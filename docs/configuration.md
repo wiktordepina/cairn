@@ -1,0 +1,348 @@
+# Configuration
+
+Cairn is configured via TOML. This page is the reference for every key
+you can set.
+
+Philosophy:
+
+- **Schema-versioned.** The config carries `schema_version`; mismatched
+  versions either warn or error rather than misbehave silently.
+- **Three-tier merge.** User defaults + project overrides + local
+  personal tweaks, resolved deterministically.
+- **Secret-aware.** API keys are `SecretRef`s — references to where the
+  secret *lives* (keychain, env var, prompt), never the value itself.
+- **Frozen at load time.** The merged config is immutable for the
+  lifetime of the process. File edits are picked up explicitly, not
+  silently.
+
+## File locations and discovery order
+
+Cairn reads and merges up to three files:
+
+| Tier | Path | Intended for |
+|---|---|---|
+| **User** | `$XDG_CONFIG_HOME/cairn/config.toml` (defaults to `~/.config/cairn/config.toml`) | Your personal defaults |
+| **Project** | `<repo>/.cairn/config.toml` | Team-level overrides, checked in |
+| **Local** | `<repo>/.cairn/config.local.toml` | Personal per-project tweaks, gitignored |
+
+Project-root discovery walks up from the current working directory
+looking for a `.cairn/config.toml`, stopping at the git root by
+default.
+
+**Merge order** (later tiers override earlier):
+
+```
+user  <  project  <  local  <  CLI flags
+```
+
+## Profile resolution
+
+A profile bundles everything that defines *one way to work*: which model,
+which soul document, which memory space, which budgets. You can define
+multiple profiles (e.g. `companion`, `work`, `experimental`) and switch
+between them.
+
+**Active profile resolution order** (highest priority wins):
+
+1. `--profile <name>` CLI flag
+2. `active_profile` set in the local config
+3. `active_profile` set in the project config
+4. `active_profile` set in the user config
+
+If no profile is named, cairn elicits one on first run.
+
+## Top-level keys
+
+```toml
+schema_version = 1        # required; reject on mismatch
+active_profile = "companion"
+```
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `schema_version` | int | — (required) | Must be `1` today. Future versions will warn. |
+| `active_profile` | string | — | Must match a key in `[profiles.*]`. |
+
+## `[providers.<name>]`
+
+A provider is a vendor you call out to. Each provider has one config
+block. The block's key is the provider's name — `anthropic`, `openai`,
+`openrouter`, etc.
+
+```toml
+[providers.anthropic]
+api_key = "keyring:cairn:anthropic-api-key"
+
+[providers.openai]
+api_key = "env:OPENAI_API_KEY"
+
+[providers.openrouter]
+api_key = "keyring:cairn:openrouter-api-key"
+extra_headers = { "HTTP-Referer" = "https://github.com/you/your-project" }
+
+[providers.llamacpp]
+api_key = "literal:not-required"   # ← rejected, see below
+base_url = "http://localhost:8080/v1"
+```
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `api_key` | [`SecretRef`](#secret-references) | — | Must not use the `literal:` scheme (rejected at load time). |
+| `base_url` | string | — | Override for OpenAI-compatible local servers. See [providers.md](providers.md#openai-compatible-local-servers). |
+| `extra_headers` | `{ string: string }` | `{}` | Merged into every request. Used for OpenRouter identity headers. |
+
+Provider names are injected into the `ProviderConfig` from the TOML dict
+key, so you don't repeat them inside the block.
+
+## `[[models]]`
+
+A model is a specific thing you call — a vendor model ID plus cost and
+capability metadata. Define one `[[models]]` block per model you want to
+use.
+
+```toml
+[[models]]
+id = "claude-sonnet-4-6"
+provider = "anthropic"
+display_name = "Claude Sonnet 4.6"
+context_window = 200_000
+max_output_tokens = 8_192
+supports_tools = true
+supports_vision = true
+supports_prompt_cache = true
+input_cost_per_1m = 3.00
+output_cost_per_1m = 15.00
+cache_read_cost_per_1m = 0.30
+cache_write_cost_per_1m = 3.75
+roles = ["primary"]
+```
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `id` | string | — (required) | Vendor model ID. |
+| `provider` | string | — (required) | Key into `[providers.*]`. |
+| `display_name` | string | — (required) | Shown in the UI. |
+| `context_window` | int | — (required) | Max input tokens. |
+| `max_output_tokens` | int | — (required) | Max tokens per response. |
+| `supports_tools` | bool | — (required) | Whether the model can call tools. |
+| `supports_vision` | bool | `false` | Whether the model accepts images. |
+| `supports_thinking` | bool | `false` | Whether the model has extended-thinking mode. |
+| `supports_prompt_cache` | bool | `false` | Whether cairn should emit cache markers. |
+| `input_cost_per_1m` | float | — (required) | USD per 1M input tokens. |
+| `output_cost_per_1m` | float | — (required) | USD per 1M output tokens. |
+| `cache_read_cost_per_1m` | float | `null` | USD per 1M tokens read from cache. |
+| `cache_write_cost_per_1m` | float | `null` | USD per 1M tokens written to cache. |
+| `roles` | list of [role](#model-roles) | `[]` | Roles this model fulfils. |
+
+### Model roles
+
+Roles let profiles reference models semantically (`role:primary`) rather
+than by vendor ID (`claude-opus-4-7`). Swapping models becomes a
+config change.
+
+| Role | Purpose |
+|---|---|
+| `primary` | The companion's voice. Default turn model. |
+| `utility` | Cheap, fast model for background work (extraction, titling). |
+| `reasoning` | Stronger model consulted via delegation for hard problems. |
+| `coding` | Model optimised for code; consulted via delegation. |
+| `vision` | Model with image input support. |
+| `fast` | Low-latency model for latency-sensitive paths. |
+
+A model can fulfil multiple roles (`roles = ["primary", "vision"]`).
+Where a profile specifies `"role:<name>"`, cairn picks the first model
+in the registry with that role.
+
+## `[profiles.<name>]`
+
+A profile is one named way to work. The key names the profile.
+
+```toml
+[profiles.companion]
+soul_document_path = "~/.config/cairn/soul.md"
+user_context_path = "~/.config/cairn/user_context.md"
+memory_md_path = "~/.config/cairn/MEMORY.md"
+memory_space = "companion"
+primary_model = "role:primary"
+utility_model = "role:utility"
+
+[profiles.companion.budgets]
+per_turn_usd = 0.50
+per_session_usd = 5.00
+daily_usd = 20.00
+
+[profiles.companion.convention_files]
+enabled = true
+filenames = ["CAIRN.md", "AGENTS.md", "CLAUDE.md"]
+walk_up_to = "git_root"
+trust_policy = "prompt"
+
+[[profiles.companion.delegation_tools]]
+tool_name = "ask_reasoning_model"
+target_model = "role:reasoning"
+description = "Delegate to a stronger reasoning model."
+when_to_use = "Hard logic, multi-step deduction, tight maths."
+max_cost_usd = 0.50
+```
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `name` | string | `null` | Display name. Elicited on first run if not set. |
+| `soul_document_path` | path | — (required) | Soul document — the companion's identity. |
+| `user_context_path` | path | — (required) | User context — facts about you. |
+| `memory_md_path` | path | — (required) | Curated MEMORY.md. |
+| `memory_space` | string | `"companion"` | Tenant key for memory isolation. |
+| `primary_model` | string | — (required) | Model ID or `"role:<name>"`. |
+| `utility_model` | string | — (required) | Used for observation extraction + compaction. |
+| `delegation_tools` | list | `[]` | See [`DelegationTool`](#delegation-tools). |
+| `budgets` | table | defaults | See [`budgets`](#budgets). |
+| `convention_files` | table | defaults | See [`convention_files`](#convention-files). |
+
+Path fields support `~` and `$VAR` expansion.
+
+### `budgets`
+
+Cost caps that gate a profile's turn loop.
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `per_turn_usd` | float | `0.50` | Soft cap per turn. |
+| `per_session_usd` | float | `5.00` | Hard cap per session. |
+| `daily_usd` | float | `20.00` | Hard cap per UTC day. |
+
+### `convention_files`
+
+Controls loading of project convention files (`AGENTS.md`, `CLAUDE.md`,
+`CAIRN.md`, etc.) into the system prompt.
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `enabled` | bool | `true` | Turn off to disable entirely. |
+| `filenames` | list | `["CAIRN.md", "AGENTS.md", "CLAUDE.md"]` | Which filenames to look for, in order. |
+| `walk_up_to` | `"git_root" \| "filesystem_root" \| "cwd_only"` | `"git_root"` | How far up to walk. |
+| `search_subdirs` | bool | `true` | In monorepos, allow nested overrides. |
+| `max_bytes_per_file` | int | `65_536` | Truncate at a paragraph boundary above this. |
+| `trust_policy` | `"prompt" \| "always" \| "project_allowlist"` | `"prompt"` | First-encounter gating. |
+| `user_level_paths` | list | `[]` | Absolute paths prepended to the search list. |
+
+### Delegation tools
+
+Each delegation tool lets the companion consult a different model as if
+it were a tool. Define via `[[profiles.<name>.delegation_tools]]` arrays.
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `tool_name` | string | — (required) | Shown to the model. |
+| `target_model` | string | — (required) | Model ID or `"role:<name>"`. |
+| `description` | string | — (required) | Shown to the model. |
+| `when_to_use` | string | — (required) | Guidance surfaced to the model. |
+| `preserve_history` | bool | `false` | Pass full conversation vs. just the query. |
+| `sub_system_prompt` | string | `null` | Overrides the default "you are being consulted" prompt. |
+| `max_cost_usd` | float | `null` | Per-call cost cap. Stream cancels on overflow. |
+| `approval_required` | bool | `false` | Ask the user before calling. |
+
+## Secret references
+
+API keys are never written to config files as plain strings. Every
+`api_key` is a `SecretRef`: `<scheme>:<parameters>`.
+
+| Scheme | Syntax | Behaviour |
+|---|---|---|
+| `keyring` | `keyring:<service>:<key>` | Resolves via the OS keychain via the `keyring` package. **Recommended.** |
+| `env` | `env:<ENV_VAR>` | Reads from environment. |
+| `prompt` | `prompt:<optional message>` | Prompts the user on first access, caches for the process lifetime. |
+| `literal` | `literal:<value>` | Plaintext. **Rejected on any field marked as a secret** (including `api_key`). Kept in the parser so non-secret references can opt into inline values later. |
+
+### Managing keyring entries
+
+Use the `keyring` CLI that ships with the Python `keyring` package:
+
+```bash
+keyring set cairn anthropic-api-key
+# enter your key when prompted
+
+keyring get cairn anthropic-api-key
+```
+
+### Path expansion
+
+Path-valued keys (`soul_document_path`, `user_context_path`,
+`memory_md_path`) expand `~` and `$VAR`:
+
+```toml
+soul_document_path = "~/.config/cairn/soul.md"
+user_context_path = "$XDG_CONFIG_HOME/cairn/user_context.md"
+```
+
+## Full example
+
+A complete, commented `config.toml` you can start from:
+
+```toml
+schema_version = 1
+active_profile = "companion"
+
+# ────────── Providers ──────────
+
+[providers.anthropic]
+api_key = "keyring:cairn:anthropic-api-key"
+
+[providers.openai]
+api_key = "keyring:cairn:openai-api-key"
+
+# ────────── Models ──────────
+
+[[models]]
+id = "claude-opus-4-7"
+provider = "anthropic"
+display_name = "Claude Opus 4.7"
+context_window = 200_000
+max_output_tokens = 8_192
+supports_tools = true
+supports_vision = true
+supports_prompt_cache = true
+input_cost_per_1m = 15.00
+output_cost_per_1m = 75.00
+cache_read_cost_per_1m = 1.50
+cache_write_cost_per_1m = 18.75
+roles = ["primary", "reasoning"]
+
+[[models]]
+id = "claude-haiku-4-5-20251001"
+provider = "anthropic"
+display_name = "Claude Haiku 4.5"
+context_window = 200_000
+max_output_tokens = 8_192
+supports_tools = true
+input_cost_per_1m = 0.80
+output_cost_per_1m = 4.00
+roles = ["utility", "fast"]
+
+# ────────── Profiles ──────────
+
+[profiles.companion]
+soul_document_path = "~/.config/cairn/soul.md"
+user_context_path = "~/.config/cairn/user_context.md"
+memory_md_path = "~/.config/cairn/MEMORY.md"
+memory_space = "companion"
+primary_model = "role:primary"
+utility_model = "role:utility"
+
+[profiles.companion.budgets]
+per_turn_usd = 0.50
+per_session_usd = 5.00
+daily_usd = 20.00
+
+[[profiles.companion.delegation_tools]]
+tool_name = "ask_reasoning_model"
+target_model = "role:reasoning"
+description = "Delegate hard reasoning to the specialist."
+when_to_use = "Multi-step deduction, tight logic, formal reasoning."
+max_cost_usd = 0.50
+```
+
+## Related ADRs
+
+- [0002 — Three-tier config merge](decisions/0002-three-tier-config-merge.md)
+- [0003 — `SecretRef` schemes](decisions/0003-secret-ref-schemes.md)
+- [0006 — Role-based model selection](decisions/0006-role-based-model-selection.md)

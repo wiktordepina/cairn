@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "cairn"
-version = "0.3.0"
+version = "0.3.1"
 description = "A personal LLM harness built around a companion at its centre."
 requires-python = ">=3.13"
 dependencies = [

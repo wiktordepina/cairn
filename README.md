@@ -70,6 +70,18 @@ Cairn uses schema-versioned TOML configuration, layered:
 
 API keys are stored in the OS keychain via `keyring`, never in config files.
 
+See [`docs/configuration.md`](docs/configuration.md) for the full TOML reference.
+
+## Documentation
+
+Comprehensive user documentation lives in [`docs/`](docs/):
+
+- [Architecture](docs/architecture.md) — the shape of the system.
+- [Configuration](docs/configuration.md) — every TOML key.
+- [Providers](docs/providers.md) — Anthropic, OpenAI, OpenRouter.
+- [Persistence](docs/persistence.md) — data layout and backup.
+- [Architecture Decision Records](docs/decisions/) — why cairn is shaped this way.
+
 ## Roadmap
 
 - **V1** — Companion + tier-1 memory + delegation + observability
