@@ -31,6 +31,7 @@ from cairn.orchestrator._protocols import (
     ToolRunner,
 )
 from cairn.orchestrator._records import ApprovalDecisionRecord, TurnRecord
+from cairn.orchestrator._session_manager import SessionManager
 from cairn.orchestrator._stubs import (
     AutoApproveGateway,
     DenyAllGateway,
@@ -79,6 +80,8 @@ __all__ = [
     # Records
     "ApprovalDecisionRecord",
     "TurnRecord",
+    # Session management
+    "SessionManager",
     # Stubs
     "AutoApproveGateway",
     "DenyAllGateway",
