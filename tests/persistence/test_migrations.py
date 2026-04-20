@@ -45,14 +45,15 @@ class TestApplyPending:
     async def test_clean_apply(self) -> None:
         async with aiosqlite.connect(":memory:") as conn:
             applied = await apply_pending(conn)
-            assert applied == [1]
+            # Every migration file in _sql/ gets applied on a clean DB.
+            assert applied == [m.version for m in discover_migrations()]
 
     @pytest.mark.asyncio
     async def test_idempotent(self) -> None:
         async with aiosqlite.connect(":memory:") as conn:
             first = await apply_pending(conn)
             second = await apply_pending(conn)
-            assert first == [1]
+            assert first == [m.version for m in discover_migrations()]
             assert second == []
 
     @pytest.mark.asyncio
@@ -84,4 +85,6 @@ class TestApplyPending:
                 "messages",
                 "tool_calls",
                 "model_usage",
+                "turns",
+                "approval_decisions",
             } <= tables

@@ -34,6 +34,7 @@ from cairn.domain._events import (
     UIEvent,
     UserMessagePersisted,
 )
+from cairn.domain._memory import MemoryEntry
 from cairn.domain._messages import Message
 from cairn.domain._provider import (
     MessageStop,
@@ -80,6 +81,8 @@ __all__ = [
     "TurnComplete",
     "UIEvent",
     "UserMessagePersisted",
+    # Memory
+    "MemoryEntry",
     # Messages
     "Message",
     # Provider

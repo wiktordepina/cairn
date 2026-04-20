@@ -16,6 +16,8 @@ that, read the code.
   OpenAI (including OpenAI-compatible local servers), and OpenRouter.
 - **[Persistence](persistence.md)** — per-profile data layout, SQLite
   specifics, backup story.
+- **[Orchestrator](orchestrator.md)** — the turn loop: state machine,
+  middleware seams, cancellation, crash recovery.
 
 ### Decisions
 

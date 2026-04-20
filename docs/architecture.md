@@ -125,7 +125,7 @@ Cairn is under active development. This table is authoritative; the
 | Domain types | Shipped (0.2.0) |
 | Providers (Anthropic, OpenAI, OpenRouter) | Shipped (0.2.0) |
 | Persistence (sessions, messages, tool calls, usage) | Shipped (0.3.0) |
-| Orchestrator | Planned |
+| Orchestrator | Shipped (0.4.0) |
 | Tool system | Planned |
 | Memory (tier-1) | Planned |
 | Compaction | Planned |

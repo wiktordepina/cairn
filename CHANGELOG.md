@@ -10,7 +10,120 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-Nothing yet. Next up: the orchestrator turn loop.
+Nothing yet. Next up: the tool system brick (real `ToolRunner`,
+built-in tools, MCP wiring).
+
+## [0.4.0] — 2026-04-20
+
+### Added — Orchestrator (`src/cairn/orchestrator/`)
+
+The pivotal brick. Coordinates providers, persistence, memory, tools,
+context assembly, and the UI through an explicit per-turn state
+machine plus four typed middleware seams.
+
+- **`Orchestrator` class** — public API: `start_session`,
+  `resume_session`, `archive_session`, `run_turn`, `cancel`,
+  `resume_aborted_turns`.
+- **Explicit per-turn state machine**: `STARTED → MEMORY_RETRIEVAL →
+  ITERATION ↻ (TOOL_DISPATCH) → FINALISING → EXTRACTION_ENQUEUED →
+  COMPLETED`, with `ABORTED` as the sole terminal failure state.
+  Every transition is a conditional `UPDATE` against the new `turns`
+  table; illegal transitions raise `InvalidTurnTransition`.
+- **Collaborator protocols** — `ContextManager`, `MemoryService`,
+  `ToolRegistry`, `ToolRunner`, `ExtractionQueue`, `ApprovalGateway`,
+  `CostTracker`, `Tool`, `Clock`. Each ships with a no-op / stub
+  implementation so the orchestrator is fully testable before the
+  downstream bricks (tool system, memory, UI) exist.
+- **Four middleware seams** with narrow typed contracts:
+  `MessagePreparer` (rewrites requests), `ToolApprover` (gates tool
+  calls), `ResultTransformer` (scrubs tool results),
+  `UIEventObserver` (sync fan-out, fire-and-forget). Default chains
+  are empty; bricks register their own middleware at
+  harness-assembly time.
+- **`SessionManager`** — thin coordinator over `SessionRepo`. Owns
+  memory-space scoping per session type (ephemeral forced to None,
+  companion defaulting to `companion`, persona honoured verbatim),
+  model-ref resolution via `ModelRegistry`, ID generation.
+- **`BasicCostTracker`** — wraps `UsageRepo` for writes, implements
+  `should_block_turn` (`PROCEED | WARN | BLOCK`) against per-session
+  and daily budget caps.
+- **Cancellation** — per-session `asyncio.Event`; the turn loop
+  checks between awaits. On cancel: partial assistant message
+  persisted, turns row → `ABORTED`, `TurnAborted` emitted.
+- **Crash recovery** via `resume_aborted_turns()` — scans non-terminal
+  turns on boot and marks them aborted with `reason='process_crash'`.
+- **New UIEvent types** — `ToolCallPlanned`, `ToolCallApproved`,
+  `ToolCallRejected`, `TurnAborted`, `TurnBlocked`, `TurnIncomplete`,
+  `BudgetWarning`. `turn_id` threaded through every per-turn event.
+
+### Added — Persistence: `turns` + `approval_decisions`
+
+Migration `0002_orchestrator_tables.sql`:
+
+- **`turns` table** — one row per turn, `state` column authoritative,
+  indexes on `(session_id, started_at)` and `state NOT IN (terminal)`.
+- **`approval_decisions` table** — audit trail for tool-call approval
+  decisions. Populated by the tool-system brick; schema lives here.
+- **`turn_id` columns** on `messages`, `tool_calls`, `model_usage` —
+  threading for cost-per-turn aggregations and clean debugging joins.
+  Deliberately *not* foreign keys (see ADR 0012 for the circular
+  write dependency that motivated the decision).
+- **`TurnRepo`** — conditional state transitions, iteration counter,
+  mark-completed/aborted, list-non-terminal for crash recovery.
+- **`UsageRepo.record`** now accepts an optional `turn_id` kwarg;
+  `UsageRecord` carries it. New `UsageRepo.cost_for_turn(turn_id)`
+  aggregation.
+- **`MessageRepo.append`** accepts an optional `turn_id` kwarg.
+
+### Added — New domain type
+
+- **`MemoryEntry`** — frozen Pydantic model for retrieved memory
+  observations. Placed in `cairn.domain` so the orchestrator and
+  context manager can be written against it before the memory brick
+  lands.
+
+### Added — User documentation
+
+- `docs/orchestrator.md` — user-facing surface and lifecycle.
+- `docs/decisions/0009-protocol-stubs.md` — why the orchestrator is
+  built on injected protocols with default stubs rather than concrete
+  collaborators.
+- `docs/decisions/0010-typed-middleware.md` — why four narrow
+  middleware seams instead of a generic callback system.
+- `docs/decisions/0011-explicit-turn-state-machine.md` — why the
+  `turns` table uses a state column rather than event sourcing.
+- `docs/decisions/0012-no-fk-on-turn-id.md` — why `turn_id` is not a
+  SQL foreign key.
+- `docs/architecture.md` — orchestrator status bumped to Shipped.
+- `docs/decisions/README.md` — index updated.
+
+### Tests
+
+- 15 orchestrator scenarios (happy path, tool dispatch, rejected
+  tool, unknown tool, budget block, single-turn invariant,
+  cancellation, memory-space threading, ephemeral behaviour, crash
+  recovery, session-lifecycle events).
+- 10 `TurnRepo` tests.
+- 10 `BasicCostTracker` tests.
+- 16 `SessionManager` tests.
+- Pre-existing tests updated for the new required `turn_id` field on
+  UIEvents and the second migration.
+- **Total suite: 378 passing** (up from 353 on 0.3.1).
+
+### Deferred (to subsequent bricks)
+
+- Real `ToolRunner` implementation (tool-system brick) — V1 ships
+  `RaisingToolRunner` paired with `EmptyToolRegistry`.
+- Real `MemoryService` + observation extraction (memory brick) — V1
+  ships `NullMemoryService` and `NullExtractionQueue`.
+- Real `ApprovalGateway` with UI interaction (tool-system brick) — V1
+  ships `AutoApproveGateway` / `DenyAllGateway`.
+- Context-manager features beyond pass-through: compaction, memory
+  injection, convention-file loading, prompt-cache markers.
+- Per-tool timeout enforcement (lives in the tool-runner).
+- `DelegationSpawned` / `DelegationCompleted` event emission from
+  inside `DelegationTool.invoke` (tool-system brick).
+- `/context` inspection metadata (context-manager brick).
 
 ## [0.3.1] — 2026-04-20
 
@@ -269,7 +382,8 @@ Architecture doc §4.1.
 Commits: [`85d8e30`](https://github.com/wiktordepina/cairn/commit/85d8e30a4c48981d03cbdb4307b06e2ff29de289),
 [`35b1c91`](https://github.com/wiktordepina/cairn/commit/35b1c911c039754389c296b67f3f1c5dc16bc4f9).
 
-[Unreleased]: https://github.com/wiktordepina/cairn/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/wiktordepina/cairn/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/wiktordepina/cairn/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/wiktordepina/cairn/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/wiktordepina/cairn/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/wiktordepina/cairn/compare/v0.1.0...v0.2.0

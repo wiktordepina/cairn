@@ -17,6 +17,7 @@ from cairn.persistence._paths import (
 from cairn.persistence._records import ToolCallRecord, UsageRecord
 from cairn.persistence._sessions_repo import SessionRepo
 from cairn.persistence._tool_calls_repo import ToolCallRepo
+from cairn.persistence._turns_repo import InvalidTurnTransition, TurnRepo
 from cairn.persistence._usage_repo import UsageRepo
 
 __all__ = [
@@ -24,6 +25,7 @@ __all__ = [
     "Database",
     # Errors
     "InvalidToolCallTransition",
+    "InvalidTurnTransition",
     "MigrationError",
     "NotFoundError",
     "PersistenceError",
@@ -42,5 +44,6 @@ __all__ = [
     "MessageRepo",
     "SessionRepo",
     "ToolCallRepo",
+    "TurnRepo",
     "UsageRepo",
 ]
