@@ -22,11 +22,6 @@ tools. The user always sees the companion's voice.
 
 ## Architecture
 
-The design is documented in detail in `.plan/`:
-
-- `llm-harness-architecture-v2.md` — full architecture specification
-- `llm-harness-security.md` — threat model and security guidance
-
 Key architectural commitments:
 
 - **Companion-first, tool-aware** — a relationship, not a task queue
