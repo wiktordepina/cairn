@@ -5,8 +5,7 @@ All notable changes to this project are documented here. The format follows
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 While the project is pre-1.0, minor version bumps track meaningful additions
-of functionality (each "brick" in `.plan/implementation-progress.md`) and
-the public surface is still in flux.
+of functionality and the public surface is still in flux.
 
 ## [Unreleased]
 
