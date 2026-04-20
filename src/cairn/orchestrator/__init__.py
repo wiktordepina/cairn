@@ -21,6 +21,7 @@ from cairn.orchestrator._middleware import (
     ToolApprover,
     UIEventObserver,
 )
+from cairn.orchestrator._orchestrator import Orchestrator
 from cairn.orchestrator._protocols import (
     ApprovalGateway,
     ContextManager,
@@ -93,4 +94,6 @@ __all__ = [
     "NullExtractionQueue",
     "NullMemoryService",
     "RaisingToolRunner",
+    # Orchestrator
+    "Orchestrator",
 ]

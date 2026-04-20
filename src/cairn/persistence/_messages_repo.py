@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from cairn.persistence._connection import Database
 
 
-_SELECT_COLS = "id, session_id, idx, role, content_json, created_at"
+_SELECT_COLS = "id, session_id, idx, role, content_json, created_at, turn_id"
 
 
 def _row_to_message(row: aiosqlite.Row) -> Message:
@@ -34,10 +34,12 @@ class MessageRepo:
     def __init__(self, db: Database) -> None:
         self._db = db
 
-    async def append(self, message: Message) -> None:
+    async def append(self, message: Message, *, turn_id: str | None = None) -> None:
         """Append a message, computing its idx server-side.
 
-        Mutates ``message.idx`` in place.
+        Mutates ``message.idx`` in place. ``turn_id`` threads orchestrator
+        turn attribution onto the row; None for messages not produced
+        inside an orchestrator turn (e.g. imports).
         """
         async with self._db.transaction() as conn:
             cursor = await conn.execute(
@@ -50,7 +52,7 @@ class MessageRepo:
             message.idx = next_idx
             content = message.content_json().decode("utf-8")
             await conn.execute(
-                f"INSERT INTO messages ({_SELECT_COLS}) VALUES (?, ?, ?, ?, ?, ?)",
+                f"INSERT INTO messages ({_SELECT_COLS}) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (
                     message.id,
                     message.session_id,
@@ -58,15 +60,18 @@ class MessageRepo:
                     message.role,
                     content,
                     message.created_at.isoformat(),
+                    turn_id,
                 ),
             )
 
-    async def insert_with_idx(self, message: Message) -> None:
+    async def insert_with_idx(
+        self, message: Message, *, turn_id: str | None = None
+    ) -> None:
         """Insert a message with its existing ``idx`` (for replay/import)."""
         conn = await self._db.connect()
         content = message.content_json().decode("utf-8")
         await conn.execute(
-            f"INSERT INTO messages ({_SELECT_COLS}) VALUES (?, ?, ?, ?, ?, ?)",
+            f"INSERT INTO messages ({_SELECT_COLS}) VALUES (?, ?, ?, ?, ?, ?, ?)",
             (
                 message.id,
                 message.session_id,
@@ -74,6 +79,7 @@ class MessageRepo:
                 message.role,
                 content,
                 message.created_at.isoformat(),
+                turn_id,
             ),
         )
         await conn.commit()
