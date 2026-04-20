@@ -35,10 +35,17 @@ CREATE INDEX idx_approval_decided_at ON approval_decisions(decided_at);
 
 -- turn_id threading — every row produced during a turn carries its turn_id.
 -- Enables "cost per turn" queries, clean joins from turns to downstream artefacts,
--- and debugging replays. Nullable because the existing rows don't have one.
-ALTER TABLE messages ADD COLUMN turn_id TEXT REFERENCES turns(id);
-ALTER TABLE tool_calls ADD COLUMN turn_id TEXT REFERENCES turns(id);
-ALTER TABLE model_usage ADD COLUMN turn_id TEXT REFERENCES turns(id);
+-- and debugging replays.
+--
+-- NB: deliberately not a foreign key. The turns row references the user message
+-- (turns.user_message_id → messages.id), and the user message also carries the
+-- turn_id for uniform threading. Making messages.turn_id a hard FK would
+-- introduce a circular write dependency: the message cannot land before the
+-- turn, and the turn cannot land before the message. Logical integrity is
+-- enforced by the orchestrator at write time.
+ALTER TABLE messages ADD COLUMN turn_id TEXT;
+ALTER TABLE tool_calls ADD COLUMN turn_id TEXT;
+ALTER TABLE model_usage ADD COLUMN turn_id TEXT;
 
 CREATE INDEX idx_messages_turn ON messages(turn_id) WHERE turn_id IS NOT NULL;
 CREATE INDEX idx_tool_calls_turn ON tool_calls(turn_id) WHERE turn_id IS NOT NULL;

@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from cairn.persistence._connection import Database
 
 _SELECT_COLS = (
-    "id, timestamp, session_id, message_id, parent_session_id, "
+    "id, timestamp, session_id, message_id, turn_id, parent_session_id, "
     "provider, model, role, operation, "
     "input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, "
     "cost_usd, duration_ms, stop_reason, is_error, metadata_json"
@@ -29,6 +29,7 @@ def _row_to_record(row: aiosqlite.Row) -> UsageRecord:
         timestamp=datetime.fromisoformat(row["timestamp"]),
         session_id=row["session_id"],
         message_id=row["message_id"],
+        turn_id=row["turn_id"],
         parent_session_id=row["parent_session_id"],
         provider=row["provider"],
         model=row["model"],
@@ -76,6 +77,7 @@ class UsageRepo:
         stop_reason: StopReason | None = None,
         is_error: bool = False,
         metadata: dict[str, object] | None = None,
+        turn_id: str | None = None,
     ) -> int:
         """Insert a usage row. Returns the new row id."""
         meta_json = json.dumps(metadata, sort_keys=True) if metadata else None
@@ -83,16 +85,17 @@ class UsageRepo:
         cursor = await conn.execute(
             """
             INSERT INTO model_usage (
-                timestamp, session_id, message_id, parent_session_id,
+                timestamp, session_id, message_id, turn_id, parent_session_id,
                 provider, model, role, operation,
                 input_tokens, output_tokens, cache_read_tokens, cache_write_tokens,
                 cost_usd, duration_ms, stop_reason, is_error, metadata_json
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 timestamp.isoformat(),
                 session_id,
                 message_id,
+                turn_id,
                 parent_session_id,
                 provider,
                 model,
@@ -167,6 +170,21 @@ class UsageRepo:
         cursor = await conn.execute(
             "SELECT COALESCE(SUM(cost_usd), 0.0) FROM model_usage WHERE message_id = ?",
             (message_id,),
+        )
+        row = await cursor.fetchone()
+        await cursor.close()
+        return float(row[0]) if row is not None else 0.0
+
+    async def cost_for_turn(self, turn_id: str) -> float:
+        """Sum all provider calls attributed to a single orchestrator turn.
+
+        Includes every iteration in the tool loop plus any delegation
+        sub-calls that carry the same ``turn_id``.
+        """
+        conn = await self._db.connect()
+        cursor = await conn.execute(
+            "SELECT COALESCE(SUM(cost_usd), 0.0) FROM model_usage WHERE turn_id = ?",
+            (turn_id,),
         )
         row = await cursor.fetchone()
         await cursor.close()

@@ -23,6 +23,7 @@ class ToolCallRecord(BaseModel):
     id: str
     session_id: str
     message_id: str
+    turn_id: str | None = None
     tool_name: str
     tool_kind: Literal["native", "mcp", "delegation"]
     server: str | None = None
@@ -54,6 +55,7 @@ class UsageRecord(BaseModel):
     timestamp: datetime
     session_id: str | None = None
     message_id: str | None = None
+    turn_id: str | None = None
     parent_session_id: str | None = None
     provider: str
     model: str

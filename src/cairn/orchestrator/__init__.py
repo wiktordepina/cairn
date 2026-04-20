@@ -4,6 +4,7 @@ memory, tools, context assembly, and the UI together."""
 from cairn.orchestrator._clock import Clock, FrozenClock, SystemClock
 from cairn.orchestrator._config import OrchestratorConfig
 from cairn.orchestrator._context import TurnContext
+from cairn.orchestrator._cost_tracker import BasicCostTracker
 from cairn.orchestrator._enums import ApprovalOutcome, BudgetVerdict, TurnState
 from cairn.orchestrator._errors import (
     OrchestratorError,
@@ -49,6 +50,8 @@ __all__ = [
     "SystemClock",
     # Config
     "OrchestratorConfig",
+    # Cost tracking
+    "BasicCostTracker",
     # Context
     "TurnContext",
     # Enums
