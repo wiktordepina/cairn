@@ -5,11 +5,58 @@ All notable changes to this project are documented here. The format follows
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 While the project is pre-1.0, minor version bumps track meaningful additions
-of functionality and the public surface is still in flux.
+of functionality; patch bumps cover docs, internal tidy-ups, and fixes that
+don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
 Nothing yet. Next up: the orchestrator turn loop.
+
+## [0.3.1] — 2026-04-20
+
+### Added — User documentation
+
+Backfill of user-facing documentation in `docs/` covering the four
+already-shipped bricks:
+
+- `docs/architecture.md` — system shape, brick boundaries, and the data
+  flow of a companion turn.
+- `docs/configuration.md` — full TOML reference: every key across
+  `[providers.*]`, `[[models]]`, `[profiles.*]`, `budgets`,
+  `convention_files`, and `delegation_tools`, plus the four `SecretRef`
+  schemes and the three-tier merge rules.
+- `docs/providers.md` — per-provider notes (Anthropic, OpenAI including
+  OpenAI-compatible local servers, OpenRouter), streaming and tool-call
+  semantics, error hierarchy.
+- `docs/persistence.md` — per-profile SQLite layout, WAL specifics,
+  table overview, memory-space enforcement, and the backup story.
+
+### Added — Architecture Decision Records
+
+Eight ADRs in `docs/decisions/` capturing the non-obvious decisions that
+shaped the shipped bricks, using Michael Nygard's *Context / Decision /
+Consequences* format:
+
+- 0001 — Per-profile SQLite database.
+- 0002 — Three-tier config merge (user / project / local).
+- 0003 — `SecretRef` with four schemes (`keyring`, `env`, `prompt`,
+  `literal`).
+- 0004 — Hand-rolled SQL migrations over an ORM / framework.
+- 0005 — Per-provider adapters over a unified client.
+- 0006 — Role-based model selection.
+- 0007 — Memory-space scoping enforced at the repository layer.
+- 0008 — Tool-call state as a column, not an event stream.
+
+### Changed
+
+- `README.md` now links into `docs/` for discoverability.
+
+### Policy
+
+Documentation is now a first-class citizen: every feature PR updates
+the relevant user docs, and any non-obvious design decision lands with
+an ADR in the same PR as the code. Recorded in `docs/README.md` and
+(locally) in `AGENTS.md`.
 
 ## [0.3.0] — 2026-04-20
 
@@ -222,7 +269,8 @@ Architecture doc §4.1.
 Commits: [`85d8e30`](https://github.com/wiktordepina/cairn/commit/85d8e30a4c48981d03cbdb4307b06e2ff29de289),
 [`35b1c91`](https://github.com/wiktordepina/cairn/commit/35b1c911c039754389c296b67f3f1c5dc16bc4f9).
 
-[Unreleased]: https://github.com/wiktordepina/cairn/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/wiktordepina/cairn/compare/v0.3.1...HEAD
+[0.3.1]: https://github.com/wiktordepina/cairn/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/wiktordepina/cairn/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/wiktordepina/cairn/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/wiktordepina/cairn/releases/tag/v0.1.0
