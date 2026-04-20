@@ -75,3 +75,7 @@ ongoing costs does this impose?
 | [0006](0006-role-based-model-selection.md) | Role-based model selection | accepted |
 | [0007](0007-memory-space-at-repo-layer.md) | Memory-space scoping at the repository layer | accepted |
 | [0008](0008-tool-call-state-column.md) | Tool-call state as a column, not an event stream | accepted |
+| [0009](0009-protocol-stubs.md) | Protocol-shaped collaborators with default stubs | accepted |
+| [0010](0010-typed-middleware.md) | Typed middleware over generic lifecycle hooks | accepted |
+| [0011](0011-explicit-turn-state-machine.md) | `turns` table with an explicit state machine | accepted |
+| [0012](0012-no-fk-on-turn-id.md) | No foreign-key constraint on `turn_id` columns | accepted |
