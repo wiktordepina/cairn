@@ -42,10 +42,19 @@ class Tool(Protocol):
     def name(self) -> str: ...
 
     @property
+    def description(self) -> str: ...
+
+    @property
+    def input_schema(self) -> dict[str, object]: ...
+
+    @property
+    def tool_kind(self) -> Literal["native", "mcp", "delegation"]: ...
+
+    @property
     def approval_required(self) -> bool: ...
 
     @property
-    def risk_tier(self) -> int: ...                                # 0..5
+    def risk_tier(self) -> int: ...                                # 0..4 in V1
 
     @property
     def side_effects(self) -> Literal["none", "read", "write"]: ...

@@ -135,6 +135,11 @@ class StubTool:
     """
 
     name: str
+    description: str = "stub tool for tests"
+    input_schema: dict[str, object] = field(  # pyright: ignore[reportUnknownVariableType]
+        default_factory=lambda: {"type": "object", "properties": {}}
+    )
+    tool_kind: Literal["native", "mcp", "delegation"] = "native"
     approval_required: bool = False
     risk_tier: int = 0
     side_effects: Literal["none", "read", "write"] = "none"
