@@ -1,11 +1,11 @@
 """Built-in tools that ship with cairn V1.
 
-Each ``make_<tool>`` factory builds a decorated ``Tool`` against the
-collaborators it needs — typically a ``WorkspaceSandbox`` for filesystem
+Each `make_<tool>` factory builds a decorated `Tool` against the
+collaborators it needs — typically a `WorkspaceSandbox` for filesystem
 tools. The CLI calls these factories once at startup and hands the
-resulting ``Tool`` list to ``DefaultToolRegistry``.
+resulting `Tool` list to `DefaultToolRegistry`.
 
-``web_fetch`` needs no sandbox — its safety is enforced by the SSRF
+`web_fetch` needs no sandbox — its safety is enforced by the SSRF
 defence layer.
 """
 

@@ -1,4 +1,4 @@
-"""Tests for the ``file_read`` built-in tool."""
+"""Tests for the `file_read` built-in tool."""
 
 from __future__ import annotations
 

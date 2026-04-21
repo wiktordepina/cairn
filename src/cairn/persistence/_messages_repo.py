@@ -1,4 +1,4 @@
-"""Repository for the ``messages`` table."""
+"""Repository for the `messages` table."""
 
 from __future__ import annotations
 
@@ -37,7 +37,7 @@ class MessageRepo:
     async def append(self, message: Message, *, turn_id: str | None = None) -> None:
         """Append a message, computing its idx server-side.
 
-        Mutates ``message.idx`` in place. ``turn_id`` threads orchestrator
+        Mutates `message.idx` in place. `turn_id` threads orchestrator
         turn attribution onto the row; None for messages not produced
         inside an orchestrator turn (e.g. imports).
         """
@@ -65,7 +65,7 @@ class MessageRepo:
             )
 
     async def insert_with_idx(self, message: Message, *, turn_id: str | None = None) -> None:
-        """Insert a message with its existing ``idx`` (for replay/import)."""
+        """Insert a message with its existing `idx` (for replay/import)."""
         conn = await self._db.connect()
         content = message.content_json().decode("utf-8")
         await conn.execute(

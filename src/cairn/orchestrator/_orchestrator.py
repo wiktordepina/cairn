@@ -489,15 +489,15 @@ class Orchestrator:
     ):
         """Dispatch each tool call through the approval chain + runner.
 
-        Yields a mix of ``UIEvent`` (to be re-yielded upward) and
-        ``(ToolResultBlock,)`` one-tuples (results for the model).
+        Yields a mix of `UIEvent` (to be re-yielded upward) and
+        `(ToolResultBlock,)` one-tuples (results for the model).
         The caller reassembles the stream.
 
         Responsibility split with the runner:
         - Orchestrator owns approval chain + UI events (Planned, Approved,
           Rejected, Started, Completed) + transformer application + timing.
-        - Runner owns ``tool_calls`` / ``approval_decisions`` DB writes,
-          ``asyncio.timeout`` wrapping, and error-to-error-block synthesis.
+        - Runner owns `tool_calls` / `approval_decisions` DB writes,
+          `asyncio.timeout` wrapping, and error-to-error-block synthesis.
           It is called once per tool call — on both approve and reject —
           so the audit trail always lands.
         """

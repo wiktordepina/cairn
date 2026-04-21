@@ -1,15 +1,15 @@
-"""``file_write`` — Tier 3, sandboxed text write.
+"""`file_write` — Tier 3, sandboxed text write.
 
-Paths resolve through the same ``WorkspaceSandbox`` as ``file_read``.
+Paths resolve through the same `WorkspaceSandbox` as `file_read`.
 Three modes:
 
-- ``"create"`` — fails if the target already exists.
-- ``"overwrite"`` — replaces the existing file (or creates it).
-- ``"append"`` — extends the existing file (or creates it).
+- `"create"` — fails if the target already exists.
+- `"overwrite"` — replaces the existing file (or creates it).
+- `"append"` — extends the existing file (or creates it).
 
 Parent directories are not auto-created — callers pass paths that
 terminate inside an existing directory. The tool writes UTF-8. Size of
-the pending write is capped to mirror ``file_read``'s read cap.
+the pending write is capped to mirror `file_read`'s read cap.
 
 Approval is required by default (Tier 3); the session allowlist grants
 "first-run then subsequent writes to the same path" via the runner's
@@ -53,12 +53,12 @@ def make_file_write(
     *,
     max_bytes: int = DEFAULT_MAX_BYTES,
 ) -> Tool:
-    """Build a ``file_write`` tool bound to ``sandbox``.
+    """Build a `file_write` tool bound to `sandbox`.
 
     Args:
         sandbox: The workspace sandbox whose root confines path resolution.
         max_bytes: Writes larger than this are refused. Matches
-            ``file_read``'s read cap by default.
+            `file_read`'s read cap by default.
     """
 
     @tool(

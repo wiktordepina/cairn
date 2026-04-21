@@ -1,4 +1,4 @@
-"""Repository for the ``tool_calls`` table — lifecycle-aware."""
+"""Repository for the `tool_calls` table — lifecycle-aware."""
 
 from __future__ import annotations
 
@@ -59,7 +59,7 @@ class ToolCallRepo:
     """Tool call lifecycle persistence.
 
     Each transition method enforces the allowed previous status; an attempt
-    to transition from a disallowed state raises ``InvalidToolCallTransition``.
+    to transition from a disallowed state raises `InvalidToolCallTransition`.
     """
 
     def __init__(self, db: Database) -> None:

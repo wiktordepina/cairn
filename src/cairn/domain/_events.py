@@ -73,7 +73,7 @@ class ToolCallStarted:
 
 @dataclass(frozen=True, slots=True)
 class ToolCallCompleted:
-    """A tool call has finished. ``status`` carries the terminal state."""
+    """A tool call has finished. `status` carries the terminal state."""
 
     tool_call_id: str
     turn_id: str
@@ -138,7 +138,7 @@ class TurnBlocked:
 
 @dataclass(frozen=True, slots=True)
 class TurnIncomplete:
-    """A turn stopped at ``max_tokens`` before a tool call finished streaming."""
+    """A turn stopped at `max_tokens` before a tool call finished streaming."""
 
     session_id: str
     turn_id: str

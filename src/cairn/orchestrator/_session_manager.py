@@ -1,4 +1,4 @@
-"""SessionManager — thin coordinator over ``SessionRepo``.
+"""SessionManager — thin coordinator over `SessionRepo`.
 
 Owns session lifecycle: creation (with memory-space scoping, model
 resolution, ID generation), lookup, archival. Does not emit UI events —
@@ -28,10 +28,10 @@ class SessionManager:
     - **Ephemeral sessions never have a memory space.** Callers that pass
       one get it silently dropped — the invariant is on the type, not
       the caller.
-    - **Companion sessions default to the ``'companion'`` space** unless
+    - **Companion sessions default to the `'companion'` space** unless
       the caller explicitly passes one.
     - **Persona sessions accept whatever the caller passes**, including
-      ``None`` (a memoryless persona is legitimate).
+      `None` (a memoryless persona is legitimate).
     """
 
     def __init__(
@@ -76,14 +76,14 @@ class SessionManager:
         return session
 
     async def get(self, session_id: str) -> Session:
-        """Fetch a session. Raises ``UnknownSession`` if missing."""
+        """Fetch a session. Raises `UnknownSession` if missing."""
         session = await self._repo.get(session_id)
         if session is None:
             raise UnknownSession(f"No session with id {session_id!r}")
         return session
 
     async def archive(self, session_id: str) -> None:
-        """Archive a session. Raises ``UnknownSession`` if missing."""
+        """Archive a session. Raises `UnknownSession` if missing."""
         # Existence check before archive so the error is attributed correctly.
         await self.get(session_id)
         await self._repo.archive(session_id)

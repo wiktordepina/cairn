@@ -1,4 +1,4 @@
-"""Repository for the ``model_usage`` table."""
+"""Repository for the `model_usage` table."""
 
 from __future__ import annotations
 
@@ -51,7 +51,7 @@ class UsageRepo:
     """Provider-call usage records and cost aggregations.
 
     One row per provider call (even on retry). Callers indicate retry status
-    via ``metadata={"retry_attempt": n, "previous_error": "..."}``.
+    via `metadata={"retry_attempt": n, "previous_error": "..."}`.
     """
 
     def __init__(self, db: Database) -> None:
@@ -179,7 +179,7 @@ class UsageRepo:
         """Sum all provider calls attributed to a single orchestrator turn.
 
         Includes every iteration in the tool loop plus any delegation
-        sub-calls that carry the same ``turn_id``.
+        sub-calls that carry the same `turn_id`.
         """
         conn = await self._db.connect()
         cursor = await conn.execute(

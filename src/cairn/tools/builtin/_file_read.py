@@ -1,11 +1,11 @@
-"""``file_read`` — Tier 1, sandboxed text read.
+"""`file_read` — Tier 1, sandboxed text read.
 
-Paths resolve through a ``WorkspaceSandbox`` — absolute paths, ``..``
+Paths resolve through a `WorkspaceSandbox` — absolute paths, `..`
 escapes, and symlink escapes are rejected before any I/O. Binary files
 return a one-line summary rather than their contents; oversized files
 are truncated with a suffix carrying the original byte count.
 
-The tool is constructed via ``make_file_read(sandbox)`` so the CLI can
+The tool is constructed via `make_file_read(sandbox)` so the CLI can
 wire the same tool against whichever workspace root is in scope.
 """
 
@@ -50,12 +50,12 @@ def make_file_read(
     *,
     max_bytes: int = DEFAULT_MAX_BYTES,
 ) -> Tool:
-    """Build a ``file_read`` tool bound to ``sandbox``.
+    """Build a `file_read` tool bound to `sandbox`.
 
     Args:
         sandbox: The workspace sandbox whose root confines path resolution.
         max_bytes: Text content over this size is truncated. Defaults to
-            ``DEFAULT_MAX_BYTES`` (1 MB).
+            `DEFAULT_MAX_BYTES` (1 MB).
     """
 
     @tool(

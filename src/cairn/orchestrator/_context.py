@@ -1,6 +1,6 @@
 """TurnContext — the execution context threaded through middleware and tools.
 
-Passed to every middleware call and to ``ToolRunner.run``. Carries the
+Passed to every middleware call and to `ToolRunner.run`. Carries the
 information collaborators need without exposing the Orchestrator itself.
 """
 

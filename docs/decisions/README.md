@@ -85,3 +85,4 @@ ongoing costs does this impose?
 | [0016](0016-no-shell-in-v1.md) | No shell / code-execution tool in V1 | accepted |
 | [0017](0017-ssrf-ip-pinning-deferred.md) | SSRF defence: IP pinning deferred in V1 | accepted |
 | [0018](0018-docs-site-tooling.md) | Documentation site tooling: MkDocs + Material + mkdocstrings | accepted |
+| [0019](0019-docstrings-google-style.md) | Docstrings follow Google style | accepted |

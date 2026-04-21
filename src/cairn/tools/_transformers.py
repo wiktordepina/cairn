@@ -1,12 +1,12 @@
 """Result-transformer middleware shipped with the tool system.
 
-Registered into the orchestrator's ``transformers`` chain at
+Registered into the orchestrator's `transformers` chain at
 harness-assembly time. Default order (config-overridable):
 
     InvisibleUnicodeStripper → SecretRedactor → SpotlightTransformer
 
 Rationale: strip invisible Unicode first so a malicious tool output
-cannot split an API-key token across ``re.sub`` boundaries with a
+cannot split an API-key token across `re.sub` boundaries with a
 zero-width character. Redact secrets second so any reassembled token
 is caught. Spotlight last so the trust marker is the outermost frame
 and nothing in the redactor's replacement text gets reinterpreted
@@ -45,15 +45,15 @@ _SECRET_PATTERNS: tuple[re.Pattern[str], ...] = (
 
 
 def redact_secrets(text: str) -> str:
-    """Replace any API-key-shaped strings with ``[REDACTED]`` while
-    preserving structural context (e.g. ``Bearer `` prefix)."""
+    """Replace any API-key-shaped strings with `[REDACTED]` while
+    preserving structural context (e.g. `Bearer ` prefix)."""
     for pattern in _SECRET_PATTERNS:
         text = pattern.sub(r"\1[REDACTED]", text)
     return text
 
 
 class SecretRedactor:
-    """Runs ``redact_secrets`` over the result content."""
+    """Runs `redact_secrets` over the result content."""
 
     async def transform(
         self,
@@ -128,7 +128,7 @@ class SpotlightTransformer:
     determined injections still bypass it.
 
     For list content, the envelope is added as prefix and suffix
-    ``TextBlock``s around the existing blocks — non-text content
+    `TextBlock`s around the existing blocks — non-text content
     (images, etc.) passes through unchanged.
     """
 
@@ -180,12 +180,12 @@ def _map_text(
     content: Any,
     fn: Callable[[str], str],
 ) -> str | list[Any]:
-    """Apply ``fn`` to every text portion of the content, preserving non-text.
+    """Apply `fn` to every text portion of the content, preserving non-text.
 
-    Typed as ``Any`` on the input because ``ToolResultBlock.content`` is
+    Typed as `Any` on the input because `ToolResultBlock.content` is
     declared as a narrow Annotated union that doesn't play well with
-    invariant ``list``; pydantic re-validates the returned value on
-    ``model_copy``, so runtime safety is intact.
+    invariant `list`; pydantic re-validates the returned value on
+    `model_copy`, so runtime safety is intact.
     """
     if isinstance(content, str):
         return fn(content)

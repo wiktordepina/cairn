@@ -1,4 +1,4 @@
-"""Tests for the ``@tool`` decorator."""
+"""Tests for the `@tool` decorator."""
 
 from __future__ import annotations
 

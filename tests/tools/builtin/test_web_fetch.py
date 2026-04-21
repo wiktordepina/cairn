@@ -1,4 +1,4 @@
-"""Tests for the ``web_fetch`` built-in tool."""
+"""Tests for the `web_fetch` built-in tool."""
 
 from __future__ import annotations
 

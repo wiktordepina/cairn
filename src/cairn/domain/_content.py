@@ -1,8 +1,8 @@
 """Content block types — the vocabulary of message content.
 
-Each block is a frozen Pydantic model with a ``type`` literal discriminator.
-The ``ContentBlock`` union and ``content_list_adapter`` provide serialization
-for the ``content_json`` database column.
+Each block is a frozen Pydantic model with a `type` literal discriminator.
+The `ContentBlock` union and `content_list_adapter` provide serialization
+for the `content_json` database column.
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ class ThinkingBlock(BaseModel):
 class ToolResultBlock(BaseModel):
     """Result returned from a tool call.
 
-    ``content`` can be a plain string or a list of content blocks
+    `content` can be a plain string or a list of content blocks
     (for rich tool results containing images, etc.).
     """
 

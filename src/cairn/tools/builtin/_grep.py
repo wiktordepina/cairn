@@ -1,15 +1,15 @@
-"""``grep`` — Tier 1, regex search confined to the workspace.
+"""`grep` — Tier 1, regex search confined to the workspace.
 
-Uses ``ripgrep`` if available on ``PATH``; otherwise falls back to a
-pure-Python walker built on ``re`` + ``pathlib``. Both paths:
+Uses `ripgrep` if available on `PATH`; otherwise falls back to a
+pure-Python walker built on `re` + `pathlib`. Both paths:
 
 - Resolve the caller's search root through the workspace sandbox.
 - Skip binary files (null-byte detection on the first 8 KB).
-- Skip files larger than ``max_file_bytes``.
-- Cap total matches at ``max_matches`` (default 200) and append a
+- Skip files larger than `max_file_bytes`.
+- Cap total matches at `max_matches` (default 200) and append a
   truncation note when the cap bites.
 
-Output is a plain-text block of ``path:lineno:line`` entries, one per
+Output is a plain-text block of `path:lineno:line` entries, one per
 match — easy for the model to consume without further parsing.
 """
 
@@ -57,7 +57,7 @@ class GrepArgs(BaseModel):
 
 
 def _ripgrep_path() -> str | None:
-    """Resolved at call time so tests can monkeypatch ``shutil.which``."""
+    """Resolved at call time so tests can monkeypatch `shutil.which`."""
     return shutil.which("rg")
 
 
@@ -231,7 +231,7 @@ def make_grep(
     max_matches: int = DEFAULT_MAX_MATCHES,
     max_file_bytes: int = DEFAULT_MAX_FILE_BYTES,
 ) -> Tool:
-    """Build a ``grep`` tool bound to ``sandbox``.
+    """Build a `grep` tool bound to `sandbox`.
 
     Args:
         sandbox: The workspace sandbox whose root confines path resolution.

@@ -33,8 +33,8 @@ class ModelRole(StrEnum):
 class SecretRef:
     """A reference to a secret value — never the value itself.
 
-    Parsed from strings like ``keyring:cairn:anthropic-api-key``,
-    ``env:OPENAI_API_KEY``, ``prompt:Google API key``, or ``literal:value``.
+    Parsed from strings like `keyring:cairn:anthropic-api-key`,
+    `env:OPENAI_API_KEY`, `prompt:Google API key`, or `literal:value`.
     """
 
     __slots__ = ("scheme", "params")
@@ -45,7 +45,7 @@ class SecretRef:
 
     @classmethod
     def parse(cls, raw: str) -> SecretRef:
-        """Parse a secret reference string into a ``SecretRef``."""
+        """Parse a secret reference string into a `SecretRef`."""
         match raw.split(":", 2):
             case ["keyring", service, key]:
                 return cls(scheme="keyring", params=(service, key))
@@ -108,7 +108,7 @@ class SecretRef:
 
 
 def _expand_path(v: Any) -> Path:
-    """Expand ``~`` and environment variables in a path value."""
+    """Expand `~` and environment variables in a path value."""
     if isinstance(v, str):
         v = Path(v)
     if isinstance(v, Path):
@@ -180,7 +180,7 @@ class ProviderConfig(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def reject_literal_secrets(cls, data: Any) -> Any:  # noqa: ANN401
-        """Reject ``literal:`` scheme on fields marked as secret."""
+        """Reject `literal:` scheme on fields marked as secret."""
         if not isinstance(data, dict):  # pyright: ignore[reportUnnecessaryIsInstance]
             return data
         typed_data: dict[str, Any] = data  # pyright: ignore[reportUnknownVariableType]

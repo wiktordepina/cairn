@@ -16,7 +16,7 @@ from cairn.domain._enums import (  # noqa: TC001
 
 
 class ToolCallRecord(BaseModel):
-    """A single tool call as stored in the ``tool_calls`` table."""
+    """A single tool call as stored in the `tool_calls` table."""
 
     model_config = ConfigDict(frozen=True)
 
@@ -47,7 +47,7 @@ class ToolCallRecord(BaseModel):
 
 
 class UsageRecord(BaseModel):
-    """A single provider call recorded in ``model_usage``."""
+    """A single provider call recorded in `model_usage`."""
 
     model_config = ConfigDict(frozen=True)
 

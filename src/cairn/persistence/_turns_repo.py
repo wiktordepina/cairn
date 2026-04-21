@@ -1,8 +1,8 @@
-"""Repository for the ``turns`` table.
+"""Repository for the `turns` table.
 
 One row per orchestrator turn. State transitions are conditional
 UPDATEs — a state transition that finds the row in the wrong starting
-state is a bug, surfaced via ``InvalidTurnTransition`` rather than
+state is a bug, surfaced via `InvalidTurnTransition` rather than
 silently corrupting state.
 """
 
@@ -86,8 +86,8 @@ class TurnRepo:
         from_state: TurnState,
         to_state: TurnState,
     ) -> None:
-        """Advance the turn's state. Raises ``InvalidTurnTransition`` if the
-        row is not currently in ``from_state``."""
+        """Advance the turn's state. Raises `InvalidTurnTransition` if the
+        row is not currently in `from_state`."""
         conn = await self._db.connect()
         cursor = await conn.execute(
             "UPDATE turns SET state = ? WHERE id = ? AND state = ?",
@@ -120,7 +120,7 @@ class TurnRepo:
         """Transition to COMPLETED and record stop_reason + completed_at.
 
         Allowed from any non-terminal state (callers typically pass through
-        ``FINALISING`` or ``EXTRACTION_ENQUEUED`` first)."""
+        `FINALISING` or `EXTRACTION_ENQUEUED` first)."""
         conn = await self._db.connect()
         cursor = await conn.execute(
             """

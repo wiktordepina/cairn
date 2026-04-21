@@ -1,6 +1,6 @@
 """Approver middleware shipped with the tool system.
 
-Registered into the orchestrator's ``approvers`` chain at
+Registered into the orchestrator's `approvers` chain at
 harness-assembly time. Default order (config-overridable):
 
     AutoApproveReadOnly → SessionAllowlist → TierGate → ApprovalGateway
@@ -61,15 +61,15 @@ class AutoApproveReadOnly:
 class SessionAllowlist:
     """Remembers user approvals within a session to avoid re-prompting.
 
-    Exact-match on ``(tool_name, args_signature)``. First-run of a
+    Exact-match on `(tool_name, args_signature)`. First-run of a
     call prompts (via the gateway); second and subsequent identical
     calls are auto-approved by this approver.
 
     The harness-assembly layer is responsible for calling
-    ``remember_user_approval(session_id, request)`` when an approval
-    comes back from the gateway with ``decided_by='user'``. In
+    `remember_user_approval(session_id, request)` when an approval
+    comes back from the gateway with `decided_by='user'`. In
     typical wiring: the orchestrator, after receiving a user approval,
-    calls this method on the shared ``SessionAllowlist`` instance.
+    calls this method on the shared `SessionAllowlist` instance.
     """
 
     def __init__(self) -> None:
@@ -93,11 +93,11 @@ class SessionAllowlist:
         )
 
     def remember_user_approval(self, *, session_id: str, request: ApprovalRequest) -> None:
-        """Cache ``request`` as approved for ``session_id``."""
+        """Cache `request` as approved for `session_id`."""
         self._seen[session_id].add(self._key(request))
 
     def forget_session(self, session_id: str) -> None:
-        """Drop all approvals for ``session_id``. Call on session archive."""
+        """Drop all approvals for `session_id`. Call on session archive."""
         self._seen.pop(session_id, None)
 
     @staticmethod
@@ -116,7 +116,7 @@ class TierGate:
     """Escalates Tier 4+ calls to the gateway unconditionally.
 
     Runs last in the chain. Defends against a misconfigured earlier
-    approver (e.g. a buggy ``SessionAllowlist`` snapshot) that might
+    approver (e.g. a buggy `SessionAllowlist` snapshot) that might
     otherwise auto-approve a high-risk call. For Tier <= 3, escalates
     so earlier decisions stand.
     """

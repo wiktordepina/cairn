@@ -28,7 +28,7 @@ class ProviderRegistry:
         self._factories: dict[str, type[Any]] = _default_factories()
 
     def for_model(self, model_config: ModelConfig) -> Provider:
-        """Get the provider for a model (by its ``provider`` field)."""
+        """Get the provider for a model (by its `provider` field)."""
         return self.by_name(model_config.provider)
 
     def by_name(self, name: str) -> Provider:

@@ -13,6 +13,20 @@ don't change the public surface. Everything is still in flux.
 Memory brick (tier-1), compaction, convention files, UI, CLI entry
 point, and observability hookup are all still to land.
 
+### Changed — documentation
+
+- **Google-style docstrings adopted as the house convention**
+  ([ADR 0019](docs/decisions/0019-docstrings-google-style.md)). Inline
+  code uses single backticks; structured `Args:` / `Returns:` /
+  `Raises:` sections are used where they clarify; plain-prose
+  docstrings remain acceptable for simple cases. Convention documented
+  in `AGENTS.md`.
+- **Existing docstrings tidied.** RST-style double-backticks
+  (`` ``foo`` ``) rendered literally in `mkdocstrings` output;
+  converted to single-backticks (`` `foo` ``) across 57 files
+  (`src/cairn/` and `tests/`). Docstring-only changes, no behaviour
+  change.
+
 ## [0.6.0] — 2026-04-21
 
 Wires the real tool system into the orchestrator, completing the

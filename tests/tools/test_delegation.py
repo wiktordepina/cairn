@@ -1,9 +1,9 @@
-"""Tests for ``DelegationTool``.
+"""Tests for `DelegationTool`.
 
-Wires a real ``SessionManager`` + ``BasicCostTracker`` over a tmp-path
-SQLite DB, plugs ``FakeProvider`` into the ``ProviderRegistry`` via
-``register_adapter``, and exercises the per-call flow from
-``.plan/tool-system-design.md`` §12.
+Wires a real `SessionManager` + `BasicCostTracker` over a tmp-path
+SQLite DB, plugs `FakeProvider` into the `ProviderRegistry` via
+`register_adapter`, and exercises the per-call flow from
+`.plan/tool-system-design.md` §12.
 """
 
 from __future__ import annotations
@@ -502,12 +502,12 @@ class TestProviderRequest:
 
 
 def _ctx_with_session(turn_ctx: TurnContext, session: Session) -> TurnContext:
-    """Build a ``TurnContext`` pointing at ``session``.
+    """Build a `TurnContext` pointing at `session`.
 
-    The shared ``turn_ctx`` fixture from ``tests/tools/conftest.py`` is
+    The shared `turn_ctx` fixture from `tests/tools/conftest.py` is
     tied to the shared companion session; delegation tests need the
     context bound to the freshly-inserted parent session so the
-    sub-session's ``parent_session_id`` FK resolves.
+    sub-session's `parent_session_id` FK resolves.
     """
     from cairn.orchestrator._context import TurnContext as _TC
 

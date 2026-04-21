@@ -13,9 +13,9 @@ class MissingSecretError(Exception):
 
 
 class SecretResolver:
-    """Resolves ``SecretRef`` instances to their actual secret values.
+    """Resolves `SecretRef` instances to their actual secret values.
 
-    The resolver is stateful: ``prompt:`` references are cached for the
+    The resolver is stateful: `prompt:` references are cached for the
     lifetime of the process. All other schemes are resolved fresh on each call
     (so a rotated keyring entry is picked up without restart).
     """
