@@ -18,6 +18,7 @@ from cairn.tools._errors import (
     ToolTimeout,
 )
 from cairn.tools._registry import DefaultToolRegistry
+from cairn.tools._runner import DefaultToolRunner
 from cairn.tools._transformers import (
     InvisibleUnicodeStripper,
     SecretRedactor,
@@ -37,8 +38,9 @@ __all__ = [
     "ToolError",
     "ToolRetry",
     "ToolTimeout",
-    # Registry + decorator
+    # Registry + decorator + runner
     "DefaultToolRegistry",
+    "DefaultToolRunner",
     "tool",
     # Transformers
     "InvisibleUnicodeStripper",
