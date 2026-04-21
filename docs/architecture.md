@@ -6,7 +6,7 @@ multi-session management.
 
 This document describes the overall shape of the system. For configuration,
 see [configuration.md](configuration.md); for *why* specific structural
-decisions were made, see the [ADRs](decisions/).
+decisions were made, see the [ADRs](decisions/README.md).
 
 ## Design principles
 
@@ -151,4 +151,4 @@ Cairn is under active development. This table is authoritative; the
 - [Persistence](persistence.md) — on-disk layout.
 - [Orchestrator](orchestrator.md) — the turn loop.
 - [Tools](tools.md) — tool system, built-in catalogue, security primitives.
-- [ADRs](decisions/) — the *why* behind non-obvious decisions.
+- [ADRs](decisions/README.md) — the *why* behind non-obvious decisions.

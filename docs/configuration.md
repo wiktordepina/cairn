@@ -196,7 +196,7 @@ max_cost_usd = 0.50
 | `utility_model` | string | — (required) | Used for observation extraction + compaction. |
 | `delegation_tools` | list | `[]` | See [`DelegationTool`](#delegation-tools). |
 | `budgets` | table | defaults | See [`budgets`](#budgets). |
-| `convention_files` | table | defaults | See [`convention_files`](#convention-files). |
+| `convention_files` | table | defaults | See [`convention_files`](#convention_files). |
 
 Path fields support `~` and `$VAR` expansion.
 

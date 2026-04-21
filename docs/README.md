@@ -4,27 +4,50 @@ User-facing documentation for cairn. Intended audience: people using,
 configuring, or packaging cairn. Not internal implementation detail — for
 that, read the code.
 
+This page is the landing for both the GitHub folder view and the published
+site at <https://wiktordepina.github.io/cairn/>. The site adds search, a
+version selector, and an API reference generated from docstrings; the
+content is otherwise the same.
+
 ## Contents
 
-### Reference
+### Guide
 
-- **[Architecture](architecture.md)** — the overall shape of cairn, how the
-  bricks fit together, and the data flow of a turn.
 - **[Configuration](configuration.md)** — every TOML key, every secret
   reference scheme, profile discovery and merge order.
 - **[Providers](providers.md)** — per-provider notes for Anthropic,
   OpenAI (including OpenAI-compatible local servers), and OpenRouter.
-- **[Persistence](persistence.md)** — per-profile data layout, SQLite
-  specifics, backup story.
+
+### Architecture
+
+- **[Overview](architecture.md)** — the overall shape of cairn, how the
+  bricks fit together, and the data flow of a turn.
 - **[Orchestrator](orchestrator.md)** — the turn loop: state machine,
   middleware seams, cancellation, crash recovery.
+- **[Persistence](persistence.md)** — per-profile data layout, SQLite
+  specifics, backup story.
 - **[Tools](tools.md)** — tool system, built-in catalogue (`file_read`,
   `file_write`, `grep`, `web_fetch`), risk tiers, workspace sandbox,
   SSRF defence.
 
+### Reference
+
+API reference generated from docstrings. Visible on the published site;
+omitted from GitHub rendering because the `:::` directives are only
+resolved by MkDocs.
+
+- **[Providers](reference/providers.md)** — protocol, adapters, registry,
+  error hierarchy.
+- **[Tools](reference/tools.md)** — `@tool` decorator, registry and runner,
+  approval gates, content transformers.
+- **[Orchestrator](reference/orchestrator.md)** — entry point, collaborator
+  protocols, middleware, turn records.
+- **[Domain](reference/domain.md)** — messages, content blocks, sessions,
+  provider and UI events.
+
 ### Decisions
 
-- **[Architecture Decision Records](decisions/)** — the *why* behind
+- **[Architecture Decision Records](decisions/README.md)** — the *why* behind
   non-obvious decisions. Numbered, dated, never rewritten — superseded
   when reversed. See `decisions/README.md` for the format.
 
@@ -45,3 +68,20 @@ record *how it works* and ADRs record *why it's shaped that way*.
 
 If you spot an inconsistency between the docs and the code, the code is
 the truth and the docs are a bug — please open an issue.
+
+The site is built with [MkDocs](https://www.mkdocs.org/) and the
+[Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme.
+Docstring extraction uses [`mkdocstrings`](https://mkdocstrings.github.io/)
+with the Python handler; docstrings follow **Google style**. Versioned
+publication uses [`mike`](https://github.com/jimporter/mike). See
+[ADR 0018](decisions/0018-docs-site-tooling.md) for the rationale.
+
+### Building locally
+
+```bash
+uv sync --group docs
+uv run mkdocs serve   # live-reload at http://127.0.0.1:8000
+```
+
+A strict build (`uv run mkdocs build --strict`) runs on every PR and
+fails on broken references, unresolved `:::` paths, and nav orphans.

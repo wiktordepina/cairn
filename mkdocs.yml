@@ -1,0 +1,143 @@
+site_name: Cairn
+site_description: A personal LLM harness built around a companion at its centre.
+site_author: Wiktor de Pina
+site_url: https://wiktordepina.github.io/cairn/
+repo_url: https://github.com/wiktordepina/cairn
+repo_name: wiktordepina/cairn
+edit_uri: edit/main/docs/
+copyright: Copyright &copy; 2026 Wiktor de Pina
+
+docs_dir: docs
+strict: true
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.tracking
+    - navigation.top
+    - navigation.indexes
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - search.suggest
+    - search.share
+    - search.highlight
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  version:
+    provider: mike
+    default: latest
+    alias: true
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/wiktordepina/cairn
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.caret
+  - pymdownx.tilde
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths:
+            - src
+          options:
+            docstring_style: google
+            show_source: false
+            show_root_heading: true
+            show_root_full_path: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            merge_init_into_class: true
+            docstring_section_style: spacy
+            filters:
+              - "!^_"
+
+nav:
+  - Home: README.md
+  - Guide:
+      - Configuration: configuration.md
+      - Providers: providers.md
+  - Architecture:
+      - Overview: architecture.md
+      - Orchestrator: orchestrator.md
+      - Persistence: persistence.md
+      - Tools: tools.md
+  - Reference:
+      - Providers: reference/providers.md
+      - Tools: reference/tools.md
+      - Orchestrator: reference/orchestrator.md
+      - Domain: reference/domain.md
+  - Decisions:
+      - Index: decisions/README.md
+      - "0001 Per-profile SQLite": decisions/0001-per-profile-sqlite.md
+      - "0002 Three-tier config merge": decisions/0002-three-tier-config-merge.md
+      - "0003 SecretRef schemes": decisions/0003-secret-ref-schemes.md
+      - "0004 Hand-rolled migrations": decisions/0004-hand-rolled-migrations.md
+      - "0005 Per-provider adapters": decisions/0005-per-provider-adapters.md
+      - "0006 Role-based model selection": decisions/0006-role-based-model-selection.md
+      - "0007 Memory-space at repo layer": decisions/0007-memory-space-at-repo-layer.md
+      - "0008 Tool-call state column": decisions/0008-tool-call-state-column.md
+      - "0009 Protocol stubs": decisions/0009-protocol-stubs.md
+      - "0010 Typed middleware": decisions/0010-typed-middleware.md
+      - "0011 Explicit turn state machine": decisions/0011-explicit-turn-state-machine.md
+      - "0012 No FK on turn_id": decisions/0012-no-fk-on-turn-id.md
+      - "0013 Tier taxonomy": decisions/0013-tier-taxonomy.md
+      - "0014 @tool decorator": decisions/0014-tool-decorator.md
+      - "0015 Session allowlist exact match": decisions/0015-session-allowlist-exact-match.md
+      - "0016 No shell in V1": decisions/0016-no-shell-in-v1.md
+      - "0017 SSRF IP pinning deferred": decisions/0017-ssrf-ip-pinning-deferred.md
+      - "0018 Docs site tooling": decisions/0018-docs-site-tooling.md
