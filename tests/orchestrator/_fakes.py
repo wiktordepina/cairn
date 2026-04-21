@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Literal
 
 from cairn.domain._content import ToolResultBlock
+from cairn.orchestrator._enums import ApprovalOutcome
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator, Awaitable, Callable
@@ -24,6 +25,7 @@ if TYPE_CHECKING:
         UIEvent,
     )
     from cairn.orchestrator._context import TurnContext
+    from cairn.orchestrator._middleware import ApprovalDecision
     from cairn.orchestrator._protocols import Tool
 
 
@@ -99,6 +101,8 @@ class RecordingToolRunner:
         session: Session,
         turn_id: str,
         ctx: TurnContext,  # noqa: ARG002
+        decision: ApprovalDecision,
+        message_id: str,
     ) -> ToolResultBlock:
         self.calls.append(
             {
@@ -107,8 +111,18 @@ class RecordingToolRunner:
                 "args": dict(tool_call.input),
                 "session_id": session.id,
                 "turn_id": turn_id,
+                "decision": decision,
+                "message_id": message_id,
             }
         )
+        # Mirror the real runner: on REJECT the handler is never invoked —
+        # the audit row is recorded and an error block is synthesised.
+        if decision.outcome is ApprovalOutcome.REJECT:
+            return ToolResultBlock(
+                tool_use_id=tool_call.id,
+                content=decision.reason or "Tool rejected by approver.",
+                is_error=True,
+            )
         handler = self.handlers.get(tool_call.name)
         if handler is None:
             return ToolResultBlock(

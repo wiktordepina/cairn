@@ -34,19 +34,37 @@ Key architectural commitments:
 
 ## Tech stack
 
+Today's shipped dependencies (what `uv sync` installs and the code
+actually imports):
+
 | Concern | Choice |
 |---|---|
-| Language | Python 3.12+ |
+| Language | Python 3.13+ |
 | Packaging | `uv` |
-| UI | Textual |
 | Validation | Pydantic v2 |
-| HTTP | httpx |
-| Async | anyio |
-| Database | SQLite (aiosqlite, WAL mode, FTS5) |
-| Logging | structlog |
-| Config | TOML (tomllib) |
+| HTTP | httpx (via the provider SDKs and `web_fetch`) |
+| Database | SQLite (aiosqlite, WAL mode) |
+| Config | TOML (tomllib, stdlib) |
 | Secrets | OS keychain (keyring) |
 | Paths | platformdirs |
+| Provider SDKs | `anthropic`, `openai` (also serves OpenRouter) |
+| Tokenisation | `tiktoken` |
+| File watching | `watchfiles` |
+
+Planned (not yet shipped): Textual UI, `structlog` observability,
+MCP client (`mcp` SDK), `sqlite-vec` + `fastembed` for V3 vector
+search. See [`docs/architecture.md`](docs/architecture.md) for the
+full roadmap.
+
+## Status
+
+Cairn is in active assembly. The orchestrator, providers, persistence,
+config, and tool system (including the runner and `DelegationTool`)
+are all built and tested end-to-end, but there is **no CLI entry
+point yet** — the `cairn = "cairn.cli:main"` script in `pyproject.toml`
+is a placeholder for work that hasn't landed. You can drive the
+library programmatically today; the user-facing terminal app arrives
+with the CLI + UI bricks.
 
 ## Getting started
 
@@ -55,12 +73,12 @@ Key architectural commitments:
 git clone https://github.com/wiktordepina/cairn.git
 cd cairn
 
-# Install dependencies
+# Install dependencies (and run the test suite)
 uv sync
-
-# Run
-uv run cairn
+uv run pytest
 ```
+
+`uv run cairn` will error out until the CLI brick lands.
 
 ## Configuration
 

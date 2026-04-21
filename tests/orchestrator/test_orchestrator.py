@@ -503,10 +503,10 @@ class TestToolDispatch:
             ],
         ]
 
-        async def never_called(*args, **kwargs):
-            raise AssertionError("runner must not be invoked for a rejected tool")
+        async def should_not_reach_handler(*args, **kwargs):
+            raise AssertionError("tool handler must not be invoked for a rejected tool")
 
-        runner = RecordingToolRunner(handlers={"writer": never_called})
+        runner = RecordingToolRunner(handlers={"writer": should_not_reach_handler})
         registry = DictToolRegistry(
             tools={"writer": StubTool(name="writer", approval_required=True, side_effects="write")}
         )
@@ -529,10 +529,15 @@ class TestToolDispatch:
         async for ev in orch.run_turn(session.id, _user("do thing")):
             events.append(ev)
 
-        # Rejected, not approved; runner not called.
+        # Rejected, not approved. Runner IS called (to write the audit
+        # row + synthesise the error block) but the tool handler itself
+        # is never reached.
         assert any(type(e).__name__ == "ToolCallRejected" for e in events)
         assert not any(type(e).__name__ == "ToolCallApproved" for e in events)
-        assert len(runner.calls) == 0
+        assert len(runner.calls) == 1
+        from cairn.orchestrator._enums import ApprovalOutcome
+
+        assert runner.calls[0]["decision"].outcome is ApprovalOutcome.REJECT
 
     @pytest.mark.asyncio
     async def test_unknown_tool_becomes_error_result(

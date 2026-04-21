@@ -37,7 +37,9 @@ for the full reasoning.
 
 ## Tables
 
-The V1 persistence brick ships four tables. A fifth, `memory_entries`
+The V1 persistence brick ships six tables (`sessions`, `messages`,
+`tool_calls`, `model_usage` from migration 0001; `turns` and
+`approval_decisions` from migration 0002). A seventh, `memory_entries`
 (plus FTS5 shadow), lands with the memory brick.
 
 ### `sessions`
@@ -74,15 +76,18 @@ column, holding a list of `ContentBlock` discriminated-union objects
 
 ### `tool_calls`
 
-One row per tool invocation. The lifecycle (`pending → approved →
-executing → completed | failed | timed_out | cancelled`) is tracked by
-the `status` column. Transitions are conditional UPDATEs — attempting
-an illegal transition raises `InvalidToolCallTransition` rather than
-silently corrupting state.
+One row per tool invocation. The lifecycle
+(`pending → (approved → executing → completed | failed | timed_out | cancelled) | rejected`)
+is tracked by the `status` column. Transitions are conditional
+UPDATEs — attempting an illegal transition raises
+`InvalidToolCallTransition` rather than silently corrupting state.
 
-Columns include `tool_name`, `arguments_json`, `output_json`,
+The `DefaultToolRunner` in `cairn.tools` is the sole writer of these
+rows in shipped V1 code.
+
+Columns include `tool_name`, `input_json`, `output_json`,
 `output_bytes` (original size before truncation), `error_class`,
-`error_message`, `duration_ms`, and `delegation_sub_session_id` (FK to
+`error_message`, `duration_ms`, and `delegation_session_id` (FK to
 `sessions` for delegation tools).
 
 See [ADR 0008 — Tool-call state as a column](decisions/0008-tool-call-state-column.md).
@@ -107,6 +112,25 @@ Aggregations exposed by `UsageRepo`:
 - `by_operation_in_window(start, end)` — primary turn vs. delegation vs.
   extraction, etc.
 - `by_model_in_window(start, end)` — cost per model.
+
+### `turns`
+
+One row per orchestrator turn, introduced in migration 0002. The
+`state` column is authoritative for crash recovery — on boot the
+orchestrator scans this table for turns left in a non-terminal state
+and marks them `ABORTED` with `reason='process_crash'`. Indexed on
+`(session_id, started_at)` and on non-terminal state.
+
+See [ADR 0011 — `turns` table with an explicit state machine](decisions/0011-explicit-turn-state-machine.md).
+
+### `approval_decisions`
+
+One row per approval event (approved or rejected), introduced in
+migration 0002. Populated by `DefaultToolRunner` — every dispatched
+tool call produces an audit row here, including rejected calls.
+Carries `tool_call_id`, `decided_at`, `decided_by` (the full approver
+string like `"auto:read-only"` or `"user"`), `decision`, `reason`, and
+`args_snapshot_json`.
 
 ## WAL mode
 

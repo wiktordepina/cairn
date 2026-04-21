@@ -236,9 +236,9 @@ it were a tool. Define via `[[profiles.<name>.delegation_tools]]` arrays.
 | `target_model` | string | — (required) | Model ID or `"role:<name>"`. |
 | `description` | string | — (required) | Shown to the model. |
 | `when_to_use` | string | — (required) | Guidance surfaced to the model. |
-| `preserve_history` | bool | `false` | Pass full conversation vs. just the query. |
-| `sub_system_prompt` | string | `null` | Overrides the default "you are being consulted" prompt. |
-| `max_cost_usd` | float | `null` | Per-call cost cap. Stream cancels on overflow. |
+| `preserve_history` | bool | `false` | Pass full conversation vs. just the query. **Not yet implemented in V1 — setting this to `true` raises `NotImplementedError` at tool construction.** |
+| `sub_system_prompt` | string | `null` | System prompt sent to the sub-session. Passed through as `ProviderRequest.system`; if `null`, no system prompt is sent. |
+| `max_cost_usd` | float | `null` | Per-call cost cap in USD. On overflow the stream breaks early and the returned text is appended with `[delegation: cost cap reached; output truncated]`. |
 | `approval_required` | bool | `false` | Ask the user before calling. |
 
 ## Secret references

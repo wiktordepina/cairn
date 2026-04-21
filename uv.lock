@@ -53,11 +53,12 @@ wheels = [
 
 [[package]]
 name = "cairn"
-version = "0.5.0"
+version = "0.6.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiosqlite" },
     { name = "anthropic" },
+    { name = "httpx" },
     { name = "keyring" },
     { name = "openai" },
     { name = "platformdirs" },
@@ -78,6 +79,7 @@ dev = [
 requires-dist = [
     { name = "aiosqlite", specifier = ">=0.20" },
     { name = "anthropic", specifier = ">=0.49,<1" },
+    { name = "httpx", specifier = ">=0.27" },
     { name = "keyring", specifier = ">=25.0" },
     { name = "openai", specifier = ">=1.75,<2" },
     { name = "platformdirs", specifier = ">=4.0" },

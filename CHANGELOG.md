@@ -10,10 +10,108 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-Tool-system integration remaining: `DefaultToolRunner`,
-`DelegationTool`, wiring the real collaborators into the
-orchestrator in place of `RaisingToolRunner` / `EmptyToolRegistry`.
-Memory brick also pending.
+Memory brick (tier-1), compaction, convention files, UI, CLI entry
+point, and observability hookup are all still to land.
+
+## [0.6.0] — 2026-04-21
+
+Wires the real tool system into the orchestrator, completing the
+tool-system brick for V1. The runner drives per-call lifecycle and
+audit; `DelegationTool` lets the companion consult specialist models
+in ephemeral sub-sessions; the orchestrator now calls the runner on
+both approve and reject paths so the `approval_decisions` audit row
+always lands.
+
+### Added — `DefaultToolRunner` (`src/cairn/tools/_runner.py`)
+
+- **Per-call lifecycle driver** — replaces the orchestrator's
+  `RaisingToolRunner` stub. Drives every transition on the
+  `tool_calls` row: `pending → (approved | rejected) → executing →
+  completed | failed | timed_out`.
+- **Approval audit** — writes one row per dispatched call to
+  `approval_decisions`, on both approve and reject paths.
+- **Timeout enforcement** — wraps `tool.invoke` in
+  `asyncio.timeout(tool.timeout_s)`; on expiry, transitions the row
+  to `TIMED_OUT` and returns an error result.
+- **Error classification** — `PathEscape`, `SSRFBlocked`,
+  `ToolTimeout`, and `ToolError` map to `ErrorClass.USER`; anything
+  else maps to `ErrorClass.UNEXPECTED`.
+- **`tool_use_id` stamping** — fills in the blank `tool_use_id`
+  returned by tools (the convention the `@tool` decorator and
+  `DelegationTool` both follow) so the provider can correlate the
+  result to the tool call.
+- **`decided_by` narrowing** — richer approver strings (`"auto:read-only"`,
+  `"user:session-allowlist"`) collapse to the DB enum (`"auto"` or
+  `"user"`) by prefix.
+
+### Added — `DelegationTool` (`src/cairn/tools/_delegation.py`)
+
+- **Sub-session spawning** — creates an ephemeral child session with
+  `parent_session_id = ctx.session.id` for cost attribution and
+  lineage.
+- **Mid-stream cost cap** — when the accumulated cost for the
+  delegation exceeds `DelegationToolConfig.max_cost_usd`, streaming
+  breaks early and the returned text is appended with
+  `[delegation: cost cap reached; output truncated]`.
+- **Usage tracking** — records the final `UsageEvent` via
+  `CostTracker.record(..., operation=UsageOperation.DELEGATION,
+  parent_session_id=…)`.
+- **Sub-session archival** — runs in a `finally:` block, so the
+  ephemeral session is archived even if the provider stream raises.
+- **History guard** — `DelegationToolConfig.preserve_history = true`
+  raises `NotImplementedError` at tool construction. The config
+  field shape is preserved for a future wiring.
+- **Input schema** — `DelegationArgs(prompt: str)`.
+
+### Changed — `ToolRunner` protocol and orchestrator wiring
+
+- **`ToolRunner.run` widened** with `decision: ApprovalDecision` and
+  `message_id: str` kwargs. The orchestrator passes both through;
+  the runner uses them to stamp `message_id` on the `tool_calls`
+  row and to record the approval outcome.
+- **`Orchestrator._dispatch_tools`** now calls the runner **once per
+  tool call, on both approve and reject paths**. On REJECT, the
+  runner writes the rejection audit row and synthesises the error
+  block; the orchestrator still emits the `ToolCallRejected` UI
+  event. The orchestrator continues to own the approval chain, the
+  `ResultTransformer` chain, and per-call timing.
+- **`RecordingToolRunner` test fake** (in `tests/orchestrator/_fakes.py`)
+  updated to mirror the new contract — on REJECT it returns an
+  error block without invoking the handler.
+
+### Fixed
+
+- `DefaultToolRunner` now stamps `tool_call.id` onto the returned
+  `ToolResultBlock` when the tool left `tool_use_id` blank. Without
+  this, successful results would have flowed to the provider with
+  an empty id, breaking tool-call correlation.
+
+### Dependencies
+
+- Declared `httpx` as a direct runtime dependency. `httpx` was
+  already transitively installed via the provider SDKs and imported
+  directly by `web_fetch` + the SSRF defence module; the declaration
+  makes the dependency explicit.
+
+### Deferred
+
+- **`DelegationSpawned` / `DelegationCompleted` UI events.** The
+  domain events exist and `DelegationTool` runs, but the
+  orchestrator cannot emit them yet — the sub-session ID is created
+  inside `DelegationTool.invoke()` and the `Tool` protocol has no
+  back-channel to report it. Resolving needs either a `TurnContext`
+  callback or a post-hoc `SessionRepo.children_of()` query; picked
+  up in a follow-up release. Users can still observe delegation via
+  `model_usage` rows where `operation = delegation` and via
+  `SessionRepo.children_of(parent)`.
+- **`preserve_history = true`** for delegation — raises at
+  construction in V1.
+
+### Tests
+
+Total suite: **566 passed** (537 on 0.5.0 + 29 new: 18 for the
+runner, 11 for the delegation tool; orchestrator integration tests
+green against the rewired dispatcher). Ruff + pyright clean.
 
 ## [0.5.0] — 2026-04-21
 

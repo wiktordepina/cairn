@@ -109,7 +109,7 @@ pre-/post-turn). The full union:
 | `ToolCallRejected` | An approver (or gateway) blocked it |
 | `ToolCallStarted` | Execution began |
 | `ToolCallCompleted` | Execution finished (status + is_error on the event) |
-| `DelegationSpawned` / `DelegationCompleted` | Emitted by the delegation tool's own `invoke` (V2; placeholder today) |
+| `DelegationSpawned` / `DelegationCompleted` | Not yet emitted — see *Dispatch and delegation* below. |
 | `ObservationExtractionRequested` | Post-turn extraction enqueued |
 | `TurnComplete` | Clean completion + stop_reason |
 | `TurnAborted` | User cancel / crash / error |
@@ -192,7 +192,43 @@ The orchestrator enforces two scopes directly:
   `CostTracker.should_block_turn()`. `BLOCK` short-circuits the turn
   before any writes; `WARN` proceeds but emits `BudgetWarning`.
 
-Per-delegation cost caps live inside `DelegationTool.invoke` (V2).
+Per-delegation cost caps live inside `DelegationTool.invoke` — when
+the accumulated sub-session cost exceeds `DelegationToolConfig.max_cost_usd`
+the stream breaks early and the result carries a truncation note.
+
+## Dispatch and delegation
+
+When the model emits a tool call, the orchestrator walks each call
+through approval, runs it via the injected `ToolRunner`, applies the
+result-transformer chain, and re-joins the streamed results into the
+next iteration.
+
+The responsibility split with the runner:
+
+- **Orchestrator** owns the approval chain (`ToolApprover` middleware
+  then the terminal `ApprovalGateway`), emits all `ToolCallPlanned /
+  Approved / Rejected / Started / Completed` events, applies the
+  `ResultTransformer` chain, and measures per-call duration.
+- **Runner** (`DefaultToolRunner` in `cairn.tools`) owns the
+  `tool_calls` and `approval_decisions` DB writes, `asyncio.timeout`
+  enforcement around `tool.invoke`, and synthesising an error
+  `ToolResultBlock` when the decision is REJECT or the call fails.
+
+The runner is called **once per tool call, on both approve and reject
+paths** — so the approval audit row in `approval_decisions` always
+lands regardless of outcome.
+
+### Delegation events are not yet emitted
+
+`DelegationSpawned` and `DelegationCompleted` are defined in the
+domain event union and `DelegationTool` exists, but the orchestrator
+currently does not emit them. The sub-session's ID is created inside
+`DelegationTool.invoke()` and the `Tool` protocol has no back-channel
+to report it to the orchestrator. Resolving this needs either a
+callback on `TurnContext` or a post-hoc `SessionRepo.children_of()`
+query; deferred to a follow-up. Users can still observe delegation
+activity via `UsageRepo` rows where `operation = delegation` and via
+`SessionRepo.children_of(parent)`.
 
 ## Protocols and stubs
 
@@ -210,9 +246,15 @@ stubs are shipped in `cairn.orchestrator`:
 | `Clock` | `SystemClock` (prod), `FrozenClock` (tests) | Wall clock / deterministic. |
 | `CostTracker` | `BasicCostTracker` | Fully functional against `UsageRepo`. |
 
-Real implementations land with their respective bricks (tool system,
-memory, UI adapter for the approval gateway). The orchestrator can be
-constructed and fully tested today with just the stubs.
+Real implementations land with their respective bricks. `ToolRegistry`
+and `ToolRunner` now have real implementations in `cairn.tools`
+(`DefaultToolRegistry`, `DefaultToolRunner`) and are what the harness
+wires in at startup; the stubs remain for tests and for orchestrator
+unit tests that need to exercise the turn loop without real tools.
+`MemoryService` and `ApprovalGateway` stubs still ship as the default
+— the memory brick and the UI's real approval gateway are still to
+land. The orchestrator can be constructed and fully tested today with
+any mix of stubs and real implementations.
 
 ## Related ADRs
 
