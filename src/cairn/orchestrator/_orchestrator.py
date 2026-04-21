@@ -391,6 +391,7 @@ class Orchestrator:
                         turn_id=turn_id,
                         tctx=tctx,
                         cancel_flag=cancel_flag,
+                        assistant_msg_id=assistant_msg.id,
                     )
                 ]
                 # Extract just the ToolResultBlocks (yielded by _dispatch_tools
@@ -484,12 +485,21 @@ class Orchestrator:
         turn_id: str,
         tctx: TurnContext,
         cancel_flag: asyncio.Event,
+        assistant_msg_id: str,
     ):
         """Dispatch each tool call through the approval chain + runner.
 
         Yields a mix of ``UIEvent`` (to be re-yielded upward) and
         ``(ToolResultBlock,)`` one-tuples (results for the model).
         The caller reassembles the stream.
+
+        Responsibility split with the runner:
+        - Orchestrator owns approval chain + UI events (Planned, Approved,
+          Rejected, Started, Completed) + transformer application + timing.
+        - Runner owns ``tool_calls`` / ``approval_decisions`` DB writes,
+          ``asyncio.timeout`` wrapping, and error-to-error-block synthesis.
+          It is called once per tool call — on both approve and reject —
+          so the audit trail always lands.
         """
         for tool_call in tool_calls:
             self._raise_if_cancelled(cancel_flag)
@@ -523,13 +533,18 @@ class Orchestrator:
                     decided_by=decision.decided_by,
                     reason=decision.reason,
                 )
-                yield (
-                    ToolResultBlock(
-                        tool_use_id=tool_call.id,
-                        content=(decision.reason or "Tool rejected by approver."),
-                        is_error=True,
-                    ),
+                # Runner still writes the rejection to tool_calls +
+                # approval_decisions and returns the error block.
+                result = await self._tool_runner.run(
+                    tool_call=tool_call,
+                    tool=tool,
+                    session=session,
+                    turn_id=turn_id,
+                    ctx=tctx,
+                    decision=decision,
+                    message_id=assistant_msg_id,
                 )
+                yield (result,)
                 continue
 
             yield ToolCallApproved(
@@ -544,21 +559,15 @@ class Orchestrator:
             )
 
             started = self._clock.now()
-            try:
-                result = await self._tool_runner.run(
-                    tool_call=tool_call,
-                    tool=tool,
-                    session=session,
-                    turn_id=turn_id,
-                    ctx=tctx,
-                )
-            except Exception as exc:  # noqa: BLE001
-                _logger.exception("tool.runner_failed")
-                result = ToolResultBlock(
-                    tool_use_id=tool_call.id,
-                    content=f"Tool runner error: {exc}",
-                    is_error=True,
-                )
+            result = await self._tool_runner.run(
+                tool_call=tool_call,
+                tool=tool,
+                session=session,
+                turn_id=turn_id,
+                ctx=tctx,
+                decision=decision,
+                message_id=assistant_msg_id,
+            )
             duration_ms = int((self._clock.now() - started).total_seconds() * 1000)
 
             # Run transformers (spotlighting, redaction, Unicode strip).

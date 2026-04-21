@@ -105,6 +105,8 @@ class ToolRunner(Protocol):
         session: Session,
         turn_id: str,
         ctx: TurnContext,
+        decision: ApprovalDecision,
+        message_id: str,
     ) -> ToolResultBlock: ...
 
 
