@@ -111,6 +111,7 @@ nav:
   - Guide:
       - Configuration: configuration.md
       - Providers: providers.md
+      - Observability: observability.md
   - Architecture:
       - Overview: architecture.md
       - Orchestrator: orchestrator.md

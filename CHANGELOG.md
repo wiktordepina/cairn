@@ -11,7 +11,28 @@ don't change the public surface. Everything is still in flux.
 ## [Unreleased]
 
 Memory brick (tier-1), compaction, convention files, UI, CLI entry
-point, and observability hookup are all still to land.
+point, and observability tranche 2 (log redaction, structured
+`UIEventObserver`) are still to land.
+
+### Added — observability bootstrap
+
+- **`cairn.logging.setup_logging()`** — idempotent bootstrap for the
+  `cairn` namespace logger. `RotatingFileHandler` (5 MB × 3 backups),
+  `propagate = False` (Textual UI owns the terminal), env-driven via
+  `CAIRN_LOG_LEVEL` and `CAIRN_LOG_FILE`, default path from
+  `platformdirs.user_log_path("cairn")`. Parent directory created
+  with mode `0o700`.
+- **`cairn.ssl.setup_ssl()`** — idempotent bootstrap injecting the
+  operating system's trust store into Python's `ssl` module via
+  `truststore`. Silent no-op if `truststore` is unavailable or
+  injection raises. Unblocks provider HTTPS calls behind corporate
+  MITM proxies (Netskope, Zscaler, etc.).
+- **New guide page** at `docs/observability.md` — resolution order,
+  idempotency semantics, and when to call each bootstrap.
+
+### Added — dependencies
+
+- **`truststore>=0.9`** as a direct runtime dependency.
 
 ### Changed — documentation
 
