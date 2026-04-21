@@ -14,10 +14,13 @@ from cairn.tools.builtin._file_write import (
     FileWriteArgs,
     make_file_write,
 )
+from cairn.tools.builtin._grep import GrepArgs, make_grep
 
 __all__ = [
     "FileReadArgs",
     "FileWriteArgs",
+    "GrepArgs",
     "make_file_read",
     "make_file_write",
+    "make_grep",
 ]
