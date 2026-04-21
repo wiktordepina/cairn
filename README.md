@@ -1,8 +1,11 @@
 # cairn
 
 [![CI](https://github.com/wiktordepina/cairn/actions/workflows/ci.yml/badge.svg)](https://github.com/wiktordepina/cairn/actions/workflows/ci.yml)
+[![Docs](https://github.com/wiktordepina/cairn/actions/workflows/docs.yml/badge.svg)](https://wiktordepina.github.io/cairn/)
 
 A personal LLM harness built around a companion at its centre.
+
+**Documentation:** <https://wiktordepina.github.io/cairn/>
 
 *Cairn* (Gaelic *carn*; Welsh *carn*) — a pile of stones stacked by travellers
 to mark a path, a summit, or a place worth remembering. The companion
@@ -94,7 +97,9 @@ See [`docs/configuration.md`](docs/configuration.md) for the full TOML reference
 
 ## Documentation
 
-Comprehensive user documentation lives in [`docs/`](docs/):
+The published site at <https://wiktordepina.github.io/cairn/> has search, a
+version selector, and an API reference generated from docstrings. The same
+content is readable in [`docs/`](docs/) on GitHub:
 
 - [Architecture](docs/architecture.md) — the shape of the system.
 - [Configuration](docs/configuration.md) — every TOML key.
