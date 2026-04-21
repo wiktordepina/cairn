@@ -161,6 +161,13 @@ class DefaultToolRunner:
                 is_error=True,
             )
 
+        # Tool implementations return results with an empty tool_use_id
+        # (the ``@tool`` decorator + ``DelegationTool`` both follow this
+        # convention); the runner is responsible for stamping the call id
+        # on the way back so the provider can correlate it to the tool_use.
+        if not result.tool_use_id:
+            result = result.model_copy(update={"tool_use_id": tool_call.id})
+
         output_json = result.model_dump_json()
         await self._tool_call_repo.complete(
             tool_call.id,

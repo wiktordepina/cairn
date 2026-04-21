@@ -70,7 +70,7 @@ class FakeTool:
         if self.raise_on_invoke is not None:
             raise self.raise_on_invoke
         return ToolResultBlock(
-            tool_use_id="will-be-overwritten",
+            tool_use_id="",  # mirrors the @tool decorator convention
             content=self.result_text,
             is_error=False,
         )
@@ -229,6 +229,29 @@ class TestApprovedSuccess:
         )
         assert result.is_error is False
         assert result.content == "42"
+
+    @pytest.mark.asyncio
+    async def test_stamps_tool_use_id_when_blank(
+        self,
+        runner: DefaultToolRunner,
+        seeded: tuple[str, str, str],
+        companion_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        _, message_id, turn_id = seeded
+        # FakeTool.invoke returns tool_use_id='will-be-overwritten';
+        # the runner should replace that blank-convention value with
+        # the real tool_call.id.
+        result = await runner.run(
+            tool_call=_tool_call("tc-stamp"),
+            tool=FakeTool(),
+            session=companion_session.model_copy(update={"id": "sess-r"}),
+            turn_id=turn_id,
+            ctx=turn_ctx,
+            decision=_approve(),
+            message_id=message_id,
+        )
+        assert result.tool_use_id == "tc-stamp"
 
     @pytest.mark.asyncio
     async def test_invokes_tool_exactly_once(
