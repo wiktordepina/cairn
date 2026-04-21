@@ -55,4 +55,7 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --locked
-      - run: uv run --with pip-audit pip-audit --strict
+      - name: Export locked requirements
+        run: uv export --locked --no-emit-project --no-hashes --format requirements-txt > requirements.audit.txt
+      - name: Audit dependencies
+        run: uv run --with pip-audit pip-audit --strict --requirement requirements.audit.txt
