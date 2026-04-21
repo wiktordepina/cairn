@@ -57,9 +57,11 @@ independently testable and, where reasonable, independently swappable.
    │                  │                  │                  │
 ┌──▼───────┐   ┌──────▼──────┐   ┌───────▼───────┐   ┌──────▼──────┐
 │ Context  │   │ Memory      │   │ Tool system   │   │ Providers   │
-│ manager  │   │ (planned)   │   │ (partial —    │   │ (shipped)   │
-│(planned) │   │             │   │ foundation +  │   │             │
-│          │   │             │   │ built-ins)    │   │             │
+│ manager  │   │ (planned)   │   │ (shipped —    │   │ (shipped)   │
+│(planned) │   │             │   │ foundation,   │   │             │
+│          │   │             │   │ built-ins,    │   │             │
+│          │   │             │   │ runner,       │   │             │
+│          │   │             │   │ delegation)   │   │             │
 └──┬───────┘   └─────────────┘   └───────────────┘   └─────────────┘
    │                                                          │
    │                                                          │
@@ -88,7 +90,8 @@ independently testable and, where reasonable, independently swappable.
    the stream against the UI.
 6. If the model emits tool calls:
    - **Tool system** walks each call through the approval + execution
-     lifecycle (`pending → approved → executing → completed | failed`).
+     lifecycle
+     (`pending → (approved → executing → completed | failed | timed_out) | rejected`).
    - Results are appended to the session and the loop iterates.
    - **Delegation tools** spawn an ephemeral sub-session against a
      different model; the response is returned to the companion as a
@@ -128,7 +131,7 @@ Cairn is under active development. This table is authoritative; the
 | Persistence (sessions, messages, tool calls, usage) | Shipped (0.3.0) |
 | Orchestrator | Shipped (0.4.0) |
 | Tool system — foundation + built-in tools | Shipped (0.5.0) |
-| Tool system — runner + orchestrator integration | In progress |
+| Tool system — runner + delegation + orchestrator integration | Shipped (0.6.0) |
 | Memory (tier-1) | Planned |
 | Compaction | Planned |
 | Convention files | Planned |

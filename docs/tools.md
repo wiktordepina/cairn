@@ -115,8 +115,11 @@ The decorator:
 
 Return type can be a plain `str` or a `list[ContentBlock]` for richer
 output. The decorator wraps the return in a `ToolResultBlock` with
-`is_error=False`; raising propagates to the runner, which translates
-expected failures (`ToolError` and subclasses) into error result blocks.
+`is_error=False` and a blank `tool_use_id` — the runner stamps the
+real call id on the way back. Tool authors do not need to know or
+thread through the call id. Raising propagates to the runner, which
+translates expected failures (`ToolError` and subclasses) into error
+result blocks.
 
 Tools are **not** auto-registered as a side effect of import. The CLI
 imports tool modules and builds the registry explicitly — see
@@ -364,31 +367,48 @@ Two things to keep in mind when writing a custom tool:
   correct way to turn it into a `Path` — it enforces the
   no-escape rule.
 
-## What's not yet shipped
+## What's shipped and what's not
 
-The tool-system brick is landing in stages. As of 0.5.0:
+As of 0.6.0 the tool-system brick is feature-complete for V1:
 
-- ✅ `@tool` decorator, `DefaultToolRegistry`, `ApprovalDecisionRepo`.
-- ✅ Security middleware (three transformers, three approvers).
-- ✅ Workspace sandbox, SSRF defence.
-- ✅ Four built-in tools (`file_read`, `file_write`, `grep`,
-  `web_fetch`).
+- ✅ `@tool` decorator, `DefaultToolRegistry`, `ApprovalDecisionRepo` (0.5.0).
+- ✅ Security middleware — three transformers, three approvers (0.5.0).
+- ✅ Workspace sandbox, SSRF defence (0.5.0).
+- ✅ Four built-in tools — `file_read`, `file_write`, `grep`,
+  `web_fetch` (0.5.0).
+- ✅ **`DefaultToolRunner`** (0.6.0) — the real per-call lifecycle
+  driver replacing the orchestrator's `RaisingToolRunner` stub.
+  Writes `tool_calls` + `approval_decisions` rows, wraps
+  `tool.invoke` in `asyncio.timeout(tool.timeout_s)`, classifies
+  errors (`PathEscape` / `SSRFBlocked` / `ToolTimeout` / `ToolError`
+  → USER; anything else → UNEXPECTED), and stamps `tool_use_id` on
+  successful results where the tool left it blank. The orchestrator
+  still owns the approval chain, UI event emission, and the
+  `ResultTransformer` chain.
+- ✅ **`DelegationTool`** (0.6.0) — the concrete tool for spawning
+  ephemeral sub-sessions against alternative models, with mid-stream
+  cost caps (`max_cost_usd`) and parent attribution via
+  `parent_session_id`. The sub-session is archived in a `finally:`
+  block so clean-up survives mid-stream failures. Setting
+  `preserve_history=true` in config currently raises
+  `NotImplementedError` at construction — deferred.
+- ✅ **Orchestrator wiring** (0.6.0) — `_dispatch_tools` now calls the
+  runner once per tool call on both approve and reject paths. See
+  [orchestrator.md](orchestrator.md) for the responsibility split.
 
-Still to land before the brick is complete:
+Deferred to later releases:
 
-- **`DefaultToolRunner`** — the real per-call lifecycle driver that
-  replaces the orchestrator's `RaisingToolRunner` stub. Will drive the
-  state machine, apply the transformer chain, handle
-  `asyncio.timeout(tool.timeout_s)`, and persist approval decisions.
-- **`DelegationTool`** — the concrete tool for spawning sub-sessions
-  against alternative models, with mid-stream cost caps and parent
-  attribution.
-- **Orchestrator wiring** — today the orchestrator still uses
-  `EmptyToolRegistry` + `RaisingToolRunner` unless the caller injects
-  real ones manually. The CLI brick will wire the real collaborators
-  in at startup.
-- **MCP client** — V2. The tool-kind discriminator and registry slot
-  are already in place.
+- **`DelegationSpawned` / `DelegationCompleted` UI events.** The
+  domain events exist and `DelegationTool` runs, but the orchestrator
+  cannot emit them yet — the sub-session ID is created inside
+  `DelegationTool.invoke()` and the `Tool` protocol has no
+  back-channel to report it. Users can still observe delegation via
+  `model_usage` rows where `operation = delegation` and via
+  `SessionRepo.children_of(parent)`.
+- **`preserve_history=true`** for delegation — the config field is
+  honoured at the schema level but unsupported at runtime in V1.
+- **MCP client** — V2. The `tool_kind` discriminator and registry
+  slot are already in place.
 
 ## Related documents
 
