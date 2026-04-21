@@ -1,5 +1,7 @@
 # cairn
 
+[![CI](https://github.com/wiktordepina/cairn/actions/workflows/ci.yml/badge.svg)](https://github.com/wiktordepina/cairn/actions/workflows/ci.yml)
+
 A personal LLM harness built around a companion at its centre.
 
 *Cairn* (Gaelic *carn*; Welsh *carn*) — a pile of stones stacked by travellers
