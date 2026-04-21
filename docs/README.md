@@ -18,6 +18,9 @@ that, read the code.
   specifics, backup story.
 - **[Orchestrator](orchestrator.md)** — the turn loop: state machine,
   middleware seams, cancellation, crash recovery.
+- **[Tools](tools.md)** — tool system, built-in catalogue (`file_read`,
+  `file_write`, `grep`, `web_fetch`), risk tiers, workspace sandbox,
+  SSRF defence.
 
 ### Decisions
 

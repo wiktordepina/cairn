@@ -51,14 +51,15 @@ independently testable and, where reasonable, independently swappable.
 └─────────────────────────────▲─────────────────────────────────────┘
                               │ AsyncIterator[UIEvent]
 ┌─────────────────────────────┴─────────────────────────────────────┐
-│                        Orchestrator (planned)                     │
+│                       Orchestrator (shipped)                      │
 │   Turn loop · state machine · middleware chains · cancellation    │
 └──┬──────────────────┬──────────────────┬──────────────────┬───────┘
    │                  │                  │                  │
 ┌──▼───────┐   ┌──────▼──────┐   ┌───────▼───────┐   ┌──────▼──────┐
 │ Context  │   │ Memory      │   │ Tool system   │   │ Providers   │
-│ manager  │   │ (planned)   │   │ (planned)     │   │ (shipped)   │
-│(planned) │   │             │   │               │   │             │
+│ manager  │   │ (planned)   │   │ (partial —    │   │ (shipped)   │
+│(planned) │   │             │   │ foundation +  │   │             │
+│          │   │             │   │ built-ins)    │   │             │
 └──┬───────┘   └─────────────┘   └───────────────┘   └─────────────┘
    │                                                          │
    │                                                          │
@@ -126,7 +127,8 @@ Cairn is under active development. This table is authoritative; the
 | Providers (Anthropic, OpenAI, OpenRouter) | Shipped (0.2.0) |
 | Persistence (sessions, messages, tool calls, usage) | Shipped (0.3.0) |
 | Orchestrator | Shipped (0.4.0) |
-| Tool system | Planned |
+| Tool system — foundation + built-in tools | Shipped (0.5.0) |
+| Tool system — runner + orchestrator integration | In progress |
 | Memory (tier-1) | Planned |
 | Compaction | Planned |
 | Convention files | Planned |
@@ -144,4 +146,6 @@ Cairn is under active development. This table is authoritative; the
 - [Configuration](configuration.md) — TOML reference.
 - [Providers](providers.md) — per-provider notes.
 - [Persistence](persistence.md) — on-disk layout.
+- [Orchestrator](orchestrator.md) — the turn loop.
+- [Tools](tools.md) — tool system, built-in catalogue, security primitives.
 - [ADRs](decisions/) — the *why* behind non-obvious decisions.

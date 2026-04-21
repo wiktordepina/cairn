@@ -1,5 +1,6 @@
 """Cairn persistence — SQLite-backed storage for sessions, messages, tool calls, and usage."""
 
+from cairn.persistence._approval_repo import ApprovalDecisionRepo
 from cairn.persistence._connection import Database
 from cairn.persistence._errors import (
     InvalidToolCallTransition,
@@ -41,6 +42,7 @@ __all__ = [
     "ToolCallRecord",
     "UsageRecord",
     # Repos
+    "ApprovalDecisionRepo",
     "MessageRepo",
     "SessionRepo",
     "ToolCallRepo",

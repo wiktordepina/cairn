@@ -79,3 +79,8 @@ ongoing costs does this impose?
 | [0010](0010-typed-middleware.md) | Typed middleware over generic lifecycle hooks | accepted |
 | [0011](0011-explicit-turn-state-machine.md) | `turns` table with an explicit state machine | accepted |
 | [0012](0012-no-fk-on-turn-id.md) | No foreign-key constraint on `turn_id` columns | accepted |
+| [0013](0013-tier-taxonomy.md) | Tier taxonomy for tool risk (0-4 in V1) | accepted |
+| [0014](0014-tool-decorator.md) | `@tool` decorator over a class hierarchy | accepted |
+| [0015](0015-session-allowlist-exact-match.md) | Session approval allowlist uses exact args-signature match | accepted |
+| [0016](0016-no-shell-in-v1.md) | No shell / code-execution tool in V1 | accepted |
+| [0017](0017-ssrf-ip-pinning-deferred.md) | SSRF defence: IP pinning deferred in V1 | accepted |
