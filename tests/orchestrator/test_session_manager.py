@@ -69,9 +69,7 @@ class TestCreate:
         assert not session.archived
 
     @pytest.mark.asyncio
-    async def test_companion_respects_explicit_memory_space(
-        self, manager: SessionManager
-    ) -> None:
+    async def test_companion_respects_explicit_memory_space(self, manager: SessionManager) -> None:
         session = await manager.create(
             type=SessionType.COMPANION,
             persona="companion",
@@ -80,9 +78,7 @@ class TestCreate:
         assert session.memory_space == "work"
 
     @pytest.mark.asyncio
-    async def test_ephemeral_forces_no_memory_space(
-        self, manager: SessionManager
-    ) -> None:
+    async def test_ephemeral_forces_no_memory_space(self, manager: SessionManager) -> None:
         session = await manager.create(
             type=SessionType.EPHEMERAL,
             persona="_ephemeral",
@@ -130,14 +126,10 @@ class TestCreate:
     @pytest.mark.asyncio
     async def test_unknown_model_propagates(self, manager: SessionManager) -> None:
         with pytest.raises(ModelNotFoundError):
-            await manager.create(
-                type=SessionType.EPHEMERAL, persona="x", model="no-such-model"
-            )
+            await manager.create(type=SessionType.EPHEMERAL, persona="x", model="no-such-model")
 
     @pytest.mark.asyncio
-    async def test_records_parent_session_id(
-        self, manager: SessionManager
-    ) -> None:
+    async def test_records_parent_session_id(self, manager: SessionManager) -> None:
         parent = await manager.create(type=SessionType.COMPANION, persona="companion")
         child = await manager.create(
             type=SessionType.EPHEMERAL,

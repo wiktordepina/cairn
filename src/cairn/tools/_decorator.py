@@ -173,9 +173,7 @@ def tool(
     a tier-2 tool with an escalating side-effect).
     """
     _validate_tier_and_effects(risk_tier, side_effects)
-    resolved_approval = (
-        approval_required if approval_required is not None else risk_tier >= 3
-    )
+    resolved_approval = approval_required if approval_required is not None else risk_tier >= 3
     spec = _ToolSpec(
         name=name,
         description=description,

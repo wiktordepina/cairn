@@ -40,6 +40,4 @@ class TestSystemClock:
 
     def test_satisfies_clock_protocol(self) -> None:
         assert isinstance(SystemClock(), Clock)
-        assert isinstance(
-            FrozenClock(now=datetime(2026, 4, 20, tzinfo=UTC)), Clock
-        )
+        assert isinstance(FrozenClock(now=datetime(2026, 4, 20, tzinfo=UTC)), Clock)

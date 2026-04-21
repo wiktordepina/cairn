@@ -67,9 +67,7 @@ def _make_getaddrinfo(ips: list[str]):
         out = []
         for ip in ips:
             family = (
-                __import__("socket").AF_INET
-                if ":" not in ip
-                else __import__("socket").AF_INET6
+                __import__("socket").AF_INET if ":" not in ip else __import__("socket").AF_INET6
             )
             out.append((family, 0, 0, "", (ip, 0)))
         return out
@@ -86,9 +84,7 @@ class TestResolveHostname:
         with pytest.raises(SSRFBlocked, match="blocked IP"):
             resolve_hostname("example.com")
 
-    def test_rejects_metadata_endpoint(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_rejects_metadata_endpoint(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["169.254.169.254"]),
@@ -104,9 +100,7 @@ class TestResolveHostname:
         with pytest.raises(SSRFBlocked):
             resolve_hostname("internal.example")
 
-    def test_rejects_rfc1918_192(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_rejects_rfc1918_192(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["192.168.1.100"]),
@@ -114,9 +108,7 @@ class TestResolveHostname:
         with pytest.raises(SSRFBlocked):
             resolve_hostname("router.local")
 
-    def test_rejects_ipv6_loopback(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_rejects_ipv6_loopback(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["::1"]),
@@ -124,9 +116,7 @@ class TestResolveHostname:
         with pytest.raises(SSRFBlocked):
             resolve_hostname("ipv6.local")
 
-    def test_rejects_ipv6_link_local(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_rejects_ipv6_link_local(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["fe80::1"]),
@@ -134,9 +124,7 @@ class TestResolveHostname:
         with pytest.raises(SSRFBlocked):
             resolve_hostname("ipv6.example")
 
-    def test_rejects_when_any_ip_blocked(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_rejects_when_any_ip_blocked(self, monkeypatch: pytest.MonkeyPatch) -> None:
         # Attacker-controlled hostname returning both a public IP
         # and a blocked one — must reject.
         monkeypatch.setattr(
@@ -146,9 +134,7 @@ class TestResolveHostname:
         with pytest.raises(SSRFBlocked):
             resolve_hostname("evil.example")
 
-    def test_accepts_public_ipv4(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_accepts_public_ipv4(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["1.1.1.1"]),
@@ -156,9 +142,7 @@ class TestResolveHostname:
         ips = resolve_hostname("one.one.one.one")
         assert ips == ["1.1.1.1"]
 
-    def test_accepts_public_ipv6(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_accepts_public_ipv6(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["2001:db8::1"]),
@@ -174,9 +158,7 @@ class TestResolveHostname:
 
 class TestSafeFetch:
     @pytest.mark.asyncio
-    async def test_fetches_with_validation(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    async def test_fetches_with_validation(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["1.1.1.1"]),
@@ -213,9 +195,7 @@ class TestSafeFetch:
             await safe_fetch("http://myservice.local/")
 
     @pytest.mark.asyncio
-    async def test_enforces_size_cap(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    async def test_enforces_size_cap(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["1.1.1.1"]),
@@ -236,9 +216,7 @@ class TestSafeFetch:
             await safe_fetch("https://example.com/", max_size=1000)
 
     @pytest.mark.asyncio
-    async def test_surfaces_4xx_with_status(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    async def test_surfaces_4xx_with_status(self, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setattr(
             "cairn.tools.security._ssrf.socket.getaddrinfo",
             _make_getaddrinfo(["1.1.1.1"]),

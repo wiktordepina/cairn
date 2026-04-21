@@ -44,19 +44,13 @@ class TestScoping:
         reg = DefaultToolRegistry(companion_tools=[_make_tool("a")])
         assert reg.for_session(ephemeral_session) == []
 
-    def test_ephemeral_with_allowlist(
-        self, ephemeral_session: Session
-    ) -> None:
+    def test_ephemeral_with_allowlist(self, ephemeral_session: Session) -> None:
         a, b = _make_tool("a"), _make_tool("b")
-        reg = DefaultToolRegistry(
-            companion_tools=[a, b], ephemeral_allowlist=["a"]
-        )
+        reg = DefaultToolRegistry(companion_tools=[a, b], ephemeral_allowlist=["a"])
         defs = reg.for_session(ephemeral_session)
         assert {d.name for d in defs} == {"a"}
 
-    def test_persona_honours_allowlist(
-        self, persona_session: Session
-    ) -> None:
+    def test_persona_honours_allowlist(self, persona_session: Session) -> None:
         a, b, c = _make_tool("a"), _make_tool("b"), _make_tool("c")
         reg = DefaultToolRegistry(
             companion_tools=[a, b, c],
@@ -65,15 +59,11 @@ class TestScoping:
         defs = reg.for_session(persona_session)
         assert {d.name for d in defs} == {"a", "c"}
 
-    def test_persona_without_allowlist_sees_nothing(
-        self, persona_session: Session
-    ) -> None:
+    def test_persona_without_allowlist_sees_nothing(self, persona_session: Session) -> None:
         reg = DefaultToolRegistry(companion_tools=[_make_tool("a")])
         assert reg.for_session(persona_session) == []
 
-    def test_mcp_tools_visible_to_companion(
-        self, companion_session: Session
-    ) -> None:
+    def test_mcp_tools_visible_to_companion(self, companion_session: Session) -> None:
         native = _make_tool("native-one")
         mcp = _make_tool("mcp-one")
         reg = DefaultToolRegistry(companion_tools=[native], mcp_tools=[mcp])

@@ -89,9 +89,7 @@ class SessionManager:
         await self._repo.archive(session_id)
 
     @staticmethod
-    def _scope_memory_space(
-        type_: SessionType, requested: str | None
-    ) -> str | None:
+    def _scope_memory_space(type_: SessionType, requested: str | None) -> str | None:
         if type_ is SessionType.EPHEMERAL:
             return None
         if type_ is SessionType.COMPANION:

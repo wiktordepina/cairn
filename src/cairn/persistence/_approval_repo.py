@@ -19,9 +19,7 @@ if TYPE_CHECKING:
     from cairn.persistence._connection import Database
 
 
-_SELECT_COLS = (
-    "id, tool_call_id, decided_at, decided_by, decision, reason, args_snapshot_json"
-)
+_SELECT_COLS = "id, tool_call_id, decided_at, decided_by, decision, reason, args_snapshot_json"
 
 
 def _row_to_record(row: aiosqlite.Row) -> ApprovalDecisionRecord:
@@ -75,9 +73,7 @@ class ApprovalDecisionRepo:
         assert row_id is not None
         return row_id
 
-    async def list_for_tool_call(
-        self, tool_call_id: str
-    ) -> list[ApprovalDecisionRecord]:
+    async def list_for_tool_call(self, tool_call_id: str) -> list[ApprovalDecisionRecord]:
         conn = await self._db.connect()
         cursor = await conn.execute(
             f"""

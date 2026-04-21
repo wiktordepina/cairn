@@ -38,9 +38,7 @@ class TestAutoApproveReadOnly:
     @pytest.mark.asyncio
     async def test_approves_tier_0_none(self, turn_ctx: TurnContext) -> None:
         a = AutoApproveReadOnly()
-        d = await a.decide(
-            _req(name="calc", risk_tier=0, side_effects="none"), turn_ctx
-        )
+        d = await a.decide(_req(name="calc", risk_tier=0, side_effects="none"), turn_ctx)
         assert d.outcome is ApprovalOutcome.APPROVE
 
     @pytest.mark.asyncio
@@ -58,17 +56,13 @@ class TestAutoApproveReadOnly:
     @pytest.mark.asyncio
     async def test_escalates_tier_3_write(self, turn_ctx: TurnContext) -> None:
         a = AutoApproveReadOnly()
-        d = await a.decide(
-            _req(name="file_write", risk_tier=3, side_effects="write"), turn_ctx
-        )
+        d = await a.decide(_req(name="file_write", risk_tier=3, side_effects="write"), turn_ctx)
         assert d.outcome is ApprovalOutcome.ESCALATE
 
     @pytest.mark.asyncio
     async def test_escalates_tier_4(self, turn_ctx: TurnContext) -> None:
         a = AutoApproveReadOnly()
-        d = await a.decide(
-            _req(name="send_email", risk_tier=4, side_effects="write"), turn_ctx
-        )
+        d = await a.decide(_req(name="send_email", risk_tier=4, side_effects="write"), turn_ctx)
         assert d.outcome is ApprovalOutcome.ESCALATE
 
 
@@ -94,9 +88,7 @@ class TestSessionAllowlist:
         assert d.decided_by == "auto:session-allowlist"
 
     @pytest.mark.asyncio
-    async def test_different_args_require_reapproval(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_different_args_require_reapproval(self, turn_ctx: TurnContext) -> None:
         a = SessionAllowlist()
         req_foo = _req(name="file_write", args={"path": "foo.py"})
         req_bar = _req(name="file_write", args={"path": "bar.py"})
@@ -107,17 +99,13 @@ class TestSessionAllowlist:
         assert d_bar.outcome is ApprovalOutcome.ESCALATE
 
     @pytest.mark.asyncio
-    async def test_different_tool_requires_reapproval(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_different_tool_requires_reapproval(self, turn_ctx: TurnContext) -> None:
         a = SessionAllowlist()
         a.remember_user_approval(
             session_id=turn_ctx.session.id,
             request=_req(name="file_write", args={"path": "x"}),
         )
-        d = await a.decide(
-            _req(name="file_read", args={"path": "x"}), turn_ctx
-        )
+        d = await a.decide(_req(name="file_read", args={"path": "x"}), turn_ctx)
         assert d.outcome is ApprovalOutcome.ESCALATE
 
     @pytest.mark.asyncio
@@ -133,9 +121,7 @@ class TestSessionAllowlist:
 
     def test_forget_session(self, turn_ctx: TurnContext) -> None:
         a = SessionAllowlist()
-        a.remember_user_approval(
-            session_id=turn_ctx.session.id, request=_req(args={"a": 1})
-        )
+        a.remember_user_approval(session_id=turn_ctx.session.id, request=_req(args={"a": 1}))
         a.forget_session(turn_ctx.session.id)
         # Internal state dropped — no way to assert other than re-decide.
         # We test via decide semantics in the next test.

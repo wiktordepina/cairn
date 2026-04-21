@@ -42,9 +42,7 @@ def _row_to_record(row: aiosqlite.Row) -> TurnRecord:
         model=row["model"],
         started_at=datetime.fromisoformat(row["started_at"]),
         completed_at=(
-            datetime.fromisoformat(row["completed_at"])
-            if row["completed_at"]
-            else None
+            datetime.fromisoformat(row["completed_at"]) if row["completed_at"] else None
         ),
         aborted_reason=row["aborted_reason"],
         stop_reason=StopReason(row["stop_reason"]) if row["stop_reason"] else None,
@@ -181,9 +179,7 @@ class TurnRepo:
 
     async def get(self, turn_id: str) -> TurnRecord | None:
         conn = await self._db.connect()
-        cursor = await conn.execute(
-            f"SELECT {_SELECT_COLS} FROM turns WHERE id = ?", (turn_id,)
-        )
+        cursor = await conn.execute(f"SELECT {_SELECT_COLS} FROM turns WHERE id = ?", (turn_id,))
         row = await cursor.fetchone()
         await cursor.close()
         return _row_to_record(row) if row is not None else None

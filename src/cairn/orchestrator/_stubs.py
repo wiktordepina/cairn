@@ -27,7 +27,11 @@ class NullMemoryService:
     """Returns no memories. Default until the memory brick lands."""
 
     async def retrieve(
-        self, *, space: str, query: str, k: int  # noqa: ARG002
+        self,
+        *,
+        space: str,
+        query: str,
+        k: int,  # noqa: ARG002
     ) -> list[MemoryEntry]:
         return []
 
@@ -36,7 +40,11 @@ class NullExtractionQueue:
     """No-op submission. Default until the memory brick lands."""
 
     def submit(
-        self, *, session_id: str, since_idx: int, turn_id: str  # noqa: ARG002
+        self,
+        *,
+        session_id: str,
+        since_idx: int,
+        turn_id: str,  # noqa: ARG002
     ) -> None:
         return None
 
@@ -67,7 +75,11 @@ class AutoApproveGateway:
     """Approves every request. Safe as long as no real tools are registered."""
 
     async def request(
-        self, *, session_id: str, tool_call_id: str, request: ApprovalRequest  # noqa: ARG002
+        self,
+        *,
+        session_id: str,
+        tool_call_id: str,
+        request: ApprovalRequest,  # noqa: ARG002
     ) -> ApprovalDecision:
         return ApprovalDecision(
             outcome=ApprovalOutcome.APPROVE,
@@ -81,7 +93,11 @@ class DenyAllGateway:
     execute tools (e.g. ephemeral sessions)."""
 
     async def request(
-        self, *, session_id: str, tool_call_id: str, request: ApprovalRequest  # noqa: ARG002
+        self,
+        *,
+        session_id: str,
+        tool_call_id: str,
+        request: ApprovalRequest,  # noqa: ARG002
     ) -> ApprovalDecision:
         return ApprovalDecision(
             outcome=ApprovalOutcome.REJECT,

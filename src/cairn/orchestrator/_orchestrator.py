@@ -186,9 +186,7 @@ class Orchestrator:
         session_ids: list[str] = []
         now = self._clock.now()
         for turn in dangling:
-            await self._turn_repo.mark_aborted(
-                turn.id, reason="process_crash", completed_at=now
-            )
+            await self._turn_repo.mark_aborted(turn.id, reason="process_crash", completed_at=now)
             session_ids.append(turn.session_id)
             _logger.info(
                 "turn.resumed_as_aborted",
@@ -216,9 +214,7 @@ class Orchestrator:
         session = await self._session_manager.get(session_id)
 
         if session_id in self._cancel_flags:
-            raise TurnAlreadyRunning(
-                f"Session {session_id!r} already has a turn running"
-            )
+            raise TurnAlreadyRunning(f"Session {session_id!r} already has a turn running")
         cancel_flag = asyncio.Event()
         self._cancel_flags[session_id] = cancel_flag
 
@@ -308,9 +304,7 @@ class Orchestrator:
             for iteration in range(self._config.max_iterations):
                 self._raise_if_cancelled(cancel_flag)
 
-                tctx = TurnContext(
-                    session=session, turn_id=turn_id, iteration=iteration
-                )
+                tctx = TurnContext(session=session, turn_id=turn_id, iteration=iteration)
 
                 # Build request + apply preparer chain
                 history = await self._message_repo.list_for_session(session.id)
@@ -348,9 +342,7 @@ class Orchestrator:
                             assistant_msg.append_tool_input_delta(tc_id, chunk)
                         case ToolCallEnd(id=tc_id):
                             assistant_msg.finalize_tool_use(tc_id)
-                            pending_tool_calls.append(
-                                assistant_msg.get_tool_use(tc_id)
-                            )
+                            pending_tool_calls.append(assistant_msg.get_tool_use(tc_id))
                         case UsageEvent() as u:
                             # Buffer usage events — the model_usage FK on
                             # message_id requires the assistant row to exist
@@ -362,9 +354,7 @@ class Orchestrator:
                 # Persist assistant message, then flush buffered usage rows.
                 await self._message_repo.append(assistant_msg, turn_id=turn_id)
                 stream_end = self._clock.now()
-                duration_ms = int(
-                    (stream_end - stream_start).total_seconds() * 1000
-                )
+                duration_ms = int((stream_end - stream_start).total_seconds() * 1000)
                 for u in pending_usage:
                     await self._cost_tracker.record(
                         session_id=session.id,
@@ -380,9 +370,7 @@ class Orchestrator:
                         cost_usd=self._compute_cost(model_cfg, u),
                     )
 
-                yield AssistantMessageComplete(
-                    message_id=assistant_msg.id, turn_id=turn_id
-                )
+                yield AssistantMessageComplete(message_id=assistant_msg.id, turn_id=turn_id)
 
                 stop_reason = current_stop
 
@@ -436,10 +424,7 @@ class Orchestrator:
             )
 
             # Post-turn extraction (fire-and-forget, only if memory-bound).
-            if (
-                session.memory_space is not None
-                and session.type is not SessionType.EPHEMERAL
-            ):
+            if session.memory_space is not None and session.type is not SessionType.EPHEMERAL:
                 self._extraction_queue.submit(
                     session_id=session.id,
                     since_idx=user_msg.idx,
@@ -450,9 +435,7 @@ class Orchestrator:
                     from_state=TurnState.FINALISING,
                     to_state=TurnState.EXTRACTION_ENQUEUED,
                 )
-                yield ObservationExtractionRequested(
-                    session_id=session.id, turn_id=turn_id
-                )
+                yield ObservationExtractionRequested(session_id=session.id, turn_id=turn_id)
 
             final_stop = stop_reason or StopReason.END_TURN
             await self._turn_repo.mark_completed(
@@ -460,9 +443,7 @@ class Orchestrator:
                 stop_reason=final_stop,
                 completed_at=self._clock.now(),
             )
-            yield TurnComplete(
-                session_id=session.id, turn_id=turn_id, stop_reason=final_stop
-            )
+            yield TurnComplete(session_id=session.id, turn_id=turn_id, stop_reason=final_stop)
 
         except asyncio.CancelledError:
             await self._turn_repo.mark_aborted(
@@ -545,10 +526,7 @@ class Orchestrator:
                 yield (
                     ToolResultBlock(
                         tool_use_id=tool_call.id,
-                        content=(
-                            decision.reason
-                            or "Tool rejected by approver."
-                        ),
+                        content=(decision.reason or "Tool rejected by approver."),
                         is_error=True,
                     ),
                 )
@@ -581,17 +559,13 @@ class Orchestrator:
                     content=f"Tool runner error: {exc}",
                     is_error=True,
                 )
-            duration_ms = int(
-                (self._clock.now() - started).total_seconds() * 1000
-            )
+            duration_ms = int((self._clock.now() - started).total_seconds() * 1000)
 
             # Run transformers (spotlighting, redaction, Unicode strip).
             for transformer in self._transformers:
                 result = await transformer.transform(result, tool_call, tctx)
 
-            status = (
-                ToolCallStatus.FAILED if result.is_error else ToolCallStatus.COMPLETED
-            )
+            status = ToolCallStatus.FAILED if result.is_error else ToolCallStatus.COMPLETED
             yield ToolCallCompleted(
                 tool_call_id=tool_call.id,
                 turn_id=turn_id,

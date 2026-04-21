@@ -44,8 +44,7 @@ class BasicCostTracker:
     ) -> None:
         if not 0 < warn_threshold_fraction <= 1:
             raise ValueError(
-                "warn_threshold_fraction must be in (0, 1]; "
-                f"got {warn_threshold_fraction}"
+                f"warn_threshold_fraction must be in (0, 1]; got {warn_threshold_fraction}"
             )
         self._usage_repo = usage_repo
         self._clock = clock

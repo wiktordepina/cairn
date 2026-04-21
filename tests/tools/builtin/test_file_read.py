@@ -30,9 +30,7 @@ def sandbox(tmp_path: Path) -> WorkspaceSandbox:
 
 class TestHappyPath:
     @pytest.mark.asyncio
-    async def test_reads_text_file(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_reads_text_file(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_file_read(sandbox)
         result = await t.invoke({"path": "hello.txt"}, turn_ctx)
         assert isinstance(result, ToolResultBlock)
@@ -64,17 +62,13 @@ class TestMetadata:
 
 class TestErrors:
     @pytest.mark.asyncio
-    async def test_missing_file(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_missing_file(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_file_read(sandbox)
         with pytest.raises(ToolError, match="not found"):
             await t.invoke({"path": "nope.txt"}, turn_ctx)
 
     @pytest.mark.asyncio
-    async def test_directory_path(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_directory_path(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_file_read(sandbox)
         with pytest.raises(ToolError, match="Not a regular file"):
             await t.invoke({"path": "nested"}, turn_ctx)
@@ -192,17 +186,13 @@ class TestTruncation:
 
 class TestArgValidation:
     @pytest.mark.asyncio
-    async def test_missing_path(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_missing_path(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_file_read(sandbox)
         with pytest.raises(Exception):  # noqa: PT011, B017 — pydantic ValidationError
             await t.invoke({}, turn_ctx)
 
     @pytest.mark.asyncio
-    async def test_empty_path(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_empty_path(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_file_read(sandbox)
         with pytest.raises(PathEscape, match="Empty"):
             await t.invoke({"path": ""}, turn_ctx)

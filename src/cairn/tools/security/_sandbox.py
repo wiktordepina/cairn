@@ -47,9 +47,7 @@ class WorkspaceSandbox:
 
         p = Path(path)
         if p.is_absolute():
-            raise PathEscape(
-                f"Absolute paths are not allowed inside the sandbox: {path!r}"
-            )
+            raise PathEscape(f"Absolute paths are not allowed inside the sandbox: {path!r}")
 
         candidate = (self._root / p).resolve(strict=False)
 
@@ -72,9 +70,7 @@ class WorkspaceSandbox:
         try:
             path.relative_to(self._root)
         except ValueError as exc:
-            raise PathEscape(
-                f"{path} is outside the sandbox root {self._root}."
-            ) from exc
+            raise PathEscape(f"{path} is outside the sandbox root {self._root}.") from exc
 
     def assert_writable(self, path: Path) -> None:
         """Same as ``assert_readable`` — V1 has no read/write distinction

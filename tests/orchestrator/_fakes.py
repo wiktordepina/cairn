@@ -88,9 +88,7 @@ class RecordingToolRunner:
     ``ToolResultBlock`` and returns it.
     """
 
-    handlers: dict[str, Callable[..., Awaitable[tuple[str, bool]]]] = field(
-        default_factory=dict
-    )
+    handlers: dict[str, Callable[..., Awaitable[tuple[str, bool]]]] = field(default_factory=dict)
     calls: list[dict[str, Any]] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
 
     async def run(
@@ -174,9 +172,7 @@ class SpyMemoryService:
     canned: list[MemoryEntry] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     calls: list[dict[str, Any]] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
 
-    async def retrieve(
-        self, *, space: str, query: str, k: int
-    ) -> list[MemoryEntry]:
+    async def retrieve(self, *, space: str, query: str, k: int) -> list[MemoryEntry]:
         self.calls.append({"space": space, "query": query, "k": k})
         return list(self.canned)
 
@@ -187,9 +183,7 @@ class SpyExtractionQueue:
 
     submissions: list[dict[str, Any]] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
 
-    def submit(
-        self, *, session_id: str, since_idx: int, turn_id: str
-    ) -> None:
+    def submit(self, *, session_id: str, since_idx: int, turn_id: str) -> None:
         self.submissions.append(
             {"session_id": session_id, "since_idx": since_idx, "turn_id": turn_id}
         )

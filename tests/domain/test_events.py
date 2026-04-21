@@ -57,9 +57,7 @@ class TestUIEvents:
         assert ev.approved_by == "user"
 
     def test_tool_call_rejected(self) -> None:
-        ev = ToolCallRejected(
-            tool_call_id="tc-1", turn_id="t-1", decided_by="user", reason="no"
-        )
+        ev = ToolCallRejected(tool_call_id="tc-1", turn_id="t-1", decided_by="user", reason="no")
         assert ev.reason == "no"
 
     def test_tool_call_started(self) -> None:
@@ -129,9 +127,7 @@ class TestUIEvents:
         assert ev.session_id == "sess-001"
 
     def test_budget_warning(self) -> None:
-        ev = BudgetWarning(
-            session_id="sess-001", turn_id="t-1", cost_usd=4.2, threshold_usd=4.0
-        )
+        ev = BudgetWarning(session_id="sess-001", turn_id="t-1", cost_usd=4.2, threshold_usd=4.0)
         assert ev.cost_usd == 4.2
         assert ev.threshold_usd == 4.0
 
@@ -150,6 +146,4 @@ class TestUIEvents:
         with pytest.raises(dataclasses.FrozenInstanceError):
             UserMessagePersisted(message_id="x", turn_id="t").message_id = "y"  # type: ignore[misc]
         with pytest.raises(dataclasses.FrozenInstanceError):
-            ToolCallStarted(
-                tool_call_id="x", turn_id="t", tool_name="x"
-            ).tool_call_id = "y"  # type: ignore[misc]
+            ToolCallStarted(tool_call_id="x", turn_id="t", tool_name="x").tool_call_id = "y"  # type: ignore[misc]
