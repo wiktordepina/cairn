@@ -12,31 +12,31 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0009-protocol-stubs/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/observability/">
       
       
-        <link rel="prev" href="../0008-tool-call-state-column/">
+        <link rel="prev" href="../providers/">
       
       
-        <link rel="next" href="../0010-typed-middleware/">
+        <link rel="next" href="../architecture/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>0009 Protocol stubs - Cairn</title>
+        <title>Observability - Cairn</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0009-protocol-shaped-collaborators-with-default-stubs" class="md-skip">
+        <a href="#observability" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0009 Protocol stubs
+              Observability
             
           </span>
         </div>
@@ -244,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -261,11 +261,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../configuration/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../configuration/" class="md-tabs__link">
           
   
   
@@ -287,7 +289,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../architecture/" class="md-tabs__link">
+        <a href="../architecture/" class="md-tabs__link">
           
   
   
@@ -309,7 +311,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../reference/providers/" class="md-tabs__link">
+        <a href="../reference/providers/" class="md-tabs__link">
           
   
   
@@ -327,13 +329,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../decisions/" class="md-tabs__link">
           
   
   
@@ -375,7 +375,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -405,7 +405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -429,8 +429,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -444,19 +446,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -474,7 +479,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -492,7 +497,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -520,7 +525,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../providers/" class="md-nav__link">
+      <a href="../providers/" class="md-nav__link">
         
   
   
@@ -545,10 +550,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../observability/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -564,6 +596,148 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.logging.setup_logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;setup_logging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tls-trust" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLS trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to call
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotency_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ssl.setup_ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;setup_ssl
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -645,7 +819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -673,7 +847,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../orchestrator/" class="md-nav__link">
+      <a href="../orchestrator/" class="md-nav__link">
         
   
   
@@ -701,7 +875,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../persistence/" class="md-nav__link">
+      <a href="../persistence/" class="md-nav__link">
         
   
   
@@ -729,7 +903,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tools/" class="md-nav__link">
+      <a href="../tools/" class="md-nav__link">
         
   
   
@@ -826,7 +1000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/providers/" class="md-nav__link">
+      <a href="../reference/providers/" class="md-nav__link">
         
   
   
@@ -854,7 +1028,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/tools/" class="md-nav__link">
+      <a href="../reference/tools/" class="md-nav__link">
         
   
   
@@ -882,7 +1056,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/orchestrator/" class="md-nav__link">
+      <a href="../reference/orchestrator/" class="md-nav__link">
         
   
   
@@ -910,7 +1084,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/domain/" class="md-nav__link">
+      <a href="../reference/domain/" class="md-nav__link">
         
   
   
@@ -942,8 +1116,6 @@
       
   
   
-    
-  
   
   
     
@@ -995,23 +1167,20 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../decisions/" class="md-nav__link ">
               
   
   
@@ -1029,13 +1198,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1055,7 +1224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-per-profile-sqlite/" class="md-nav__link">
+      <a href="../decisions/0001-per-profile-sqlite/" class="md-nav__link">
         
   
   
@@ -1083,7 +1252,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
+      <a href="../decisions/0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1111,7 +1280,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-secret-ref-schemes/" class="md-nav__link">
+      <a href="../decisions/0003-secret-ref-schemes/" class="md-nav__link">
         
   
   
@@ -1139,7 +1308,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-hand-rolled-migrations/" class="md-nav__link">
+      <a href="../decisions/0004-hand-rolled-migrations/" class="md-nav__link">
         
   
   
@@ -1167,7 +1336,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-per-provider-adapters/" class="md-nav__link">
+      <a href="../decisions/0005-per-provider-adapters/" class="md-nav__link">
         
   
   
@@ -1195,7 +1364,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-role-based-model-selection/" class="md-nav__link">
+      <a href="../decisions/0006-role-based-model-selection/" class="md-nav__link">
         
   
   
@@ -1223,7 +1392,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-memory-space-at-repo-layer/" class="md-nav__link">
+      <a href="../decisions/0007-memory-space-at-repo-layer/" class="md-nav__link">
         
   
   
@@ -1251,7 +1420,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0008-tool-call-state-column/" class="md-nav__link">
+      <a href="../decisions/0008-tool-call-state-column/" class="md-nav__link">
         
   
   
@@ -1276,37 +1445,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0009 Protocol stubs
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../decisions/0009-protocol-stubs/" class="md-nav__link">
         
   
   
@@ -1322,59 +1464,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1387,7 +1476,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0010-typed-middleware/" class="md-nav__link">
+      <a href="../decisions/0010-typed-middleware/" class="md-nav__link">
         
   
   
@@ -1415,7 +1504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-explicit-turn-state-machine/" class="md-nav__link">
+      <a href="../decisions/0011-explicit-turn-state-machine/" class="md-nav__link">
         
   
   
@@ -1443,7 +1532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-no-fk-on-turn-id/" class="md-nav__link">
+      <a href="../decisions/0012-no-fk-on-turn-id/" class="md-nav__link">
         
   
   
@@ -1471,7 +1560,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0013-tier-taxonomy/" class="md-nav__link">
+      <a href="../decisions/0013-tier-taxonomy/" class="md-nav__link">
         
   
   
@@ -1499,7 +1588,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0014-tool-decorator/" class="md-nav__link">
+      <a href="../decisions/0014-tool-decorator/" class="md-nav__link">
         
   
   
@@ -1527,7 +1616,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0015-session-allowlist-exact-match/" class="md-nav__link">
+      <a href="../decisions/0015-session-allowlist-exact-match/" class="md-nav__link">
         
   
   
@@ -1555,7 +1644,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0016-no-shell-in-v1/" class="md-nav__link">
+      <a href="../decisions/0016-no-shell-in-v1/" class="md-nav__link">
         
   
   
@@ -1583,7 +1672,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
+      <a href="../decisions/0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
         
   
   
@@ -1611,7 +1700,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0018-docs-site-tooling/" class="md-nav__link">
+      <a href="../decisions/0018-docs-site-tooling/" class="md-nav__link">
         
   
   
@@ -1639,7 +1728,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0019-docstrings-google-style/" class="md-nav__link">
+      <a href="../decisions/0019-docstrings-google-style/" class="md-nav__link">
         
   
   
@@ -1694,10 +1783,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
+  <a href="#logging" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context
+        Logging
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Logging">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idempotency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Idempotency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.logging.setup_logging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;setup_logging
       
     </span>
   </a>
@@ -1705,21 +1844,60 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
+  <a href="#tls-trust" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision
+        TLS trust
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLS trust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to call
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#idempotency_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consequences
+        Idempotency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ssl.setup_ssl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;setup_ssl
       
     </span>
   </a>
@@ -1743,7 +1921,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0009-protocol-stubs.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/observability.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1751,77 +1929,265 @@
   
 
 
-<h1 id="0009-protocol-shaped-collaborators-with-default-stubs">0009 — Protocol-shaped collaborators with default stubs<a class="headerlink" href="#0009-protocol-shaped-collaborators-with-default-stubs" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
-<strong>Status:</strong> accepted</p>
-<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The orchestrator has a lot of collaborators: context assembly, memory,
-tools, extraction, approval, cost tracking, model resolution, providers,
-persistence. In the obvious implementation, the orchestrator takes
-concrete types, imports them, and calls their methods. That creates a
-hard dependency on each of those bricks existing in its final shape
-before the orchestrator can ship.</p>
-<p>Two consequences of that approach:</p>
+<h1 id="observability">Observability<a class="headerlink" href="#observability" title="Permanent link">&para;</a></h1>
+<p>Cairn writes logs to a rotating file on the <code>cairn</code> namespace logger,
+and (optionally) uses the operating system's trust store for HTTPS
+instead of Python's bundled CA list. Both are wired in via small
+bootstrap modules that callers invoke once at process start.</p>
+<div class="admonition note">
+<p class="admonition-title">Tranche 1 — bootstrap only</p>
+<p>This page describes what has shipped today: the <code>setup_logging()</code>
+and <code>setup_ssl()</code> entry points. A later tranche will add log
+redaction, tool-call lifecycle logging, and a structured
+<code>UIEventObserver</code> implementation — that work lands alongside the
+UI brick.</p>
+</div>
+<h2 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h2>
+<p><code>cairn.logging.setup_logging()</code> configures a single
+<code>RotatingFileHandler</code> (5 MB × 3 backups) on the <code>cairn</code> namespace
+logger, sets <code>propagate = False</code>, and returns the resolved path.</p>
+<p>Why <code>propagate = False</code>: the planned Textual UI owns the terminal.
+Any stray log line that reaches stderr corrupts the screen. Keeping
+cairn's log records off the root logger prevents that. It also means
+<code>logging.getLogger("cairn.something")</code> records land in the cairn log
+file and nowhere else — if you want them on stderr as well during
+development, attach your own handler to the <code>cairn</code> logger before or
+after the bootstrap call.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>Resolution order (highest priority first):</p>
 <ol>
-<li><strong>Blocking.</strong> The orchestrator can't be written (let alone tested)
-   before every downstream brick is complete. The "pivotal brick" ends
-   up being the last one delivered.</li>
-<li><strong>Coupling.</strong> Changes to a collaborator's internal API ripple through
-   the orchestrator even when the collaborator's <em>role</em> hasn't
-   changed.</li>
+<li>Keyword arguments to <code>setup_logging(level=..., log_file=...)</code>.</li>
+<li>Environment variables:<ul>
+<li><code>CAIRN_LOG_LEVEL</code> — <code>DEBUG</code> / <code>INFO</code> / <code>WARNING</code> / <code>ERROR</code> /
+  <code>CRITICAL</code> (case-insensitive). Unknown values fall back to
+  <code>INFO</code>.</li>
+<li><code>CAIRN_LOG_FILE</code> — absolute path to the log file.</li>
+</ul>
+</li>
+<li>Defaults:<ul>
+<li>Level: <code>INFO</code>.</li>
+<li>Path: <code>&lt;platformdirs user log dir&gt;/cairn.log</code>. On Linux that
+  resolves under <code>$XDG_STATE_HOME</code> or <code>~/.local/state/cairn/</code>;
+  macOS uses <code>~/Library/Logs/cairn/</code>; Windows uses
+  <code>%LOCALAPPDATA%\cairn\Logs\</code>.</li>
+</ul>
+</li>
 </ol>
-<p>Alternatives:</p>
-<ul>
-<li><strong>Protocols + stubs.</strong> Every collaborator is a <code>Protocol</code>; a default
-  stub implementation ships in <code>cairn.orchestrator</code> for each. Real
-  implementations plug in by name at construction.</li>
-<li><strong>Interfaces + DI container.</strong> Same idea, heavier machinery.</li>
-<li><strong>Concrete base classes.</strong> Some of the same benefit with less rigour;
-  introduces inheritance, which we wanted to avoid.</li>
-</ul>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Every orchestrator dependency is a <code>Protocol</code> (<code>@runtime_checkable</code>
-where practical). Default stubs ship in <code>cairn.orchestrator._stubs</code>:</p>
-<ul>
-<li><code>NullMemoryService</code>, <code>NullExtractionQueue</code> — safely ignored.</li>
-<li><code>EmptyToolRegistry</code> + <code>RaisingToolRunner</code> — paired so the runner
-  can never be called.</li>
-<li><code>AutoApproveGateway</code>, <code>DenyAllGateway</code> — context-appropriate
-  defaults.</li>
-<li><code>MinimalContextManager</code> — passes through history.</li>
-</ul>
-<p>The orchestrator constructor enforces nothing at the type level about
-which implementation is passed; the harness-assembly layer (CLI) wires
-real ones in production.</p>
-<p>Test fakes (<code>FakeProvider</code>, <code>RecordingToolRunner</code>, <code>SpyMemoryService</code>,
-etc.) live under <code>tests/orchestrator/_fakes.py</code>; they are test-only and
-not part of the shipped package.</p>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
-<ul>
-<li>The orchestrator shipped as a complete, tested brick before tools,
-  memory, or the UI existed. Real collaborators plug in when their
-  bricks land.</li>
-<li>Tests run in milliseconds because they never touch real providers or
-  UIs. The whole 15-test orchestrator suite runs in under a second.</li>
-<li>Swapping a collaborator — e.g. a different memory retriever —
-  requires exactly one change at construction, no orchestrator edits.</li>
-</ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>A mis-wired orchestrator (stub where a real impl was expected)
-  silently degrades. Mitigation: the CLI's harness-assembly fails loud
-  if it finds a stub where it was supposed to wire something real.</li>
-<li>Protocol drift: if the protocol and the implementation disagree,
-  pyright catches it at build time; runtime duck-typing is a weaker
-  guarantee.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>Adding a new collaborator means: a new protocol + a new stub + a
-  constructor parameter. Roughly 50 LOC of overhead per new
-  collaborator. Worth it.</li>
-</ul>
+<p>The parent directory is created with mode <code>0o700</code> if missing.</p>
+<h3 id="idempotency">Idempotency<a class="headerlink" href="#idempotency" title="Permanent link">&para;</a></h3>
+<p>Calling <code>setup_logging()</code> a second time removes any handlers installed
+by the first call and replaces them. Tests can reconfigure freely; a
+future <code>/reload</code> command can re-point the log file without restart.</p>
+<h3 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="cairn.logging.setup_logging" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">setup_logging</span>
+
+
+<a href="#cairn.logging.setup_logging" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">setup_logging</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">level</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="n"><span title="int">int</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">log_file</span><span class="p">:</span> <span class="n"><span title="pathlib.Path">Path</span></span> <span class="o">|</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="pathlib.Path">Path</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+        <p>Configure the <code>cairn</code> namespace logger.</p>
+<p>Idempotent — a second call replaces any existing cairn handlers,
+so tests and long-running processes can reconfigure freely.</p>
+
+
+<table>
+      <thead>
+        <tr>
+          <th><span class="doc-section-title">PARAMETER</span></th>
+          <th><span>DESCRIPTION</span></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>level</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Override for the <code>CAIRN_LOG_LEVEL</code> env var. Accepts a
+stdlib level name (<code>"DEBUG"</code>) or an integer threshold.</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="str">str</span> | <span title="int">int</span> | None</code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>None</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>log_file</code>
+            </td>
+            <td class="doc-param-details">
+              <div class="doc-md-description">
+                <p>Override for the <code>CAIRN_LOG_FILE</code> env var. Parent
+directory is created with mode <code>0o700</code> if missing.</p>
+              </div>
+              <p>
+                  <span class="doc-param-annotation">
+                    <b>TYPE:</b>
+                      <code><span title="pathlib.Path">Path</span> | <span title="str">str</span> | None</code>
+                  </span>
+                  <span class="doc-param-default">
+                    <b>DEFAULT:</b>
+                      <code>None</code>
+                  </span>
+              </p>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<table>
+      <thead>
+        <tr>
+          <th><span class="doc-section-title">RETURNS</span></th>
+          <th><span>DESCRIPTION</span></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <span class="doc-returns-annotation">
+                    <code><span title="pathlib.Path">Path</span></code>
+                </span>
+            </td>
+            <td class="doc-returns-details">
+              <div class="doc-md-description">
+                <p>The resolved log file path.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div><h2 id="tls-trust">TLS trust<a class="headerlink" href="#tls-trust" title="Permanent link">&para;</a></h2>
+<p><code>cairn.ssl.setup_ssl()</code> injects the operating system's trust store
+into Python's <code>ssl</code> module via the <a href="https://pypi.org/project/truststore/">truststore</a>
+package. The practical need is corporate MITM proxies (Netskope,
+Zscaler, etc.) that rewrite provider HTTPS endpoints with a private
+CA — Python's default <code>certifi</code> bundle doesn't trust that CA, so
+provider SDK calls fail certificate validation.</p>
+<p><code>setup_ssl()</code> is deliberately silent on failure: if <code>truststore</code> is
+not installed, or <code>truststore.inject_into_ssl()</code> raises, the function
+logs at <code>DEBUG</code> and returns <code>False</code>. The rest of the application
+continues with Python's default <code>ssl</code> context. Nothing crashes over
+an optional bootstrap.</p>
+<h3 id="when-to-call">When to call<a class="headerlink" href="#when-to-call" title="Permanent link">&para;</a></h3>
+<p>Once, at the top of <code>main()</code>, before any HTTPS client is constructed.
+Calling after an HTTPS connection has already been opened does not
+retroactively change that connection's trust context.</p>
+<h3 id="idempotency_1">Idempotency<a class="headerlink" href="#idempotency_1" title="Permanent link">&para;</a></h3>
+<p>A second call after a successful injection returns <code>True</code> without
+re-invoking <code>truststore</code>. A second call after a failed first call
+will retry, so transient import failures don't latch to <code>False</code>.</p>
+<h3 id="api_1">API<a class="headerlink" href="#api_1" title="Permanent link">&para;</a></h3>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="cairn.ssl.setup_ssl" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">setup_ssl</span>
+
+
+<a href="#cairn.ssl.setup_ssl" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">setup_ssl</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="bool">bool</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+        <p>Inject the OS trust store into the <code>ssl</code> module.</p>
+<p>Idempotent: safe to call multiple times. A second call after a
+successful injection returns <code>True</code> without re-invoking
+<code>truststore</code>.</p>
+
+
+<table>
+      <thead>
+        <tr>
+          <th><span class="doc-section-title">RETURNS</span></th>
+          <th><span>DESCRIPTION</span></th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <span class="doc-returns-annotation">
+                    <code><span title="bool">bool</span></code>
+                </span>
+            </td>
+            <td class="doc-returns-details">
+              <div class="doc-md-description">
+                <p><code>True</code> if the OS trust store is now in effect (including on</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <span class="doc-returns-annotation">
+                    <code><span title="bool">bool</span></code>
+                </span>
+            </td>
+            <td class="doc-returns-details">
+              <div class="doc-md-description">
+                <p>repeat calls after a successful injection). <code>False</code> if</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <span class="doc-returns-annotation">
+                    <code><span title="bool">bool</span></code>
+                </span>
+            </td>
+            <td class="doc-returns-details">
+              <div class="doc-md-description">
+                <p><code>truststore</code> is not installed or injection raised — in which</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <span class="doc-returns-annotation">
+                    <code><span title="bool">bool</span></code>
+                </span>
+            </td>
+            <td class="doc-returns-details">
+              <div class="doc-md-description">
+                <p>case the default <code>ssl</code> context is left untouched.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
 
 
 
@@ -1897,10 +2263,10 @@ not part of the shipped package.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
