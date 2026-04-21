@@ -504,9 +504,7 @@ class TestToolDispatch:
         ]
 
         async def should_not_reach_handler(*args, **kwargs):
-            raise AssertionError(
-                "tool handler must not be invoked for a rejected tool"
-            )
+            raise AssertionError("tool handler must not be invoked for a rejected tool")
 
         runner = RecordingToolRunner(handlers={"writer": should_not_reach_handler})
         registry = DictToolRegistry(

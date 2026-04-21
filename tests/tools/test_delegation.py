@@ -216,9 +216,7 @@ class TestBasicInvoke:
             cost_tracker=cost_tracker,
             clock=frozen_clock,
         )
-        result = await tool.invoke(
-            {"prompt": "hi"}, _ctx_with_session(turn_ctx, parent_session)
-        )
+        result = await tool.invoke({"prompt": "hi"}, _ctx_with_session(turn_ctx, parent_session))
         # Tool itself leaves tool_use_id blank; the runner fills it in.
         assert result.tool_use_id == ""
 
@@ -308,9 +306,7 @@ class TestSubSession:
             clock=frozen_clock,
         )
         with pytest.raises(AssertionError):
-            await tool.invoke(
-                {"prompt": "hi"}, _ctx_with_session(turn_ctx, parent_session)
-            )
+            await tool.invoke({"prompt": "hi"}, _ctx_with_session(turn_ctx, parent_session))
         children = await SessionRepo(db).children_of(parent_session.id)
         assert children[0].archived is True
 
@@ -407,9 +403,7 @@ class TestCostCap:
             cost_tracker=cost_tracker,
             clock=frozen_clock,
         )
-        result = await tool.invoke(
-            {"prompt": "long"}, _ctx_with_session(turn_ctx, parent_session)
-        )
+        result = await tool.invoke({"prompt": "long"}, _ctx_with_session(turn_ctx, parent_session))
         assert isinstance(result.content, str)
         assert "cost cap reached" in result.content
         assert result.content.startswith("partial")
@@ -435,9 +429,7 @@ class TestCostCap:
             cost_tracker=cost_tracker,
             clock=frozen_clock,
         )
-        result = await tool.invoke(
-            {"prompt": "hi"}, _ctx_with_session(turn_ctx, parent_session)
-        )
+        result = await tool.invoke({"prompt": "hi"}, _ctx_with_session(turn_ctx, parent_session))
         assert result.content == "full answer"
         assert "cost cap" not in str(result.content)
 
@@ -494,9 +486,7 @@ class TestProviderRequest:
             cost_tracker=cost_tracker,
             clock=frozen_clock,
         )
-        await tool.invoke(
-            {"prompt": "ahoy"}, _ctx_with_session(turn_ctx, parent_session)
-        )
+        await tool.invoke({"prompt": "ahoy"}, _ctx_with_session(turn_ctx, parent_session))
         assert len(provider.requests) == 1
         req = provider.requests[0]
         assert req.model == "delegation-target"

@@ -146,9 +146,10 @@ class DelegationTool:
                     accumulated_text.append(event.text)
                 elif isinstance(event, UsageEvent):
                     final_usage = event
-                    if self._config.max_cost_usd is not None and _compute_cost(
-                        model_cfg, event
-                    ) > self._config.max_cost_usd:
+                    if (
+                        self._config.max_cost_usd is not None
+                        and _compute_cost(model_cfg, event) > self._config.max_cost_usd
+                    ):
                         capped = True
                         break
         finally:

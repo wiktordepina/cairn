@@ -101,11 +101,7 @@ class DefaultToolRunner:
             tool_call_id=tool_call.id,
             decided_at=started_at,
             decided_by=decision.decided_by,
-            decision=(
-                "approved"
-                if decision.outcome is ApprovalOutcome.APPROVE
-                else "rejected"
-            ),
+            decision=("approved" if decision.outcome is ApprovalOutcome.APPROVE else "rejected"),
             reason=decision.reason,
             args_snapshot_json=input_json,
         )
