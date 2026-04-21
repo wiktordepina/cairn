@@ -10,8 +10,181 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-Nothing yet. Next up: the tool system brick (real `ToolRunner`,
-built-in tools, MCP wiring).
+Tool-system integration remaining: `DefaultToolRunner`,
+`DelegationTool`, wiring the real collaborators into the
+orchestrator in place of `RaisingToolRunner` / `EmptyToolRegistry`.
+Memory brick also pending.
+
+## [0.5.0] — 2026-04-21
+
+The tool-system foundation plus V1's four built-in tools. The
+orchestrator's `RaisingToolRunner` stub is still in place — the
+runner + orchestrator wiring lands in a subsequent release. What
+ships here is everything the tool system exposes: the decorator,
+the registry, the approval and transformation middleware, the
+security primitives, and the built-in tool catalogue.
+
+### Added — Tool-system foundation (`src/cairn/tools/`)
+
+- **`@tool` decorator** — wraps an async callable with a Pydantic
+  args model into a `Tool` protocol-conforming instance. Validates
+  risk-tier / side-effects consistency at decoration time; generates
+  JSON `input_schema` from `args_model.model_json_schema()`; defaults
+  `approval_required` from the tier.
+- **`DefaultToolRegistry`** — session-type-scoped tool discovery.
+  Ephemeral sessions see nothing by default (override via
+  `ephemeral_allowlist`); persona sessions see a per-persona
+  allowlist; companion sessions see the full set
+  (`companion_tools + mcp_tools`). Duplicate names across the sets
+  are a config error.
+- **`ApprovalDecisionRepo`** — CRUD over the
+  `approval_decisions` table that migration 0002 provisioned. Writes
+  one row per terminal approval outcome (approved / rejected) with
+  the redacted args snapshot.
+- **Error hierarchy** — `ToolError`, `ToolRetry`, `ToolTimeout`,
+  `PathEscape`, `SSRFBlocked`. Classified for distinct runner
+  responses (expected-failure result block, one retry, timeout
+  marker, sandbox escape, SSRF block).
+- **`Tool` protocol extensions** — `description`, `input_schema`,
+  `tool_kind` on the protocol so the registry can build
+  `ToolDefinition`s and the persistence layer can tell a delegation
+  call apart from a native one.
+
+### Added — Security middleware
+
+Three `ResultTransformer`s and three `ToolApprover`s, ready to wire
+into the orchestrator's existing middleware chains.
+
+Transformers, applied in order `InvisibleUnicodeStripper →
+SecretRedactor → SpotlightTransformer`:
+
+- **`InvisibleUnicodeStripper`** — removes zero-width, bidi-override,
+  bidi-isolate, and Unicode-Tag-plane codepoints. Applied to tool
+  outputs only. Runs first so an attacker cannot split an API-key
+  across regex boundaries with an invisible separator.
+- **`SecretRedactor`** — pattern-based replacement for
+  `Bearer …`, `sk-…`, `sk-ant-…`, `AIza…`, `AKIA…`. Patterns
+  from security doc §4.
+- **`SpotlightTransformer`** — wraps the result in a
+  `<tool_result tool="…" trust="untrusted">…</tool_result>`
+  envelope with a plain-English warning. Works on both string and
+  `list[ContentBlock]` content.
+
+The strip-first order is pinned by a counter-example test that
+fails if the chain is reordered.
+
+Approvers, default chain `[AutoApproveReadOnly, SessionAllowlist,
+TierGate]`:
+
+- **`AutoApproveReadOnly`** — approves read-only (`side_effects ∈
+  {"none", "read"}`) tier ≤ 2 calls.
+- **`SessionAllowlist`** — caches `(tool_name, args_signature)`
+  tuples where `args_signature = sha256(sorted_json(args))`.
+  First-run prompts; exact repeats auto-approve. Populated by the
+  harness-assembly layer on user approval.
+- **`TierGate`** — escalates every call unconditionally as a
+  belt-and-braces check; guarantees tier-4+ reaches the gateway
+  even if earlier approvers misfire.
+
+### Added — Security primitives (`src/cairn/tools/security/`)
+
+- **`WorkspaceSandbox`** — rejects absolute paths, rejects `..`
+  escapes, rejects symlink escapes via `Path.resolve()` +
+  `relative_to()`. `assert_readable` / `assert_writable` for
+  belt-and-braces checks on paths constructed by other means.
+- **SSRF defence module** — `validate_url`, `resolve_hostname`,
+  `safe_fetch`. Scheme allowlist (`http`, `https`), blocked-network
+  list covering RFC1918, loopback, link-local (incl. cloud metadata
+  `169.254.169.254`), IPv6 ULA / link-local / unspecified, and
+  carrier-grade NAT. Any single resolved IP in a blocked range
+  fails the call. Embedded-credential URLs rejected. `safe_fetch`
+  disables automatic redirects and caps response size via streaming
+  reads.
+
+IP pinning against DNS rebinding is deferred — see ADR 0017.
+
+### Added — Built-in tools (`src/cairn/tools/builtin/`)
+
+Each tool is built via a `make_<tool>(…)` factory so the CLI can
+bind it to whichever workspace root is in scope.
+
+- **`file_read`** (Tier 1) — sandboxed UTF-8 read with a 1 MB cap
+  (`... [truncated: N bytes total]` suffix on overflow) and binary
+  detection via null-byte probe returning
+  `[binary: <mime>, <size> bytes, sha256:<prefix>]`.
+- **`file_write`** (Tier 3, approval-required) — `create` /
+  `overwrite` / `append` modes, 1 MB write cap, parent directory
+  must already exist, refuses to clobber non-regular targets.
+- **`grep`** (Tier 1) — regex search under the sandbox, 200-match
+  cap with truncation notice, skips binaries / hidden dirs /
+  oversize files. Uses ripgrep (`--no-follow`,
+  `--max-filesize=N`, `--max-count=N`, `-e pattern`, argv-form,
+  no shell) when `rg` is on `PATH`; pure-Python `re` +
+  `pathlib.rglob` fallback otherwise.
+- **`web_fetch`** (Tier 2) — full SSRF defence re-run at every hop,
+  including each redirect target; manual redirect walk with a hard
+  hop cap; Content-Type filter (text/*, application/json,
+  application/xml, application/javascript); HTML best-effort
+  stripped to plain text (script and style bodies removed, entities
+  unescaped, whitespace collapsed); binary responses return the
+  same summary form as `file_read`.
+
+### Added — User documentation
+
+- `docs/tools.md` — the tool system: Tool protocol, risk tiers,
+  session-type scoping, the `@tool` decorator with a worked
+  example, workspace sandbox, SSRF defence, security middleware
+  details, built-in catalogue, custom-tool registration, what's
+  not yet shipped.
+- `docs/decisions/0013-tier-taxonomy.md` — why 0-4 tiers, why not
+  more or fewer, and the approval policy per tier.
+- `docs/decisions/0014-tool-decorator.md` — why the `@tool`
+  decorator over a class hierarchy.
+- `docs/decisions/0015-session-allowlist-exact-match.md` — why
+  the allowlist matches on `(tool_name, args_signature)` rather
+  than tool-level or path-scoped approval.
+- `docs/decisions/0016-no-shell-in-v1.md` — why V1 does not ship
+  `bash` / `code_exec` and what would need to land before it does.
+- `docs/decisions/0017-ssrf-ip-pinning-deferred.md` — why IP
+  pinning against DNS rebinding is out of V1, and the upgrade
+  path.
+- `docs/architecture.md` — tool system status bumped to partial;
+  brick diagram updated (orchestrator + tool system).
+- `docs/decisions/README.md` — index updated.
+- `docs/README.md` — tools doc linked.
+
+### Tests
+
+- 26 tests — decorator, registry, approval repo.
+- 37 tests — three transformers, three approvers (including the
+  order-pinning counter-example).
+- 38 tests — workspace sandbox, SSRF validate / resolve /
+  safe-fetch with mocked DNS and `httpx.MockTransport`.
+- 58 tests — built-in tools (15 `file_read`, 12 `file_write`,
+  15 `grep`, 16 `web_fetch`).
+- **Total suite: 537 passing** (up from 479 on 0.4.0).
+
+Ruff clean across `src/` and `tests/`. Pyright clean on `src/`;
+the test-suite's pre-existing pyright warnings (union-narrowing
+and mock-type issues) are unchanged.
+
+### Deferred (to subsequent releases)
+
+- `DefaultToolRunner` — per-call lifecycle driver that replaces
+  `RaisingToolRunner`. Will drive the state machine (pending →
+  approved → executing → terminal), apply the transformer chain,
+  enforce `asyncio.timeout(tool.timeout_s)`, and persist approval
+  decisions. Tracked in `.plan/tool-system-design.md` §7.
+- `DelegationTool` — concrete Tool implementation for spawning
+  sub-sessions against alternative models, with mid-stream cost
+  caps and parent attribution. Tracked in
+  `.plan/tool-system-design.md` §12.
+- Orchestrator wiring — replacing `EmptyToolRegistry` +
+  `RaisingToolRunner` with the real ones; `DelegationSpawned` /
+  `DelegationCompleted` emission.
+- IP pinning against DNS rebinding — V2; see ADR 0017.
+- MCP client — V2. The `tool_kind="mcp"` discriminator and
+  registry slot are already in place.
 
 ## [0.4.0] — 2026-04-20
 
@@ -382,7 +555,8 @@ Architecture doc §4.1.
 Commits: [`85d8e30`](https://github.com/wiktordepina/cairn/commit/85d8e30a4c48981d03cbdb4307b06e2ff29de289),
 [`35b1c91`](https://github.com/wiktordepina/cairn/commit/35b1c911c039754389c296b67f3f1c5dc16bc4f9).
 
-[Unreleased]: https://github.com/wiktordepina/cairn/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/wiktordepina/cairn/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/wiktordepina/cairn/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/wiktordepina/cairn/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/wiktordepina/cairn/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/wiktordepina/cairn/compare/v0.2.0...v0.3.0
