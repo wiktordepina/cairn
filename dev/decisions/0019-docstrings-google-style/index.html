@@ -12,13 +12,11 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0015-session-allowlist-exact-match/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0019-docstrings-google-style/">
       
       
-        <link rel="prev" href="../0014-tool-decorator/">
+        <link rel="prev" href="../0018-docs-site-tooling/">
       
-      
-        <link rel="next" href="../0016-no-shell-in-v1/">
       
       
         
@@ -29,7 +27,7 @@
     
     
       
-        <title>0015 Session allowlist exact match - Cairn</title>
+        <title>0019 Google docstring style - Cairn</title>
       
     
     
@@ -82,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0015-session-approval-allowlist-uses-exact-args-signature-match" class="md-skip">
+        <a href="#0019-docstrings-follow-google-style" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0015 Session allowlist exact match
+              0019 Google docstring style
             
           </span>
         </div>
@@ -1414,37 +1412,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0015 Session allowlist exact match
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0015-session-allowlist-exact-match/" class="md-nav__link">
         
   
   
@@ -1460,59 +1431,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1606,10 +1524,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0019-docstrings-google-style/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0019 Google docstring style
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1625,6 +1570,98 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-good" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example — good
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example — avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1683,6 +1720,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Decision">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-good" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example — good
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example — avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1690,6 +1755,17 @@
     <span class="md-ellipsis">
       
         Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
       
     </span>
   </a>
@@ -1713,7 +1789,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0015-session-allowlist-exact-match.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0019-docstrings-google-style.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1721,81 +1797,128 @@
   
 
 
-<h1 id="0015-session-approval-allowlist-uses-exact-args-signature-match">0015 — Session approval allowlist uses exact args-signature match<a class="headerlink" href="#0015-session-approval-allowlist-uses-exact-args-signature-match" title="Permanent link">&para;</a></h1>
+<h1 id="0019-docstrings-follow-google-style">0019 — Docstrings follow Google style<a class="headerlink" href="#0019-docstrings-follow-google-style" title="Permanent link">&para;</a></h1>
 <p><strong>Date:</strong> 2026-04-21
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Tier 3 tools (mutating filesystem operations, delegation) require
-approval the first time the model invokes them in a session. The
-question is what happens on the second, third, fourth call.</p>
-<p>Three shapes considered:</p>
-<ol>
-<li><strong>Always re-prompt.</strong> Safe, but adds friction to every step of
-   an iterative edit session. Users hit prompt fatigue and either
-   reflexively approve (defeating the point) or abandon the session.</li>
-<li><strong>Approve the tool for the rest of the session.</strong> "Let
-   <code>file_write</code> go through for this session" is fast, but the
-   granularity is wrong — approving one write to <code>src/foo.py</code> should
-   not auto-approve writes to <code>package.json</code> or <code>.env</code>.</li>
-<li><strong>Approve an exact <code>(tool_name, args)</code> tuple.</strong> Re-prompt on any
-   argument change. The user approves a specific action; repeats of
-   that specific action go through.</li>
-</ol>
-<p>Option 3 gives the right default. The granularity matches the
-user's mental model: the model is asking to do a specific thing, the
-user approves that thing, the same thing can happen again without
-asking.</p>
-<p>A fourth alternative — "approve the tool for a set of paths the
-user specifies" — is real and will matter eventually ("trust
-<code>file_write</code> everywhere under <code>src/</code>"). It's also more UI than
-V1 can afford. The UI brick can add it as a follow-on affordance
-without changing the allowlist's underlying contract.</p>
+<p><a href="../0018-docs-site-tooling/">ADR 0018</a> selected MkDocs + Material +
+<code>mkdocstrings[python]</code> as cairn's documentation stack and, in passing,
+called out that the docstring style would be Google. That ADR is
+primarily about <em>build and publication</em> tooling — the authoring
+convention deserves its own record so it survives a tooling change and
+so it's discoverable by anyone searching ADRs for "docstrings".</p>
+<p>The practical state at the time of this ADR: most docstrings in
+<code>src/cairn/</code> are plain prose. A minority use RST-style double-backticks
+(<code></code>Clock.now()<code></code>) for inline code — a habit from Sphinx-heavy
+Python projects. Nine docstrings across the tree use Google-style
+section headings. Contributors have no single style to follow, which
+will produce drift as the codebase grows and now that docstrings
+render on a user-visible site.</p>
+<p><code>mkdocstrings[python]</code> supports Google, numpy, and sphinx (reST) styles
+via its handler config. Only one can be the house style — mixing
+produces inconsistent rendering and confuses contributors.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><code>SessionAllowlist</code> caches <code>(tool_name, args_signature)</code> tuples,
-where <code>args_signature = sha256(sorted_json(args))</code>. On the second
-call with an identical tool name and identical argument values, the
-allowlist returns <code>APPROVE</code> from the approver chain. On any change
-to the args — different path, different mode, any bit different —
-the chain falls through to the gateway and the user is prompted
-again.</p>
-<p>The hash is over the canonicalised JSON (<code>sort_keys=True</code>), so
-argument ordering has no effect; only value differences re-prompt.
-The cache is per-session — archiving a session drops its
-allowlist. Restarting the process also drops it; allowlists are
-deliberately in-memory, not persisted. The <code>approval_decisions</code>
-table holds the audit trail; the allowlist is a runtime convenience
-on top of that record.</p>
-<p>Population is explicit: the harness-assembly layer calls
-<code>SessionAllowlist.remember_user_approval(session_id=..., request=...)</code>
-after receiving a <code>decided_by="user"</code> result from the gateway. The
-allowlist doesn't snoop the approval chain.</p>
+<p><strong>All cairn docstrings follow Google style.</strong> The <code>docstring_style:
+google</code> option in <code>mkdocs.yml</code> is the canonical configuration; this
+ADR records the authoring convention that config implies.</p>
+<p>Concretely:</p>
+<ul>
+<li><strong>One-line summary</strong> as the first line, ending with a period. Blank
+  line, then any longer explanation.</li>
+<li><strong>Structured sections</strong> — <code>Args:</code>, <code>Returns:</code>, <code>Raises:</code>, <code>Yields:</code>,
+  <code>Examples:</code> — used when they clarify. Not required for every
+  docstring. A simple getter with a self-evident return type is fine
+  as a one-liner. A method taking three parameters with non-obvious
+  failure modes should have sections.</li>
+<li><strong>Inline code uses single backticks</strong> — <code>`foo`</code>. Never
+  <code></code>foo<code></code>. RST-style double-backticks render literally in
+  Markdown-mode mkdocstrings output.</li>
+<li><strong>British English</strong> — consistent with the rest of cairn's
+  user-facing text.</li>
+<li><strong>Module docstrings</strong> may remain a single sentence. There's no
+  requirement to promote every module header into full sections.</li>
+<li><strong>Private symbols</strong> (leading underscore) may have terser docstrings
+  since they don't appear on the published site; contributors still
+  benefit from a one-line summary.</li>
+</ul>
+<h3 id="example-good">Example — good<a class="headerlink" href="#example-good" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_hostname</span><span class="p">(</span><span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">timeout_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">IPv4Address</span><span class="p">]:</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve a hostname to its public IP addresses.</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="sd">    Filters out loopback, RFC1918, link-local, and cloud-metadata</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="sd">    ranges before returning. Used by SSRF defence before every</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="sd">    outbound HTTP connection.</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="sd">    Args:</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="sd">        host: Hostname to resolve. Must not include scheme or port.</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="sd">        timeout_s: DNS lookup timeout in seconds.</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="sd">    Returns:</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="sd">        The list of public IPv4 addresses the hostname resolves to.</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="sd">        Empty if every resolved address is in a blocked range.</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="sd">    Raises:</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="sd">        SSRFBlocked: If `host` itself is an IP literal in a blocked</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="sd">            range (pre-DNS check).</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="sd">        socket.gaierror: If DNS resolution fails or times out.</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span></code></pre></div>
+<h3 id="example-avoid">Example — avoid<a class="headerlink" href="#example-avoid" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">resolve_hostname</span><span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">timeout_s</span><span class="o">=</span><span class="mf">5.0</span><span class="p">):</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolves ``host`` to public IPs, filtering blocked ranges.</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="sd">    Raises ``SSRFBlocked`` for IP literals.</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span></code></pre></div>
+<p>Problems: double-backticks render literally on the site; no structured
+sections for a function that takes parameters and raises specific
+exceptions; first line leads with "Resolves" rather than a clean
+imperative "Resolve".</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <p><strong>Easier:</strong></p>
 <ul>
-<li>The friction model is right: approve a thing once, the same thing
-  is free thereafter. Different things still prompt.</li>
-<li>No state-recovery logic at startup — nothing is persisted.</li>
-<li>The audit trail (<code>approval_decisions</code> rows) is independent of the
-  allowlist's runtime cache.</li>
+<li>One style across the tree. New contributors follow the same rule
+  whether they're writing a tool, a provider adapter, or an
+  orchestrator middleware.</li>
+<li><code>mkdocstrings</code> renders structured sections as proper parameter and
+  return blocks on the reference pages, which is a meaningful lift
+  over plain-prose rendering.</li>
+<li>Any future lint gate (e.g. <code>ruff</code>'s pydocstyle rules with
+  <code>convention = "google"</code>) has a single target to enforce against.</li>
 </ul>
 <p><strong>Harder:</strong></p>
 <ul>
-<li>"I want to trust <code>file_write</code> everywhere inside <code>src/</code>" has no
-  V1 answer. A user who wants that granularity either pre-approves
-  each path individually or waits for the UI brick to add a
-  trust-scope affordance.</li>
-<li>Two semantically identical calls with different argument shapes
-  (whitespace in a JSON-valued arg, for example) would be treated as
-  different. This is rare in practice and the re-prompt is the
-  conservative default.</li>
+<li>PRs touching public symbols are expected to update the docstring in
+  the same change. Reviewers will flag mismatches. This is a small
+  tax on velocity.</li>
+<li>Style consistency is a review concern until a lint rule lands. No
+  automation catches a new RST-style double-backtick today.</li>
 </ul>
 <p><strong>Ongoing cost:</strong></p>
 <ul>
-<li><code>SessionAllowlist</code> lives in-process memory. For long-running
-  sessions across days, nothing prevents the allowlist growing
-  arbitrarily. Sessions are archived periodically and the cache is
-  cleared then. If this turns out to matter, a per-session bound
-  (LRU, time-based) is a local change.</li>
+<li>Existing plain-prose docstrings aren't a bug — they're acceptable
+  under this convention. Backfilling them with sections is editorial
+  work that happens organically as code gets touched, not as a big-bang
+  rewrite. The four reference pages in <code>docs/reference/</code> are where
+  this polish matters most; elsewhere it's lower priority.</li>
+<li>A ripple to future ADRs: if cairn ever moves off <code>mkdocstrings</code>, the
+  convention either stays (because Google style is the most widely
+  recognised and readable of the three options) or gets re-examined
+  against the new tool's preference.</li>
+</ul>
+<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>numpy style.</strong> Common in scientific Python. More verbose than
+  Google (section headings are underlined with dashes, parameters use
+  a specific two-line layout). Google style reads better in a codebase
+  where functions typically take 1–3 parameters.</li>
+<li><strong>sphinx / reST style</strong> (<code>:param foo:</code>, <code>:returns:</code>). Reads poorly
+  in source; the directive syntax belongs in RST files, not Python
+  docstrings. Would also conflict visually with the Markdown-heavy
+  narrative docs.</li>
+<li><strong>No convention, plain prose only.</strong> The state before this ADR. No
+  way to render a parameter table; no lint path; drift is inevitable
+  as the codebase grows.</li>
 </ul>
 
 
