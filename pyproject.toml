@@ -44,5 +44,6 @@ pythonVersion = "3.13"
 typeCheckingMode = "strict"
 venvPath = "."
 venv = ".venv"
+include = ["src"]
 reportPrivateUsage = "warning"
 reportUnusedFunction = "warning"
