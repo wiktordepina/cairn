@@ -50,9 +50,7 @@ def budgets() -> BudgetConfig:
 async def tracker(
     usage_repo: UsageRepo, frozen_clock: FrozenClock, budgets: BudgetConfig
 ) -> BasicCostTracker:
-    return BasicCostTracker(
-        usage_repo=usage_repo, clock=frozen_clock, budgets=budgets
-    )
+    return BasicCostTracker(usage_repo=usage_repo, clock=frozen_clock, budgets=budgets)
 
 
 def _usage(*, input_tokens: int = 100, output_tokens: int = 50) -> UsageEvent:
@@ -188,9 +186,7 @@ class TestShouldBlockTurn:
         budgets: BudgetConfig,
     ) -> None:
         # Separate sessions, but combined daily cost exceeds cap.
-        tracker = BasicCostTracker(
-            usage_repo=usage_repo, clock=frozen_clock, budgets=budgets
-        )
+        tracker = BasicCostTracker(usage_repo=usage_repo, clock=frozen_clock, budgets=budgets)
         for i in range(5):
             await _insert_session(session_repo, f"sess-{i}")
             await tracker.record(
@@ -208,10 +204,7 @@ class TestShouldBlockTurn:
             )
         # A fresh session still blocks because the daily cap is hit.
         await _insert_session(session_repo, "sess-new")
-        assert (
-            await tracker.should_block_turn(session_id="sess-new")
-            == BudgetVerdict.BLOCK
-        )
+        assert await tracker.should_block_turn(session_id="sess-new") == BudgetVerdict.BLOCK
 
     @pytest.mark.asyncio
     async def test_session_isolated(
@@ -245,9 +238,7 @@ class TestShouldBlockTurn:
         # Record cost on day A.
         day_a = datetime(2026, 4, 20, 23, 59, 59, tzinfo=UTC)
         clock = FrozenClock(now=day_a)
-        tracker = BasicCostTracker(
-            usage_repo=usage_repo, clock=clock, budgets=budgets
-        )
+        tracker = BasicCostTracker(usage_repo=usage_repo, clock=clock, budgets=budgets)
         await _insert_session(session_repo, "sess-1")
         await tracker.record(
             session_id="sess-1",
@@ -267,10 +258,7 @@ class TestShouldBlockTurn:
         # Daily cap resets (previous day's spend doesn't count today).
         # Session cap is session-specific, so sess-other proceeds cleanly.
         await _insert_session(session_repo, "sess-other")
-        assert (
-            await tracker.should_block_turn(session_id="sess-other")
-            == BudgetVerdict.PROCEED
-        )
+        assert await tracker.should_block_turn(session_id="sess-other") == BudgetVerdict.PROCEED
 
 
 class TestConstruction:

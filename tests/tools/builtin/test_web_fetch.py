@@ -48,9 +48,7 @@ def _patch_client(
         kwargs["transport"] = httpx.MockTransport(handler)
         return real_cls(**kwargs)  # type: ignore[arg-type]
 
-    monkeypatch.setattr(
-        "cairn.tools.builtin._web_fetch.httpx.AsyncClient", patched
-    )
+    monkeypatch.setattr("cairn.tools.builtin._web_fetch.httpx.AsyncClient", patched)
 
 
 class TestMetadata:
@@ -171,9 +169,7 @@ class TestBinaryContent:
 
 class TestSsrfRejections:
     @pytest.mark.asyncio
-    async def test_blocks_file_scheme(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_blocks_file_scheme(self, turn_ctx: TurnContext) -> None:
         t = make_web_fetch()
         with pytest.raises(SSRFBlocked, match="Scheme"):
             await t.invoke({"url": "file:///etc/passwd"}, turn_ctx)
@@ -213,14 +209,10 @@ class TestSsrfRejections:
             await t.invoke({"url": "http://aws.example/"}, turn_ctx)
 
     @pytest.mark.asyncio
-    async def test_blocks_embedded_credentials(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_blocks_embedded_credentials(self, turn_ctx: TurnContext) -> None:
         t = make_web_fetch()
         with pytest.raises(SSRFBlocked, match="credentials"):
-            await t.invoke(
-                {"url": "https://user:pass@example.com/"}, turn_ctx
-            )
+            await t.invoke({"url": "https://user:pass@example.com/"}, turn_ctx)
 
 
 class TestSizeCap:
@@ -283,9 +275,7 @@ class TestRedirects:
         def handler(request: httpx.Request) -> httpx.Response:
             hits.append(str(request.url))
             if request.url.path == "/start":
-                return httpx.Response(
-                    302, headers={"Location": "https://example.com/final"}
-                )
+                return httpx.Response(302, headers={"Location": "https://example.com/final"})
             return httpx.Response(
                 200,
                 content=b"arrived",
@@ -316,14 +306,10 @@ class TestRedirects:
                 return _make_getaddrinfo(["169.254.169.254"])(host, 0)
             return _make_getaddrinfo(["1.1.1.1"])(host, 0)
 
-        monkeypatch.setattr(
-            "cairn.tools.security._ssrf.socket.getaddrinfo", fake_getaddrinfo
-        )
+        monkeypatch.setattr("cairn.tools.security._ssrf.socket.getaddrinfo", fake_getaddrinfo)
 
         def handler(request: httpx.Request) -> httpx.Response:
-            return httpx.Response(
-                302, headers={"Location": "http://metadata.example/meta"}
-            )
+            return httpx.Response(302, headers={"Location": "http://metadata.example/meta"})
 
         _patch_client(monkeypatch, handler)
         t = make_web_fetch()
@@ -340,9 +326,7 @@ class TestRedirects:
 
         def handler(request: httpx.Request) -> httpx.Response:  # noqa: ARG001
             # Always redirect to itself — forces the hop cap.
-            return httpx.Response(
-                302, headers={"Location": "https://example.com/loop"}
-            )
+            return httpx.Response(302, headers={"Location": "https://example.com/loop"})
 
         _patch_client(monkeypatch, handler)
         t = make_web_fetch(max_redirects=2)

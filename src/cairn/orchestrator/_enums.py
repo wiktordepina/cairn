@@ -15,7 +15,7 @@ class TurnState(StrEnum):
 
     STARTED = "started"
     MEMORY_RETRIEVAL = "memory_retrieval"
-    ITERATION = "iteration"                # in the tool loop
+    ITERATION = "iteration"  # in the tool loop
     CONTEXT_ASSEMBLY = "context_assembly"
     PROVIDER_STREAMING = "provider_streaming"
     TOOL_DISPATCH = "tool_dispatch"

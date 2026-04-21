@@ -40,9 +40,7 @@ class DefaultToolRegistry:
     ) -> None:
         self._companion: list[Tool] = list(companion_tools)
         self._mcp: list[Tool] = list(mcp_tools)
-        self._persona_allowlists: dict[str, list[str]] = dict(
-            persona_allowlists or {}
-        )
+        self._persona_allowlists: dict[str, list[str]] = dict(persona_allowlists or {})
         self._ephemeral_allowlist: frozenset[str] = frozenset(ephemeral_allowlist)
 
         # Unified name → Tool map for get(). Duplicates across the
@@ -79,11 +77,7 @@ class DefaultToolRegistry:
                 return [*self._companion, *self._mcp]
             case SessionType.PERSONA:
                 allowed = self._persona_allowlists.get(session.persona, [])
-                return [
-                    t
-                    for t in (*self._companion, *self._mcp)
-                    if t.name in allowed
-                ]
+                return [t for t in (*self._companion, *self._mcp) if t.name in allowed]
             case SessionType.EPHEMERAL:
                 if not self._ephemeral_allowlist:
                     return []

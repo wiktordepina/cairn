@@ -64,9 +64,7 @@ class MessageRepo:
                 ),
             )
 
-    async def insert_with_idx(
-        self, message: Message, *, turn_id: str | None = None
-    ) -> None:
+    async def insert_with_idx(self, message: Message, *, turn_id: str | None = None) -> None:
         """Insert a message with its existing ``idx`` (for replay/import)."""
         conn = await self._db.connect()
         content = message.content_json().decode("utf-8")

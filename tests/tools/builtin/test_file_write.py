@@ -71,9 +71,7 @@ class TestOverwriteMode:
         turn_ctx: TurnContext,
     ) -> None:
         t = make_file_write(sandbox)
-        await t.invoke(
-            {"path": "existing.txt", "content": "new\n"}, turn_ctx
-        )
+        await t.invoke({"path": "existing.txt", "content": "new\n"}, turn_ctx)
         assert (tmp_path / "existing.txt").read_text() == "new\n"
 
     @pytest.mark.asyncio
@@ -84,9 +82,7 @@ class TestOverwriteMode:
         turn_ctx: TurnContext,
     ) -> None:
         t = make_file_write(sandbox)
-        await t.invoke(
-            {"path": "docs/note.md", "content": "note"}, turn_ctx
-        )
+        await t.invoke({"path": "docs/note.md", "content": "note"}, turn_ctx)
         assert (tmp_path / "docs" / "note.md").read_text() == "note"
 
 
@@ -127,19 +123,13 @@ class TestSandboxViolations:
     ) -> None:
         t = make_file_write(sandbox)
         with pytest.raises(PathEscape):
-            await t.invoke(
-                {"path": "/tmp/evil", "content": "x"}, turn_ctx
-            )
+            await t.invoke({"path": "/tmp/evil", "content": "x"}, turn_ctx)
 
     @pytest.mark.asyncio
-    async def test_rejects_dotdot(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_rejects_dotdot(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_file_write(sandbox)
         with pytest.raises(PathEscape):
-            await t.invoke(
-                {"path": "../escape.txt", "content": "x"}, turn_ctx
-            )
+            await t.invoke({"path": "../escape.txt", "content": "x"}, turn_ctx)
 
 
 class TestParentDir:
@@ -149,9 +139,7 @@ class TestParentDir:
     ) -> None:
         t = make_file_write(sandbox)
         with pytest.raises(ToolError, match="Parent directory does not exist"):
-            await t.invoke(
-                {"path": "nonexistent/x.txt", "content": "y"}, turn_ctx
-            )
+            await t.invoke({"path": "nonexistent/x.txt", "content": "y"}, turn_ctx)
 
 
 class TestSizeCap:
@@ -163,9 +151,7 @@ class TestSizeCap:
     ) -> None:
         t = make_file_write(sandbox, max_bytes=100)
         with pytest.raises(ToolError, match="exceeds max_bytes"):
-            await t.invoke(
-                {"path": "big.txt", "content": "x" * 200}, turn_ctx
-            )
+            await t.invoke({"path": "big.txt", "content": "x" * 200}, turn_ctx)
 
 
 class TestDirectoryOverwriteRejected:
@@ -177,6 +163,4 @@ class TestDirectoryOverwriteRejected:
     ) -> None:
         t = make_file_write(sandbox)
         with pytest.raises(ToolError, match="non-regular"):
-            await t.invoke(
-                {"path": "docs", "content": "x"}, turn_ctx
-            )
+            await t.invoke({"path": "docs", "content": "x"}, turn_ctx)

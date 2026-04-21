@@ -43,32 +43,24 @@ class TestResolve:
         with pytest.raises(PathEscape, match="outside"):
             sandbox.resolve("../../etc/passwd")
 
-    def test_rejects_dotdot_with_reentry(
-        self, sandbox: WorkspaceSandbox
-    ) -> None:
+    def test_rejects_dotdot_with_reentry(self, sandbox: WorkspaceSandbox) -> None:
         # src/../../outside → escapes
         with pytest.raises(PathEscape):
             sandbox.resolve("src/../../elsewhere")
 
-    def test_allows_dotdot_when_stays_inside(
-        self, sandbox: WorkspaceSandbox
-    ) -> None:
+    def test_allows_dotdot_when_stays_inside(self, sandbox: WorkspaceSandbox) -> None:
         # src/../docs/readme.md → inside
         p = sandbox.resolve("src/../docs/readme.md")
         assert p.read_text().startswith("# readme")
 
-    def test_non_existent_path_allowed(
-        self, sandbox: WorkspaceSandbox
-    ) -> None:
+    def test_non_existent_path_allowed(self, sandbox: WorkspaceSandbox) -> None:
         # resolve() canonicalises without strict=True, so non-existent
         # paths inside the sandbox resolve cleanly — callers enforce
         # existence at the file-op level.
         p = sandbox.resolve("src/new_file.py")
         assert p.name == "new_file.py"
 
-    def test_rejects_symlink_escape(
-        self, tmp_path: Path, sandbox: WorkspaceSandbox
-    ) -> None:
+    def test_rejects_symlink_escape(self, tmp_path: Path, sandbox: WorkspaceSandbox) -> None:
         # Create a symlink inside the sandbox that points outside.
         outside = tmp_path.parent / "outside"
         outside.mkdir(exist_ok=True)
@@ -83,9 +75,7 @@ class TestAsserts:
         p = sandbox.resolve("src/main.py")
         sandbox.assert_readable(p)  # does not raise
 
-    def test_readable_outside_raises(
-        self, tmp_path: Path, sandbox: WorkspaceSandbox
-    ) -> None:
+    def test_readable_outside_raises(self, tmp_path: Path, sandbox: WorkspaceSandbox) -> None:
         outside = tmp_path.parent / "other.txt"
         with pytest.raises(PathEscape):
             sandbox.assert_readable(outside)
@@ -94,9 +84,7 @@ class TestAsserts:
         p = sandbox.resolve("new.txt")
         sandbox.assert_writable(p)
 
-    def test_writable_outside_raises(
-        self, tmp_path: Path, sandbox: WorkspaceSandbox
-    ) -> None:
+    def test_writable_outside_raises(self, tmp_path: Path, sandbox: WorkspaceSandbox) -> None:
         with pytest.raises(PathEscape):
             sandbox.assert_writable(tmp_path.parent / "xx")
 

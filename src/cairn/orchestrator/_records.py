@@ -36,6 +36,6 @@ class ApprovalDecisionRecord(BaseModel):
     tool_call_id: str
     decided_at: datetime
     decided_by: str
-    decision: str            # 'approved' | 'rejected'
+    decision: str  # 'approved' | 'rejected'
     reason: str | None
     args_snapshot_json: str | None

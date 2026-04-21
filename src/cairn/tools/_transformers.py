@@ -37,10 +37,10 @@ if TYPE_CHECKING:
 # zero-width anchor so the substitution still works.
 _SECRET_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"(Bearer\s+)[A-Za-z0-9_\-\.]{20,}"),
-    re.compile(r"()(sk-[A-Za-z0-9]{20,})"),              # OpenAI-shaped
-    re.compile(r"()(sk-ant-[A-Za-z0-9_\-]{20,})"),       # Anthropic-shaped
-    re.compile(r"()(AIza[0-9A-Za-z_\-]{35})"),           # Google API
-    re.compile(r"()(AKIA[0-9A-Z]{16})"),                 # AWS access key
+    re.compile(r"()(sk-[A-Za-z0-9]{20,})"),  # OpenAI-shaped
+    re.compile(r"()(sk-ant-[A-Za-z0-9_\-]{20,})"),  # Anthropic-shaped
+    re.compile(r"()(AIza[0-9A-Za-z_\-]{35})"),  # Google API
+    re.compile(r"()(AKIA[0-9A-Z]{16})"),  # AWS access key
 )
 
 
@@ -61,9 +61,7 @@ class SecretRedactor:
         tool_call: ToolUseBlock,  # noqa: ARG002
         ctx: TurnContext,  # noqa: ARG002
     ) -> ToolResultBlock:
-        return result.model_copy(
-            update={"content": _map_text(result.content, redact_secrets)}
-        )
+        return result.model_copy(update={"content": _map_text(result.content, redact_secrets)})
 
 
 # ---------------------------------------------------------------------------

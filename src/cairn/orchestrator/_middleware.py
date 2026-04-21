@@ -30,7 +30,7 @@ class ApprovalRequest:
     tool_call_id: str
     tool_name: str
     args: dict[str, Any]
-    risk_tier: int                                     # 0..5
+    risk_tier: int  # 0..5
     side_effects: Literal["none", "read", "write"]
 
 
@@ -39,7 +39,7 @@ class ApprovalDecision:
     """Outcome returned by a ``ToolApprover`` / ``ApprovalGateway``."""
 
     outcome: ApprovalOutcome
-    decided_by: str                                    # 'user', 'auto:read-only', etc.
+    decided_by: str  # 'user', 'auto:read-only', etc.
     reason: str | None = None
 
 

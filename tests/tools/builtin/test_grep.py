@@ -29,16 +29,10 @@ def sandbox(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> WorkspaceSandbox
     (tmp_path / "src" / "main.py").write_text(
         "def main():\n    print('hello')\n    return 0\n", encoding="utf-8"
     )
-    (tmp_path / "src" / "util.py").write_text(
-        "def helper():\n    pass\n", encoding="utf-8"
-    )
-    (tmp_path / "README.md").write_text(
-        "# project\nhello there\n", encoding="utf-8"
-    )
+    (tmp_path / "src" / "util.py").write_text("def helper():\n    pass\n", encoding="utf-8")
+    (tmp_path / "README.md").write_text("# project\nhello there\n", encoding="utf-8")
     (tmp_path / ".hidden").mkdir()
-    (tmp_path / ".hidden" / "secret.py").write_text(
-        "hello secret\n", encoding="utf-8"
-    )
+    (tmp_path / ".hidden" / "secret.py").write_text("hello secret\n", encoding="utf-8")
     return WorkspaceSandbox(root=tmp_path)
 
 
@@ -53,36 +47,24 @@ class TestMetadata:
 
 class TestHappyPath:
     @pytest.mark.asyncio
-    async def test_finds_matches(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_finds_matches(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": "hello", "path": "."}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "hello", "path": "."}, turn_ctx)
         content = result.content
         assert isinstance(content, str)
         assert "README.md:2:hello there" in content
         assert "src/main.py:2:    print('hello')" in content
 
     @pytest.mark.asyncio
-    async def test_no_matches(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_no_matches(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": "zzznonexistent", "path": "."}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "zzznonexistent", "path": "."}, turn_ctx)
         assert result.content == "[no matches]"
 
     @pytest.mark.asyncio
-    async def test_glob_filter(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_glob_filter(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": "hello", "path": ".", "glob": "*.md"}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "hello", "path": ".", "glob": "*.md"}, turn_ctx)
         content = result.content
         assert "README.md" in content
         assert "main.py" not in content
@@ -92,19 +74,13 @@ class TestHappyPath:
         self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
     ) -> None:
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": "helper", "path": "src/util.py"}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "helper", "path": "src/util.py"}, turn_ctx)
         assert "src/util.py:1:def helper" in result.content
 
     @pytest.mark.asyncio
-    async def test_regex_pattern(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_regex_pattern(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": r"^def \w+", "path": "src"}, turn_ctx
-        )
+        result = await t.invoke({"pattern": r"^def \w+", "path": "src"}, turn_ctx)
         content = result.content
         assert "src/main.py" in content
         assert "src/util.py" in content
@@ -116,9 +92,7 @@ class TestHiddenDirs:
         self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
     ) -> None:
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": "hello", "path": "."}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "hello", "path": "."}, turn_ctx)
         # `.hidden/secret.py` contains "hello" but must be skipped.
         assert ".hidden" not in result.content
 
@@ -131,13 +105,9 @@ class TestBinarySkip:
         sandbox: WorkspaceSandbox,
         turn_ctx: TurnContext,
     ) -> None:
-        (tmp_path / "src" / "data.bin").write_bytes(
-            b"hello\x00\x01binary\x00"
-        )
+        (tmp_path / "src" / "data.bin").write_bytes(b"hello\x00\x01binary\x00")
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": "hello", "path": "src"}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "hello", "path": "src"}, turn_ctx)
         assert "data.bin" not in result.content
 
 
@@ -152,42 +122,28 @@ class TestLargeFileSkip:
         big = "hello\n" * 1000  # 6000 bytes
         (tmp_path / "huge.txt").write_text(big, encoding="utf-8")
         t = make_grep(sandbox, max_file_bytes=100)
-        result = await t.invoke(
-            {"pattern": "hello", "path": "huge.txt"}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "hello", "path": "huge.txt"}, turn_ctx)
         assert result.content == "[no matches]"
 
 
 class TestErrorCases:
     @pytest.mark.asyncio
-    async def test_missing_path(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_missing_path(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_grep(sandbox)
         with pytest.raises(ToolError, match="does not exist"):
-            await t.invoke(
-                {"pattern": "x", "path": "nope"}, turn_ctx
-            )
+            await t.invoke({"pattern": "x", "path": "nope"}, turn_ctx)
 
     @pytest.mark.asyncio
-    async def test_invalid_regex(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_invalid_regex(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_grep(sandbox)
         with pytest.raises(ToolError, match="Invalid regex"):
-            await t.invoke(
-                {"pattern": "(unclosed", "path": "."}, turn_ctx
-            )
+            await t.invoke({"pattern": "(unclosed", "path": "."}, turn_ctx)
 
     @pytest.mark.asyncio
-    async def test_sandbox_escape(
-        self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext
-    ) -> None:
+    async def test_sandbox_escape(self, sandbox: WorkspaceSandbox, turn_ctx: TurnContext) -> None:
         t = make_grep(sandbox)
         with pytest.raises(PathEscape):
-            await t.invoke(
-                {"pattern": "x", "path": "/etc"}, turn_ctx
-            )
+            await t.invoke({"pattern": "x", "path": "/etc"}, turn_ctx)
 
 
 class TestMatchCap:
@@ -201,9 +157,7 @@ class TestMatchCap:
         lines = "\n".join(f"hello {i}" for i in range(50))
         (tmp_path / "many.txt").write_text(lines, encoding="utf-8")
         t = make_grep(sandbox, max_matches=5)
-        result = await t.invoke(
-            {"pattern": "hello", "path": "many.txt"}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "hello", "path": "many.txt"}, turn_ctx)
         content = result.content
         assert isinstance(content, str)
         assert "[truncated: match cap 5 reached]" in content
@@ -232,9 +186,7 @@ class TestRipgrepPath:
         monkeypatch.setattr(_grep, "_ripgrep_search", fake_ripgrep_search)
 
         t = make_grep(sandbox)
-        result = await t.invoke(
-            {"pattern": "hello", "path": "src"}, turn_ctx
-        )
+        result = await t.invoke({"pattern": "hello", "path": "src"}, turn_ctx)
         assert len(calls) == 1
         assert calls[0]["rg_path"] == "/usr/bin/rg"
         assert calls[0]["pattern"] == "hello"
@@ -265,7 +217,8 @@ class TestRipgrepPath:
                 return None
 
         async def fake_create_subprocess_exec(
-            *argv: str, **kwargs: object  # noqa: ARG001
+            *argv: str,
+            **kwargs: object,  # noqa: ARG001
         ) -> FakeProc:
             captured_argv.append(list(argv))
             return FakeProc()
@@ -277,9 +230,7 @@ class TestRipgrepPath:
         )
 
         t = make_grep(sandbox, max_matches=150, max_file_bytes=500_000)
-        await t.invoke(
-            {"pattern": "hello", "path": "src", "glob": "*.py"}, turn_ctx
-        )
+        await t.invoke({"pattern": "hello", "path": "src", "glob": "*.py"}, turn_ctx)
         argv = captured_argv[0]
         assert argv[0] == "/usr/bin/rg"
         # Safety flags — belt-and-braces against symlink follows.

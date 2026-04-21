@@ -38,18 +38,18 @@ from cairn.tools._errors import SSRFBlocked
 
 BLOCKED_NETWORKS: tuple[ipaddress.IPv4Network | ipaddress.IPv6Network, ...] = (
     # IPv4
-    ipaddress.ip_network("127.0.0.0/8"),      # loopback
-    ipaddress.ip_network("10.0.0.0/8"),       # RFC1918 private
-    ipaddress.ip_network("172.16.0.0/12"),    # RFC1918 private
-    ipaddress.ip_network("192.168.0.0/16"),   # RFC1918 private
-    ipaddress.ip_network("169.254.0.0/16"),   # link-local incl. 169.254.169.254
-    ipaddress.ip_network("0.0.0.0/8"),        # "this network"
-    ipaddress.ip_network("100.64.0.0/10"),    # carrier-grade NAT
+    ipaddress.ip_network("127.0.0.0/8"),  # loopback
+    ipaddress.ip_network("10.0.0.0/8"),  # RFC1918 private
+    ipaddress.ip_network("172.16.0.0/12"),  # RFC1918 private
+    ipaddress.ip_network("192.168.0.0/16"),  # RFC1918 private
+    ipaddress.ip_network("169.254.0.0/16"),  # link-local incl. 169.254.169.254
+    ipaddress.ip_network("0.0.0.0/8"),  # "this network"
+    ipaddress.ip_network("100.64.0.0/10"),  # carrier-grade NAT
     # IPv6
-    ipaddress.ip_network("::1/128"),          # loopback
-    ipaddress.ip_network("fc00::/7"),         # unique-local
-    ipaddress.ip_network("fe80::/10"),        # link-local
-    ipaddress.ip_network("::/128"),           # unspecified
+    ipaddress.ip_network("::1/128"),  # loopback
+    ipaddress.ip_network("fc00::/7"),  # unique-local
+    ipaddress.ip_network("fe80::/10"),  # link-local
+    ipaddress.ip_network("::/128"),  # unspecified
 )
 
 
@@ -76,8 +76,7 @@ def validate_url(url: str) -> tuple[str, str]:
 
     if parsed.scheme.lower() not in ALLOWED_SCHEMES:
         raise SSRFBlocked(
-            f"Scheme {parsed.scheme!r} is not allowed "
-            f"(allowed: {sorted(ALLOWED_SCHEMES)})"
+            f"Scheme {parsed.scheme!r} is not allowed (allowed: {sorted(ALLOWED_SCHEMES)})"
         )
     if not parsed.hostname:
         raise SSRFBlocked(f"URL {url!r} has no hostname")
@@ -111,9 +110,7 @@ def resolve_hostname(hostname: str) -> list[str]:
     try:
         infos = socket.getaddrinfo(hostname, None)
     except socket.gaierror as exc:
-        raise SSRFBlocked(
-            f"Hostname {hostname!r} did not resolve: {exc}"
-        ) from exc
+        raise SSRFBlocked(f"Hostname {hostname!r} did not resolve: {exc}") from exc
 
     ips: set[str] = set()
     for info in infos:
@@ -128,9 +125,7 @@ def resolve_hostname(hostname: str) -> list[str]:
     for ip_str in ips:
         ip = ipaddress.ip_address(ip_str)
         if _is_blocked_ip(ip):
-            raise SSRFBlocked(
-                f"Hostname {hostname!r} resolved to blocked IP {ip_str}"
-            )
+            raise SSRFBlocked(f"Hostname {hostname!r} resolved to blocked IP {ip_str}")
 
     return sorted(ips)
 
@@ -165,25 +160,24 @@ async def safe_fetch(
     hostname, normalised = validate_url(url)
     resolve_hostname(hostname)  # discards the IP list; just validates
 
-    async with httpx.AsyncClient(
-        timeout=timeout,
-        follow_redirects=False,
-        headers={"User-Agent": user_agent},
-    ) as client, client.stream("GET", normalised) as response:
+    async with (
+        httpx.AsyncClient(
+            timeout=timeout,
+            follow_redirects=False,
+            headers={"User-Agent": user_agent},
+        ) as client,
+        client.stream("GET", normalised) as response,
+    ):
         content = bytearray()
         async for chunk in response.aiter_bytes():
             content.extend(chunk)
             if len(content) > max_size:
-                raise SSRFBlocked(
-                    f"Response exceeds max_size={max_size} bytes"
-                )
+                raise SSRFBlocked(f"Response exceeds max_size={max_size} bytes")
         if response.status_code >= 400:
             # Non-2xx / non-3xx → still return the body the caller can
             # surface as an error, but carry the status in an exception
             # attribute so the caller can differentiate.
-            exc = SSRFBlocked(
-                f"Request returned status {response.status_code}"
-            )
+            exc = SSRFBlocked(f"Request returned status {response.status_code}")
             exc.status_code = response.status_code  # type: ignore[attr-defined]
             exc.body = bytes(content)  # type: ignore[attr-defined]
             raise exc

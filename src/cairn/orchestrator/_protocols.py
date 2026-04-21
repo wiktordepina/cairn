@@ -54,7 +54,7 @@ class Tool(Protocol):
     def approval_required(self) -> bool: ...
 
     @property
-    def risk_tier(self) -> int: ...                                # 0..4 in V1
+    def risk_tier(self) -> int: ...  # 0..4 in V1
 
     @property
     def side_effects(self) -> Literal["none", "read", "write"]: ...

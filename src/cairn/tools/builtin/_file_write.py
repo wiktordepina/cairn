@@ -79,9 +79,7 @@ def make_file_write(
         target = sandbox.resolve(args.path)
         payload = args.content.encode("utf-8")
         if len(payload) > max_bytes:
-            raise ToolError(
-                f"Write of {len(payload)} bytes exceeds max_bytes={max_bytes}"
-            )
+            raise ToolError(f"Write of {len(payload)} bytes exceeds max_bytes={max_bytes}")
 
         def _write_sync() -> str:
             sandbox.assert_writable(target)
@@ -95,21 +93,15 @@ def make_file_write(
 
             if args.mode == "create":
                 if target.exists():
-                    raise ToolError(
-                        f"File already exists (mode=create): {args.path}"
-                    )
+                    raise ToolError(f"File already exists (mode=create): {args.path}")
                 target.write_bytes(payload)
             elif args.mode == "overwrite":
                 if target.exists() and not target.is_file():
-                    raise ToolError(
-                        f"Refusing to overwrite non-regular file: {args.path}"
-                    )
+                    raise ToolError(f"Refusing to overwrite non-regular file: {args.path}")
                 target.write_bytes(payload)
             elif args.mode == "append":
                 if target.exists() and not target.is_file():
-                    raise ToolError(
-                        f"Refusing to append to non-regular file: {args.path}"
-                    )
+                    raise ToolError(f"Refusing to append to non-regular file: {args.path}")
                 with target.open("ab") as f:
                     f.write(payload)
 

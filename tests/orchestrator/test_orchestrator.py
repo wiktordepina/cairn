@@ -165,9 +165,7 @@ def orchestrator_config() -> OrchestratorConfig:
 async def cost_tracker(
     usage_repo: UsageRepo, frozen_clock: FrozenClock, budgets: BudgetConfig
 ) -> BasicCostTracker:
-    return BasicCostTracker(
-        usage_repo=usage_repo, clock=frozen_clock, budgets=budgets
-    )
+    return BasicCostTracker(usage_repo=usage_repo, clock=frozen_clock, budgets=budgets)
 
 
 def _make_orchestrator(
@@ -253,9 +251,7 @@ class TestHappyPath:
             orchestrator_config=orchestrator_config,
             collector=collector,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
 
         events = []
         async for ev in orch.run_turn(session.id, _user("Hi")):
@@ -271,9 +267,7 @@ class TestHappyPath:
             "TurnComplete",
         ]
         # Reconstruct the assistant's text.
-        text = "".join(
-            e.text for e in events if isinstance(e, AssistantTextDelta)
-        )
+        text = "".join(e.text for e in events if isinstance(e, AssistantTextDelta))
         assert text == "Hello there."
 
         # Final event carries the stop reason.
@@ -312,9 +306,7 @@ class TestHappyPath:
             orchestrator_config=orchestrator_config,
             collector=collector,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         async for _ in orch.run_turn(session.id, _user("hi")):
             pass
 
@@ -355,9 +347,7 @@ class TestHappyPath:
             orchestrator_config=orchestrator_config,
             collector=collector,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         turn_complete = None
         async for ev in orch.run_turn(session.id, _user("hi")):
             if isinstance(ev, TurnComplete):
@@ -401,9 +391,7 @@ class TestHappyPath:
             orchestrator_config=orchestrator_config,
             collector=collector,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         turn_id = None
         async for ev in orch.run_turn(session.id, _user("hi")):
             if isinstance(ev, TurnComplete):
@@ -457,9 +445,7 @@ class TestToolDispatch:
             return ("echoed", False)
 
         runner = RecordingToolRunner(handlers={"echo": echo_handler})
-        registry = DictToolRegistry(
-            tools={"echo": StubTool(name="echo", approval_required=False)}
-        )
+        registry = DictToolRegistry(tools={"echo": StubTool(name="echo", approval_required=False)})
         orch = _make_orchestrator(
             provider_registry=provider_registry,
             model_registry=model_registry,
@@ -473,9 +459,7 @@ class TestToolDispatch:
             tool_registry=registry,
             tool_runner=runner,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         events = []
         async for ev in orch.run_turn(session.id, _user("run echo")):
             events.append(ev)
@@ -524,11 +508,7 @@ class TestToolDispatch:
 
         runner = RecordingToolRunner(handlers={"writer": never_called})
         registry = DictToolRegistry(
-            tools={
-                "writer": StubTool(
-                    name="writer", approval_required=True, side_effects="write"
-                )
-            }
+            tools={"writer": StubTool(name="writer", approval_required=True, side_effects="write")}
         )
         orch = _make_orchestrator(
             provider_registry=provider_registry,
@@ -544,9 +524,7 @@ class TestToolDispatch:
             tool_runner=runner,
             approval_gateway=DenyAllGateway(),
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         events = []
         async for ev in orch.run_turn(session.id, _user("do thing")):
             events.append(ev)
@@ -595,9 +573,7 @@ class TestToolDispatch:
             collector=collector,
             tool_registry=DictToolRegistry(),  # empty
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         async for _ in orch.run_turn(session.id, _user("x")):
             pass
         # Two provider calls happened — the error result was fed back.
@@ -628,9 +604,7 @@ class TestBudgetAndCancellation:
         from cairn.domain._enums import UsageOperation as UO
 
         # Pre-populate the session with spend that exceeds the cap.
-        session = await session_manager.create(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await session_manager.create(type=SessionType.COMPANION, persona="companion")
         await usage_repo.record(
             timestamp=frozen_clock.now(),
             session_id=session.id,
@@ -703,9 +677,7 @@ class TestBudgetAndCancellation:
             orchestrator_config=orchestrator_config,
             collector=collector,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
 
         # Start a turn but don't iterate yet.
         gen_a = orch.run_turn(session.id, _user("first"))
@@ -752,9 +724,7 @@ class TestBudgetAndCancellation:
             orchestrator_config=orchestrator_config,
             collector=collector,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         events = []
         gen = orch.run_turn(session.id, _user("hi"))
         async for ev in gen:
@@ -807,9 +777,7 @@ class TestMemoryBehaviour:
             collector=collector,
             memory_service=spy,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         async for _ in orch.run_turn(session.id, _user("hi")):
             pass
         assert len(spy.calls) == 1
@@ -849,9 +817,7 @@ class TestMemoryBehaviour:
             collector=collector,
             memory_service=spy,
         )
-        session = await orch.start_session(
-            type=SessionType.EPHEMERAL, persona="_ephemeral"
-        )
+        session = await orch.start_session(type=SessionType.EPHEMERAL, persona="_ephemeral")
         async for _ in orch.run_turn(session.id, _user("hi")):
             pass
         # Ephemerals have no memory_space → memory service untouched.
@@ -891,9 +857,7 @@ class TestMemoryBehaviour:
             collector=collector,
             extraction_queue=extraction_spy,
         )
-        session = await orch.start_session(
-            type=SessionType.EPHEMERAL, persona="_ephemeral"
-        )
+        session = await orch.start_session(type=SessionType.EPHEMERAL, persona="_ephemeral")
         events = []
         async for ev in orch.run_turn(session.id, _user("hi")):
             events.append(ev)
@@ -931,12 +895,9 @@ class TestSessionLifecycleEvents:
             orchestrator_config=orchestrator_config,
             collector=collector,
         )
-        session = await orch.start_session(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
         assert any(
-            isinstance(e, SessionCreated) and e.session_id == session.id
-            for e in collector.events
+            isinstance(e, SessionCreated) and e.session_id == session.id for e in collector.events
         )
 
 
@@ -962,9 +923,7 @@ class TestResumeAbortedTurns:
         from cairn.orchestrator._records import TurnRecord
 
         # Seed a session + user message + a non-terminal turn (simulating crash).
-        session = await session_manager.create(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await session_manager.create(type=SessionType.COMPANION, persona="companion")
         msg = Message(role="user", session_id=session.id)
         msg.content.append(TextBlock(text="hi"))
         await message_repo.append(msg)

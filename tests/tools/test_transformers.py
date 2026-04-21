@@ -69,9 +69,7 @@ class TestRedactSecrets:
         assert got == "The quick brown fox jumps over the lazy dog."
 
     def test_multiple_secrets_in_one_string(self) -> None:
-        got = redact_secrets(
-            "sk-abc123def456ghi789jkl012 and AKIAIOSFODNN7EXAMPLE too"
-        )
+        got = redact_secrets("sk-abc123def456ghi789jkl012 and AKIAIOSFODNN7EXAMPLE too")
         assert got.count("[REDACTED]") == 2
 
 
@@ -130,7 +128,7 @@ class TestStripInvisibleUnicode:
 
     def test_unicode_tags(self) -> None:
         # Tag Latin capital A = U+E0041
-        got = strip_invisible_unicode("X\U000E0041Y")
+        got = strip_invisible_unicode("X\U000e0041Y")
         assert got == "XY"
 
     def test_leaves_visible_unicode_alone(self) -> None:
@@ -211,9 +209,7 @@ class TestSpotlightTransformer:
 
 class TestChainComposition:
     @pytest.mark.asyncio
-    async def test_strip_redact_spotlight_in_order(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_strip_redact_spotlight_in_order(self, turn_ctx: TurnContext) -> None:
         # Default ordering: strip → redact → spotlight. The zero-width
         # splitter gets removed before the redactor runs, so the
         # reassembled ``Bearer <token>`` string is redacted cleanly.
@@ -232,9 +228,7 @@ class TestChainComposition:
         assert "<tool_result" in r.content
 
     @pytest.mark.asyncio
-    async def test_reversed_order_fails_to_redact(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_reversed_order_fails_to_redact(self, turn_ctx: TurnContext) -> None:
         # Counter-demonstration: running redact before strip lets
         # invisible-Unicode splitters slip a token through the regex.
         # This test pins the design decision — if we flip the default

@@ -92,9 +92,7 @@ class SessionAllowlist:
             decided_by="auto:session-allowlist",
         )
 
-    def remember_user_approval(
-        self, *, session_id: str, request: ApprovalRequest
-    ) -> None:
+    def remember_user_approval(self, *, session_id: str, request: ApprovalRequest) -> None:
         """Cache ``request`` as approved for ``session_id``."""
         self._seen[session_id].add(self._key(request))
 

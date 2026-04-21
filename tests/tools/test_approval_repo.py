@@ -98,9 +98,7 @@ class TestRecord:
 
 class TestListForToolCall:
     @pytest.mark.asyncio
-    async def test_empty_for_unknown(
-        self, approval_repo: ApprovalDecisionRepo
-    ) -> None:
+    async def test_empty_for_unknown(self, approval_repo: ApprovalDecisionRepo) -> None:
         assert await approval_repo.list_for_tool_call("nope") == []
 
     @pytest.mark.asyncio

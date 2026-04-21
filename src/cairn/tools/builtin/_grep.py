@@ -44,8 +44,7 @@ class GrepArgs(BaseModel):
     path: str = Field(
         default=".",
         description=(
-            "Path relative to the workspace root to search under. Defaults "
-            "to the workspace root."
+            "Path relative to the workspace root to search under. Defaults to the workspace root."
         ),
     )
     glob: str | None = Field(

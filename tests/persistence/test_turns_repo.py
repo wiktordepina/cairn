@@ -195,9 +195,7 @@ class TestMarkAborted:
         await _seed(session_repo=session_repo, message_repo=message_repo)
         await turn_repo.insert(_record(started_at=started_at))
         completed_at = datetime(2026, 4, 20, 12, 1, 0, tzinfo=UTC)
-        await turn_repo.mark_aborted(
-            "t-1", reason="user_cancel", completed_at=completed_at
-        )
+        await turn_repo.mark_aborted("t-1", reason="user_cancel", completed_at=completed_at)
         got = await turn_repo.get("t-1")
         assert got is not None
         assert got.state is TurnState.ABORTED
@@ -216,9 +214,7 @@ class TestListNonTerminal:
         # Seed a session and three messages.
         await session_repo.insert(make_db_session(id="sess-1"))
         for i in range(3):
-            await message_repo.append(
-                make_db_message(id=f"msg-{i}", session_id="sess-1")
-            )
+            await message_repo.append(make_db_message(id=f"msg-{i}", session_id="sess-1"))
 
         # Insert three turns: completed, aborted, in-flight.
         completed_at = datetime(2026, 4, 20, 12, 1, 0, tzinfo=UTC)
@@ -228,12 +224,8 @@ class TestListNonTerminal:
         await turn_repo.mark_completed(
             "t-completed", stop_reason=StopReason.END_TURN, completed_at=completed_at
         )
-        await turn_repo.insert(
-            _record(id="t-aborted", message_id="msg-1", started_at=started_at)
-        )
-        await turn_repo.mark_aborted(
-            "t-aborted", reason="user_cancel", completed_at=completed_at
-        )
+        await turn_repo.insert(_record(id="t-aborted", message_id="msg-1", started_at=started_at))
+        await turn_repo.mark_aborted("t-aborted", reason="user_cancel", completed_at=completed_at)
         await turn_repo.insert(
             _record(
                 id="t-inflight",
@@ -257,9 +249,7 @@ class TestListForSession:
     ) -> None:
         await session_repo.insert(make_db_session(id="sess-1"))
         for i in range(3):
-            await message_repo.append(
-                make_db_message(id=f"msg-{i}", session_id="sess-1")
-            )
+            await message_repo.append(make_db_message(id=f"msg-{i}", session_id="sess-1"))
 
         for i in range(3):
             await turn_repo.insert(

@@ -154,9 +154,7 @@ class TestValidationRules:
 
 class TestInvocation:
     @pytest.mark.asyncio
-    async def test_parses_args_and_returns_result(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_parses_args_and_returns_result(self, turn_ctx: TurnContext) -> None:
         @tool(
             name="echo",
             description="echo",
@@ -174,9 +172,7 @@ class TestInvocation:
         assert result.is_error is False
 
     @pytest.mark.asyncio
-    async def test_accepts_list_content_return(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_accepts_list_content_return(self, turn_ctx: TurnContext) -> None:
         @tool(
             name="rich",
             description="rich",
@@ -195,9 +191,7 @@ class TestInvocation:
         assert result.content[0].text == "hi"
 
     @pytest.mark.asyncio
-    async def test_rejects_malformed_args(
-        self, turn_ctx: TurnContext
-    ) -> None:
+    async def test_rejects_malformed_args(self, turn_ctx: TurnContext) -> None:
         @tool(
             name="echo",
             description="echo",

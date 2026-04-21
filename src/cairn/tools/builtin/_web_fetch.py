@@ -79,12 +79,8 @@ def _is_text_mime(mime: str) -> bool:
     return mime.startswith("text/") or mime in _TEXT_CONTENT_TYPES
 
 
-_SCRIPT_BLOCK = re.compile(
-    r"<script[^>]*>.*?</script>", re.IGNORECASE | re.DOTALL
-)
-_STYLE_BLOCK = re.compile(
-    r"<style[^>]*>.*?</style>", re.IGNORECASE | re.DOTALL
-)
+_SCRIPT_BLOCK = re.compile(r"<script[^>]*>.*?</script>", re.IGNORECASE | re.DOTALL)
+_STYLE_BLOCK = re.compile(r"<style[^>]*>.*?</style>", re.IGNORECASE | re.DOTALL)
 _TAG = re.compile(r"<[^>]+>")
 _WHITESPACE = re.compile(r"\s+")
 
@@ -136,9 +132,7 @@ async def _fetch_with_redirects(
                 async for chunk in response.aiter_bytes():
                     body.extend(chunk)
                     if len(body) > max_size:
-                        raise ToolError(
-                            f"Response exceeds max_size={max_size} bytes"
-                        )
+                        raise ToolError(f"Response exceeds max_size={max_size} bytes")
 
                 status = response.status_code
                 if 300 <= status < 400:
@@ -204,9 +198,7 @@ def make_web_fetch(
         mime, charset = _parse_content_type(headers.get("Content-Type"))
 
         if status >= 400:
-            raise ToolError(
-                f"Request returned status {status} for {final_url}"
-            )
+            raise ToolError(f"Request returned status {status} for {final_url}")
 
         if not _is_text_mime(mime):
             return _binary_summary(final_url, mime, body)
