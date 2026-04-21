@@ -1,6 +1,6 @@
 """Orchestrator runtime config — caps, timeouts, defaults.
 
-Distinct from ``CairnConfig`` (which is user-facing TOML). This is the
+Distinct from `CairnConfig` (which is user-facing TOML). This is the
 orchestrator's own knobs, populated at construction from profile config
 plus sensible defaults.
 """
@@ -21,7 +21,7 @@ class OrchestratorConfig(BaseModel):
     max_model_behaviour_retries: int = Field(default=2, ge=0)
     """How many times to feed an error back to the model (malformed tool-call
     JSON, unknown tool name) before giving up. Does not count against
-    ``max_iterations``."""
+    `max_iterations`."""
 
     max_turn_duration_s: float = Field(default=600.0, gt=0)
     """Wall-clock cap on a single turn. Defaults to 10 minutes."""
@@ -34,5 +34,5 @@ class OrchestratorConfig(BaseModel):
     back-pressures the provider stream."""
 
     budget_warn_threshold_fraction: float = Field(default=0.8, gt=0, le=1)
-    """Emit a ``BudgetWarning`` once session spend crosses this fraction
+    """Emit a `BudgetWarning` once session spend crosses this fraction
     of the session cap."""

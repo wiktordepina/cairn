@@ -61,7 +61,7 @@ class TestValidateUrl:
 
 
 def _make_getaddrinfo(ips: list[str]):
-    """Build a getaddrinfo stub that returns ``ips`` for any hostname."""
+    """Build a getaddrinfo stub that returns `ips` for any hostname."""
 
     def fake_getaddrinfo(host: str, port: object, *args: object, **kwargs: object):  # noqa: ARG001
         out = []

@@ -1,4 +1,4 @@
-"""Tests for the ``grep`` built-in tool.
+"""Tests for the `grep` built-in tool.
 
 Exercises the pure-Python fallback (primary path on CI) and the
 ripgrep subprocess path via mocks.

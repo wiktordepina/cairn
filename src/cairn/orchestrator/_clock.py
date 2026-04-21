@@ -1,7 +1,7 @@
 """Clock abstraction for testability.
 
-Every timestamp that cairn records or depends on flows through ``Clock.now()``.
-Tests substitute ``FrozenClock`` to get deterministic timestamps.
+Every timestamp that cairn records or depends on flows through `Clock.now()`.
+Tests substitute `FrozenClock` to get deterministic timestamps.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ class Clock(Protocol):
         ...
 
     async def sleep(self, seconds: float) -> None:
-        """Cooperatively sleep for ``seconds``."""
+        """Cooperatively sleep for `seconds`."""
         ...
 
 
@@ -37,8 +37,8 @@ class SystemClock:
 class FrozenClock:
     """Controllable clock for tests.
 
-    ``now()`` returns the frozen timestamp; ``advance(seconds)`` moves it
-    forward; ``sleep()`` advances the clock instead of actually sleeping.
+    `now()` returns the frozen timestamp; `advance(seconds)` moves it
+    forward; `sleep()` advances the clock instead of actually sleeping.
     """
 
     def __init__(self, now: datetime) -> None:
@@ -50,7 +50,7 @@ class FrozenClock:
         return self._now
 
     def advance(self, seconds: float) -> None:
-        """Move the frozen clock forward by ``seconds``."""
+        """Move the frozen clock forward by `seconds`."""
         self._now += timedelta(seconds=seconds)
 
     async def sleep(self, seconds: float) -> None:

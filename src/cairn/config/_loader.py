@@ -36,10 +36,10 @@ def user_config_path() -> Path:
 
 
 def discover_project_root(start: Path | None = None) -> Path | None:
-    """Walk up from *start* to the git root, looking for ``.cairn/config.toml``.
+    """Walk up from *start* to the git root, looking for `.cairn/config.toml`.
 
-    Returns the directory containing ``.cairn/`` if found, else ``None``.
-    The first match wins; nested ``.cairn/`` configs are not merged.
+    Returns the directory containing `.cairn/` if found, else `None`.
+    The first match wins; nested `.cairn/` configs are not merged.
     """
     current = (start or Path.cwd()).resolve()
 
@@ -76,8 +76,8 @@ def config_paths(
 ) -> list[tuple[str, Path]]:
     """Return the ordered list of config file paths to load.
 
-    Each entry is ``(layer_name, path)`` where layer_name is one of
-    ``"user"``, ``"project"``, or ``"local"``.
+    Each entry is `(layer_name, path)` where layer_name is one of
+    `"user"`, `"project"`, or `"local"`.
     """
     paths: list[tuple[str, Path]] = [("user", user_config_path())]
 
@@ -102,7 +102,7 @@ def config_paths(
 def load_raw(path: Path) -> dict[str, Any]:
     """Load a single TOML config file and check its schema version.
 
-    Raises ``ConfigError`` on missing ``schema_version``.
+    Raises `ConfigError` on missing `schema_version`.
     Logs a warning if the version is newer than we know about.
     """
     with path.open("rb") as f:
@@ -135,7 +135,7 @@ def load_raw(path: Path) -> dict[str, Any]:
 
 
 def _inject_provider_names(raw: dict[str, Any]) -> None:
-    """Populate each provider's ``name`` field from its dict key."""
+    """Populate each provider's `name` field from its dict key."""
     providers: dict[str, Any] | None = raw.get("providers")  # type: ignore[assignment]
     if isinstance(providers, dict):
         for key, value in providers.items():
@@ -156,11 +156,11 @@ def load_config(
     """Load, merge, migrate, and validate the full cairn configuration.
 
     Args:
-        profile: CLI ``--profile`` override. Takes precedence over all layers.
-        project_dir: Explicit project root. If ``None``, discovered automatically.
+        profile: CLI `--profile` override. Takes precedence over all layers.
+        project_dir: Explicit project root. If `None`, discovered automatically.
 
     Returns:
-        A frozen ``CairnConfig`` instance ready for use.
+        A frozen `CairnConfig` instance ready for use.
 
     Raises:
         ConfigError: If no config files are found or validation fails.

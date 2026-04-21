@@ -1,12 +1,12 @@
-"""``DefaultToolRegistry`` — session-type-scoped tool discovery.
+"""`DefaultToolRegistry` — session-type-scoped tool discovery.
 
-Replaces the orchestrator's ``EmptyToolRegistry`` stub. Scoping rules
+Replaces the orchestrator's `EmptyToolRegistry` stub. Scoping rules
 match security doc §11 lines 1057-1064:
 
-- ``EPHEMERAL`` — ``[]`` unless ``ephemeral_allowlist`` names tools by
+- `EPHEMERAL` — `[]` unless `ephemeral_allowlist` names tools by
   name.
-- ``PERSONA`` — names listed under ``persona_allowlists[session.persona]``.
-- ``COMPANION`` — the full set: ``companion_tools + mcp_tools``.
+- `PERSONA` — names listed under `persona_allowlists[session.persona]`.
+- `COMPANION` — the full set: `companion_tools + mcp_tools`.
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ class DefaultToolRegistry:
     """Session-type-scoped tool registry.
 
     Construct with the full lists at the harness-assembly layer (CLI);
-    the orchestrator asks ``for_session`` per turn.
+    the orchestrator asks `for_session` per turn.
     """
 
     def __init__(

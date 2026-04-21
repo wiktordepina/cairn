@@ -21,13 +21,13 @@ _MEMORY_PATHS = {":memory:", "file::memory:"}
 class Database:
     """A lazily-opened aiosqlite handle scoped to a single profile DB file.
 
-    On first ``connect()``:
-    - Ensure parent directory exists with mode ``0o700`` (skipped for in-memory).
-    - Open the connection with ``aiosqlite.Row`` factory.
+    On first `connect()`:
+    - Ensure parent directory exists with mode `0o700` (skipped for in-memory).
+    - Open the connection with `aiosqlite.Row` factory.
     - Apply WAL/foreign-key/timeout PRAGMAs.
     - Run any pending schema migrations.
 
-    Subsequent ``connect()`` calls reuse the same handle.
+    Subsequent `connect()` calls reuse the same handle.
     """
 
     def __init__(self, path: Path) -> None:
@@ -67,7 +67,7 @@ class Database:
 
     @asynccontextmanager
     async def transaction(self) -> AsyncIterator[aiosqlite.Connection]:
-        """Run a block inside ``BEGIN IMMEDIATE`` / ``COMMIT`` / ``ROLLBACK``."""
+        """Run a block inside `BEGIN IMMEDIATE` / `COMMIT` / `ROLLBACK`."""
         conn = await self.connect()
         await conn.execute("BEGIN IMMEDIATE")
         try:

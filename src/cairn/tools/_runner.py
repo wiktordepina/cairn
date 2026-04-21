@@ -1,25 +1,25 @@
-"""The default ``ToolRunner`` implementation.
+"""The default `ToolRunner` implementation.
 
-Replaces ``orchestrator.RaisingToolRunner``. Follows the design in
-``.plan/tool-system-design.md`` §7, Option A: the orchestrator owns the
+Replaces `orchestrator.RaisingToolRunner`. Follows the design in
+`.plan/tool-system-design.md` §7, Option A: the orchestrator owns the
 approval chain and emits UI events; the runner receives the already-made
-``ApprovalDecision`` and handles the execute + persist + classify path.
+`ApprovalDecision` and handles the execute + persist + classify path.
 
 Per-call flow:
 
-    1. ``tool_call_repo.start(pending)`` — audit the attempt.
-    2. Write the approval outcome to ``approval_decisions``.
-    3a. On REJECT: ``tool_call_repo.reject()`` → synthesised error
-        ``ToolResultBlock``; return.
-    3b. On APPROVE: ``tool_call_repo.approve()``.
-    4. ``tool_call_repo.mark_executing()``.
-    5. ``asyncio.timeout(tool.timeout_s)`` around ``tool.invoke(args, ctx)``.
-    6. On success: ``tool_call_repo.complete()`` → return result.
-       On timeout: ``tool_call_repo.mark_timed_out()`` → error result.
-       On other exception: ``tool_call_repo.mark_failed()`` → error result.
+    1. `tool_call_repo.start(pending)` — audit the attempt.
+    2. Write the approval outcome to `approval_decisions`.
+    3a. On REJECT: `tool_call_repo.reject()` → synthesised error
+        `ToolResultBlock`; return.
+    3b. On APPROVE: `tool_call_repo.approve()`.
+    4. `tool_call_repo.mark_executing()`.
+    5. `asyncio.timeout(tool.timeout_s)` around `tool.invoke(args, ctx)`.
+    6. On success: `tool_call_repo.complete()` → return result.
+       On timeout: `tool_call_repo.mark_timed_out()` → error result.
+       On other exception: `tool_call_repo.mark_failed()` → error result.
 
 The orchestrator still wraps the returned result through the
-``ResultTransformer`` chain before yielding it upstream; the runner
+`ResultTransformer` chain before yielding it upstream; the runner
 itself does not apply transformers in this iteration (keeps the Phase 7
 integration diff minimal — transformer ownership may migrate later).
 """
@@ -158,7 +158,7 @@ class DefaultToolRunner:
             )
 
         # Tool implementations return results with an empty tool_use_id
-        # (the ``@tool`` decorator + ``DelegationTool`` both follow this
+        # (the `@tool` decorator + `DelegationTool` both follow this
         # convention); the runner is responsible for stamping the call id
         # on the way back so the provider can correlate it to the tool_use.
         if not result.tool_use_id:
@@ -175,10 +175,10 @@ class DefaultToolRunner:
 
 
 def _narrow_approver(decided_by: str) -> Literal["user", "auto"]:
-    """Map the fine-grained ``decided_by`` to the narrow DB enum.
+    """Map the fine-grained `decided_by` to the narrow DB enum.
 
-    ``ToolCallRepo.approve`` accepts only ``"user"`` or ``"auto"``; the
-    approver chain emits richer strings (``"auto:read-only"``,
-    ``"user:session-allowlist"``). We split on the prefix.
+    `ToolCallRepo.approve` accepts only `"user"` or `"auto"`; the
+    approver chain emits richer strings (`"auto:read-only"`,
+    `"user:session-allowlist"`). We split on the prefix.
     """
     return "auto" if decided_by.startswith("auto") else "user"

@@ -1,8 +1,8 @@
 """CostTracker — cost recording and budget enforcement.
 
-Wraps ``UsageRepo`` for writes and implements ``should_block_turn``
-against the profile's ``BudgetConfig``. All timestamp reads go through
-the injected ``Clock`` so tests can pin time deterministically.
+Wraps `UsageRepo` for writes and implements `should_block_turn`
+against the profile's `BudgetConfig`. All timestamp reads go through
+the injected `Clock` so tests can pin time deterministically.
 """
 
 from __future__ import annotations
@@ -20,17 +20,17 @@ if TYPE_CHECKING:
 
 
 class BasicCostTracker:
-    """Default ``CostTracker`` implementation.
+    """Default `CostTracker` implementation.
 
-    - ``record`` delegates to ``UsageRepo.record``, stamping the turn_id
+    - `record` delegates to `UsageRepo.record`, stamping the turn_id
       so per-turn aggregations work downstream.
-    - ``should_block_turn`` returns ``BLOCK`` when *previously-recorded*
-      spend already meets or exceeds the session or daily cap, ``WARN``
+    - `should_block_turn` returns `BLOCK` when *previously-recorded*
+      spend already meets or exceeds the session or daily cap, `WARN`
       when session spend has crossed the configured warn fraction of
-      the per-session cap, and ``PROCEED`` otherwise.
+      the per-session cap, and `PROCEED` otherwise.
 
     Budget checks reflect costs *already persisted* — the turn currently
-    starting is not counted. The orchestrator's own ``max_iterations``
+    starting is not counted. The orchestrator's own `max_iterations`
     guards against unbounded loops within a single turn.
     """
 

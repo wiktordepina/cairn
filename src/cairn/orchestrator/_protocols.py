@@ -4,7 +4,7 @@ Each collaborator is injected at construction. The orchestrator only
 talks to protocols, never to concrete implementations. The tool system,
 memory brick, and UI layer plug in through these protocols.
 
-Stubs for every protocol live in ``_stubs.py`` so the orchestrator can
+Stubs for every protocol live in `_stubs.py` so the orchestrator can
 be constructed (and tested) before its downstream bricks exist.
 """
 
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 class Tool(Protocol):
     """Minimum shape the orchestrator knows about a tool.
 
-    The tool-system brick provides concrete ``Tool`` classes with richer
+    The tool-system brick provides concrete `Tool` classes with richer
     surface (invocation, schemas, MCP server bindings); the orchestrator
     only needs metadata plus a way to invoke.
     """
@@ -77,14 +77,14 @@ class ToolRegistry(Protocol):
         """Return tool *definitions* the session may see.
 
         Scoping rules (enforced by the concrete registry, not the orchestrator):
-        - ``EPHEMERAL`` → ``[]`` by default
-        - ``PERSONA`` → per-persona allowlist
-        - ``COMPANION`` → full set
+        - `EPHEMERAL` → `[]` by default
+        - `PERSONA` → per-persona allowlist
+        - `COMPANION` → full set
         """
         ...
 
     def get(self, name: str) -> Tool | None:
-        """Return the concrete ``Tool`` implementation by name, or None."""
+        """Return the concrete `Tool` implementation by name, or None."""
         ...
 
 
@@ -93,8 +93,8 @@ class ToolRunner(Protocol):
     """Owns the execution of a single tool call.
 
     Drives the per-call state machine (pending → approved → executing →
-    terminal), records transitions via ``ToolCallRepo``, and applies the
-    ``ResultTransformer`` chain before returning.
+    terminal), records transitions via `ToolCallRepo`, and applies the
+    `ResultTransformer` chain before returning.
     """
 
     async def run(
@@ -127,7 +127,7 @@ class MemoryService(Protocol):
 class ExtractionQueue(Protocol):
     """Fire-and-forget queue for post-turn observation extraction.
 
-    ``submit`` MUST NOT block the turn loop. Back-pressure, if any, is
+    `submit` MUST NOT block the turn loop. Back-pressure, if any, is
     handled inside the extractor's own worker — submissions always return
     immediately.
     """
@@ -143,11 +143,11 @@ class ExtractionQueue(Protocol):
 
 @runtime_checkable
 class ApprovalGateway(Protocol):
-    """Terminal approver at the end of the ``ToolApprover`` chain.
+    """Terminal approver at the end of the `ToolApprover` chain.
 
     Typically posts an approval-pending UI event and awaits a user
-    response. The in-module stubs ``AutoApproveGateway`` and
-    ``DenyAllGateway`` bypass UI interaction.
+    response. The in-module stubs `AutoApproveGateway` and
+    `DenyAllGateway` bypass UI interaction.
     """
 
     async def request(

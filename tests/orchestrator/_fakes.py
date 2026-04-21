@@ -33,8 +33,8 @@ if TYPE_CHECKING:
 class FakeProvider:
     """A provider that replays canned event sequences.
 
-    Constructed with a list of ``list[ProviderEvent]``, one per call to
-    ``stream()``. Raises ``StopIteration`` (wrapped) if exhausted.
+    Constructed with a list of `list[ProviderEvent]`, one per call to
+    `stream()`. Raises `StopIteration` (wrapped) if exhausted.
 
     Also tracks every request it received so tests can assert on what
     the orchestrator sent.
@@ -67,7 +67,7 @@ async def _gen(events: list[ProviderEvent]) -> AsyncIterator[ProviderEvent]:
 
 @dataclass
 class EventCollector:
-    """A ``UIEventObserver`` that records every event.
+    """A `UIEventObserver` that records every event.
 
     Tests assert on the full sequence.
     """
@@ -83,11 +83,11 @@ class EventCollector:
 
 @dataclass
 class RecordingToolRunner:
-    """A ``ToolRunner`` that dispatches to a dict of name → async callable.
+    """A `ToolRunner` that dispatches to a dict of name → async callable.
 
-    Each callable takes ``(tool_call, session, turn_id)`` and returns
-    ``(output_dict, is_error)``. The runner wraps the output in a
-    ``ToolResultBlock`` and returns it.
+    Each callable takes `(tool_call, session, turn_id)` and returns
+    `(output_dict, is_error)`. The runner wraps the output in a
+    `ToolResultBlock` and returns it.
     """
 
     handlers: dict[str, Callable[..., Awaitable[tuple[str, bool]]]] = field(default_factory=dict)
@@ -140,10 +140,10 @@ class RecordingToolRunner:
 
 @dataclass
 class StubTool:
-    """A minimal ``Tool`` that satisfies the orchestrator's protocol.
+    """A minimal `Tool` that satisfies the orchestrator's protocol.
 
-    Execution is delegated to ``RecordingToolRunner`` — this stub exists
-    so ``ToolRegistry.get(name)`` has something to return.
+    Execution is delegated to `RecordingToolRunner` — this stub exists
+    so `ToolRegistry.get(name)` has something to return.
     """
 
     name: str
@@ -167,7 +167,7 @@ class StubTool:
 
 @dataclass
 class DictToolRegistry:
-    """A ``ToolRegistry`` backed by a name → Tool dict."""
+    """A `ToolRegistry` backed by a name → Tool dict."""
 
     tools: dict[str, Tool] = field(default_factory=dict)
     definitions: list[ToolDefinition] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
@@ -181,7 +181,7 @@ class DictToolRegistry:
 
 @dataclass
 class SpyMemoryService:
-    """Memory service that records its ``retrieve`` calls."""
+    """Memory service that records its `retrieve` calls."""
 
     canned: list[MemoryEntry] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     calls: list[dict[str, Any]] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]

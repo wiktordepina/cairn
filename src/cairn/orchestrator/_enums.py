@@ -8,9 +8,9 @@ from enum import StrEnum
 class TurnState(StrEnum):
     """States of the orchestrator's per-turn state machine.
 
-    The ``turns.state`` column is authoritative — every transition writes
+    The `turns.state` column is authoritative — every transition writes
     here via a conditional UPDATE. A turn ends in exactly one terminal
-    state: ``completed`` or ``aborted``.
+    state: `completed` or `aborted`.
     """
 
     STARTED = "started"
@@ -37,9 +37,9 @@ class BudgetVerdict(StrEnum):
 
 
 class ApprovalOutcome(StrEnum):
-    """Result returned by a ``ToolApprover``.
+    """Result returned by a `ToolApprover`.
 
-    ``ESCALATE`` means "I can't decide — pass to the next approver in the
+    `ESCALATE` means "I can't decide — pass to the next approver in the
     chain, or the gateway". The first non-escalate decision wins.
     """
 

@@ -1,7 +1,7 @@
 """OpenAI provider adapter.
 
 Also serves OpenAI-compatible local servers (llama.cpp, vLLM, LM Studio)
-via ``base_url`` in config.
+via `base_url` in config.
 """
 
 from __future__ import annotations
@@ -49,9 +49,9 @@ def format_messages(messages: list[Message], system: str | None = None) -> list[
     """Convert cairn Messages to OpenAI message format.
 
     Key differences from Anthropic:
-    - System prompt is a message with ``role: "system"``
-    - Tool uses go in a ``tool_calls`` array on the assistant message
-    - Tool results become ``role: "tool"`` messages (one per result)
+    - System prompt is a message with `role: "system"`
+    - Tool uses go in a `tool_calls` array on the assistant message
+    - Tool results become `role: "tool"` messages (one per result)
     """
     result: list[dict[str, Any]] = []
 
@@ -155,7 +155,7 @@ class OpenAIProvider:
     """OpenAI API adapter implementing the Provider protocol.
 
     Also works for any OpenAI-compatible server (llama.cpp, vLLM, LM Studio)
-    via ``base_url`` in the provider config.
+    via `base_url` in the provider config.
     """
 
     def __init__(self, config: ProviderConfig, secret_resolver: SecretResolver) -> None:

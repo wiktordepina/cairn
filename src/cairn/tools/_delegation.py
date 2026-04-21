@@ -1,25 +1,25 @@
-"""``DelegationTool`` — consult another model in an ephemeral sub-session.
+"""`DelegationTool` — consult another model in an ephemeral sub-session.
 
-Concrete ``Tool`` implementation matching the arch spec §4.9 and the
-design in ``.plan/tool-system-design.md`` §12. Unlike the built-ins,
-this tool is instantiated directly (not via ``@tool``) because it needs
+Concrete `Tool` implementation matching the arch spec §4.9 and the
+design in `.plan/tool-system-design.md` §12. Unlike the built-ins,
+this tool is instantiated directly (not via `@tool`) because it needs
 access to the session manager, provider + model registries, and cost
 tracker.
 
-Per-call flow (``invoke``):
+Per-call flow (`invoke`):
 
-    1. Create an ephemeral sub-session with ``parent_session_id=ctx.session.id``.
-    2. Build a single user ``Message`` from ``args.prompt``.
-    3. Stream ``provider.stream(request)``, accumulating text + usage.
-    4. On each ``UsageEvent``, compute cost and break early if
-       ``config.max_cost_usd`` is configured and exceeded.
-    5. Record final ``UsageEvent`` via ``cost_tracker`` with
-       ``operation=DELEGATION`` and ``parent_session_id=ctx.session.id``.
+    1. Create an ephemeral sub-session with `parent_session_id=ctx.session.id`.
+    2. Build a single user `Message` from `args.prompt`.
+    3. Stream `provider.stream(request)`, accumulating text + usage.
+    4. On each `UsageEvent`, compute cost and break early if
+       `config.max_cost_usd` is configured and exceeded.
+    5. Record final `UsageEvent` via `cost_tracker` with
+       `operation=DELEGATION` and `parent_session_id=ctx.session.id`.
     6. Archive the sub-session.
-    7. Return ``ToolResultBlock`` with the accumulated text.
+    7. Return `ToolResultBlock` with the accumulated text.
 
-``DelegationSpawned`` / ``DelegationCompleted`` UI events are **not**
-emitted here — the orchestrator detects ``isinstance(tool, DelegationTool)``
+`DelegationSpawned` / `DelegationCompleted` UI events are **not**
+emitted here — the orchestrator detects `isinstance(tool, DelegationTool)`
 and emits them around the runner call (design-doc §16.Q2).
 """
 
@@ -53,8 +53,8 @@ class DelegationArgs(BaseModel):
 class DelegationTool:
     """Consult another model in an ephemeral sub-session.
 
-    ``side_effects = "read"`` — delegation consumes tokens but makes no
-    external mutation. ``risk_tier = 3`` reflects that delegation
+    `side_effects = "read"` — delegation consumes tokens but makes no
+    external mutation. `risk_tier = 3` reflects that delegation
     spends money, per security-doc tiering.
     """
 
@@ -185,7 +185,7 @@ class DelegationTool:
 def _compute_cost(model: ModelConfig, usage: UsageEvent) -> float:
     """Compute cost in USD from token counts + per-1M pricing.
 
-    Mirrors ``Orchestrator._compute_cost``. Duplicated rather than
+    Mirrors `Orchestrator._compute_cost`. Duplicated rather than
     extracted because the shared helper's natural home (a pricing module)
     doesn't exist yet; extraction can wait until a third caller appears.
     """

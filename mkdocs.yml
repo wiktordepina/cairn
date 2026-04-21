@@ -141,3 +141,4 @@ nav:
       - "0016 No shell in V1": decisions/0016-no-shell-in-v1.md
       - "0017 SSRF IP pinning deferred": decisions/0017-ssrf-ip-pinning-deferred.md
       - "0018 Docs site tooling": decisions/0018-docs-site-tooling.md
+      - "0019 Google docstring style": decisions/0019-docstrings-google-style.md

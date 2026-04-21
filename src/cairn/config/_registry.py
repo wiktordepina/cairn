@@ -16,8 +16,8 @@ class AmbiguousRoleError(Exception):
 class ModelRegistry:
     """Registry of available models, constructed from config.
 
-    Provides lookup by model ID and by role, plus a ``resolve()`` method
-    that accepts either ``"claude-opus-4-7"`` (ID) or ``"role:primary"``
+    Provides lookup by model ID and by role, plus a `resolve()` method
+    that accepts either `"claude-opus-4-7"` (ID) or `"role:primary"`
     (role reference).
     """
 
@@ -41,7 +41,7 @@ class ModelRegistry:
                 self._by_role[role] = model
 
     def by_id(self, model_id: str) -> ModelConfig:
-        """Look up a model by its ID. Raises ``ModelNotFoundError`` on miss."""
+        """Look up a model by its ID. Raises `ModelNotFoundError` on miss."""
         try:
             return self._by_id[model_id]
         except KeyError:
@@ -50,7 +50,7 @@ class ModelRegistry:
             ) from None
 
     def by_role(self, role: ModelRole) -> ModelConfig:
-        """Look up a model by role. Raises ``ModelNotFoundError`` on miss."""
+        """Look up a model by role. Raises `ModelNotFoundError` on miss."""
         try:
             return self._by_role[role]
         except KeyError:
@@ -60,7 +60,7 @@ class ModelRegistry:
             ) from None
 
     def resolve(self, ref: str) -> ModelConfig:
-        """Resolve a model reference — either a direct ID or ``role:<name>``.
+        """Resolve a model reference — either a direct ID or `role:<name>`.
 
         Examples::
 

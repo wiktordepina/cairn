@@ -2,12 +2,12 @@
 
 Four middleware types, each with a narrow contract:
 
-- ``MessagePreparer`` — rewrites the ``ProviderRequest`` before the model sees it
+- `MessagePreparer` — rewrites the `ProviderRequest` before the model sees it
   (memory injection, compaction, cache markers).
-- ``ToolApprover`` — gates tool execution, returns APPROVE | REJECT | ESCALATE.
-- ``ResultTransformer`` — scrubs tool results before they hit the session
+- `ToolApprover` — gates tool execution, returns APPROVE | REJECT | ESCALATE.
+- `ResultTransformer` — scrubs tool results before they hit the session
   (spotlighting, Unicode stripping, secret redaction).
-- ``UIEventObserver`` — sync fan-out of UI events for logging, metrics,
+- `UIEventObserver` — sync fan-out of UI events for logging, metrics,
   cost dashboards. Can't mutate, can't back-pressure.
 """
 
@@ -25,7 +25,7 @@ from cairn.orchestrator._enums import ApprovalOutcome  # noqa: TCH001
 
 @dataclass(frozen=True, slots=True)
 class ApprovalRequest:
-    """Payload handed to a ``ToolApprover`` / ``ApprovalGateway``."""
+    """Payload handed to a `ToolApprover` / `ApprovalGateway`."""
 
     tool_call_id: str
     tool_name: str
@@ -36,7 +36,7 @@ class ApprovalRequest:
 
 @dataclass(frozen=True, slots=True)
 class ApprovalDecision:
-    """Outcome returned by a ``ToolApprover`` / ``ApprovalGateway``."""
+    """Outcome returned by a `ToolApprover` / `ApprovalGateway`."""
 
     outcome: ApprovalOutcome
     decided_by: str  # 'user', 'auto:read-only', etc.
@@ -58,8 +58,8 @@ class MessagePreparer(Protocol):
 class ToolApprover(Protocol):
     """Decides whether a tool call may proceed.
 
-    Return ``ESCALATE`` to defer to the next approver in the chain, or
-    to the ``ApprovalGateway`` at the end of the chain.
+    Return `ESCALATE` to defer to the next approver in the chain, or
+    to the `ApprovalGateway` at the end of the chain.
     """
 
     async def decide(

@@ -17,22 +17,22 @@ class Provider(Protocol):
     Implementations translate between cairn's domain types and
     provider-specific SDK formats. The protocol has two methods:
 
-    - ``stream()`` — the primary path; async generator yielding events
-    - ``count_tokens()`` — token estimation for budget tracking
+    - `stream()` — the primary path; async generator yielding events
+    - `count_tokens()` — token estimation for budget tracking
     """
 
     @property
     def name(self) -> str:
-        """Provider name (matches ProviderConfig key, e.g. ``'anthropic'``)."""
+        """Provider name (matches ProviderConfig key, e.g. `'anthropic'`)."""
         ...
 
     def stream(self, request: ProviderRequest) -> AsyncIterator[ProviderEvent]:
         """Stream a completion, yielding domain events.
 
-        Declared as a plain ``def`` rather than ``async def`` because the
-        returned ``AsyncIterator`` is iterated directly with ``async for``;
-        no ``await`` is needed before iteration. Implementations are
-        typically written as ``async def ... yield ...`` — Python treats
+        Declared as a plain `def` rather than `async def` because the
+        returned `AsyncIterator` is iterated directly with `async for`;
+        no `await` is needed before iteration. Implementations are
+        typically written as `async def ... yield ...` — Python treats
         those as async-generator functions whose call returns an
         AsyncIterator, matching this signature.
         """

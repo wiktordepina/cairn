@@ -1,15 +1,15 @@
-"""The ``@tool`` decorator.
+"""The `@tool` decorator.
 
-Wraps an async callable ``(args_model, ctx) -> str | list[ContentBlock]``
-into a concrete ``Tool`` instance. The decorator:
+Wraps an async callable `(args_model, ctx) -> str | list[ContentBlock]`
+into a concrete `Tool` instance. The decorator:
 
 - Validates risk_tier / side_effects combinations.
-- Generates ``input_schema`` from the Pydantic args model.
-- Produces a ``_DecoratedTool`` instance implementing the ``Tool``
-  protocol (``cairn.orchestrator._protocols.Tool``).
+- Generates `input_schema` from the Pydantic args model.
+- Produces a `_DecoratedTool` instance implementing the `Tool`
+  protocol (`cairn.orchestrator._protocols.Tool`).
 
 Decorated tools are not auto-registered anywhere — the CLI assembles a
-``DefaultToolRegistry`` from an explicit list at startup.
+`DefaultToolRegistry` from an explicit list at startup.
 """
 
 from __future__ import annotations
@@ -51,9 +51,9 @@ class _ToolSpec:
 
 
 class _DecoratedTool:
-    """Concrete ``Tool`` built by the ``@tool`` decorator.
+    """Concrete `Tool` built by the `@tool` decorator.
 
-    Satisfies ``cairn.orchestrator._protocols.Tool``.
+    Satisfies `cairn.orchestrator._protocols.Tool`.
     """
 
     def __init__(
@@ -106,7 +106,7 @@ class _DecoratedTool:
         ctx: TurnContext,
     ) -> ToolResultBlock:
         """Validate args against the Pydantic model, run the user fn,
-        wrap the return value into a ``ToolResultBlock``."""
+        wrap the return value into a `ToolResultBlock`."""
         parsed = self._spec.args_model.model_validate(args)
         output = await self._fn(parsed, ctx)
         return _wrap_output(output)
@@ -115,13 +115,13 @@ class _DecoratedTool:
 def _wrap_output(output: str | list[ContentBlock]) -> ToolResultBlock:
     """Wrap a user-function return into a ToolResultBlock.
 
-    ``tool_use_id`` is intentionally blank here — the runner fills it
+    `tool_use_id` is intentionally blank here — the runner fills it
     in when it threads the result back to the model. Tests that need
     the id can post-process the block.
 
-    Uses ``model_validate`` so that Pydantic handles the union-variance
-    issue between ``ContentBlock`` (the full domain union, used
-    elsewhere) and the narrower union ``ToolResultBlock.content``
+    Uses `model_validate` so that Pydantic handles the union-variance
+    issue between `ContentBlock` (the full domain union, used
+    elsewhere) and the narrower union `ToolResultBlock.content`
     accepts (no nested tool-results).
     """
     return ToolResultBlock.model_validate(
@@ -166,10 +166,10 @@ def tool(
     [Callable[..., Awaitable[str | list[ContentBlock]]]],
     _DecoratedTool,
 ]:
-    """Decorator that turns an async callable into a ``Tool``.
+    """Decorator that turns an async callable into a `Tool`.
 
-    ``approval_required`` defaults to ``True`` for risk_tier >= 3 and
-    ``False`` otherwise. Callers can override for specific cases (e.g.
+    `approval_required` defaults to `True` for risk_tier >= 3 and
+    `False` otherwise. Callers can override for specific cases (e.g.
     a tier-2 tool with an escalating side-effect).
     """
     _validate_tier_and_effects(risk_tier, side_effects)

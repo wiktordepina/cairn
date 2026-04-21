@@ -1,7 +1,7 @@
-"""Repository for the ``approval_decisions`` table.
+"""Repository for the `approval_decisions` table.
 
 One row per approval event. Populated by the tool-system's
-``DefaultToolRunner`` each time an approval decision is made
+`DefaultToolRunner` each time an approval decision is made
 (auto-approved, user-approved, rejected). Provides an audit trail for
 the security-doc §6 requirement (timestamp, tool, args, approved-by).
 """
@@ -35,7 +35,7 @@ def _row_to_record(row: aiosqlite.Row) -> ApprovalDecisionRecord:
 
 
 class ApprovalDecisionRepo:
-    """Writes + reads the ``approval_decisions`` table."""
+    """Writes + reads the `approval_decisions` table."""
 
     def __init__(self, db: Database) -> None:
         self._db = db
@@ -50,7 +50,7 @@ class ApprovalDecisionRepo:
         reason: str | None = None,
         args_snapshot_json: str | None = None,
     ) -> int:
-        """Insert a new decision row. Returns the auto-assigned ``id``."""
+        """Insert a new decision row. Returns the auto-assigned `id`."""
         conn = await self._db.connect()
         cursor = await conn.execute(
             """

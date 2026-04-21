@@ -1,4 +1,4 @@
-"""Repository for the ``sessions`` table."""
+"""Repository for the `sessions` table."""
 
 from __future__ import annotations
 
@@ -91,7 +91,7 @@ class SessionRepo:
         archived: bool | None = None,
         updated_at: datetime | None = None,
     ) -> None:
-        """Update mutable metadata. Auto-bumps ``updated_at`` if omitted."""
+        """Update mutable metadata. Auto-bumps `updated_at` if omitted."""
         sets: list[str] = []
         params: list[Any] = []
         if not isinstance(title, _Unset):
@@ -119,7 +119,7 @@ class SessionRepo:
     ) -> list[Session]:
         """List sessions in a memory space.
 
-        ``memory_space=None`` matches memoryless sessions only.
+        `memory_space=None` matches memoryless sessions only.
         """
         archived_clause = "" if include_archived else "AND archived = 0"
         conn = await self._db.connect()

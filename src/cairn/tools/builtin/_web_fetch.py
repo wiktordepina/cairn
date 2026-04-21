@@ -1,7 +1,7 @@
-"""``web_fetch`` — Tier 2, SSRF-defended URL fetch.
+"""`web_fetch` — Tier 2, SSRF-defended URL fetch.
 
-Reuses ``validate_url`` and ``resolve_hostname`` from
-``cairn.tools.security._ssrf`` but drives its own httpx request loop
+Reuses `validate_url` and `resolve_hostname` from
+`cairn.tools.security._ssrf` but drives its own httpx request loop
 because it needs access to response status + headers for
 Content-Type filtering and manual redirect handling.
 
@@ -10,14 +10,14 @@ Safety rails:
 - Scheme allowlist (http/https), blocked-network IP check, and embedded
   credentials rejection run before every hop (including each redirect
   target).
-- ``follow_redirects=False``; the tool walks redirects manually with a
+- `follow_redirects=False`; the tool walks redirects manually with a
   hard hop cap.
 - Streaming read with a hard size cap.
 - Request timeout enforced via httpx.
-- Only text-like Content-Types (``text/*``, ``application/json``,
-  ``application/xml``, ``application/javascript``) surface as text;
+- Only text-like Content-Types (`text/*`, `application/json`,
+  `application/xml`, `application/javascript`) surface as text;
   everything else returns a binary summary.
-- HTML is best-effort stripped to plain text (``<script>`` / ``<style>``
+- HTML is best-effort stripped to plain text (`<script>` / `<style>`
   content removed, remaining tags dropped, whitespace collapsed).
 """
 
@@ -61,7 +61,7 @@ class WebFetchArgs(BaseModel):
 
 
 def _parse_content_type(header: str | None) -> tuple[str, str | None]:
-    """Return ``(mime, charset)``. Unknown inputs default to octet-stream."""
+    """Return `(mime, charset)`. Unknown inputs default to octet-stream."""
     if not header:
         return "application/octet-stream", None
     head, _, params = header.partition(";")
@@ -117,7 +117,7 @@ async def _fetch_with_redirects(
 ) -> tuple[int, httpx.Headers, bytes, str]:
     """Walk redirects manually, re-validating the SSRF rules at each hop.
 
-    Returns ``(status_code, headers, body, final_url)``.
+    Returns `(status_code, headers, body, final_url)`.
     """
     current = await _validate_url_or_block(start_url)
 
@@ -162,7 +162,7 @@ def make_web_fetch(
     timeout_s: float = DEFAULT_TIMEOUT_S,
     max_redirects: int = DEFAULT_MAX_REDIRECTS,
 ) -> Tool:
-    """Build a ``web_fetch`` tool.
+    """Build a `web_fetch` tool.
 
     The tool carries no workspace scope — SSRF defence is enforced
     against external hostnames regardless of the caller's session.

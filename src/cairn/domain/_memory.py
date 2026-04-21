@@ -17,9 +17,9 @@ from cairn.domain._enums import MemoryClass, MemoryEntryType  # noqa: TCH001
 class MemoryEntry(BaseModel):
     """A single retrieved memory observation.
 
-    Immutable once constructed. The ``id`` is assigned when the entry is
+    Immutable once constructed. The `id` is assigned when the entry is
     persisted; retrieved entries carry an integer; not-yet-persisted
-    entries carry ``None``.
+    entries carry `None`.
     """
 
     model_config = ConfigDict(frozen=True)

@@ -60,7 +60,7 @@ class EmptyToolRegistry:
 
 
 class RaisingToolRunner:
-    """Rejects every dispatch. Paired with ``EmptyToolRegistry`` so it can
+    """Rejects every dispatch. Paired with `EmptyToolRegistry` so it can
     never be called in practice; raises loudly if wiring goes wrong."""
 
     async def run(self, **kwargs: object) -> object:  # pragma: no cover
@@ -108,7 +108,7 @@ class DenyAllGateway:
 
 class MinimalContextManager:
     """Bare-bones context assembly: passes history through, no compaction,
-    no memory injection, no convention files. Real ``ContextManager``
+    no memory injection, no convention files. Real `ContextManager`
     implementations land with their respective bricks."""
 
     def __init__(self, *, system_prompt: str = "") -> None:

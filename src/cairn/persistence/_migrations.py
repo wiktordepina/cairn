@@ -1,7 +1,7 @@
 """Schema migration runner.
 
-Migrations are numbered SQL files in ``_sql/`` named ``NNNN_<slug>.sql``.
-Each is applied in its own transaction; the ``schema_migrations`` row is
+Migrations are numbered SQL files in `_sql/` named `NNNN_<slug>.sql`.
+Each is applied in its own transaction; the `schema_migrations` row is
 written by the runner (not the SQL file).
 """
 
@@ -27,7 +27,7 @@ class Migration(NamedTuple):
 
 
 def discover_migrations() -> list[Migration]:
-    """Return all migrations from the ``_migrations/`` package data directory.
+    """Return all migrations from the `_migrations/` package data directory.
 
     Validates filename pattern and gap-free monotonicity.
     """
@@ -62,7 +62,7 @@ def discover_migrations() -> list[Migration]:
 async def applied_versions(conn: aiosqlite.Connection) -> set[int]:
     """Return the set of versions already applied to *conn*.
 
-    Returns an empty set if the ``schema_migrations`` table does not exist.
+    Returns an empty set if the `schema_migrations` table does not exist.
     """
     try:
         cursor = await conn.execute("SELECT version FROM schema_migrations")

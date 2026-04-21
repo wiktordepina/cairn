@@ -1,7 +1,7 @@
 """Schema migration infrastructure for cairn configuration.
 
-Migrations are registered via the ``@migration`` decorator and applied
-in chain order by ``migrate()``. No migrations exist yet (schema_version=1),
+Migrations are registered via the `@migration` decorator and applied
+in chain order by `migrate()`. No migrations exist yet (schema_version=1),
 but the infrastructure is ready for when fields move or rename.
 """
 
@@ -42,7 +42,7 @@ def migrate(
     """Apply all registered migrations to bring *raw* to *target_version*.
 
     Returns the dict unmodified if already at the target version.
-    Raises ``MigrationError`` if a gap exists in the migration chain.
+    Raises `MigrationError` if a gap exists in the migration chain.
     """
     current = raw.get("schema_version")
     if current is None:

@@ -12,7 +12,7 @@ def deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]
     - Dicts merge recursively (keys in override add to or replace keys in base).
     - Lists replace (not concatenate) — the override list wins entirely.
     - Scalars replace.
-    - ``None`` in override does **not** erase a base value — it is skipped.
+    - `None` in override does **not** erase a base value — it is skipped.
     """
     merged: dict[str, Any] = {}
 

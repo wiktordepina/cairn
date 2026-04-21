@@ -2,15 +2,15 @@
 
 Implements security doc §7 requirements for V1:
 
-- **Scheme allowlist** — only ``http`` and ``https``; reject
-  ``file://``, ``gopher://``, ``data:``, etc.
+- **Scheme allowlist** — only `http` and `https`; reject
+  `file://`, `gopher://`, `data:`, etc.
 - **Pre-flight DNS validation** — resolve the hostname, reject any
   resolved IP in a blocked network (loopback, RFC1918 private,
   link-local incl. cloud metadata, IPv6 ULA/link-local).
-- **No automatic redirects** — ``safe_fetch`` sets
-  ``follow_redirects=False`` on the httpx client. Redirect responses
+- **No automatic redirects** — `safe_fetch` sets
+  `follow_redirects=False` on the httpx client. Redirect responses
   surface to the caller; if followed, the caller re-enters
-  ``safe_fetch`` with the target URL and gets a fresh validation.
+  `safe_fetch` with the target URL and gets a fresh validation.
 - **Size and timeout caps** — streaming read with a hard size limit;
   request timeout enforced via httpx's own mechanism.
 
@@ -64,9 +64,9 @@ ALLOWED_SCHEMES: frozenset[str] = frozenset({"http", "https"})
 def validate_url(url: str) -> tuple[str, str]:
     """Parse and validate the scheme + hostname.
 
-    Returns ``(hostname, normalised_url)``.
+    Returns `(hostname, normalised_url)`.
 
-    Raises ``SSRFBlocked`` on disallowed schemes, missing hostnames,
+    Raises `SSRFBlocked` on disallowed schemes, missing hostnames,
     or URLs that fail to parse.
     """
     try:
@@ -101,10 +101,10 @@ def _is_blocked_ip(ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
 
 
 def resolve_hostname(hostname: str) -> list[str]:
-    """Resolve ``hostname`` via ``getaddrinfo`` and return every IP.
+    """Resolve `hostname` via `getaddrinfo` and return every IP.
 
-    Every resolved IP must fall outside ``BLOCKED_NETWORKS``. If any
-    blocked IP appears, raises ``SSRFBlocked`` — even one blocked IP
+    Every resolved IP must fall outside `BLOCKED_NETWORKS`. If any
+    blocked IP appears, raises `SSRFBlocked` — even one blocked IP
     means the hostname could rebind to it.
     """
     try:
@@ -142,13 +142,13 @@ async def safe_fetch(
     timeout: float = 30.0,
     user_agent: str = "cairn/1.0",
 ) -> bytes:
-    """Fetch ``url`` with the full SSRF defence applied.
+    """Fetch `url` with the full SSRF defence applied.
 
     - Scheme + hostname validated.
     - Hostname resolved; every resolved IP must be public.
     - Automatic redirects disabled — 3xx responses return as-is;
-      caller decides whether to re-enter ``safe_fetch`` for the target.
-    - Response body size capped at ``max_size`` bytes (streamed read).
+      caller decides whether to re-enter `safe_fetch` for the target.
+    - Response body size capped at `max_size` bytes (streamed read).
     - Request timeout enforced by httpx.
 
     Returns the raw response body bytes.

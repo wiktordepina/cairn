@@ -1,10 +1,10 @@
-"""Tests for ``DefaultToolRunner``.
+"""Tests for `DefaultToolRunner`.
 
-Covers the per-call flow described in ``.plan/tool-system-design.md`` §7:
+Covers the per-call flow described in `.plan/tool-system-design.md` §7:
 start → audit decision → (approve | reject) → execute → complete with
 error classification on failure.
 
-Runner is wired to real ``ToolCallRepo`` / ``ApprovalDecisionRepo`` over
+Runner is wired to real `ToolCallRepo` / `ApprovalDecisionRepo` over
 a tmp-path SQLite DB so the lifecycle assertions are end-to-end.
 """
 
@@ -44,7 +44,7 @@ if TYPE_CHECKING:
 
 @dataclass
 class FakeTool:
-    """Minimal ``Tool`` double with configurable invoke behaviour."""
+    """Minimal `Tool` double with configurable invoke behaviour."""
 
     name: str = "fake_tool"
     description: str = "A tool for testing."
@@ -85,7 +85,7 @@ class FakeTool:
 async def seeded(db: Database) -> tuple[str, str, str]:
     """Insert a session + assistant message so FK constraints hold.
 
-    Returns ``(session_id, message_id, turn_id)``.
+    Returns `(session_id, message_id, turn_id)`.
     """
     now = datetime(2026, 4, 20, 12, 0, 0, tzinfo=UTC)
     session = Session(

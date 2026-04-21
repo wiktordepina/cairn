@@ -212,7 +212,7 @@ class TestChainComposition:
     async def test_strip_redact_spotlight_in_order(self, turn_ctx: TurnContext) -> None:
         # Default ordering: strip → redact → spotlight. The zero-width
         # splitter gets removed before the redactor runs, so the
-        # reassembled ``Bearer <token>`` string is redacted cleanly.
+        # reassembled `Bearer <token>` string is redacted cleanly.
         stripper = InvisibleUnicodeStripper()
         redactor = SecretRedactor()
         spotlight = SpotlightTransformer()

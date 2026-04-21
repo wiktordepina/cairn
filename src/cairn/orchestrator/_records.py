@@ -11,7 +11,7 @@ from cairn.orchestrator._enums import TurnState  # noqa: TCH001
 
 
 class TurnRecord(BaseModel):
-    """A single row from the ``turns`` table."""
+    """A single row from the `turns` table."""
 
     model_config = ConfigDict(frozen=True)
 
@@ -28,7 +28,7 @@ class TurnRecord(BaseModel):
 
 
 class ApprovalDecisionRecord(BaseModel):
-    """A single row from the ``approval_decisions`` table."""
+    """A single row from the `approval_decisions` table."""
 
     model_config = ConfigDict(frozen=True)
 
