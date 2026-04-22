@@ -34,6 +34,24 @@ point, and observability tranche 2 (log redaction, structured
 
 - **`truststore>=0.9`** as a direct runtime dependency.
 
+### Added — auto-generated API reference
+
+- **`docs/gen_ref_pages.py`** — standalone generator. Reads each
+  module's `__all__`, recovers the `# Section` comment groupings,
+  and writes `docs/reference/<module>.md` with one `:::` directive
+  per public symbol. Supports `--check` for drift detection in CI.
+  See [ADR 0020](docs/decisions/0020-auto-generated-api-reference.md).
+- **Coverage extended** to every package and single-file module —
+  `config`, `domain`, `logging`, `orchestrator`, `persistence`,
+  `providers`, `ssl`, `tools`. The previous hand-curated set was
+  missing `config` and `persistence` entirely.
+- **Drift test** at `tests/docs/test_gen_ref_pages.py` — runs the
+  generator with `--check` against the real repo state. Fails locally
+  before push if `__all__` was edited without regenerating.
+- **`__all__` added to `cairn.logging` and `cairn.ssl`** so the
+  generator has uniform input across packages and single-file
+  modules.
+
 ### Changed — documentation
 
 - **Google-style docstrings adopted as the house convention**

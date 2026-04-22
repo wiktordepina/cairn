@@ -53,7 +53,7 @@ future `/reload` command can re-point the log file without restart.
 
 ### API
 
-::: cairn.logging.setup_logging
+See [Logging](reference/logging.md) for the generated API reference.
 
 ## TLS trust
 
@@ -84,4 +84,4 @@ will retry, so transient import failures don't latch to `False`.
 
 ### API
 
-::: cairn.ssl.setup_ssl
+See [SSL](reference/ssl.md) for the generated API reference.

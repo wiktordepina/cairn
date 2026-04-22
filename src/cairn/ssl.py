@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import logging
 
+__all__ = ["setup_ssl"]
+
 _logger = logging.getLogger(__name__)
 
 _injected = False

@@ -23,6 +23,8 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --locked --group docs
+      - name: Check generated reference pages are in sync
+        run: uv run python docs/gen_ref_pages.py --check
       - run: uv run mkdocs build --strict
 
   deploy:
