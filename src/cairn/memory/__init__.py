@@ -14,6 +14,11 @@ The persistence schema lives in `cairn.persistence`; the domain types
 `cairn.domain`. This module owns everything in between.
 """
 
+from cairn.memory._context import (
+    DEFAULT_MAX_FILE_BYTES,
+    ProfileDocLoader,
+    StandardContextManager,
+)
 from cairn.memory._extractor import (
     ExtractedObservation,
     ExtractionResponse,
@@ -25,6 +30,10 @@ from cairn.memory._queue import ObservationExtractionQueue
 from cairn.memory._retrieval import MemoryService, composite_score
 
 __all__ = [
+    # Context
+    "DEFAULT_MAX_FILE_BYTES",
+    "ProfileDocLoader",
+    "StandardContextManager",
     # Extraction engine
     "ExtractedObservation",
     "ExtractionResponse",

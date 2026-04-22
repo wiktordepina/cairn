@@ -3,6 +3,14 @@
 
 # Memory — API reference
 
+## Context
+
+::: cairn.memory.DEFAULT_MAX_FILE_BYTES
+
+::: cairn.memory.ProfileDocLoader
+
+::: cairn.memory.StandardContextManager
+
 ## Extraction engine
 
 ::: cairn.memory.ExtractedObservation
