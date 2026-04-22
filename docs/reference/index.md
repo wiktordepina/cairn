@@ -15,6 +15,7 @@ regeneration workflow.
 - [Config](config.md) — `cairn.config`
 - [Domain](domain.md) — `cairn.domain`
 - [Logging](logging.md) — `cairn.logging`
+- [Memory](memory.md) — `cairn.memory`
 - [Orchestrator](orchestrator.md) — `cairn.orchestrator`
 - [Persistence](persistence.md) — `cairn.persistence`
 - [Providers](providers.md) — `cairn.providers`

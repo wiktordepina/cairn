@@ -36,6 +36,15 @@ def db_path_for_profile(profile_name: str) -> Path:
     return data_dir_for_profile(profile_name) / "cairn.db"
 
 
+def memory_dir_for_profile(profile_name: str) -> Path:
+    """Return the memory root `$XDG_DATA_HOME/cairn/<profile>/memory/`.
+
+    Houses the JSONL observation log (`observations/YYYY-MM-DD.jsonl`)
+    and any future on-disk artefacts the memory brick owns.
+    """
+    return data_dir_for_profile(profile_name) / "memory"
+
+
 def db_path_for_config(config: CairnConfig) -> Path:
     """Resolve the DB path from a loaded config's active profile.
 

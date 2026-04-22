@@ -126,6 +126,7 @@ nav:
       - Config: reference/config.md
       - Domain: reference/domain.md
       - Logging: reference/logging.md
+      - Memory: reference/memory.md
       - Orchestrator: reference/orchestrator.md
       - Persistence: reference/persistence.md
       - Providers: reference/providers.md
