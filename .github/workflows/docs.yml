@@ -8,6 +8,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      deploy_version:
+        description: "Version to deploy as (e.g. 0.7.0). When set, updates the 'latest' alias. Useful to backfill a release whose tag push didn't trigger the workflow."
+        required: false
+        type: string
 
 concurrency:
   group: docs-${{ github.ref }}
@@ -32,7 +37,8 @@ jobs:
     needs: build
     if: |
       github.event_name == 'release' ||
-      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')))
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))) ||
+      (github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')))
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -76,12 +82,26 @@ jobs:
             fi
           fi
 
+      - name: Deploy explicit version (manual dispatch)
+        if: github.event_name == 'workflow_dispatch' && inputs.deploy_version != ''
+        env:
+          VERSION: ${{ inputs.deploy_version }}
+        run: |
+          set -euo pipefail
+          uv run mike deploy --push --update-aliases "$VERSION" latest
+          uv run mike set-default --push latest
+
       - name: Deploy dev alias (push to main)
-        if: github.ref == 'refs/heads/main'
+        if: |
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+          github.ref == 'refs/heads/main' &&
+          inputs.deploy_version == ''
         run: uv run mike deploy --push --update-aliases dev
 
       - name: Deploy release (tag push)
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: |
+          github.event_name == 'release' ||
+          (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v'))
         run: |
           set -euo pipefail
           VERSION="${GITHUB_REF_NAME#v}"

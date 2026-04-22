@@ -100,3 +100,18 @@ jobs:
             --target "$GITHUB_SHA" \
             --title "v$VERSION" \
             --notes-file release-notes.md
+
+      # The release above is created with the default GITHUB_TOKEN,
+      # which does NOT fire downstream workflows (GitHub's anti-loop
+      # rule). Without this step the `release: published` trigger on
+      # docs.yml never runs and `mike` never cuts the release alias.
+      # Manually dispatch the docs workflow against the newly-created
+      # tag to keep the published docs in lock-step with releases.
+      - name: Trigger docs deploy for the new tag
+        if: steps.detect.outputs.bumped == 'true' && steps.tagcheck.outputs.exists == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.detect.outputs.current }}
+        run: |
+          set -euo pipefail
+          gh workflow run docs.yml --ref "v$VERSION"
