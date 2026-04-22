@@ -197,6 +197,7 @@ max_cost_usd = 0.50
 | `delegation_tools` | list | `[]` | See [`DelegationTool`](#delegation-tools). |
 | `budgets` | table | defaults | See [`budgets`](#budgets). |
 | `convention_files` | table | defaults | See [`convention_files`](#convention_files). |
+| `compaction` | table | defaults | See [`compaction`](#compaction). |
 
 Path fields support `~` and `$VAR` expansion.
 
@@ -224,6 +225,19 @@ Controls loading of project convention files (`AGENTS.md`, `CLAUDE.md`,
 | `max_bytes_per_file` | int | `65_536` | Truncate at a paragraph boundary above this. |
 | `trust_policy` | `"prompt" \| "always" \| "project_allowlist"` | `"prompt"` | First-encounter gating. |
 | `user_level_paths` | list | `[]` | Absolute paths prepended to the search list. |
+
+### `compaction`
+
+Controls conversation-history truncation before each provider call.
+Per-persona via profile (each persona has its own `compaction` block).
+See [Compaction](compaction.md) for the full guide.
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `enabled` | bool | `true` | Master kill switch; `false` disables truncation entirely. |
+| `preserve_last_n_turns` | int | `6` | Hard floor on surviving turn blocks. Raise for tool-heavy personas. |
+| `safety_margin_tokens` | int | `2048` | Held back from `context_window` on top of reserved output tokens. |
+| `min_history_tokens` | int | `1024` | If effective budget falls below this, log ERROR and pass the request through unchanged. |
 
 ### Delegation tools
 

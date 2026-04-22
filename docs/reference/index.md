@@ -12,6 +12,7 @@ regeneration workflow.
 
 ## Modules
 
+- [Compaction](compaction.md) — `cairn.compaction`
 - [Config](config.md) — `cairn.config`
 - [Domain](domain.md) — `cairn.domain`
 - [Logging](logging.md) — `cairn.logging`

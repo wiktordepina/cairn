@@ -9,6 +9,8 @@
 
 ::: cairn.config.CairnConfig
 
+::: cairn.config.CompactionConfig
+
 ::: cairn.config.ConventionFilesConfig
 
 ::: cairn.config.CURRENT_SCHEMA_VERSION

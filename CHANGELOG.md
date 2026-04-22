@@ -10,9 +10,70 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-Compaction, convention files, UI, CLI entry point, and observability
-tranche 2 (log redaction, structured `UIEventObserver`) are still to
-land.
+Convention files, UI, CLI entry point, and observability tranche 2
+(log redaction, structured `UIEventObserver`) are still to land.
+
+## [0.8.0] — 2026-04-22
+
+Ships basic compaction: turn-block truncation in front of every
+provider call, with a preserve-floor that escalates to a user
+advisory rather than silently blocking or silently overflowing.
+Design doc: `.plan/compaction-brick-design.md`.
+
+### Added — compaction
+
+- **`cairn.compaction` module** (`src/cairn/compaction/`):
+    - `TruncatingCompactor` — implements the
+      `MessagePreparer` protocol. Computes the effective budget
+      (`context_window − max_tokens − safety_margin_tokens`), counts
+      tokens via the provider's native tokenizer, and drops whole
+      turn blocks from the front of `ProviderRequest.messages`
+      until the request fits or the preserve-floor is reached.
+    - `iter_turn_blocks` + `TurnBlock` — detect coherent turn
+      boundaries so truncation never splits a
+      `ToolUseBlock`/`ToolResultBlock` pair or leaves the first
+      message with a non-user role. See
+      [ADR 0028](docs/decisions/0028-turn-block-granularity.md).
+    - `BudgetOverflowGateway` protocol with two default stubs:
+      `AutoContinueOverflowGateway` and
+      `AutoTerminateOverflowGateway`. The terminate stub is the
+      orchestrator default so headless/CI runs fail loudly.
+    - `BudgetOverflowDeclined` exception signalling the terminate
+      path back to the orchestrator.
+- **`CompactionConfig`** on `ProfileConfig.compaction` — four
+  knobs (`enabled`, `preserve_last_n_turns`,
+  `safety_margin_tokens`, `min_history_tokens`). Per-persona by
+  construction because each persona is its own profile.
+- **Two new UI events** in `cairn.domain`: `HistoryCompacted`
+  (normal compaction + preserve-floor-continue paths) and
+  `BudgetOverflowAdvisory` (preserve-floor hit; decision
+  pending).
+- **Orchestrator wiring** — catches `BudgetOverflowDeclined`, marks
+  the turn aborted with `reason="user_declined_overflow"`,
+  archives the session via `SessionManager.archive`, and emits
+  `TurnAborted` + `SessionArchived`. See
+  [ADR 0029](docs/decisions/0029-context-budget-advisory.md).
+
+### Added — docs + ADRs
+
+- New guide page `docs/compaction.md` covering what compaction
+  does, what it doesn't, the advisory-budget flow, config knobs,
+  and UI events.
+- `docs/configuration.md` — new `[profiles.<name>.compaction]`
+  section.
+- Three ADRs: [0027](docs/decisions/0027-truncation-before-summarisation.md),
+  [0028](docs/decisions/0028-turn-block-granularity.md),
+  [0029](docs/decisions/0029-context-budget-advisory.md).
+- Auto-generated reference: `cairn.compaction` added to
+  `REFERENCE_MODULES`; `docs/reference/compaction.md` generated.
+- `docs/architecture.md` status table updated — compaction shipped
+  at 0.8.0.
+
+### Tests
+
+24 new compaction tests (8 turn-block + 13 preparer + 3 gateway
+stubs) plus 2 new orchestrator integration tests covering the
+continue and terminate paths end-to-end.
 
 ## [0.7.0] — 2026-04-22
 

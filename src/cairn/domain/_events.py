@@ -155,6 +155,33 @@ class BudgetWarning:
 
 
 @dataclass(frozen=True, slots=True)
+class HistoryCompacted:
+    """Conversation history was truncated before the provider call."""
+
+    session_id: str
+    turn_id: str
+    blocks_dropped: int
+    messages_dropped: int
+    tokens_before: int
+    tokens_after: int
+    reason: str  # 'budget' | 'preserve_floor_hit'
+
+
+@dataclass(frozen=True, slots=True)
+class BudgetOverflowAdvisory:
+    """Compaction hit the preserve-floor and the request still exceeds the
+    advisory budget. Awaits a user decision via `BudgetOverflowGateway`."""
+
+    session_id: str
+    turn_id: str
+    tokens_projected: int
+    context_window: int
+    safety_margin: int
+    overflow_tokens: int
+    will_fit_context_window: bool
+
+
+@dataclass(frozen=True, slots=True)
 class SessionCreated:
     """A new session has been created."""
 
@@ -192,6 +219,8 @@ UIEvent = (
     | TurnBlocked
     | TurnIncomplete
     | BudgetWarning
+    | HistoryCompacted
+    | BudgetOverflowAdvisory
     | SessionCreated
     | SessionResumed
     | SessionArchived

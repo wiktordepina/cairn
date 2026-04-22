@@ -185,6 +185,7 @@ def _make_orchestrator(
     extraction_queue=None,
     approvers=(),
     approval_gateway=None,
+    preparers=(),
 ) -> Orchestrator:
     return Orchestrator(
         provider_registry=provider_registry,
@@ -202,6 +203,7 @@ def _make_orchestrator(
         clock=frozen_clock,
         config=orchestrator_config,
         approvers=approvers,
+        preparers=preparers,
         observers=[collector],
     )
 
@@ -967,3 +969,144 @@ class TestResumeAbortedTurns:
         assert turn is not None
         assert turn.state is TurnState.ABORTED
         assert turn.aborted_reason == "process_crash"
+
+
+# ---------------------------------------------------------------------------
+# Compaction integration — overflow terminate path
+# ---------------------------------------------------------------------------
+
+
+class TestCompactionOverflow:
+    @pytest.mark.asyncio
+    async def test_overflow_terminate_aborts_turn_and_archives_session(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        from cairn.compaction import (
+            AutoTerminateOverflowGateway,
+            CompactionConfig,
+            TruncatingCompactor,
+        )
+        from cairn.domain import SessionArchived
+
+        # Provider will never be asked to stream — compactor will raise
+        # BudgetOverflowDeclined first. Use a huge token_count so we
+        # certainly exceed the advisory budget.
+        provider.token_count = 1_000_000
+
+        compactor = TruncatingCompactor(
+            CompactionConfig(
+                safety_margin_tokens=0,
+                preserve_last_n_turns=1,
+                min_history_tokens=100,
+            ),
+            model_registry,
+            provider_registry,
+            overflow_gateway=AutoTerminateOverflowGateway(),
+        )
+
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+            preparers=(compactor,),
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+
+        events = []
+        async for ev in orch.run_turn(session.id, _user("hi")):
+            events.append(ev)
+
+        aborted = [e for e in events if isinstance(e, TurnAborted)]
+        archived = [e for e in events if isinstance(e, SessionArchived)]
+        assert len(aborted) == 1
+        assert aborted[0].reason == "user_declined_overflow"
+        assert len(archived) == 1
+        assert archived[0].session_id == session.id
+
+        # Session is now archived in the DB.
+        persisted = await session_manager.get(session.id)
+        assert persisted.archived is True
+
+        # Turn row reflects the abort reason.
+        turns = await turn_repo.list_for_session(session.id)
+        assert len(turns) == 1
+        assert turns[0].state is TurnState.ABORTED
+        assert turns[0].aborted_reason == "user_declined_overflow"
+
+    @pytest.mark.asyncio
+    async def test_overflow_continue_lets_request_through(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        from cairn.compaction import (
+            AutoContinueOverflowGateway,
+            CompactionConfig,
+            TruncatingCompactor,
+        )
+
+        provider.token_count = 1_000_000  # always over budget
+        provider.scripted = [
+            [
+                TextDelta(text="ok"),
+                UsageEvent(input_tokens=1, output_tokens=1),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+
+        compactor = TruncatingCompactor(
+            CompactionConfig(
+                safety_margin_tokens=0,
+                preserve_last_n_turns=1,
+                min_history_tokens=100,
+            ),
+            model_registry,
+            provider_registry,
+            overflow_gateway=AutoContinueOverflowGateway(),
+        )
+
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+            preparers=(compactor,),
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+
+        events = []
+        async for ev in orch.run_turn(session.id, _user("hi")):
+            events.append(ev)
+
+        # Turn completed normally.
+        assert any(isinstance(e, TurnComplete) for e in events)
+        assert not any(isinstance(e, TurnAborted) for e in events)

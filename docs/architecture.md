@@ -136,7 +136,7 @@ Cairn is under active development. This table is authoritative; the
 | Tool system — runner + delegation + orchestrator integration | Shipped (0.6.0) |
 | Observability — bootstrap modules | Shipped (0.7.0) |
 | Memory (tier-1) — extraction, retrieval, context assembly | Shipped (0.7.0) |
-| Compaction | Planned |
+| Compaction | Shipped (0.8.0) |
 | Convention files | Planned |
 | UI (Textual) | Planned |
 | CLI entry point | Planned |
