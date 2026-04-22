@@ -53,6 +53,7 @@ actually imports):
 | Provider SDKs | `anthropic`, `openai` (also serves OpenRouter) |
 | Tokenisation | `tiktoken` |
 | File watching | `watchfiles` |
+| TLS trust | `truststore` (OS trust store via `setup_ssl()`) |
 
 Planned (not yet shipped): Textual UI, `structlog` observability,
 MCP client (`mcp` SDK), `sqlite-vec` + `fastembed` for V3 vector
@@ -97,15 +98,12 @@ See [`docs/configuration.md`](docs/configuration.md) for the full TOML reference
 
 ## Documentation
 
-The published site at <https://wiktordepina.github.io/cairn/> has search, a
-version selector, and an API reference generated from docstrings. The same
-content is readable in [`docs/`](docs/) on GitHub:
+Published site (with search, a version selector, and an auto-generated
+API reference): <https://wiktordepina.github.io/cairn/>.
 
-- [Architecture](docs/architecture.md) — the shape of the system.
-- [Configuration](docs/configuration.md) — every TOML key.
-- [Providers](docs/providers.md) — Anthropic, OpenAI, OpenRouter.
-- [Persistence](docs/persistence.md) — data layout and backup.
-- [Architecture Decision Records](docs/decisions/) — why cairn is shaped this way.
+For the same content on GitHub — including the index of guides,
+architecture pages, ADRs, and the API reference — see
+[`docs/README.md`](docs/README.md).
 
 ## Roadmap
 

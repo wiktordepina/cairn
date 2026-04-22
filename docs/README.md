@@ -17,6 +17,8 @@ content is otherwise the same.
   reference scheme, profile discovery and merge order.
 - **[Providers](providers.md)** — per-provider notes for Anthropic,
   OpenAI (including OpenAI-compatible local servers), and OpenRouter.
+- **[Observability](observability.md)** — `setup_logging()` and
+  `setup_ssl()` bootstraps; resolution order; when to call.
 
 ### Architecture
 
@@ -32,18 +34,17 @@ content is otherwise the same.
 
 ### Reference
 
-API reference generated from docstrings. Visible on the published site;
-omitted from GitHub rendering because the `:::` directives are only
-resolved by MkDocs.
+- **[API reference](reference/index.md)** — auto-generated from each
+  module's `__all__`. Covers `config`, `domain`, `logging`,
+  `orchestrator`, `persistence`, `providers`, `ssl`, and `tools`.
 
-- **[Providers](reference/providers.md)** — protocol, adapters, registry,
-  error hierarchy.
-- **[Tools](reference/tools.md)** — `@tool` decorator, registry and runner,
-  approval gates, content transformers.
-- **[Orchestrator](reference/orchestrator.md)** — entry point, collaborator
-  protocols, middleware, turn records.
-- **[Domain](reference/domain.md)** — messages, content blocks, sessions,
-  provider and UI events.
+The reference pages are best read on the published site, where
+`mkdocstrings` resolves the `:::` directives into rendered docstrings
+with parameter and return tables. On GitHub the same files show as
+plain Markdown — useful for finding which symbols exist, less useful
+for reading the docstrings themselves. See
+[ADR 0020](decisions/0020-auto-generated-api-reference.md) for the
+generation contract.
 
 ### Decisions
 
@@ -75,6 +76,17 @@ Docstring extraction uses [`mkdocstrings`](https://mkdocstrings.github.io/)
 with the Python handler; docstrings follow **Google style**. Versioned
 publication uses [`mike`](https://github.com/jimporter/mike). See
 [ADR 0018](decisions/0018-docs-site-tooling.md) for the rationale.
+
+The reference pages under `reference/` are produced by
+`docs/gen_ref_pages.py` from each module's `__all__` — see
+[ADR 0020](decisions/0020-auto-generated-api-reference.md). After
+editing `__all__`, regenerate:
+
+```bash
+uv run python docs/gen_ref_pages.py
+```
+
+CI runs the same script with `--check` to catch drift.
 
 ### Building locally
 

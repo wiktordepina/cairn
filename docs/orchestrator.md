@@ -51,39 +51,42 @@ Every turn walks an explicit state machine. The `turns` table's
 `state` column is authoritative; transitions are conditional `UPDATE`
 statements.
 
+```mermaid
+stateDiagram-v2
+    direction TB
+    [*] --> pre_turn
+    pre_turn: pre-turn check
+    pre_turn --> [*]: block
+    pre_turn --> STARTED: proceed
+    STARTED --> MEMORY_RETRIEVAL
+    MEMORY_RETRIEVAL --> ITERATION
+    ITERATION --> CONTEXT_ASSEMBLY
+    CONTEXT_ASSEMBLY --> PROVIDER_STREAMING
+    PROVIDER_STREAMING --> TOOL_DISPATCH: tool calls
+    TOOL_DISPATCH --> ITERATION
+    PROVIDER_STREAMING --> FINALISING: no tools
+    FINALISING --> EXTRACTION_ENQUEUED
+    EXTRACTION_ENQUEUED --> COMPLETED
+    COMPLETED --> [*]
 ```
-  ┌────────────────┐
-  │  (pre-turn)    │   CostTracker.should_block_turn
-  │   BLOCK? ──► TurnBlocked, return
-  │   WARN? ──► proceed + BudgetWarning
-  │   PROCEED? ──► proceed
-  └───────┬────────┘
-          ▼
-    STARTED  ────► user msg persisted, turns row inserted
-          ▼
-    MEMORY_RETRIEVAL  (skipped for memoryless sessions)
-          ▼
-    ITERATION  ◄────────────┐
-        ↓                    │
-    CONTEXT_ASSEMBLY         │
-        ↓                    │
-    PROVIDER_STREAMING       │
-        ↓                    │
-    ┌───┴────┐               │
-    │        │               │
- no tools  tool calls pending│
-    │        │               │
-    │    TOOL_DISPATCH       │
-    │        │───────────────┘
-    ▼
-    FINALISING
-        ↓
-    EXTRACTION_ENQUEUED  (skipped for ephemeral / memoryless)
-        ↓
-    COMPLETED ──► TurnComplete(stop_reason)
 
-  (any state can transition to ABORTED via user cancel, crash, or unrecoverable error)
-```
+Notes on the transitions:
+
+- **pre-turn check** runs `CostTracker.should_block_turn`. `BLOCK`
+  emits `TurnBlocked` and returns. `WARN` proceeds and emits
+  `BudgetWarning`. `PROCEED` proceeds silently.
+- **STARTED** is reached after the user message is persisted and the
+  `turns` row is inserted.
+- **MEMORY_RETRIEVAL** is skipped for memoryless sessions (ephemeral,
+  or persona with `memory_space = None`).
+- **EXTRACTION_ENQUEUED** is skipped for ephemeral or memoryless
+  sessions; the queued task is what runs observation extraction
+  asynchronously after the turn returns.
+- **COMPLETED** emits `TurnComplete(stop_reason)`.
+- **ABORTED** is reachable from any state via user cancel, process
+  crash, or unrecoverable error. The `turns` row's `state` column is
+  conditionally updated; the previous state is recorded in
+  `aborted_from`.
 
 Each transition:
 
