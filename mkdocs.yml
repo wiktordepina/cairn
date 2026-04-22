@@ -118,10 +118,15 @@ nav:
       - Persistence: persistence.md
       - Tools: tools.md
   - Reference:
-      - Providers: reference/providers.md
-      - Tools: reference/tools.md
-      - Orchestrator: reference/orchestrator.md
+      - Overview: reference/index.md
+      - Config: reference/config.md
       - Domain: reference/domain.md
+      - Logging: reference/logging.md
+      - Orchestrator: reference/orchestrator.md
+      - Persistence: reference/persistence.md
+      - Providers: reference/providers.md
+      - SSL: reference/ssl.md
+      - Tools: reference/tools.md
   - Decisions:
       - Index: decisions/README.md
       - "0001 Per-profile SQLite": decisions/0001-per-profile-sqlite.md
@@ -143,3 +148,4 @@ nav:
       - "0017 SSRF IP pinning deferred": decisions/0017-ssrf-ip-pinning-deferred.md
       - "0018 Docs site tooling": decisions/0018-docs-site-tooling.md
       - "0019 Google docstring style": decisions/0019-docstrings-google-style.md
+      - "0020 Auto-generated API reference": decisions/0020-auto-generated-api-reference.md

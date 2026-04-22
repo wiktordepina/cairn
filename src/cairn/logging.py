@@ -22,6 +22,8 @@ from pathlib import Path
 
 from platformdirs import user_log_path
 
+__all__ = ["setup_logging"]
+
 _LOGGER_NAME = "cairn"
 _DEFAULT_LEVEL = "INFO"
 _DEFAULT_FILENAME = "cairn.log"
