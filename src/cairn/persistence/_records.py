@@ -13,6 +13,7 @@ from cairn.domain._enums import (  # noqa: TC001
     ToolCallStatus,
     UsageOperation,
 )
+from cairn.domain._memory import MemoryEntry  # noqa: TC001
 
 
 class ToolCallRecord(BaseModel):
@@ -70,3 +71,18 @@ class UsageRecord(BaseModel):
     stop_reason: StopReason | None = None
     is_error: bool = False
     metadata: dict[str, object] = {}
+
+
+class MemoryHit(BaseModel):
+    """A memory entry surfaced by `MemoryRepo.search`, paired with its
+    FTS5 BM25 score.
+
+    Lower `bm25_score` is a better match per SQLite's FTS5 convention.
+    Callers typically rescore with recency + importance weights before
+    picking top-k — see the retrieval service.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    entry: MemoryEntry
+    bm25_score: float

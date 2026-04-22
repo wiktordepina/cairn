@@ -42,6 +42,7 @@ REFERENCE_MODULES: list[tuple[str, str]] = [
     ("config", "Config"),
     ("domain", "Domain"),
     ("logging", "Logging"),
+    ("memory", "Memory"),
     ("orchestrator", "Orchestrator"),
     ("persistence", "Persistence"),
     ("providers", "Providers"),

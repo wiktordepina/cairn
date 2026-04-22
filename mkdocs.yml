@@ -115,6 +115,7 @@ nav:
   - Guide:
       - Configuration: configuration.md
       - Providers: providers.md
+      - Memory: memory.md
       - Observability: observability.md
   - Architecture:
       - Overview: architecture.md
@@ -126,6 +127,7 @@ nav:
       - Config: reference/config.md
       - Domain: reference/domain.md
       - Logging: reference/logging.md
+      - Memory: reference/memory.md
       - Orchestrator: reference/orchestrator.md
       - Persistence: reference/persistence.md
       - Providers: reference/providers.md
@@ -153,3 +155,9 @@ nav:
       - "0018 Docs site tooling": decisions/0018-docs-site-tooling.md
       - "0019 Google docstring style": decisions/0019-docstrings-google-style.md
       - "0020 Auto-generated API reference": decisions/0020-auto-generated-api-reference.md
+      - "0021 Tier-1 memory first": decisions/0021-tier-1-memory-first.md
+      - "0022 Memory dedup threshold": decisions/0022-memory-dedup-threshold.md
+      - "0023 JSONL log without V1 rebuild": decisions/0023-jsonl-log-no-rebuild.md
+      - "0024 MEMORY.md as an index": decisions/0024-memory-md-as-index.md
+      - "0025 Extraction role and local models": decisions/0025-extraction-role-and-local-models.md
+      - "0026 Per-turn extraction with context": decisions/0026-per-turn-extraction-with-context.md

@@ -35,7 +35,11 @@
 
 ::: cairn.persistence.db_path_for_profile
 
+::: cairn.persistence.memory_dir_for_profile
+
 ## Records
+
+::: cairn.persistence.MemoryHit
 
 ::: cairn.persistence.ToolCallRecord
 
@@ -44,6 +48,8 @@
 ## Repos
 
 ::: cairn.persistence.ApprovalDecisionRepo
+
+::: cairn.persistence.MemoryRepo
 
 ::: cairn.persistence.MessageRepo
 

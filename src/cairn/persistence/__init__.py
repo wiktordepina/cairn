@@ -8,14 +8,16 @@ from cairn.persistence._errors import (
     NotFoundError,
     PersistenceError,
 )
+from cairn.persistence._memory_repo import MemoryRepo
 from cairn.persistence._messages_repo import MessageRepo
 from cairn.persistence._migrations import Migration, apply_pending, discover_migrations
 from cairn.persistence._paths import (
     data_dir_for_profile,
     db_path_for_config,
     db_path_for_profile,
+    memory_dir_for_profile,
 )
-from cairn.persistence._records import ToolCallRecord, UsageRecord
+from cairn.persistence._records import MemoryHit, ToolCallRecord, UsageRecord
 from cairn.persistence._sessions_repo import SessionRepo
 from cairn.persistence._tool_calls_repo import ToolCallRepo
 from cairn.persistence._turns_repo import InvalidTurnTransition, TurnRepo
@@ -38,11 +40,14 @@ __all__ = [
     "data_dir_for_profile",
     "db_path_for_config",
     "db_path_for_profile",
+    "memory_dir_for_profile",
     # Records
+    "MemoryHit",
     "ToolCallRecord",
     "UsageRecord",
     # Repos
     "ApprovalDecisionRepo",
+    "MemoryRepo",
     "MessageRepo",
     "SessionRepo",
     "ToolCallRepo",

@@ -10,9 +10,104 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-Memory brick (tier-1), compaction, convention files, UI, CLI entry
-point, and observability tranche 2 (log redaction, structured
-`UIEventObserver`) are still to land.
+Compaction, convention files, UI, CLI entry point, and observability
+tranche 2 (log redaction, structured `UIEventObserver`) are still to
+land.
+
+## [0.7.0] — 2026-04-22
+
+Ships tier-1 memory end-to-end: post-turn observation extraction with
+dedup-on-store, composite-scored retrieval, and a context manager that
+assembles soul / user-context / MEMORY.md alongside retrieved
+memories. Also wraps up the observability bootstrap modules and the
+auto-generated API reference that had been accumulating on `main`.
+
+### Added — tier-1 memory
+
+- **Migration `0003_memory.sql`** — `memory_entries` table with CHECK
+  constraints on `importance` (1–10), `memory_class`
+  (`semantic`/`episodic`) and `entry_type` (six values). Plus an
+  external-content FTS5 shadow (`memory_entries_fts`) and the standard
+  `ai`/`ad`/`au` sync triggers. No ON DELETE CASCADE from sessions —
+  memory outlives its source session ([arch doc §4.11 invariant #4]).
+- **`MemoryRepo`** (`src/cairn/persistence/_memory_repo.py`) — `store`
+  with dedup-on-store (`SequenceMatcher ≥ 0.90` against FTS5
+  candidates, `BEGIN IMMEDIATE`-wrapped; refresh `updated_at` + max
+  importance rather than inserting a second row), `search` (BM25
+  with optional `entry_types` filter), plus `recent`, `get`, `delete`,
+  `count_for_space`.
+- **`MemoryHit`** record pairs each search result with its BM25 score
+  for the retrieval service.
+- **`cairn.persistence._text.significant_words`** — hand-rolled
+  40-word English stopword filter + tokeniser powering the dedup
+  candidate query. No external NLP dep.
+- **`ObservationLog`** (`src/cairn/memory/_observation_log.py`) —
+  append-only JSONL writer. One file per UTC day under
+  `<profile>/memory/observations/YYYY-MM-DD.jsonl`. Dir created
+  `0o700` lazily, `asyncio.Lock` keeps concurrent writers from
+  interleaving bytes. `Observation.from_entry(entry)` converts a
+  persisted `MemoryEntry`. No fsync per append by default; SQLite is
+  the primary durability store.
+- **`Extractor`** (`src/cairn/memory/_extractor.py`) — streams
+  `ModelRole.EXTRACTION` (falls back to `UTILITY` when unset), parses
+  the structured JSON envelope, stores via `MemoryRepo`, mirrors to
+  `ObservationLog`, records usage with
+  `operation=UsageOperation.EXTRACTION` and `role="extraction"`.
+  Tolerates ```json fenced responses. Mid-stream cost cap
+  (`MemoryConfig.max_extraction_cost_usd`) truncates runaway calls;
+  parse failures drop the batch but still record usage. Exceptions
+  are logged and swallowed — the worker keeps running.
+- **`ObservationExtractionQueue`** (`src/cairn/memory/_queue.py`) —
+  implements the orchestrator's `ExtractionQueue` protocol:
+  non-blocking `submit`, background `asyncio.Task` worker, per-space
+  `asyncio.Lock` for serialisation (cross-space jobs run in
+  parallel), drop-oldest-on-overflow with a logged WARNING at
+  `max_pending_extractions`. Gates: length gate
+  (`min_extraction_chars`), persona opt-out (`extract_from_personas`),
+  tool-only-turn gate (`extract_from_tool_only_turns`). Graceful
+  `stop()` waits for in-flight extractions to drain.
+- **`MemoryService`** (`src/cairn/memory/_retrieval.py`) — implements
+  the orchestrator's `MemoryService` protocol. `retrieve(space,
+  query, k)` fetches `3*k` BM25 candidates, rescores with the
+  arch-doc composite (`0.3·recency + 0.3·importance + 0.4·relevance`
+  with 90-day semantic / 3-day episodic half-lives), sorts desc,
+  truncates to top-k, truncates content to
+  `retrieval_content_truncate`. `composite_score()` exported as a
+  pure function; golden-value tests pin the formula.
+- **`ProfileDocLoader` + `StandardContextManager`**
+  (`src/cairn/memory/_context.py`) — default `ContextManager`
+  implementation. Reads `soul_document.md`, `user_context.md`, and
+  `MEMORY.md` (verbatim, as an index file per
+  [ADR 0024](docs/decisions/0024-memory-md-as-index.md)) with a 20 KB
+  per-file defensive cap + WARNING. Missing soul doc falls back to a
+  bundled minimal identity. System prompt assembled as tagged
+  sections — `<identity>`, `<user_context>`, `<memory_index>`,
+  `<retrieved_memories>`, `<persona_system_prompt>` — with empty
+  sources omitted entirely. Retrieved memories render as
+  `- [<type>] <content> (importance <n>)` bullets.
+- **`ModelRole.EXTRACTION`** — new enum member for dedicated
+  extraction models ([ADR 0025](docs/decisions/0025-extraction-role-and-local-models.md)).
+- **`MemoryConfig`** on `ProfileConfig.memory` — nine tunables:
+  `extraction_context_turns`, `min_extraction_chars`,
+  `extract_from_personas`, `extract_from_tool_only_turns`,
+  `max_extraction_cost_usd`, `max_pending_extractions`,
+  `retrieval_k`, `retrieval_content_truncate`,
+  `observation_log_fsync`.
+- **`memory_dir_for_profile()`** path helper in `cairn.persistence`.
+- **`cairn.memory` package** (`__init__.py` with `__all__`) re-exports
+  the public surface — `Extractor`, `ObservationExtractionQueue`,
+  `MemoryService`, `StandardContextManager`, `ProfileDocLoader`,
+  `ObservationLog`, `composite_score`, plus Pydantic response
+  models.
+- **New guide page at `docs/memory.md`** — end-to-end walkthrough of
+  extraction, retrieval, system prompt assembly, on-disk layout,
+  invariants, configuration, and troubleshooting.
+- **Six new ADRs** — [0021](docs/decisions/0021-tier-1-memory-first.md),
+  [0022](docs/decisions/0022-memory-dedup-threshold.md),
+  [0023](docs/decisions/0023-jsonl-log-no-rebuild.md),
+  [0024](docs/decisions/0024-memory-md-as-index.md),
+  [0025](docs/decisions/0025-extraction-role-and-local-models.md),
+  [0026](docs/decisions/0026-per-turn-extraction-with-context.md).
 
 ### Added — observability bootstrap
 
