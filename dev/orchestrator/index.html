@@ -2216,38 +2216,40 @@ narrow protocol that the orchestrator consumes.</p>
 <p>Every turn walks an explicit state machine. The <code>turns</code> table's
 <code>state</code> column is authoritative; transitions are conditional <code>UPDATE</code>
 statements.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>  ┌────────────────┐
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  │  (pre-turn)    │   CostTracker.should_block_turn
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  │   BLOCK? ──► TurnBlocked, return
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  │   WARN? ──► proceed + BudgetWarning
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  │   PROCEED? ──► proceed
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  └───────┬────────┘
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>          ▼
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    STARTED  ────► user msg persisted, turns row inserted
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>          ▼
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    MEMORY_RETRIEVAL  (skipped for memoryless sessions)
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>          ▼
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    ITERATION  ◄────────────┐
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        ↓                    │
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    CONTEXT_ASSEMBLY         │
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        ↓                    │
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    PROVIDER_STREAMING       │
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>        ↓                    │
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    ┌───┴────┐               │
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    │        │               │
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a> no tools  tool calls pending│
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    │        │               │
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    │    TOOL_DISPATCH       │
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    │        │───────────────┘
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    ▼
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    FINALISING
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        ↓
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    EXTRACTION_ENQUEUED  (skipped for ephemeral / memoryless)
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        ↓
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    COMPLETED ──► TurnComplete(stop_reason)
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  (any state can transition to ABORTED via user cancel, crash, or unrecoverable error)
-</span></code></pre></div>
+<pre class="mermaid"><code>stateDiagram-v2
+    direction TB
+    [*] --&gt; pre_turn
+    pre_turn: pre-turn check
+    pre_turn --&gt; [*]: block
+    pre_turn --&gt; STARTED: proceed
+    STARTED --&gt; MEMORY_RETRIEVAL
+    MEMORY_RETRIEVAL --&gt; ITERATION
+    ITERATION --&gt; CONTEXT_ASSEMBLY
+    CONTEXT_ASSEMBLY --&gt; PROVIDER_STREAMING
+    PROVIDER_STREAMING --&gt; TOOL_DISPATCH: tool calls
+    TOOL_DISPATCH --&gt; ITERATION
+    PROVIDER_STREAMING --&gt; FINALISING: no tools
+    FINALISING --&gt; EXTRACTION_ENQUEUED
+    EXTRACTION_ENQUEUED --&gt; COMPLETED
+    COMPLETED --&gt; [*]</code></pre>
+<p>Notes on the transitions:</p>
+<ul>
+<li><strong>pre-turn check</strong> runs <code>CostTracker.should_block_turn</code>. <code>BLOCK</code>
+  emits <code>TurnBlocked</code> and returns. <code>WARN</code> proceeds and emits
+  <code>BudgetWarning</code>. <code>PROCEED</code> proceeds silently.</li>
+<li><strong>STARTED</strong> is reached after the user message is persisted and the
+  <code>turns</code> row is inserted.</li>
+<li><strong>MEMORY_RETRIEVAL</strong> is skipped for memoryless sessions (ephemeral,
+  or persona with <code>memory_space = None</code>).</li>
+<li><strong>EXTRACTION_ENQUEUED</strong> is skipped for ephemeral or memoryless
+  sessions; the queued task is what runs observation extraction
+  asynchronously after the turn returns.</li>
+<li><strong>COMPLETED</strong> emits <code>TurnComplete(stop_reason)</code>.</li>
+<li><strong>ABORTED</strong> is reachable from any state via user cancel, process
+  crash, or unrecoverable error. The <code>turns</code> row's <code>state</code> column is
+  conditionally updated; the previous state is recorded in
+  <code>aborted_from</code>.</li>
+</ul>
 <p>Each transition:</p>
 <ol>
 <li>Updates the <code>turns</code> row (conditional <code>UPDATE</code>; invalid transitions

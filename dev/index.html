@@ -2056,6 +2056,8 @@ content is otherwise the same.</p>
   reference scheme, profile discovery and merge order.</li>
 <li><strong><a href="providers/">Providers</a></strong> — per-provider notes for Anthropic,
   OpenAI (including OpenAI-compatible local servers), and OpenRouter.</li>
+<li><strong><a href="observability/">Observability</a></strong> — <code>setup_logging()</code> and
+  <code>setup_ssl()</code> bootstraps; resolution order; when to call.</li>
 </ul>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
 <ul>
@@ -2070,19 +2072,18 @@ content is otherwise the same.</p>
   SSRF defence.</li>
 </ul>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
-<p>API reference generated from docstrings. Visible on the published site;
-omitted from GitHub rendering because the <code>:::</code> directives are only
-resolved by MkDocs.</p>
 <ul>
-<li><strong><a href="reference/providers/">Providers</a></strong> — protocol, adapters, registry,
-  error hierarchy.</li>
-<li><strong><a href="reference/tools/">Tools</a></strong> — <code>@tool</code> decorator, registry and runner,
-  approval gates, content transformers.</li>
-<li><strong><a href="reference/orchestrator/">Orchestrator</a></strong> — entry point, collaborator
-  protocols, middleware, turn records.</li>
-<li><strong><a href="reference/domain/">Domain</a></strong> — messages, content blocks, sessions,
-  provider and UI events.</li>
+<li><strong><a href="reference/">API reference</a></strong> — auto-generated from each
+  module's <code>__all__</code>. Covers <code>config</code>, <code>domain</code>, <code>logging</code>,
+  <code>orchestrator</code>, <code>persistence</code>, <code>providers</code>, <code>ssl</code>, and <code>tools</code>.</li>
 </ul>
+<p>The reference pages are best read on the published site, where
+<code>mkdocstrings</code> resolves the <code>:::</code> directives into rendered docstrings
+with parameter and return tables. On GitHub the same files show as
+plain Markdown — useful for finding which symbols exist, less useful
+for reading the docstrings themselves. See
+<a href="decisions/0020-auto-generated-api-reference/">ADR 0020</a> for the
+generation contract.</p>
 <h3 id="decisions">Decisions<a class="headerlink" href="#decisions" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong><a href="decisions/">Architecture Decision Records</a></strong> — the <em>why</em> behind
@@ -2110,9 +2111,16 @@ Docstring extraction uses <a href="https://mkdocstrings.github.io/"><code>mkdocs
 with the Python handler; docstrings follow <strong>Google style</strong>. Versioned
 publication uses <a href="https://github.com/jimporter/mike"><code>mike</code></a>. See
 <a href="decisions/0018-docs-site-tooling/">ADR 0018</a> for the rationale.</p>
+<p>The reference pages under <code>reference/</code> are produced by
+<code>docs/gen_ref_pages.py</code> from each module's <code>__all__</code> — see
+<a href="decisions/0020-auto-generated-api-reference/">ADR 0020</a>. After
+editing <code>__all__</code>, regenerate:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>docs/gen_ref_pages.py
+</span></code></pre></div>
+<p>CI runs the same script with <code>--check</code> to catch drift.</p>
 <h3 id="building-locally">Building locally<a class="headerlink" href="#building-locally" title="Permanent link">&para;</a></h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>serve<span class="w">   </span><span class="c1"># live-reload at http://127.0.0.1:8000</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>docs
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uv<span class="w"> </span>run<span class="w"> </span>mkdocs<span class="w"> </span>serve<span class="w">   </span><span class="c1"># live-reload at http://127.0.0.1:8000</span>
 </span></code></pre></div>
 <p>A strict build (<code>uv run mkdocs build --strict</code>) runs on every PR and
 fails on broken references, unresolved <code>:::</code> paths, and nav orphans.</p>

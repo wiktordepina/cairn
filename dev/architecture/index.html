@@ -2064,36 +2064,67 @@ an ephemeral session writes memory anywhere.</p>
 <p>Cairn is built as a stack of independent bricks, each with a narrow
 responsibility and a clean protocol-shaped boundary. Bricks are
 independently testable and, where reasonable, independently swappable.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────────────────────────────────┐
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                      UI (Textual, planned)                        │
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│         Chat screen · session list · command bar · /commands      │
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└─────────────────────────────▲─────────────────────────────────────┘
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                              │ AsyncIterator[UIEvent]
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>┌─────────────────────────────┴─────────────────────────────────────┐
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                       Orchestrator (shipped)                      │
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   Turn loop · state machine · middleware chains · cancellation    │
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└──┬──────────────────┬──────────────────┬──────────────────┬───────┘
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>   │                  │                  │                  │
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>┌──▼───────┐   ┌──────▼──────┐   ┌───────▼───────┐   ┌──────▼──────┐
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│ Context  │   │ Memory      │   │ Tool system   │   │ Providers   │
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│ manager  │   │ (planned)   │   │ (shipped —    │   │ (shipped)   │
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│(planned) │   │             │   │ foundation,   │   │             │
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│          │   │             │   │ built-ins,    │   │             │
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│          │   │             │   │ runner,       │   │             │
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│          │   │             │   │ delegation)   │   │             │
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>└──┬───────┘   └─────────────┘   └───────────────┘   └─────────────┘
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>   │                                                          │
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>   │                                                          │
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>┌──▼──────────────────────────────────────────────────────────▼───┐
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                     Persistence (shipped)                       │
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│      Session · Message · ToolCall · Usage · Memory (planned)    │
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>└──────────────────────────┬──────────────────────────────────────┘
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                           │
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                  ┌────────▼──────────┐
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                  │  Config (shipped) │
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>                  │  TOML · profiles  │
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>                  └───────────────────┘
-</span></code></pre></div>
+<pre class="mermaid"><code>flowchart TD
+    UI["&lt;b&gt;UI&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Textual — planned&lt;/i&gt;"]
+    ORCH["&lt;b&gt;Orchestrator&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
+    CTX["&lt;b&gt;Context manager&lt;/b&gt;&lt;br/&gt;&lt;i&gt;planned&lt;/i&gt;"]
+    MEM["&lt;b&gt;Memory&lt;/b&gt;&lt;br/&gt;&lt;i&gt;planned&lt;/i&gt;"]
+    TOOLS["&lt;b&gt;Tool system&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
+    PROV["&lt;b&gt;Providers&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
+    PERS["&lt;b&gt;Persistence&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
+    CFG["&lt;b&gt;Config&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
+
+    ORCH -- "AsyncIterator[UIEvent]" --&gt; UI
+    ORCH --&gt; CTX
+    ORCH --&gt; MEM
+    ORCH --&gt; TOOLS
+    ORCH --&gt; PROV
+    CTX --&gt; PERS
+    PROV --&gt; PERS
+    PERS --&gt; CFG</code></pre>
+<p>Each brick at a glance:</p>
+<table>
+<thead>
+<tr>
+<th>Brick</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UI</strong> <em>(planned)</em></td>
+<td>Chat screen, session list, command bar, <code>/commands</code></td>
+</tr>
+<tr>
+<td><strong>Orchestrator</strong></td>
+<td>Turn loop, state machine, middleware chains, cancellation</td>
+</tr>
+<tr>
+<td><strong>Context manager</strong> <em>(planned)</em></td>
+<td>Assembles the provider request: soul, memory, conventions, history</td>
+</tr>
+<tr>
+<td><strong>Memory</strong> <em>(planned)</em></td>
+<td>Tier-1 retrieval and observation extraction</td>
+</tr>
+<tr>
+<td><strong>Tool system</strong></td>
+<td>Decorator, registry, runner, delegation, security middleware</td>
+</tr>
+<tr>
+<td><strong>Providers</strong></td>
+<td>Anthropic, OpenAI, OpenRouter adapters behind a narrow protocol</td>
+</tr>
+<tr>
+<td><strong>Persistence</strong></td>
+<td>Sessions, messages, tool calls, turns, usage; memory tables planned</td>
+</tr>
+<tr>
+<td><strong>Config</strong></td>
+<td>Schema-versioned TOML, profiles, secret references</td>
+</tr>
+</tbody>
+</table>
 <h2 id="data-flow-of-a-companion-turn">Data flow of a companion turn<a class="headerlink" href="#data-flow-of-a-companion-turn" title="Permanent link">&para;</a></h2>
 <ol>
 <li>User submits a message in the UI.</li>
