@@ -56,7 +56,7 @@ class FakeProvider:
         self._cursor += 1
         return _gen(events)
 
-    def count_tokens(self, request: ProviderRequest) -> int:  # noqa: ARG002
+    async def count_tokens(self, request: ProviderRequest) -> int:  # noqa: ARG002
         return self.token_count
 
 

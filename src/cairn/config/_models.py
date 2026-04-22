@@ -203,6 +203,36 @@ class MemoryConfig(BaseModel):
     store; losing the last few lines of JSONL on crash is acceptable."""
 
 
+class CompactionConfig(BaseModel):
+    """Tunables for conversation-history compaction.
+
+    All knobs live on `ProfileConfig.compaction`; each persona is its
+    own profile, so overrides are per-persona by construction.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    enabled: bool = True
+    """Master kill switch. `False` disables the preparer entirely —
+    history is never truncated. Useful when debugging
+    context-loss bugs."""
+
+    preserve_last_n_turns: int = 6
+    """Hard floor on surviving turn blocks. Default 6 covers ~3
+    user/assistant round trips. Tool-heavy personas may want to
+    raise this."""
+
+    safety_margin_tokens: int = 2048
+    """Tokens held back from `context_window` on top of
+    `request.max_tokens` to cover tokenizer drift and
+    retrieved-memory slop."""
+
+    min_history_tokens: int = 1024
+    """If `context_window - max_tokens - safety_margin` falls below
+    this, the profile is misconfigured — log ERROR and pass the
+    request through unchanged."""
+
+
 class DelegationToolConfig(BaseModel):
     """Configuration for a delegation tool (consult another model)."""
 
@@ -284,6 +314,7 @@ class ProfileConfig(BaseModel):
     budgets: BudgetConfig = BudgetConfig()
     convention_files: ConventionFilesConfig = ConventionFilesConfig()
     memory: MemoryConfig = MemoryConfig()
+    compaction: CompactionConfig = CompactionConfig()
 
 
 class CairnConfig(BaseModel):

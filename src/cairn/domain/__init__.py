@@ -22,8 +22,10 @@ from cairn.domain._enums import (
 from cairn.domain._events import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    BudgetOverflowAdvisory,
     DelegationCompleted,
     DelegationSpawned,
+    HistoryCompacted,
     ObservationExtractionRequested,
     SessionArchived,
     SessionCreated,
@@ -70,8 +72,10 @@ __all__ = [
     # UI events
     "AssistantMessageComplete",
     "AssistantTextDelta",
+    "BudgetOverflowAdvisory",
     "DelegationCompleted",
     "DelegationSpawned",
+    "HistoryCompacted",
     "ObservationExtractionRequested",
     "SessionArchived",
     "SessionCreated",

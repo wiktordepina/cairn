@@ -43,9 +43,13 @@
 
 ::: cairn.domain.AssistantTextDelta
 
+::: cairn.domain.BudgetOverflowAdvisory
+
 ::: cairn.domain.DelegationCompleted
 
 ::: cairn.domain.DelegationSpawned
+
+::: cairn.domain.HistoryCompacted
 
 ::: cairn.domain.ObservationExtractionRequested
 

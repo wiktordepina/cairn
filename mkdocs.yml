@@ -116,6 +116,7 @@ nav:
       - Configuration: configuration.md
       - Providers: providers.md
       - Memory: memory.md
+      - Compaction: compaction.md
       - Observability: observability.md
   - Architecture:
       - Overview: architecture.md
@@ -124,6 +125,7 @@ nav:
       - Tools: tools.md
   - Reference:
       - Overview: reference/index.md
+      - Compaction: reference/compaction.md
       - Config: reference/config.md
       - Domain: reference/domain.md
       - Logging: reference/logging.md
@@ -161,3 +163,6 @@ nav:
       - "0024 MEMORY.md as an index": decisions/0024-memory-md-as-index.md
       - "0025 Extraction role and local models": decisions/0025-extraction-role-and-local-models.md
       - "0026 Per-turn extraction with context": decisions/0026-per-turn-extraction-with-context.md
+      - "0027 Truncation before summarisation": decisions/0027-truncation-before-summarisation.md
+      - "0028 Turn-block granularity": decisions/0028-turn-block-granularity.md
+      - "0029 Context budget is advisory": decisions/0029-context-budget-advisory.md

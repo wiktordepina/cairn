@@ -15,6 +15,7 @@ import logging
 import uuid
 from typing import TYPE_CHECKING
 
+from cairn.compaction._errors import BudgetOverflowDeclined
 from cairn.domain._content import ToolResultBlock, ToolUseBlock
 from cairn.domain._enums import (
     ErrorClass,
@@ -457,6 +458,25 @@ class Orchestrator:
                 turn_id=turn_id,
                 reason="user_cancel",
             )
+        except BudgetOverflowDeclined:
+            await self._turn_repo.mark_aborted(
+                turn_id,
+                reason="user_declined_overflow",
+                completed_at=self._clock.now(),
+            )
+            try:
+                await self._session_manager.archive(session.id)
+            except Exception:  # noqa: BLE001
+                _logger.exception(
+                    "compaction.archive_failed",
+                    extra={"turn_id": turn_id, "session_id": session.id},
+                )
+            yield TurnAborted(
+                session_id=session.id,
+                turn_id=turn_id,
+                reason="user_declined_overflow",
+            )
+            yield SessionArchived(session_id=session.id)
         except Exception as exc:  # noqa: BLE001
             _logger.exception(
                 "turn.failed",

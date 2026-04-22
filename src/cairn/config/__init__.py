@@ -7,6 +7,7 @@ from cairn.config._models import (
     CURRENT_SCHEMA_VERSION,
     BudgetConfig,
     CairnConfig,
+    CompactionConfig,
     ConventionFilesConfig,
     DelegationToolConfig,
     MemoryConfig,
@@ -23,6 +24,7 @@ __all__ = [
     # Models
     "BudgetConfig",
     "CairnConfig",
+    "CompactionConfig",
     "ConventionFilesConfig",
     "CURRENT_SCHEMA_VERSION",
     "DelegationToolConfig",
