@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/reference/orchestrator/">
       
       
-        <link rel="prev" href="../tools/">
+        <link rel="prev" href="../logging/">
       
       
-        <link rel="next" href="../domain/">
+        <link rel="next" href="../persistence/">
       
       
         
@@ -311,7 +311,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../providers/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -769,6 +769,18 @@
     
       
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
       
         
       
@@ -795,8 +807,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -810,8 +823,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
@@ -825,20 +844,22 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
+            
+              
                 
   
   
   
   
     <li class="md-nav__item">
-      <a href="../providers/" class="md-nav__link">
+      <a href="../config/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Providers
+    Config
   
 
     
@@ -859,14 +880,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/" class="md-nav__link">
+      <a href="../domain/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Tools
+    Domain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
   
 
     
@@ -947,10 +996,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#entry-point" class="md-nav__link">
+  <a href="#clock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry point
+        Clock
       
     </span>
   </a>
@@ -958,22 +1007,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator" class="md-nav__link">
+  <a href="#cairn.orchestrator.Clock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Orchestrator
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Clock
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" Orchestrator">
+    <nav class="md-nav" aria-label=" Clock">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator.cancel" class="md-nav__link">
+  <a href="#cairn.orchestrator.Clock.now" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;cancel
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;now
       
     </span>
   </a>
@@ -981,21 +1030,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator.resume_aborted_turns" class="md-nav__link">
+  <a href="#cairn.orchestrator.Clock.sleep" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;resume_aborted_turns
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator.run_turn" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;run_turn
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
       
     </span>
   </a>
@@ -1008,22 +1046,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager" class="md-nav__link">
+  <a href="#cairn.orchestrator.FrozenClock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionManager
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;FrozenClock
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" SessionManager">
+    <nav class="md-nav" aria-label=" FrozenClock">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager.create" class="md-nav__link">
+  <a href="#cairn.orchestrator.FrozenClock.advance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;create
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;advance
       
     </span>
   </a>
@@ -1031,21 +1069,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager.get" class="md-nav__link">
+  <a href="#cairn.orchestrator.FrozenClock.sleep" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager.archive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;archive
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
       
     </span>
   </a>
@@ -1054,6 +1081,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.SystemClock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SystemClock
+      
+    </span>
+  </a>
   
 </li>
       
@@ -1152,10 +1190,241 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#collaborator-protocols" class="md-nav__link">
+  <a href="#cost-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Collaborator protocols
+        Cost tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.BasicCostTracker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BasicCostTracker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnContext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnContext
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enums
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ApprovalOutcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalOutcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.BudgetVerdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetVerdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnState" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnState
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.OrchestratorError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OrchestratorError
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnAlreadyRunning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnAlreadyRunning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnBudgetExceeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnBudgetExceeded
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnTimeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnTimeout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.UnknownSession" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UnknownSession
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Middleware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ApprovalDecision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalDecision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ApprovalRequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalRequest
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.MessagePreparer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessagePreparer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ResultTransformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ResultTransformer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ToolApprover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolApprover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.UIEventObserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UIEventObserver
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocols
       
     </span>
   </a>
@@ -1279,109 +1548,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#middleware" class="md-nav__link">
+  <a href="#records" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Middleware
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.MessagePreparer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessagePreparer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ResultTransformer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ResultTransformer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ToolApprover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolApprover
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.UIEventObserver" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UIEventObserver
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ApprovalRequest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalRequest
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ApprovalDecision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalDecision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#turn-context-and-records" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Turn context and records
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnContext" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnContext
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnRecord" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnRecord
+        Records
       
     </span>
   </a>
@@ -1400,10 +1570,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enums" class="md-nav__link">
+  <a href="#cairn.orchestrator.TurnRecord" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enums
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnRecord
       
     </span>
   </a>
@@ -1411,10 +1581,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ApprovalOutcome" class="md-nav__link">
+  <a href="#session-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalOutcome
+        Session management
       
     </span>
   </a>
@@ -1422,121 +1592,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.BudgetVerdict" class="md-nav__link">
+  <a href="#cairn.orchestrator.SessionManager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetVerdict
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionManager
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnState" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnState
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.OrchestratorError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OrchestratorError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnAlreadyRunning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnAlreadyRunning
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnBudgetExceeded" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnBudgetExceeded
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnTimeout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnTimeout
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.UnknownSession" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UnknownSession
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Clock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Clock
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" Clock">
+    <nav class="md-nav" aria-label=" SessionManager">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Clock.now" class="md-nav__link">
+  <a href="#cairn.orchestrator.SessionManager.create" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;now
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;create
       
     </span>
   </a>
@@ -1544,10 +1615,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Clock.sleep" class="md-nav__link">
+  <a href="#cairn.orchestrator.SessionManager.get" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.SessionManager.archive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;archive
       
     </span>
   </a>
@@ -1556,78 +1638,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SystemClock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SystemClock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.FrozenClock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;FrozenClock
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" FrozenClock">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.FrozenClock.advance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;advance
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.FrozenClock.sleep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cost-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cost tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.BasicCostTracker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BasicCostTracker
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1719,6 +1729,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Orchestrator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" Orchestrator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator.cancel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;cancel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator.resume_aborted_turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;resume_aborted_turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator.run_turn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;run_turn
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1735,14 +1806,98 @@
   
   
     <li class="md-nav__item">
-      <a href="../domain/" class="md-nav__link">
+      <a href="../persistence/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Domain
+    Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
   
 
     
@@ -1774,6 +1929,8 @@
       
         
           
+        
+      
         
       
         
@@ -2400,6 +2557,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0020-auto-generated-api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0020 Auto-generated API reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2434,10 +2619,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#entry-point" class="md-nav__link">
+  <a href="#clock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Entry point
+        Clock
       
     </span>
   </a>
@@ -2445,22 +2630,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator" class="md-nav__link">
+  <a href="#cairn.orchestrator.Clock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Orchestrator
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Clock
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" Orchestrator">
+    <nav class="md-nav" aria-label=" Clock">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator.cancel" class="md-nav__link">
+  <a href="#cairn.orchestrator.Clock.now" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;cancel
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;now
       
     </span>
   </a>
@@ -2468,21 +2653,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator.resume_aborted_turns" class="md-nav__link">
+  <a href="#cairn.orchestrator.Clock.sleep" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;resume_aborted_turns
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Orchestrator.run_turn" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;run_turn
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
       
     </span>
   </a>
@@ -2495,22 +2669,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager" class="md-nav__link">
+  <a href="#cairn.orchestrator.FrozenClock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionManager
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;FrozenClock
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" SessionManager">
+    <nav class="md-nav" aria-label=" FrozenClock">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager.create" class="md-nav__link">
+  <a href="#cairn.orchestrator.FrozenClock.advance" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;create
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;advance
       
     </span>
   </a>
@@ -2518,21 +2692,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager.get" class="md-nav__link">
+  <a href="#cairn.orchestrator.FrozenClock.sleep" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SessionManager.archive" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;archive
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
       
     </span>
   </a>
@@ -2541,6 +2704,17 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.SystemClock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SystemClock
+      
+    </span>
+  </a>
   
 </li>
       
@@ -2639,10 +2813,241 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#collaborator-protocols" class="md-nav__link">
+  <a href="#cost-tracking" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Collaborator protocols
+        Cost tracking
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.BasicCostTracker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BasicCostTracker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnContext" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnContext
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#enums" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enums
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ApprovalOutcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalOutcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.BudgetVerdict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetVerdict
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnState" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnState
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.OrchestratorError" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OrchestratorError
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnAlreadyRunning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnAlreadyRunning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnBudgetExceeded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnBudgetExceeded
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.TurnTimeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnTimeout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.UnknownSession" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UnknownSession
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Middleware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ApprovalDecision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalDecision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ApprovalRequest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalRequest
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.MessagePreparer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessagePreparer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ResultTransformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ResultTransformer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.ToolApprover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolApprover
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.UIEventObserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UIEventObserver
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#protocols" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Protocols
       
     </span>
   </a>
@@ -2766,109 +3171,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#middleware" class="md-nav__link">
+  <a href="#records" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Middleware
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.MessagePreparer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessagePreparer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ResultTransformer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ResultTransformer
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ToolApprover" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolApprover
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.UIEventObserver" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UIEventObserver
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ApprovalRequest" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalRequest
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ApprovalDecision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalDecision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#turn-context-and-records" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Turn context and records
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnContext" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnContext
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnRecord" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnRecord
+        Records
       
     </span>
   </a>
@@ -2887,10 +3193,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enums" class="md-nav__link">
+  <a href="#cairn.orchestrator.TurnRecord" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enums
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnRecord
       
     </span>
   </a>
@@ -2898,10 +3204,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.ApprovalOutcome" class="md-nav__link">
+  <a href="#session-management" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalOutcome
+        Session management
       
     </span>
   </a>
@@ -2909,121 +3215,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.orchestrator.BudgetVerdict" class="md-nav__link">
+  <a href="#cairn.orchestrator.SessionManager" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetVerdict
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionManager
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnState" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnState
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.OrchestratorError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OrchestratorError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnAlreadyRunning" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnAlreadyRunning
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnBudgetExceeded" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnBudgetExceeded
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.TurnTimeout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnTimeout
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.UnknownSession" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UnknownSession
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Clock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Clock
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" Clock">
+    <nav class="md-nav" aria-label=" SessionManager">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Clock.now" class="md-nav__link">
+  <a href="#cairn.orchestrator.SessionManager.create" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;now
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;create
       
     </span>
   </a>
@@ -3031,10 +3238,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.orchestrator.Clock.sleep" class="md-nav__link">
+  <a href="#cairn.orchestrator.SessionManager.get" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.SessionManager.archive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;archive
       
     </span>
   </a>
@@ -3043,78 +3261,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.SystemClock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SystemClock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.FrozenClock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;FrozenClock
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" FrozenClock">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.FrozenClock.advance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;advance
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.orchestrator.FrozenClock.sleep" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;sleep
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cost-tracking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cost tracking
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.orchestrator.BasicCostTracker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BasicCostTracker
-      
-    </span>
-  </a>
   
 </li>
       
@@ -3206,6 +3352,67 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Orchestrator
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" Orchestrator">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator.cancel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;cancel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator.resume_aborted_turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;resume_aborted_turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.orchestrator.Orchestrator.run_turn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;run_turn
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3231,55 +3438,31 @@
   
 
 
+<!-- Generated by docs/gen_ref_pages.py from src/cairn/<module>/__init__.py.
+     Do not edit by hand — re-run the generator instead. -->
+
 <h1 id="orchestrator-api-reference">Orchestrator — API reference<a class="headerlink" href="#orchestrator-api-reference" title="Permanent link">&para;</a></h1>
-<p>The public surface of the turn loop: the <code>Orchestrator</code> itself, the
-collaborator protocols it expects, the typed middleware seams, the turn-state
-records persisted per turn, and the runtime knobs.</p>
-<p>For the narrative — state machine, cancellation, crash recovery — see
-<a href="../../orchestrator/">Orchestrator</a>.</p>
-<h2 id="entry-point">Entry point<a class="headerlink" href="#entry-point" title="Permanent link">&para;</a></h2>
+<h2 id="clock">Clock<a class="headerlink" href="#clock" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.orchestrator.Orchestrator" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Orchestrator</span>
+<h2 id="cairn.orchestrator.Clock" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Clock</span>
 
 
-<a href="#cairn.orchestrator.Orchestrator" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Orchestrator</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">provider_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRegistry (cairn.providers._registry.ProviderRegistry)" href="../providers/#cairn.providers.ProviderRegistry">ProviderRegistry</a></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model_registry</span><span class="p">:</span> <span class="n"><span title="cairn.config._registry.ModelRegistry">ModelRegistry</span></span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">session_manager</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionManager (cairn.orchestrator._session_manager.SessionManager)" href="#cairn.orchestrator.SessionManager">SessionManager</a></span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">context_manager</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ContextManager (cairn.orchestrator._protocols.ContextManager)" href="#cairn.orchestrator.ContextManager">ContextManager</a></span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">tool_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolRegistry (cairn.orchestrator._protocols.ToolRegistry)" href="#cairn.orchestrator.ToolRegistry">ToolRegistry</a></span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">tool_runner</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolRunner (cairn.orchestrator._protocols.ToolRunner)" href="#cairn.orchestrator.ToolRunner">ToolRunner</a></span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">memory_service</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            MemoryService (cairn.orchestrator._protocols.MemoryService)" href="#cairn.orchestrator.MemoryService">MemoryService</a></span><span class="p">,</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">extraction_queue</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ExtractionQueue (cairn.orchestrator._protocols.ExtractionQueue)" href="#cairn.orchestrator.ExtractionQueue">ExtractionQueue</a></span><span class="p">,</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">approval_gateway</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ApprovalGateway (cairn.orchestrator._protocols.ApprovalGateway)" href="#cairn.orchestrator.ApprovalGateway">ApprovalGateway</a></span><span class="p">,</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">cost_tracker</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            CostTracker (cairn.orchestrator._protocols.CostTracker)" href="#cairn.orchestrator.CostTracker">CostTracker</a></span><span class="p">,</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">turn_repo</span><span class="p">:</span> <span class="n"><span title="cairn.persistence._turns_repo.TurnRepo">TurnRepo</span></span><span class="p">,</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">message_repo</span><span class="p">:</span> <span class="n"><span title="cairn.persistence._messages_repo.MessageRepo">MessageRepo</span></span><span class="p">,</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">clock</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Clock (cairn.orchestrator._clock.Clock)" href="#cairn.orchestrator.Clock">Clock</a></span><span class="p">,</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            OrchestratorConfig (cairn.orchestrator._config.OrchestratorConfig)" href="#cairn.orchestrator.OrchestratorConfig">OrchestratorConfig</a></span><span class="p">,</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">preparers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            MessagePreparer (cairn.orchestrator._middleware.MessagePreparer)" href="#cairn.orchestrator.MessagePreparer">MessagePreparer</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">approvers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ToolApprover (cairn.orchestrator._middleware.ToolApprover)" href="#cairn.orchestrator.ToolApprover">ToolApprover</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">transformers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ResultTransformer (cairn.orchestrator._middleware.ResultTransformer)" href="#cairn.orchestrator.ResultTransformer">ResultTransformer</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">observers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            UIEventObserver (cairn.orchestrator._middleware.UIEventObserver)" href="#cairn.orchestrator.UIEventObserver">UIEventObserver</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="p">)</span>
-</span></code></pre></div>
+<a href="#cairn.orchestrator.Clock" class="headerlink" title="Permanent link">&para;</a></h2>
+
 
     <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
 
 
 
-        <p>The turn loop.</p>
-<p>Composed of injected collaborator protocols; owns no downstream
-implementation. Holds per-session cancel flags and minimal in-memory
-state for the lifetime of a running turn.</p>
+        <p>A source of time + cooperative sleep.</p>
 
 
 
@@ -3305,22 +3488,17 @@ state for the lifetime of a running turn.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.orchestrator.Orchestrator.cancel" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">cancel</span>
+<h3 id="cairn.orchestrator.Clock.now" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">now</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.Orchestrator.cancel" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">cancel</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<a href="#cairn.orchestrator.Clock.now" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">now</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="datetime.datetime">datetime</span></span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Signal cancellation for an in-flight turn. Safe to call
-even if no turn is running — it's a no-op in that case.</p>
+        <p>Return the current UTC datetime.</p>
 
 
     </div>
@@ -3330,57 +3508,21 @@ even if no turn is running — it's a no-op in that case.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.orchestrator.Orchestrator.resume_aborted_turns" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">resume_aborted_turns</span>
+<h3 id="cairn.orchestrator.Clock.sleep" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">sleep</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
 
-<a href="#cairn.orchestrator.Orchestrator.resume_aborted_turns" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">resume_aborted_turns</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span>
+<a href="#cairn.orchestrator.Clock.sleep" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">sleep</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="n"><span title="float">float</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Scan for turns left non-terminal by a prior crash. Mark them
-aborted. Returns the list of session IDs with dangling turns
-so the UI can surface 'resume from your message?' prompts.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.orchestrator.Orchestrator.run_turn" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">run_turn</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.Orchestrator.run_turn" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">run_turn</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">user_msg</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Message (cairn.domain._messages.Message)" href="../domain/#cairn.domain.Message">Message</a></span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.AsyncIterator">AsyncIterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            UIEvent
-
-
-  
-      module-attribute
-   (cairn.domain.UIEvent)" href="../domain/#cairn.domain.UIEvent">UIEvent</a></span><span class="p">]</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Run a turn. Yields UIEvents as it progresses.</p>
-<p>Consumer semantics: each yielded event is delivered to all
-registered observers before returning to the caller (observer
-errors are logged and swallowed — they can't break a turn).</p>
+        <p>Cooperatively sleep for <code>seconds</code>.</p>
 
 
     </div>
@@ -3399,35 +3541,21 @@ errors are logged and swallowed — they can't break a turn).</p>
 
 
 
-<h2 id="cairn.orchestrator.SessionManager" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SessionManager</span>
+<h2 id="cairn.orchestrator.FrozenClock" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">FrozenClock</span>
 
 
-<a href="#cairn.orchestrator.SessionManager" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">SessionManager</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">session_repo</span><span class="p">:</span> <span class="n"><span title="cairn.persistence._sessions_repo.SessionRepo">SessionRepo</span></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model_registry</span><span class="p">:</span> <span class="n"><span title="cairn.config._registry.ModelRegistry">ModelRegistry</span></span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">clock</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Clock (cairn.orchestrator._clock.Clock)" href="#cairn.orchestrator.Clock">Clock</a></span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">default_model_ref</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;role:primary&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+<a href="#cairn.orchestrator.FrozenClock" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">FrozenClock</span><span class="p">(</span><span class="n">now</span><span class="p">:</span> <span class="n"><span title="datetime.datetime">datetime</span></span><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
 
 
 
-        <p>Session lifecycle coordinator.</p>
-<p>Applies three invariants at creation time:</p>
-<ul>
-<li><strong>Ephemeral sessions never have a memory space.</strong> Callers that pass
-  one get it silently dropped — the invariant is on the type, not
-  the caller.</li>
-<li><strong>Companion sessions default to the <code>'companion'</code> space</strong> unless
-  the caller explicitly passes one.</li>
-<li><strong>Persona sessions accept whatever the caller passes</strong>, including
-  <code>None</code> (a memoryless persona is legitimate).</li>
-</ul>
+        <p>Controllable clock for tests.</p>
+<p><code>now()</code> returns the frozen timestamp; <code>advance(seconds)</code> moves it
+forward; <code>sleep()</code> advances the clock instead of actually sleeping.</p>
 
 
 
@@ -3453,28 +3581,17 @@ errors are logged and swallowed — they can't break a turn).</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.orchestrator.SessionManager.create" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">create</span>
+<h3 id="cairn.orchestrator.FrozenClock.advance" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">advance</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.SessionManager.create" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">create</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionType (cairn.domain._enums.SessionType)" href="../domain/#cairn.domain.SessionType">SessionType</a></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">persona</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">model</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">memory_space</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">parent_session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain._sessions.Session)" href="../domain/#cairn.domain.Session">Session</a></span>
+<a href="#cairn.orchestrator.FrozenClock.advance" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">advance</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="n"><span title="float">float</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Create and persist a new session. Returns the Session.</p>
+        <p>Move the frozen clock forward by <code>seconds</code>.</p>
 
 
     </div>
@@ -3484,50 +3601,72 @@ errors are logged and swallowed — they can't break a turn).</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.orchestrator.SessionManager.get" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get</span>
+<h3 id="cairn.orchestrator.FrozenClock.sleep" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">sleep</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
 
-<a href="#cairn.orchestrator.SessionManager.get" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain._sessions.Session)" href="../domain/#cairn.domain.Session">Session</a></span>
+<a href="#cairn.orchestrator.FrozenClock.sleep" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">sleep</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="n"><span title="float">float</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Fetch a session. Raises <code>UnknownSession</code> if missing.</p>
+        <p>Advance the clock; do not actually block.</p>
 
 
     </div>
 
 </div>
 
-<div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.orchestrator.SessionManager.archive" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">archive</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.SessionManager.archive" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">archive</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Archive a session. Raises <code>UnknownSession</code> if missing.</p>
-
+  </div>
 
     </div>
 
 </div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.SystemClock" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SystemClock</span>
+
+
+<a href="#cairn.orchestrator.SystemClock" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Wall-clock time. The production implementation.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3740,7 +3879,745 @@ of the session cap.</p>
 
     </div>
 
-</div><h2 id="collaborator-protocols">Collaborator protocols<a class="headerlink" href="#collaborator-protocols" title="Permanent link">&para;</a></h2>
+</div><h2 id="cost-tracking">Cost tracking<a class="headerlink" href="#cost-tracking" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.BasicCostTracker" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BasicCostTracker</span>
+
+
+<a href="#cairn.orchestrator.BasicCostTracker" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">BasicCostTracker</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">usage_repo</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            UsageRepo (cairn.persistence._usage_repo.UsageRepo)" href="../persistence/#cairn.persistence.UsageRepo">UsageRepo</a></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">clock</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Clock (cairn.orchestrator._clock.Clock)" href="#cairn.orchestrator.Clock">Clock</a></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">budgets</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            BudgetConfig (cairn.config._models.BudgetConfig)" href="../config/#cairn.config.BudgetConfig">BudgetConfig</a></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">warn_threshold_fraction</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Default <code>CostTracker</code> implementation.</p>
+<ul>
+<li><code>record</code> delegates to <code>UsageRepo.record</code>, stamping the turn_id
+  so per-turn aggregations work downstream.</li>
+<li><code>should_block_turn</code> returns <code>BLOCK</code> when <em>previously-recorded</em>
+  spend already meets or exceeds the session or daily cap, <code>WARN</code>
+  when session spend has crossed the configured warn fraction of
+  the per-session cap, and <code>PROCEED</code> otherwise.</li>
+</ul>
+<p>Budget checks reflect costs <em>already persisted</em> — the turn currently
+starting is not counted. The orchestrator's own <code>max_iterations</code>
+guards against unbounded loops within a single turn.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.TurnContext" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnContext</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.TurnContext" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TurnContext</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain.Session)" href="../domain/#cairn.domain.Session">Session</a></span><span class="p">,</span> <span class="n">turn_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Read-only context for a turn's collaborators.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="enums">Enums<a class="headerlink" href="#enums" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.ApprovalOutcome" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalOutcome</span>
+
+
+<a href="#cairn.orchestrator.ApprovalOutcome" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Result returned by a <code>ToolApprover</code>.</p>
+<p><code>ESCALATE</code> means "I can't decide — pass to the next approver in the
+chain, or the gateway". The first non-escalate decision wins.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.BudgetVerdict" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BudgetVerdict</span>
+
+
+<a href="#cairn.orchestrator.BudgetVerdict" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Result of a pre-turn budget check.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.TurnState" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnState</span>
+
+
+<a href="#cairn.orchestrator.TurnState" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>States of the orchestrator's per-turn state machine.</p>
+<p>The <code>turns.state</code> column is authoritative — every transition writes
+here via a conditional UPDATE. A turn ends in exactly one terminal
+state: <code>completed</code> or <code>aborted</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.OrchestratorError" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">OrchestratorError</span>
+
+
+<a href="#cairn.orchestrator.OrchestratorError" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="Exception">Exception</span></code></p>
+
+
+
+        <p>Base class for orchestrator errors.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.TurnAlreadyRunning" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnAlreadyRunning</span>
+
+
+<a href="#cairn.orchestrator.TurnAlreadyRunning" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
+
+
+
+        <p>A turn is already in flight for this session.</p>
+<p>The orchestrator enforces one turn at a time per session. Fire
+<code>Orchestrator.cancel(session_id)</code> if you need to start a new one.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.TurnBudgetExceeded" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnBudgetExceeded</span>
+
+
+<a href="#cairn.orchestrator.TurnBudgetExceeded" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
+
+
+
+        <p>A budget cap was hit during a turn.</p>
+<p>Surfaces via the <code>TurnBlocked</code> UI event for pre-turn caps, or via
+<code>TurnAborted</code> for mid-turn caps. This exception is raised internally
+when the orchestrator decides to halt; callers of <code>run_turn</code> see
+the corresponding UI events instead.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.TurnTimeout" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnTimeout</span>
+
+
+<a href="#cairn.orchestrator.TurnTimeout" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
+
+
+
+        <p>The per-turn wall-clock limit was exceeded.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.UnknownSession" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UnknownSession</span>
+
+
+<a href="#cairn.orchestrator.UnknownSession" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
+
+
+
+        <p>The referenced session does not exist or is archived.</p>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div><h2 id="middleware">Middleware<a class="headerlink" href="#middleware" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.ApprovalDecision" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalDecision</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.ApprovalDecision" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ApprovalDecision</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">outcome</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ApprovalOutcome (cairn.orchestrator._enums.ApprovalOutcome)" href="#cairn.orchestrator.ApprovalOutcome">ApprovalOutcome</a></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">decided_by</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">reason</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Outcome returned by a <code>ToolApprover</code> / <code>ApprovalGateway</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.ApprovalRequest" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalRequest</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.ApprovalRequest" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ApprovalRequest</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">tool_call_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">tool_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">args</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">],</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">risk_tier</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">side_effects</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="s2">&quot;write&quot;</span><span class="p">],</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Payload handed to a <code>ToolApprover</code> / <code>ApprovalGateway</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.MessagePreparer" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MessagePreparer</span>
+
+
+<a href="#cairn.orchestrator.MessagePreparer" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+
+
+
+        <p>Rewrites the provider request before the model sees it.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.ResultTransformer" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ResultTransformer</span>
+
+
+<a href="#cairn.orchestrator.ResultTransformer" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+
+
+
+        <p>Rewrites a tool result before it is persisted + sent back to the model.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.ToolApprover" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolApprover</span>
+
+
+<a href="#cairn.orchestrator.ToolApprover" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+
+
+
+        <p>Decides whether a tool call may proceed.</p>
+<p>Return <code>ESCALATE</code> to defer to the next approver in the chain, or
+to the <code>ApprovalGateway</code> at the end of the chain.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.UIEventObserver" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UIEventObserver</span>
+
+
+<a href="#cairn.orchestrator.UIEventObserver" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+
+
+
+        <p>Sync, side-effecting observer of UI events. Fire-and-forget.</p>
+<p>If an observer raises, the orchestrator catches at ERROR and continues.
+Observers cannot mutate events and cannot back-pressure the turn loop.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="protocols">Protocols<a class="headerlink" href="#protocols" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-class">
@@ -4181,339 +5058,27 @@ terminal), records transitions via <code>ToolCallRepo</code>, and applies the
 
     </div>
 
-</div><h2 id="middleware">Middleware<a class="headerlink" href="#middleware" title="Permanent link">&para;</a></h2>
+</div><h2 id="records">Records<a class="headerlink" href="#records" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.orchestrator.MessagePreparer" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MessagePreparer</span>
+<h2 id="cairn.orchestrator.ApprovalDecisionRecord" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalDecisionRecord</span>
 
 
-<a href="#cairn.orchestrator.MessagePreparer" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#cairn.orchestrator.ApprovalDecisionRecord" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
-        <p>Rewrites the provider request before the model sees it.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.ResultTransformer" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ResultTransformer</span>
-
-
-<a href="#cairn.orchestrator.ResultTransformer" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Rewrites a tool result before it is persisted + sent back to the model.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.ToolApprover" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolApprover</span>
-
-
-<a href="#cairn.orchestrator.ToolApprover" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Decides whether a tool call may proceed.</p>
-<p>Return <code>ESCALATE</code> to defer to the next approver in the chain, or
-to the <code>ApprovalGateway</code> at the end of the chain.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.UIEventObserver" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UIEventObserver</span>
-
-
-<a href="#cairn.orchestrator.UIEventObserver" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>Sync, side-effecting observer of UI events. Fire-and-forget.</p>
-<p>If an observer raises, the orchestrator catches at ERROR and continues.
-Observers cannot mutate events and cannot back-pressure the turn loop.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.ApprovalRequest" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalRequest</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.ApprovalRequest" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ApprovalRequest</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">tool_call_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">tool_name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">args</span><span class="p">:</span> <span class="n"><span title="dict">dict</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">],</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">risk_tier</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">side_effects</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="s2">&quot;write&quot;</span><span class="p">],</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Payload handed to a <code>ToolApprover</code> / <code>ApprovalGateway</code>.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.ApprovalDecision" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalDecision</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.ApprovalDecision" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ApprovalDecision</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">outcome</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ApprovalOutcome (cairn.orchestrator._enums.ApprovalOutcome)" href="#cairn.orchestrator.ApprovalOutcome">ApprovalOutcome</a></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">decided_by</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">reason</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Outcome returned by a <code>ToolApprover</code> / <code>ApprovalGateway</code>.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="turn-context-and-records">Turn context and records<a class="headerlink" href="#turn-context-and-records" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.TurnContext" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnContext</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.TurnContext" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TurnContext</span><span class="p">(</span><span class="n">session</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain.Session)" href="../domain/#cairn.domain.Session">Session</a></span><span class="p">,</span> <span class="n">turn_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">iteration</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Read-only context for a turn's collaborators.</p>
+        <p>A single row from the <code>approval_decisions</code> table.</p>
 
 
 
@@ -4590,616 +5155,24 @@ Observers cannot mutate events and cannot back-pressure the turn loop.</p>
 
     </div>
 
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.ApprovalDecisionRecord" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalDecisionRecord</span>
-
-
-<a href="#cairn.orchestrator.ApprovalDecisionRecord" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
-
-
-
-        <p>A single row from the <code>approval_decisions</code> table.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="enums">Enums<a class="headerlink" href="#enums" title="Permanent link">&para;</a></h2>
+</div><h2 id="session-management">Session management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.orchestrator.ApprovalOutcome" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalOutcome</span>
+<h2 id="cairn.orchestrator.SessionManager" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SessionManager</span>
 
 
-<a href="#cairn.orchestrator.ApprovalOutcome" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
-
-
-
-        <p>Result returned by a <code>ToolApprover</code>.</p>
-<p><code>ESCALATE</code> means "I can't decide — pass to the next approver in the
-chain, or the gateway". The first non-escalate decision wins.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.BudgetVerdict" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BudgetVerdict</span>
-
-
-<a href="#cairn.orchestrator.BudgetVerdict" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
-
-
-
-        <p>Result of a pre-turn budget check.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.TurnState" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnState</span>
-
-
-<a href="#cairn.orchestrator.TurnState" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
-
-
-
-        <p>States of the orchestrator's per-turn state machine.</p>
-<p>The <code>turns.state</code> column is authoritative — every transition writes
-here via a conditional UPDATE. A turn ends in exactly one terminal
-state: <code>completed</code> or <code>aborted</code>.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.OrchestratorError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">OrchestratorError</span>
-
-
-<a href="#cairn.orchestrator.OrchestratorError" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="Exception">Exception</span></code></p>
-
-
-
-        <p>Base class for orchestrator errors.</p>
-
-
-
-
-
-
-
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.TurnAlreadyRunning" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnAlreadyRunning</span>
-
-
-<a href="#cairn.orchestrator.TurnAlreadyRunning" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
-
-
-
-        <p>A turn is already in flight for this session.</p>
-<p>The orchestrator enforces one turn at a time per session. Fire
-<code>Orchestrator.cancel(session_id)</code> if you need to start a new one.</p>
-
-
-
-
-
-
-
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.TurnBudgetExceeded" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnBudgetExceeded</span>
-
-
-<a href="#cairn.orchestrator.TurnBudgetExceeded" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
-
-
-
-        <p>A budget cap was hit during a turn.</p>
-<p>Surfaces via the <code>TurnBlocked</code> UI event for pre-turn caps, or via
-<code>TurnAborted</code> for mid-turn caps. This exception is raised internally
-when the orchestrator decides to halt; callers of <code>run_turn</code> see
-the corresponding UI events instead.</p>
-
-
-
-
-
-
-
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.TurnTimeout" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnTimeout</span>
-
-
-<a href="#cairn.orchestrator.TurnTimeout" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
-
-
-
-        <p>The per-turn wall-clock limit was exceeded.</p>
-
-
-
-
-
-
-
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.UnknownSession" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UnknownSession</span>
-
-
-<a href="#cairn.orchestrator.UnknownSession" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            OrchestratorError (cairn.orchestrator._errors.OrchestratorError)" href="#cairn.orchestrator.OrchestratorError">OrchestratorError</a></code></p>
-
-
-
-        <p>The referenced session does not exist or is archived.</p>
-
-
-
-
-
-
-
-
-
-    </div>
-
-</div><h2 id="clock">Clock<a class="headerlink" href="#clock" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.Clock" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Clock</span>
-
-
-<a href="#cairn.orchestrator.Clock" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
-
-
-
-        <p>A source of time + cooperative sleep.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.orchestrator.Clock.now" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">now</span>
-
-
-<a href="#cairn.orchestrator.Clock.now" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">now</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="datetime.datetime">datetime</span></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Return the current UTC datetime.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.orchestrator.Clock.sleep" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">sleep</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.Clock.sleep" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">sleep</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="n"><span title="float">float</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Cooperatively sleep for <code>seconds</code>.</p>
-
-
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.SystemClock" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SystemClock</span>
-
-
-<a href="#cairn.orchestrator.SystemClock" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Wall-clock time. The production implementation.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.FrozenClock" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">FrozenClock</span>
-
-
-<a href="#cairn.orchestrator.FrozenClock" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">FrozenClock</span><span class="p">(</span><span class="n">now</span><span class="p">:</span> <span class="n"><span title="datetime.datetime">datetime</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Controllable clock for tests.</p>
-<p><code>now()</code> returns the frozen timestamp; <code>advance(seconds)</code> moves it
-forward; <code>sleep()</code> advances the clock instead of actually sleeping.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.orchestrator.FrozenClock.advance" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">advance</span>
-
-
-<a href="#cairn.orchestrator.FrozenClock.advance" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">advance</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="n"><span title="float">float</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Move the frozen clock forward by <code>seconds</code>.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.orchestrator.FrozenClock.sleep" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">sleep</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.orchestrator.FrozenClock.sleep" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">sleep</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="n"><span title="float">float</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Advance the clock; do not actually block.</p>
-
-
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="cost-tracking">Cost tracking<a class="headerlink" href="#cost-tracking" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.orchestrator.BasicCostTracker" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BasicCostTracker</span>
-
-
-<a href="#cairn.orchestrator.BasicCostTracker" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">BasicCostTracker</span><span class="p">(</span>
+<a href="#cairn.orchestrator.SessionManager" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">SessionManager</span><span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">usage_repo</span><span class="p">:</span> <span class="n"><span title="cairn.persistence._usage_repo.UsageRepo">UsageRepo</span></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">clock</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Clock (cairn.orchestrator._clock.Clock)" href="#cairn.orchestrator.Clock">Clock</a></span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">budgets</span><span class="p">:</span> <span class="n"><span title="cairn.config._models.BudgetConfig">BudgetConfig</span></span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">warn_threshold_fraction</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">session_repo</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionRepo (cairn.persistence._sessions_repo.SessionRepo)" href="../persistence/#cairn.persistence.SessionRepo">SessionRepo</a></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ModelRegistry (cairn.config._registry.ModelRegistry)" href="../config/#cairn.config.ModelRegistry">ModelRegistry</a></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">clock</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Clock (cairn.orchestrator._clock.Clock)" href="#cairn.orchestrator.Clock">Clock</a></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">default_model_ref</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;role:primary&quot;</span><span class="p">,</span>
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">)</span>
 </span></code></pre></div>
 
@@ -5207,18 +5180,17 @@ forward; <code>sleep()</code> advances the clock instead of actually sleeping.</
 
 
 
-        <p>Default <code>CostTracker</code> implementation.</p>
+        <p>Session lifecycle coordinator.</p>
+<p>Applies three invariants at creation time:</p>
 <ul>
-<li><code>record</code> delegates to <code>UsageRepo.record</code>, stamping the turn_id
-  so per-turn aggregations work downstream.</li>
-<li><code>should_block_turn</code> returns <code>BLOCK</code> when <em>previously-recorded</em>
-  spend already meets or exceeds the session or daily cap, <code>WARN</code>
-  when session spend has crossed the configured warn fraction of
-  the per-session cap, and <code>PROCEED</code> otherwise.</li>
+<li><strong>Ephemeral sessions never have a memory space.</strong> Callers that pass
+  one get it silently dropped — the invariant is on the type, not
+  the caller.</li>
+<li><strong>Companion sessions default to the <code>'companion'</code> space</strong> unless
+  the caller explicitly passes one.</li>
+<li><strong>Persona sessions accept whatever the caller passes</strong>, including
+  <code>None</code> (a memoryless persona is legitimate).</li>
 </ul>
-<p>Budget checks reflect costs <em>already persisted</em> — the turn currently
-starting is not counted. The orchestrator's own <code>max_iterations</code>
-guards against unbounded loops within a single turn.</p>
 
 
 
@@ -5240,6 +5212,85 @@ guards against unbounded loops within a single turn.</p>
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.orchestrator.SessionManager.create" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">create</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.SessionManager.create" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">create</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">type</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionType (cairn.domain._enums.SessionType)" href="../domain/#cairn.domain.SessionType">SessionType</a></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">persona</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">model</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">memory_space</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">parent_session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain._sessions.Session)" href="../domain/#cairn.domain.Session">Session</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Create and persist a new session. Returns the Session.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.orchestrator.SessionManager.get" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.SessionManager.get" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain._sessions.Session)" href="../domain/#cairn.domain.Session">Session</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Fetch a session. Raises <code>UnknownSession</code> if missing.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.orchestrator.SessionManager.archive" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">archive</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.SessionManager.archive" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">archive</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Archive a session. Raises <code>UnknownSession</code> if missing.</p>
+
+
+    </div>
+
+</div>
 
 
 
@@ -5248,8 +5299,6 @@ guards against unbounded loops within a single turn.</p>
     </div>
 
 </div><h2 id="stubs">Stubs<a class="headerlink" href="#stubs" title="Permanent link">&para;</a></h2>
-<p>Default no-op implementations the orchestrator ships with. Replace with real
-implementations as each brick lands.</p>
 
 
 <div class="doc doc-object doc-class">
@@ -5570,6 +5619,162 @@ never be called in practice; raises loudly if wiring goes wrong.</p>
 
 
 
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="orchestrator">Orchestrator<a class="headerlink" href="#orchestrator" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.orchestrator.Orchestrator" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Orchestrator</span>
+
+
+<a href="#cairn.orchestrator.Orchestrator" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Orchestrator</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">provider_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRegistry (cairn.providers._registry.ProviderRegistry)" href="../providers/#cairn.providers.ProviderRegistry">ProviderRegistry</a></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ModelRegistry (cairn.config._registry.ModelRegistry)" href="../config/#cairn.config.ModelRegistry">ModelRegistry</a></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">session_manager</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionManager (cairn.orchestrator._session_manager.SessionManager)" href="#cairn.orchestrator.SessionManager">SessionManager</a></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">context_manager</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ContextManager (cairn.orchestrator._protocols.ContextManager)" href="#cairn.orchestrator.ContextManager">ContextManager</a></span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">tool_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolRegistry (cairn.orchestrator._protocols.ToolRegistry)" href="#cairn.orchestrator.ToolRegistry">ToolRegistry</a></span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">tool_runner</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolRunner (cairn.orchestrator._protocols.ToolRunner)" href="#cairn.orchestrator.ToolRunner">ToolRunner</a></span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">memory_service</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            MemoryService (cairn.orchestrator._protocols.MemoryService)" href="#cairn.orchestrator.MemoryService">MemoryService</a></span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">extraction_queue</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ExtractionQueue (cairn.orchestrator._protocols.ExtractionQueue)" href="#cairn.orchestrator.ExtractionQueue">ExtractionQueue</a></span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">approval_gateway</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ApprovalGateway (cairn.orchestrator._protocols.ApprovalGateway)" href="#cairn.orchestrator.ApprovalGateway">ApprovalGateway</a></span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">cost_tracker</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            CostTracker (cairn.orchestrator._protocols.CostTracker)" href="#cairn.orchestrator.CostTracker">CostTracker</a></span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">turn_repo</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            TurnRepo (cairn.persistence._turns_repo.TurnRepo)" href="../persistence/#cairn.persistence.TurnRepo">TurnRepo</a></span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">message_repo</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            MessageRepo (cairn.persistence._messages_repo.MessageRepo)" href="../persistence/#cairn.persistence.MessageRepo">MessageRepo</a></span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">clock</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Clock (cairn.orchestrator._clock.Clock)" href="#cairn.orchestrator.Clock">Clock</a></span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            OrchestratorConfig (cairn.orchestrator._config.OrchestratorConfig)" href="#cairn.orchestrator.OrchestratorConfig">OrchestratorConfig</a></span><span class="p">,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">preparers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            MessagePreparer (cairn.orchestrator._middleware.MessagePreparer)" href="#cairn.orchestrator.MessagePreparer">MessagePreparer</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">approvers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ToolApprover (cairn.orchestrator._middleware.ToolApprover)" href="#cairn.orchestrator.ToolApprover">ToolApprover</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">transformers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ResultTransformer (cairn.orchestrator._middleware.ResultTransformer)" href="#cairn.orchestrator.ResultTransformer">ResultTransformer</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">observers</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            UIEventObserver (cairn.orchestrator._middleware.UIEventObserver)" href="#cairn.orchestrator.UIEventObserver">UIEventObserver</a></span><span class="p">]</span> <span class="o">=</span> <span class="p">(),</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>The turn loop.</p>
+<p>Composed of injected collaborator protocols; owns no downstream
+implementation. Holds per-session cancel flags and minimal in-memory
+state for the lifetime of a running turn.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.orchestrator.Orchestrator.cancel" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">cancel</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.Orchestrator.cancel" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">cancel</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Signal cancellation for an in-flight turn. Safe to call
+even if no turn is running — it's a no-op in that case.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.orchestrator.Orchestrator.resume_aborted_turns" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">resume_aborted_turns</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.Orchestrator.resume_aborted_turns" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">resume_aborted_turns</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Scan for turns left non-terminal by a prior crash. Mark them
+aborted. Returns the list of session IDs with dangling turns
+so the UI can surface 'resume from your message?' prompts.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.orchestrator.Orchestrator.run_turn" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">run_turn</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#cairn.orchestrator.Orchestrator.run_turn" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">run_turn</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">user_msg</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Message (cairn.domain._messages.Message)" href="../domain/#cairn.domain.Message">Message</a></span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.AsyncIterator">AsyncIterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            UIEvent
+
+
+  
+      module-attribute
+   (cairn.domain.UIEvent)" href="../domain/#cairn.domain.UIEvent">UIEvent</a></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Run a turn. Yields UIEvents as it progresses.</p>
+<p>Consumer semantics: each yielded event is delivered to all
+registered observers before returning to the caller (observer
+errors are logged and swallowed — they can't break a turn).</p>
+
+
+    </div>
+
+</div>
 
 
 

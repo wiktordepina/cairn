@@ -12,13 +12,11 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0010-typed-middleware/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0020-auto-generated-api-reference/">
       
       
-        <link rel="prev" href="../0009-protocol-stubs/">
+        <link rel="prev" href="../0019-docstrings-google-style/">
       
-      
-        <link rel="next" href="../0011-explicit-turn-state-machine/">
       
       
         
@@ -29,7 +27,7 @@
     
     
       
-        <title>0010 Typed middleware - Cairn</title>
+        <title>0020 Auto-generated API reference - Cairn</title>
       
     
     
@@ -82,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0010-typed-middleware-over-generic-lifecycle-hooks" class="md-skip">
+        <a href="#0020-auto-generated-api-reference-from-__all__" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0010 Typed middleware
+              0020 Auto-generated API reference
             
           </span>
         </div>
@@ -1439,37 +1437,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0010 Typed middleware
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0010-typed-middleware/" class="md-nav__link">
         
   
   
@@ -1485,59 +1456,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1799,10 +1717,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0020-auto-generated-api-reference/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0020 Auto-generated API reference
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1818,6 +1763,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1889,6 +1898,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1906,7 +1926,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0010-typed-middleware.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0020-auto-generated-api-reference.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1914,76 +1934,140 @@
   
 
 
-<h1 id="0010-typed-middleware-over-generic-lifecycle-hooks">0010 — Typed middleware over generic lifecycle hooks<a class="headerlink" href="#0010-typed-middleware-over-generic-lifecycle-hooks" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
-<strong>Status:</strong> accepted</p>
+<h1 id="0020-auto-generated-api-reference-from-__all__">0020 — Auto-generated API reference from <code>__all__</code><a class="headerlink" href="#0020-auto-generated-api-reference-from-__all__" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-22
+<strong>Status:</strong> accepted
+<strong>Refines:</strong> <a href="../0018-docs-site-tooling/">ADR 0018</a> (does not supersede — 0018's
+toolchain choice still stands; this ADR refines how the <em>reference</em>
+section of that toolchain is authored).</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The orchestrator needs extensibility seams for cross-cutting concerns:
-memory injection into the request, tool-result sanitisation, approval
-gating, observability. The natural anti-pattern is LangChain-style
-generic <code>Callbacks</code> with twenty-odd lifecycle methods (<code>on_llm_start</code>,
-<code>on_llm_end</code>, <code>on_tool_start</code>, etc.) — a surface area that grows
-every release, where most methods are unused, and where stateful
-interactions are easy to get wrong.</p>
-<p>What we want:</p>
+<p><a href="../0018-docs-site-tooling/">ADR 0018</a> picked MkDocs + Material for
+MkDocs + <code>mkdocstrings[python]</code> + <code>mike</code> as cairn's documentation
+stack. The published site ended up split between <em>narrative</em> pages
+(<code>docs/architecture.md</code>, <code>docs/orchestrator.md</code>, etc. — hand-written
+Markdown) and <em>reference</em> pages (<code>docs/reference/*.md</code> — hand-curated
+Markdown containing one <code>:::</code> mkdocstrings directive per public
+symbol).</p>
+<p>In practice, the curated reference pattern produced two problems:</p>
 <ul>
-<li><strong>Narrow, typed contracts</strong>: each seam does one thing, with a
-  specific input and output type.</li>
-<li><strong>Composable</strong>: an ordered list of extensions at each seam, not
-  a single pluggable callback.</li>
-<li><strong>Discoverable</strong>: the list of seams IS the extensibility surface;
-  no hidden hook names.</li>
+<li><strong>Coverage gaps.</strong> Only four of cairn's six packages had reference
+  pages — <code>config</code> and <code>persistence</code> were missing entirely, so
+  <code>Database</code>, the five repos, <code>CairnConfig</code>, <code>SecretRef</code>, etc. were
+  documented only via their docstrings in source, never reaching
+  the published site.</li>
+<li><strong>Drift.</strong> AGENTS.md asked contributors to remember to update
+  <code>docs/reference/*.md</code> whenever a public symbol was added, renamed,
+  or removed. There was no automated check; the responsibility was
+  conventional only.</li>
 </ul>
+<p>A natural fix is to auto-generate the reference pages from the
+authoritative source — each package's <code>__all__</code>. That preserves the
+editorial structure (the <code># Section</code> comments inside <code>__all__</code> are
+already grouped by role) without asking contributors to maintain a
+parallel set of files.</p>
+<p>The conventional MkDocs path for this — <code>mkdocs-gen-files</code> plus
+<code>mkdocs-literate-nav</code> — was rejected after their 2026-03-16 releases
+introduced a hard dependency on <code>properdocs</code>, a fork that injects
+politicised warnings into every build. See "Alternatives considered"
+below.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Four seams, each a distinct <code>Protocol</code> with a single method:</p>
+<p><strong>The reference pages under <code>docs/reference/</code> are generated from each
+module's <code>__all__</code> by <code>docs/gen_ref_pages.py</code>.</strong> Hand-edited
+reference pages are removed; the generator owns that directory.</p>
+<p>The generator:</p>
 <ul>
-<li><strong><code>MessagePreparer</code></strong> — <code>prepare(request, ctx) -&gt; ProviderRequest</code>.
-  Rewrites the request before the provider sees it. Canonical uses:
-  memory injection (memory brick), compaction (context-manager brick),
-  prompt-cache markers.</li>
-<li><strong><code>ToolApprover</code></strong> — <code>decide(request, ctx) -&gt; ApprovalDecision</code>
-  (outcome ∈ {APPROVE, REJECT, ESCALATE}). The chain runs in order;
-  the first non-ESCALATE wins. An empty or all-ESCALATE chain falls
-  through to the <code>ApprovalGateway</code> (a single protocol at the end,
-  typically the UI).</li>
-<li><strong><code>ResultTransformer</code></strong> — <code>transform(result, tool_call, ctx) -&gt; result</code>.
-  Rewrites a tool result before it hits the session. Canonical uses:
-  spotlighting, Unicode stripping, secret redaction.</li>
-<li><strong><code>UIEventObserver</code></strong> — <code>observe(event)</code>. Sync. Fire-and-forget.
-  Cannot mutate events, cannot back-pressure. Failed observers are
-  logged at ERROR and swallowed. Canonical uses: structured logging,
-  metrics, cost dashboards.</li>
+<li>Lists modules to document in a <code>REFERENCE_MODULES</code> constant — both
+  packages (<code>__init__.py</code>) and single-file modules (<code>logging.py</code>,
+  <code>ssl.py</code>).</li>
+<li>Requires every listed module to declare <code>__all__</code>. A missing
+  <code>__all__</code> is a hard error — the generator refuses to silently
+  under-document.</li>
+<li>Parses <code>__all__</code> source line-by-line to recover the <code># Section</code>
+  comments interleaved with the symbol names. Those become H2
+  headings in the generated page.</li>
+<li>Emits each <code>docs/reference/&lt;module&gt;.md</code> with one <code>cairn.&lt;module&gt;.&lt;symbol&gt;</code> directive per <code>__all__</code> entry, in
+  source order, grouped by section.</li>
+<li>Also emits <code>docs/reference/index.md</code> as the section landing page.</li>
+<li>Supports <code>--check</code> mode which exits non-zero if any generated file
+  differs from what's checked in.</li>
 </ul>
-<p>Each seam is an ordered list at <code>Orchestrator.__init__</code>. The
-orchestrator calls them inline at well-defined points in the turn
-loop — no reflection, no dynamic dispatch.</p>
+<p><strong>The generator is invoked manually</strong> (<code>uv run python
+docs/gen_ref_pages.py</code>) and its output is checked into the repo.
+<strong>CI runs <code>--check</code></strong> to detect drift; the same check is wrapped in a
+pytest test (<code>tests/docs/test_gen_ref_pages.py</code>) so contributors get
+the same guard locally before pushing.</p>
+<p>The MkDocs nav for the reference section is hand-listed in
+<code>mkdocs.yml</code>. With eight modules of stable identity, a dynamic nav
+generator would add complexity for no readable benefit.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <p><strong>Easier:</strong></p>
 <ul>
-<li>The extensibility surface is enumerable. Four protocols, four points
-  in the turn loop.</li>
-<li>Each protocol has a narrow, typed signature. Pyright catches misuse.</li>
-<li>Adding new behaviour follows a pattern: decide which seam it fits,
-  implement the one-method protocol, register at construction.</li>
-<li>Observers that raise don't break the turn.</li>
+<li>Coverage is automatic. Every package and single-file module listed
+  in <code>REFERENCE_MODULES</code> is published; no symbol slips through
+  because someone forgot to add a <code>:::</code> line.</li>
+<li>Editorial groupings live next to the code (the <code># Section</code>
+  comments in <code>__all__</code>), where the author of the symbol is best
+  placed to decide grouping.</li>
+<li>Drift detection is a single pytest run. PRs that change <code>__all__</code>
+  show the regenerated reference page in the same diff as the source
+  change — reviewers see both halves of the change at once.</li>
 </ul>
 <p><strong>Harder:</strong></p>
 <ul>
-<li>If a future cross-cutting concern doesn't fit one of the four seams,
-  we add a fifth (with a new protocol) rather than stretching an
-  existing one. That's a deliberate design constraint.</li>
-<li>No access to "orchestrator internals" through the middleware — every
-  protocol gets a read-only <code>TurnContext</code> and the target of the
-  transformation. A middleware wanting to peek at, say, the
-  <code>turn_repo</code> would need an explicit new protocol dependency.</li>
+<li>Contributors must remember to run the generator after editing
+  <code>__all__</code>. The pytest drift check catches this before it lands;
+  the friction is one extra command.</li>
+<li>Editorial structure is constrained to what fits in <code>__all__</code>
+  comments. The previous hand-curated pages could mix ordering
+  decisions and prose intros — the generator does only headings and
+  directives.</li>
+<li>A new dependency on the source format: any contributor writing
+  <code>__all__</code> differently (e.g. multi-line strings, computed
+  expressions) breaks the parser. The error surfaces clearly, but
+  it's a discipline.</li>
 </ul>
 <p><strong>Ongoing cost:</strong></p>
 <ul>
-<li>Writing a new preparer/approver/transformer/observer is ~20–50 LOC.</li>
-<li>Composing their order in the harness-assembly layer is a source of
-  subtle bugs (spotlight-before-redact vs redact-before-spotlight).
-  Mitigation: the defaults are opinionated and documented; most users
-  won't reorder.</li>
+<li>The generator (~150 LOC) is now part of the project's surface and
+  needs maintenance. It's small and self-contained, so the cost is
+  low — but real.</li>
+<li>Adding a new module to the reference set is a one-line edit to
+  <code>REFERENCE_MODULES</code> plus a regenerate. Removing one is the same.</li>
+</ul>
+<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Hand-maintained <code>:::</code> pages with a CI freshness check.</strong> Was the
+  most likely-evolution path. The check would need to parse <code>__all__</code>
+  on one side and the <code>:::</code> directives on the other, then diff. As
+  much custom code as the generator, but without solving the
+  coverage gap — every new module still needs a hand-authored page
+  to exist before the check has anything to compare. Rejected
+  because the same effort produces a stronger result if the pages
+  are generated outright.</li>
+<li><strong><code>mkdocs-gen-files</code> + <code>mkdocs-literate-nav</code>.</strong> The conventional
+  MkDocs auto-generation pattern. Both plugins added a hard
+  dependency on <code>properdocs</code> on 2026-03-16, plus pinned
+  <code>mkdocs&lt;=1.6.1</code>. <code>properdocs</code> is a politicised fork that injects
+  aggressive warnings about the upstream MkDocs maintainer into
+  every build's stderr. Rejected on supply-chain hygiene grounds:
+  AGENTS.md's "minimise transitive dependencies" rule applies, and
+  pinning the last clean versions (<code>mkdocs-gen-files==0.6.0</code>,
+  <code>mkdocs-literate-nav==0.6.2</code>) would leave us indefinitely on
+  unmaintained code given the maintainer's stated direction. Both
+  plugins are also small enough that we can do without them — the
+  generator does the same job with <code>Path.write_text</code> and a static
+  nav block in <code>mkdocs.yml</code>.</li>
+<li><strong><code>mkdocstrings</code>'s package-level rendering.</strong> A single
+  <code>cairn.providers</code> directive renders the whole package without
+  enumerating symbols. Rejected because it ignores <code>__all__</code>
+  (renders whatever's importable) and flattens the section
+  groupings. Loses both the curatorial signal and the privacy
+  signal.</li>
+<li><strong>Pre-build hook in <code>mkdocs.yml</code>.</strong> MkDocs supports <code>hooks:</code> in
+  config, which would let the generator run as part of <code>mkdocs
+  build</code>. Rejected in favour of an explicit script that contributors
+  run themselves: PR diffs show the regenerated pages, which is
+  better review UX than "trust the build" when a docstring changes.</li>
 </ul>
 
 

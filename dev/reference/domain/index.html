@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/reference/domain/">
       
       
-        <link rel="prev" href="../orchestrator/">
+        <link rel="prev" href="../config/">
       
       
-        <link rel="next" href="../../decisions/">
+        <link rel="next" href="../logging/">
       
       
         
@@ -311,7 +311,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../providers/" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -769,6 +769,18 @@
     
       
         
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
       
         
       
@@ -795,8 +807,9 @@
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
-            
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
   
   
   <span class="md-ellipsis">
@@ -810,8 +823,14 @@
   
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
@@ -825,32 +844,6 @@
           <ul class="md-nav__list" data-md-scrollfix>
             
               
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../providers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Providers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -859,42 +852,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/" class="md-nav__link">
+      <a href="../config/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../orchestrator/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Orchestrator
+    Config
   
 
     
@@ -975,118 +940,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#messages-and-content" class="md-nav__link">
+  <a href="#content-blocks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Messages and content
+        Content blocks
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.Message" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Message
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" Message">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.append_text_delta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_text_delta
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.start_tool_use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;start_tool_use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.append_tool_input_delta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_tool_input_delta
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.finalize_tool_use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalize_tool_use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.get_tool_use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_tool_use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.get_text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_text
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.content_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;content_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.from_content_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;from_content_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1095,17 +955,6 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ContentBlock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.TextBlock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextBlock
       
     </span>
   </a>
@@ -1135,10 +984,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ThinkingBlock" class="md-nav__link">
+  <a href="#cairn.domain.TextBlock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ThinkingBlock
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextBlock
       
     </span>
   </a>
@@ -1146,10 +995,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolUseBlock" class="md-nav__link">
+  <a href="#cairn.domain.ThinkingBlock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolUseBlock
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ThinkingBlock
       
     </span>
   </a>
@@ -1168,10 +1017,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sessions-and-memory" class="md-nav__link">
+  <a href="#cairn.domain.ToolUseBlock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sessions and memory
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolUseBlock
       
     </span>
   </a>
@@ -1179,10 +1028,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.Session" class="md-nav__link">
+  <a href="#cairn.domain.content_list_adapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Session
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;content_list_adapter
       
     </span>
   </a>
@@ -1190,10 +1039,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.MemoryEntry" class="md-nav__link">
+  <a href="#enums" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntry
+        Enums
       
     </span>
   </a>
@@ -1201,10 +1050,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#provider-events" class="md-nav__link">
+  <a href="#cairn.domain.ErrorClass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Provider events
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ErrorClass
       
     </span>
   </a>
@@ -1212,10 +1061,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ProviderRequest" class="md-nav__link">
+  <a href="#cairn.domain.MemoryClass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderRequest
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryClass
       
     </span>
   </a>
@@ -1223,10 +1072,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ProviderEvent" class="md-nav__link">
+  <a href="#cairn.domain.MemoryEntryType" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ProviderEvent
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntryType
       
     </span>
   </a>
@@ -1234,10 +1083,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.TextDelta" class="md-nav__link">
+  <a href="#cairn.domain.SessionType" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextDelta
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionType
       
     </span>
   </a>
@@ -1245,10 +1094,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallStart" class="md-nav__link">
+  <a href="#cairn.domain.StopReason" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStart
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;StopReason
       
     </span>
   </a>
@@ -1256,10 +1105,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallDelta" class="md-nav__link">
+  <a href="#cairn.domain.ToolCallStatus" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallDelta
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStatus
       
     </span>
   </a>
@@ -1267,43 +1116,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallEnd" class="md-nav__link">
+  <a href="#cairn.domain.UsageOperation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallEnd
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.MessageStop" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessageStop
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.UsageEvent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageEvent
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.ToolDefinition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolDefinition
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageOperation
       
     </span>
   </a>
@@ -1315,17 +1131,6 @@
     <span class="md-ellipsis">
       
         UI events
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.UIEvent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;UIEvent
       
     </span>
   </a>
@@ -1454,6 +1259,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cairn.domain.UIEvent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;UIEvent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cairn.domain.UserMessagePersisted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1465,10 +1281,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enums" class="md-nav__link">
+  <a href="#memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enums
+        Memory
       
     </span>
   </a>
@@ -1476,10 +1292,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ErrorClass" class="md-nav__link">
+  <a href="#cairn.domain.MemoryEntry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ErrorClass
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntry
       
     </span>
   </a>
@@ -1487,10 +1303,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.MemoryClass" class="md-nav__link">
+  <a href="#messages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryClass
+        Messages
       
     </span>
   </a>
@@ -1498,10 +1314,115 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.MemoryEntryType" class="md-nav__link">
+  <a href="#cairn.domain.Message" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntryType
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Message
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.append_text_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_text_delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.start_tool_use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;start_tool_use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.append_tool_input_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_tool_input_delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.finalize_tool_use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalize_tool_use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.get_tool_use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_tool_use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.get_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.content_json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;content_json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.from_content_json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;from_content_json
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider
       
     </span>
   </a>
@@ -1509,10 +1430,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.SessionType" class="md-nav__link">
+  <a href="#cairn.domain.MessageStop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionType
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessageStop
       
     </span>
   </a>
@@ -1520,10 +1441,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.StopReason" class="md-nav__link">
+  <a href="#cairn.domain.ProviderEvent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;StopReason
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ProviderEvent
       
     </span>
   </a>
@@ -1531,10 +1452,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallStatus" class="md-nav__link">
+  <a href="#cairn.domain.ProviderRequest" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStatus
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderRequest
       
     </span>
   </a>
@@ -1542,10 +1463,87 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.UsageOperation" class="md-nav__link">
+  <a href="#cairn.domain.TextDelta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageOperation
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextDelta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolCallDelta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallDelta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolCallEnd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallEnd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolCallStart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolDefinition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolDefinition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.UsageEvent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageEvent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sessions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.Session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Session
       
     </span>
   </a>
@@ -1556,6 +1554,174 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../orchestrator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1579,6 +1745,8 @@
       
         
           
+        
+      
         
       
         
@@ -2205,6 +2373,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0020-auto-generated-api-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0020 Auto-generated API reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2239,118 +2435,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#messages-and-content" class="md-nav__link">
+  <a href="#content-blocks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Messages and content
+        Content blocks
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.Message" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Message
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" Message">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.append_text_delta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_text_delta
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.start_tool_use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;start_tool_use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.append_tool_input_delta" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_tool_input_delta
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.finalize_tool_use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalize_tool_use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.get_tool_use" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_tool_use
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.get_text" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_text
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.content_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;content_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.domain.Message.from_content_json" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;from_content_json
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2359,17 +2450,6 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ContentBlock
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.TextBlock" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextBlock
       
     </span>
   </a>
@@ -2399,10 +2479,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ThinkingBlock" class="md-nav__link">
+  <a href="#cairn.domain.TextBlock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ThinkingBlock
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextBlock
       
     </span>
   </a>
@@ -2410,10 +2490,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolUseBlock" class="md-nav__link">
+  <a href="#cairn.domain.ThinkingBlock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolUseBlock
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ThinkingBlock
       
     </span>
   </a>
@@ -2432,10 +2512,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sessions-and-memory" class="md-nav__link">
+  <a href="#cairn.domain.ToolUseBlock" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Sessions and memory
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolUseBlock
       
     </span>
   </a>
@@ -2443,10 +2523,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.Session" class="md-nav__link">
+  <a href="#cairn.domain.content_list_adapter" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Session
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;content_list_adapter
       
     </span>
   </a>
@@ -2454,10 +2534,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.MemoryEntry" class="md-nav__link">
+  <a href="#enums" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntry
+        Enums
       
     </span>
   </a>
@@ -2465,10 +2545,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#provider-events" class="md-nav__link">
+  <a href="#cairn.domain.ErrorClass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Provider events
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ErrorClass
       
     </span>
   </a>
@@ -2476,10 +2556,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ProviderRequest" class="md-nav__link">
+  <a href="#cairn.domain.MemoryClass" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderRequest
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryClass
       
     </span>
   </a>
@@ -2487,10 +2567,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ProviderEvent" class="md-nav__link">
+  <a href="#cairn.domain.MemoryEntryType" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ProviderEvent
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntryType
       
     </span>
   </a>
@@ -2498,10 +2578,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.TextDelta" class="md-nav__link">
+  <a href="#cairn.domain.SessionType" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextDelta
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionType
       
     </span>
   </a>
@@ -2509,10 +2589,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallStart" class="md-nav__link">
+  <a href="#cairn.domain.StopReason" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStart
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;StopReason
       
     </span>
   </a>
@@ -2520,10 +2600,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallDelta" class="md-nav__link">
+  <a href="#cairn.domain.ToolCallStatus" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallDelta
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStatus
       
     </span>
   </a>
@@ -2531,43 +2611,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallEnd" class="md-nav__link">
+  <a href="#cairn.domain.UsageOperation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallEnd
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.MessageStop" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessageStop
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.UsageEvent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageEvent
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.ToolDefinition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolDefinition
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageOperation
       
     </span>
   </a>
@@ -2579,17 +2626,6 @@
     <span class="md-ellipsis">
       
         UI events
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.domain.UIEvent" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;UIEvent
       
     </span>
   </a>
@@ -2718,6 +2754,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cairn.domain.UIEvent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;UIEvent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cairn.domain.UserMessagePersisted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2729,10 +2776,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#enums" class="md-nav__link">
+  <a href="#memory" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Enums
+        Memory
       
     </span>
   </a>
@@ -2740,10 +2787,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ErrorClass" class="md-nav__link">
+  <a href="#cairn.domain.MemoryEntry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ErrorClass
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntry
       
     </span>
   </a>
@@ -2751,10 +2798,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.MemoryClass" class="md-nav__link">
+  <a href="#messages" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryClass
+        Messages
       
     </span>
   </a>
@@ -2762,10 +2809,115 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.MemoryEntryType" class="md-nav__link">
+  <a href="#cairn.domain.Message" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MemoryEntryType
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Message
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" Message">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.append_text_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_text_delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.start_tool_use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;start_tool_use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.append_tool_input_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_tool_input_delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.finalize_tool_use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalize_tool_use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.get_tool_use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_tool_use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.get_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;get_text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.content_json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;content_json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.domain.Message.from_content_json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;from_content_json
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider
       
     </span>
   </a>
@@ -2773,10 +2925,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.SessionType" class="md-nav__link">
+  <a href="#cairn.domain.MessageStop" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionType
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;MessageStop
       
     </span>
   </a>
@@ -2784,10 +2936,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.StopReason" class="md-nav__link">
+  <a href="#cairn.domain.ProviderEvent" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;StopReason
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ProviderEvent
       
     </span>
   </a>
@@ -2795,10 +2947,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.ToolCallStatus" class="md-nav__link">
+  <a href="#cairn.domain.ProviderRequest" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStatus
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderRequest
       
     </span>
   </a>
@@ -2806,10 +2958,87 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.domain.UsageOperation" class="md-nav__link">
+  <a href="#cairn.domain.TextDelta" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageOperation
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextDelta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolCallDelta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallDelta
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolCallEnd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallEnd
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolCallStart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolCallStart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.ToolDefinition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ToolDefinition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.UsageEvent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;UsageEvent
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sessions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.Session" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Session
       
     </span>
   </a>
@@ -2841,251 +3070,12 @@
   
 
 
+<!-- Generated by docs/gen_ref_pages.py from src/cairn/<module>/__init__.py.
+     Do not edit by hand — re-run the generator instead. -->
+
 <h1 id="domain-api-reference">Domain — API reference<a class="headerlink" href="#domain-api-reference" title="Permanent link">&para;</a></h1>
-<p>The core data types that flow through cairn: messages, content blocks,
-sessions, memory entries, provider events, and the UI event stream.</p>
-<p>For context on how these types compose into a turn, see
-<a href="../../architecture/">Architecture</a>.</p>
-<h2 id="messages-and-content">Messages and content<a class="headerlink" href="#messages-and-content" title="Permanent link">&para;</a></h2>
+<h2 id="content-blocks">Content blocks<a class="headerlink" href="#content-blocks" title="Permanent link">&para;</a></h2>
 
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.Message" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Message</span>
-
-
-<a href="#cairn.domain.Message" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Message</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">role</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;assistant&quot;</span><span class="p">],</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">content</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ContentBlock
-
-
-  
-      module-attribute
-   (cairn.domain._content.ContentBlock)" href="#cairn.domain.ContentBlock">ContentBlock</a></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">idx</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n"><span title="datetime.datetime">datetime</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>A single message in a conversation.</p>
-<p>Mutable during streaming (content list is built up), immutable once
-persisted to the database.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.append_text_delta" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">append_text_delta</span>
-
-
-<a href="#cairn.domain.Message.append_text_delta" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">append_text_delta</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Append text to the trailing TextBlock, or create a new one.</p>
-<p>Since TextBlock is frozen, the last element is replaced with a
-new TextBlock containing the accumulated text.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.start_tool_use" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">start_tool_use</span>
-
-
-<a href="#cairn.domain.Message.start_tool_use" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">start_tool_use</span><span class="p">(</span><span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Begin accumulating input for a tool call.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.append_tool_input_delta" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">append_tool_input_delta</span>
-
-
-<a href="#cairn.domain.Message.append_tool_input_delta" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">append_tool_input_delta</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="n"><span title="str">str</span></span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Append a partial JSON fragment for a pending tool call.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.finalize_tool_use" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">finalize_tool_use</span>
-
-
-<a href="#cairn.domain.Message.finalize_tool_use" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">finalize_tool_use</span><span class="p">(</span><span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Parse accumulated JSON and append the finished ToolUseBlock.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.get_tool_use" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_tool_use</span>
-
-
-<a href="#cairn.domain.Message.get_tool_use" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get_tool_use</span><span class="p">(</span><span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolUseBlock (cairn.domain._content.ToolUseBlock)" href="#cairn.domain.ToolUseBlock">ToolUseBlock</a></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Find a ToolUseBlock by ID. Raises ValueError if not found.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.get_text" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_text</span>
-
-
-<a href="#cairn.domain.Message.get_text" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get_text</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Concatenate all TextBlock content into a single string.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.content_json" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">content_json</span>
-
-
-<a href="#cairn.domain.Message.content_json" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">content_json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="bytes">bytes</span></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Serialize content blocks to JSON bytes.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.domain.Message.from_content_json" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">from_content_json</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-  </span>
-
-<a href="#cairn.domain.Message.from_content_json" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">from_content_json</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">idx</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">role</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;assistant&quot;</span><span class="p">],</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">content_json</span><span class="p">:</span> <span class="n"><span title="bytes">bytes</span></span> <span class="o">|</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n"><span title="datetime.datetime">datetime</span></span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Message (cairn.domain._messages.Message)" href="#cairn.domain.Message">Message</a></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Reconstruct a Message from a database row.</p>
-
-
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
 
 <div class="doc doc-object doc-attribute">
 
@@ -3111,54 +3101,6 @@ new TextBlock containing the accumulated text.</p>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.TextBlock" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TextBlock</span>
-
-
-<a href="#cairn.domain.TextBlock" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
-
-
-
-        <p>Plain text content.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
 
     </div>
 
@@ -3264,11 +3206,11 @@ new TextBlock containing the accumulated text.</p>
 
 
 
-<h2 id="cairn.domain.ThinkingBlock" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ThinkingBlock</span>
+<h2 id="cairn.domain.TextBlock" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TextBlock</span>
 
 
-<a href="#cairn.domain.ThinkingBlock" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#cairn.domain.TextBlock" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
@@ -3277,7 +3219,7 @@ new TextBlock containing the accumulated text.</p>
 
 
 
-        <p>Extended reasoning / chain-of-thought content.</p>
+        <p>Plain text content.</p>
 
 
 
@@ -3312,11 +3254,11 @@ new TextBlock containing the accumulated text.</p>
 
 
 
-<h2 id="cairn.domain.ToolUseBlock" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolUseBlock</span>
+<h2 id="cairn.domain.ThinkingBlock" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ThinkingBlock</span>
 
 
-<a href="#cairn.domain.ToolUseBlock" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#cairn.domain.ThinkingBlock" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
@@ -3325,7 +3267,7 @@ new TextBlock containing the accumulated text.</p>
 
 
 
-        <p>A tool call with parsed input arguments.</p>
+        <p>Extended reasoning / chain-of-thought content.</p>
 
 
 
@@ -3404,68 +3346,17 @@ new TextBlock containing the accumulated text.</p>
 
     </div>
 
-</div><h2 id="sessions-and-memory">Sessions and memory<a class="headerlink" href="#sessions-and-memory" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.Session" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Session</span>
-
-
-<a href="#cairn.domain.Session" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
-
-
-
-        <p>A conversation session within cairn.</p>
-<p>Sessions are created once and treated as immutable records. Metadata
-updates (title, archived) produce new instances at the repository level.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
 </div>
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.domain.MemoryEntry" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MemoryEntry</span>
+<h2 id="cairn.domain.ToolUseBlock" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolUseBlock</span>
 
 
-<a href="#cairn.domain.MemoryEntry" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#cairn.domain.ToolUseBlock" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
@@ -3474,72 +3365,7 @@ updates (title, archived) produce new instances at the repository level.</p>
 
 
 
-        <p>A single retrieved memory observation.</p>
-<p>Immutable once constructed. The <code>id</code> is assigned when the entry is
-persisted; retrieved entries carry an integer; not-yet-persisted
-entries carry <code>None</code>.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="provider-events">Provider events<a class="headerlink" href="#provider-events" title="Permanent link">&para;</a></h2>
-<p>Types produced by adapters in the provider layer and consumed by the
-orchestrator.</p>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.ProviderRequest" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ProviderRequest</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.domain.ProviderRequest" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ProviderRequest</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">model</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">messages</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            Message (cairn.domain._messages.Message)" href="#cairn.domain.Message">Message</a></span><span class="p">],</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">system</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">tools</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ToolDefinition (cairn.domain._provider.ToolDefinition)" href="#cairn.domain.ToolDefinition">ToolDefinition</a></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="list">list</span></span><span class="p">(),</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">max_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">temperature</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">stop_sequences</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>A request to send to an LLM provider.</p>
+        <p>A tool call with parsed input arguments.</p>
 
 
 
@@ -3574,390 +3400,349 @@ orchestrator.</p>
 
 
 
-<h2 id="cairn.domain.ProviderEvent" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">ProviderEvent</span>
+<h2 id="cairn.domain.content_list_adapter" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">content_list_adapter</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
   </span>
 
-<a href="#cairn.domain.ProviderEvent" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">ProviderEvent</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><a class="autorefs autorefs-internal" title="            TextDelta
+<a href="#cairn.domain.content_list_adapter" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">content_list_adapter</span><span class="p">:</span> <span class="n"><span title="pydantic.TypeAdapter">TypeAdapter</span></span><span class="p">[</span><span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ContentBlock
 
 
   
-      dataclass
-   (cairn.domain._provider.TextDelta)" href="#cairn.domain.TextDelta">TextDelta</a></span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallStart
+      module-attribute
+   (cairn.domain._content.ContentBlock)" href="#cairn.domain.ContentBlock">ContentBlock</a></span><span class="p">]]</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><span title="pydantic.TypeAdapter">TypeAdapter</span></span><span class="p">(</span><span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ContentBlock
 
 
   
-      dataclass
-   (cairn.domain._provider.ToolCallStart)" href="#cairn.domain.ToolCallStart">ToolCallStart</a></span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallDelta
-
-
-  
-      dataclass
-   (cairn.domain._provider.ToolCallDelta)" href="#cairn.domain.ToolCallDelta">ToolCallDelta</a></span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallEnd
-
-
-  
-      dataclass
-   (cairn.domain._provider.ToolCallEnd)" href="#cairn.domain.ToolCallEnd">ToolCallEnd</a></span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            UsageEvent
-
-
-  
-      dataclass
-   (cairn.domain._provider.UsageEvent)" href="#cairn.domain.UsageEvent">UsageEvent</a></span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            MessageStop
-
-
-  
-      dataclass
-   (cairn.domain._provider.MessageStop)" href="#cairn.domain.MessageStop">MessageStop</a></span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+      module-attribute
+   (cairn.domain._content.ContentBlock)" href="#cairn.domain.ContentBlock">ContentBlock</a></span><span class="p">])</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
 
+        <p>Adapter for serializing/deserializing lists of content blocks.</p>
+<p>Usage::</p>
+<div class="language-text highlight"><pre><span></span><code>json_bytes = content_list_adapter.dump_json(blocks)
+blocks = content_list_adapter.validate_json(json_bytes)
+</code></pre></div>
+
     </div>
 
-</div>
+</div><h2 id="enums">Enums<a class="headerlink" href="#enums" title="Permanent link">&para;</a></h2>
+
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.domain.TextDelta" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TextDelta</span>
+<h2 id="cairn.domain.ErrorClass" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ErrorClass</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.domain.TextDelta" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TextDelta</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Incremental text token from the model.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.ToolCallStart" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallStart</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.domain.ToolCallStart" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ToolCallStart</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>A tool call has begun (ID and name known).</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.ToolCallDelta" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallDelta</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.domain.ToolCallDelta" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ToolCallDelta</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">input_delta</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Partial JSON input for a tool call.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.ToolCallEnd" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallEnd</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.domain.ToolCallEnd" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ToolCallEnd</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>A tool call's input is fully received.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.MessageStop" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MessageStop</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.domain.MessageStop" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">MessageStop</span><span class="p">(</span><span class="n">stop_reason</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            StopReason (cairn.domain._enums.StopReason)" href="#cairn.domain.StopReason">StopReason</a></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>The model has finished generating.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.UsageEvent" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UsageEvent</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
-  </span>
-
-<a href="#cairn.domain.UsageEvent" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">UsageEvent</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">input_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">output_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">cache_read_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">cache_write_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Token consumption from a provider call.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.domain.ToolDefinition" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolDefinition</span>
-
-
-<a href="#cairn.domain.ToolDefinition" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#cairn.domain.ErrorClass" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
-        <p>Schema for a tool exposed to the model.</p>
+        <p>Classification of errors for retry and reporting.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.MemoryClass" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MemoryClass</span>
+
+
+<a href="#cairn.domain.MemoryClass" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Temporal class of a memory entry — affects decay rate.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.MemoryEntryType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MemoryEntryType</span>
+
+
+<a href="#cairn.domain.MemoryEntryType" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Category of a memory observation.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.SessionType" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SessionType</span>
+
+
+<a href="#cairn.domain.SessionType" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Type of session within cairn.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.StopReason" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">StopReason</span>
+
+
+<a href="#cairn.domain.StopReason" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Why a model stopped generating.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.ToolCallStatus" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallStatus</span>
+
+
+<a href="#cairn.domain.ToolCallStatus" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>Lifecycle state of a tool call.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.UsageOperation" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UsageOperation</span>
+
+
+<a href="#cairn.domain.UsageOperation" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+
+
+
+        <p>What triggered a provider call — for cost attribution.</p>
 
 
 
@@ -3987,110 +3772,7 @@ orchestrator.</p>
     </div>
 
 </div><h2 id="ui-events">UI events<a class="headerlink" href="#ui-events" title="Permanent link">&para;</a></h2>
-<p>Emitted by the orchestrator for UI layers and observers.</p>
 
-
-<div class="doc doc-object doc-attribute">
-
-
-
-<h2 id="cairn.domain.UIEvent" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">UIEvent</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
-  </span>
-
-<a href="#cairn.domain.UIEvent" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">UIEvent</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><a class="autorefs autorefs-internal" title="            UserMessagePersisted
-
-
-  
-      dataclass
-   (cairn.domain._events.UserMessagePersisted)" href="#cairn.domain.UserMessagePersisted">UserMessagePersisted</a></span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            AssistantTextDelta
-
-
-  
-      dataclass
-   (cairn.domain._events.AssistantTextDelta)" href="#cairn.domain.AssistantTextDelta">AssistantTextDelta</a></span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            AssistantMessageComplete
-
-
-  
-      dataclass
-   (cairn.domain._events.AssistantMessageComplete)" href="#cairn.domain.AssistantMessageComplete">AssistantMessageComplete</a></span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.ToolCallPlanned">ToolCallPlanned</span></span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.ToolCallApproved">ToolCallApproved</span></span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.ToolCallRejected">ToolCallRejected</span></span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallStarted
-
-
-  
-      dataclass
-   (cairn.domain._events.ToolCallStarted)" href="#cairn.domain.ToolCallStarted">ToolCallStarted</a></span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallCompleted
-
-
-  
-      dataclass
-   (cairn.domain._events.ToolCallCompleted)" href="#cairn.domain.ToolCallCompleted">ToolCallCompleted</a></span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            DelegationSpawned
-
-
-  
-      dataclass
-   (cairn.domain._events.DelegationSpawned)" href="#cairn.domain.DelegationSpawned">DelegationSpawned</a></span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            DelegationCompleted
-
-
-  
-      dataclass
-   (cairn.domain._events.DelegationCompleted)" href="#cairn.domain.DelegationCompleted">DelegationCompleted</a></span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ObservationExtractionRequested
-
-
-  
-      dataclass
-   (cairn.domain._events.ObservationExtractionRequested)" href="#cairn.domain.ObservationExtractionRequested">ObservationExtractionRequested</a></span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            TurnComplete
-
-
-  
-      dataclass
-   (cairn.domain._events.TurnComplete)" href="#cairn.domain.TurnComplete">TurnComplete</a></span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnAborted">TurnAborted</span></span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnBlocked">TurnBlocked</span></span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnIncomplete">TurnIncomplete</span></span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.BudgetWarning">BudgetWarning</span></span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionCreated
-
-
-  
-      dataclass
-   (cairn.domain._events.SessionCreated)" href="#cairn.domain.SessionCreated">SessionCreated</a></span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionResumed
-
-
-  
-      dataclass
-   (cairn.domain._events.SessionResumed)" href="#cairn.domain.SessionResumed">SessionResumed</a></span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionArchived
-
-
-  
-      dataclass
-   (cairn.domain._events.SessionArchived)" href="#cairn.domain.SessionArchived">SessionArchived</a></span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-    </div>
-
-</div>
 
 <div class="doc doc-object doc-class">
 
@@ -4667,6 +4349,108 @@ orchestrator.</p>
 
 </div>
 
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="cairn.domain.UIEvent" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">UIEvent</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#cairn.domain.UIEvent" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">UIEvent</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><a class="autorefs autorefs-internal" title="            UserMessagePersisted
+
+
+  
+      dataclass
+   (cairn.domain._events.UserMessagePersisted)" href="#cairn.domain.UserMessagePersisted">UserMessagePersisted</a></span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            AssistantTextDelta
+
+
+  
+      dataclass
+   (cairn.domain._events.AssistantTextDelta)" href="#cairn.domain.AssistantTextDelta">AssistantTextDelta</a></span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            AssistantMessageComplete
+
+
+  
+      dataclass
+   (cairn.domain._events.AssistantMessageComplete)" href="#cairn.domain.AssistantMessageComplete">AssistantMessageComplete</a></span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.ToolCallPlanned">ToolCallPlanned</span></span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.ToolCallApproved">ToolCallApproved</span></span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.ToolCallRejected">ToolCallRejected</span></span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallStarted
+
+
+  
+      dataclass
+   (cairn.domain._events.ToolCallStarted)" href="#cairn.domain.ToolCallStarted">ToolCallStarted</a></span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallCompleted
+
+
+  
+      dataclass
+   (cairn.domain._events.ToolCallCompleted)" href="#cairn.domain.ToolCallCompleted">ToolCallCompleted</a></span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            DelegationSpawned
+
+
+  
+      dataclass
+   (cairn.domain._events.DelegationSpawned)" href="#cairn.domain.DelegationSpawned">DelegationSpawned</a></span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            DelegationCompleted
+
+
+  
+      dataclass
+   (cairn.domain._events.DelegationCompleted)" href="#cairn.domain.DelegationCompleted">DelegationCompleted</a></span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ObservationExtractionRequested
+
+
+  
+      dataclass
+   (cairn.domain._events.ObservationExtractionRequested)" href="#cairn.domain.ObservationExtractionRequested">ObservationExtractionRequested</a></span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            TurnComplete
+
+
+  
+      dataclass
+   (cairn.domain._events.TurnComplete)" href="#cairn.domain.TurnComplete">TurnComplete</a></span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnAborted">TurnAborted</span></span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnBlocked">TurnBlocked</span></span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnIncomplete">TurnIncomplete</span></span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.BudgetWarning">BudgetWarning</span></span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionCreated
+
+
+  
+      dataclass
+   (cairn.domain._events.SessionCreated)" href="#cairn.domain.SessionCreated">SessionCreated</a></span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionResumed
+
+
+  
+      dataclass
+   (cairn.domain._events.SessionResumed)" href="#cairn.domain.SessionResumed">SessionResumed</a></span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionArchived
+
+
+  
+      dataclass
+   (cairn.domain._events.SessionArchived)" href="#cairn.domain.SessionArchived">SessionArchived</a></span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+    </div>
+
+</div>
+
 <div class="doc doc-object doc-class">
 
 
@@ -4716,27 +4500,439 @@ orchestrator.</p>
 
     </div>
 
-</div><h2 id="enums">Enums<a class="headerlink" href="#enums" title="Permanent link">&para;</a></h2>
+</div><h2 id="memory">Memory<a class="headerlink" href="#memory" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.domain.ErrorClass" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ErrorClass</span>
+<h2 id="cairn.domain.MemoryEntry" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MemoryEntry</span>
 
 
-<a href="#cairn.domain.ErrorClass" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#cairn.domain.MemoryEntry" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
-        <p>Classification of errors for retry and reporting.</p>
+        <p>A single retrieved memory observation.</p>
+<p>Immutable once constructed. The <code>id</code> is assigned when the entry is
+persisted; retrieved entries carry an integer; not-yet-persisted
+entries carry <code>None</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="messages">Messages<a class="headerlink" href="#messages" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.Message" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Message</span>
+
+
+<a href="#cairn.domain.Message" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">Message</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">role</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;assistant&quot;</span><span class="p">],</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">content</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ContentBlock
+
+
+  
+      module-attribute
+   (cairn.domain._content.ContentBlock)" href="#cairn.domain.ContentBlock">ContentBlock</a></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">idx</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n"><span title="datetime.datetime">datetime</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>A single message in a conversation.</p>
+<p>Mutable during streaming (content list is built up), immutable once
+persisted to the database.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.append_text_delta" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">append_text_delta</span>
+
+
+<a href="#cairn.domain.Message.append_text_delta" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">append_text_delta</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Append text to the trailing TextBlock, or create a new one.</p>
+<p>Since TextBlock is frozen, the last element is replaced with a
+new TextBlock containing the accumulated text.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.start_tool_use" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">start_tool_use</span>
+
+
+<a href="#cairn.domain.Message.start_tool_use" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">start_tool_use</span><span class="p">(</span><span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Begin accumulating input for a tool call.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.append_tool_input_delta" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">append_tool_input_delta</span>
+
+
+<a href="#cairn.domain.Message.append_tool_input_delta" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">append_tool_input_delta</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="n"><span title="str">str</span></span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Append a partial JSON fragment for a pending tool call.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.finalize_tool_use" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">finalize_tool_use</span>
+
+
+<a href="#cairn.domain.Message.finalize_tool_use" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">finalize_tool_use</span><span class="p">(</span><span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Parse accumulated JSON and append the finished ToolUseBlock.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.get_tool_use" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_tool_use</span>
+
+
+<a href="#cairn.domain.Message.get_tool_use" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get_tool_use</span><span class="p">(</span><span class="n">tool_use_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolUseBlock (cairn.domain._content.ToolUseBlock)" href="#cairn.domain.ToolUseBlock">ToolUseBlock</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Find a ToolUseBlock by ID. Raises ValueError if not found.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.get_text" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">get_text</span>
+
+
+<a href="#cairn.domain.Message.get_text" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">get_text</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="str">str</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Concatenate all TextBlock content into a single string.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.content_json" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">content_json</span>
+
+
+<a href="#cairn.domain.Message.content_json" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">content_json</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="bytes">bytes</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Serialize content blocks to JSON bytes.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.domain.Message.from_content_json" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">from_content_json</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+<a href="#cairn.domain.Message.from_content_json" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">from_content_json</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">idx</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">role</span><span class="p">:</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">,</span> <span class="s2">&quot;assistant&quot;</span><span class="p">],</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">content_json</span><span class="p">:</span> <span class="n"><span title="bytes">bytes</span></span> <span class="o">|</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">created_at</span><span class="p">:</span> <span class="n"><span title="datetime.datetime">datetime</span></span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Message (cairn.domain._messages.Message)" href="#cairn.domain.Message">Message</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Reconstruct a Message from a database row.</p>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="provider">Provider<a class="headerlink" href="#provider" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.MessageStop" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MessageStop</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.domain.MessageStop" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">MessageStop</span><span class="p">(</span><span class="n">stop_reason</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            StopReason (cairn.domain._enums.StopReason)" href="#cairn.domain.StopReason">StopReason</a></span><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>The model has finished generating.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h2 id="cairn.domain.ProviderEvent" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">ProviderEvent</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-module-attribute"><code>module-attribute</code></small>
+  </span>
+
+<a href="#cairn.domain.ProviderEvent" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">ProviderEvent</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><a class="autorefs autorefs-internal" title="            TextDelta
+
+
+  
+      dataclass
+   (cairn.domain._provider.TextDelta)" href="#cairn.domain.TextDelta">TextDelta</a></span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallStart
+
+
+  
+      dataclass
+   (cairn.domain._provider.ToolCallStart)" href="#cairn.domain.ToolCallStart">ToolCallStart</a></span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallDelta
+
+
+  
+      dataclass
+   (cairn.domain._provider.ToolCallDelta)" href="#cairn.domain.ToolCallDelta">ToolCallDelta</a></span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallEnd
+
+
+  
+      dataclass
+   (cairn.domain._provider.ToolCallEnd)" href="#cairn.domain.ToolCallEnd">ToolCallEnd</a></span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            UsageEvent
+
+
+  
+      dataclass
+   (cairn.domain._provider.UsageEvent)" href="#cairn.domain.UsageEvent">UsageEvent</a></span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            MessageStop
+
+
+  
+      dataclass
+   (cairn.domain._provider.MessageStop)" href="#cairn.domain.MessageStop">MessageStop</a></span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.ProviderRequest" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ProviderRequest</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.domain.ProviderRequest" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ProviderRequest</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">model</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">messages</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            Message (cairn.domain._messages.Message)" href="#cairn.domain.Message">Message</a></span><span class="p">],</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">system</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">tools</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ToolDefinition (cairn.domain._provider.ToolDefinition)" href="#cairn.domain.ToolDefinition">ToolDefinition</a></span><span class="p">]</span> <span class="o">=</span> <span class="n"><span title="list">list</span></span><span class="p">(),</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">max_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">temperature</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">stop_sequences</span><span class="p">:</span> <span class="n"><span title="list">list</span></span><span class="p">[</span><span class="n"><span title="str">str</span></span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>A request to send to an LLM provider.</p>
 
 
 
@@ -4771,20 +4967,23 @@ orchestrator.</p>
 
 
 
-<h2 id="cairn.domain.MemoryClass" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MemoryClass</span>
+<h2 id="cairn.domain.TextDelta" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TextDelta</span>
 
 
-<a href="#cairn.domain.MemoryClass" class="headerlink" title="Permanent link">&para;</a></h2>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
 
+<a href="#cairn.domain.TextDelta" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TextDelta</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
+</span></code></pre></div>
 
     <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
-        <p>Temporal class of a memory entry — affects decay rate.</p>
+        <p>Incremental text token from the model.</p>
 
 
 
@@ -4819,20 +5018,23 @@ orchestrator.</p>
 
 
 
-<h2 id="cairn.domain.MemoryEntryType" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">MemoryEntryType</span>
+<h2 id="cairn.domain.ToolCallDelta" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallDelta</span>
 
 
-<a href="#cairn.domain.MemoryEntryType" class="headerlink" title="Permanent link">&para;</a></h2>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
 
+<a href="#cairn.domain.ToolCallDelta" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ToolCallDelta</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">input_delta</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
+</span></code></pre></div>
 
     <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
-        <p>Category of a memory observation.</p>
+        <p>Partial JSON input for a tool call.</p>
 
 
 
@@ -4867,20 +5069,23 @@ orchestrator.</p>
 
 
 
-<h2 id="cairn.domain.SessionType" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SessionType</span>
+<h2 id="cairn.domain.ToolCallEnd" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallEnd</span>
 
 
-<a href="#cairn.domain.SessionType" class="headerlink" title="Permanent link">&para;</a></h2>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
 
+<a href="#cairn.domain.ToolCallEnd" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ToolCallEnd</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
+</span></code></pre></div>
 
     <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
-        <p>Type of session within cairn.</p>
+        <p>A tool call's input is fully received.</p>
 
 
 
@@ -4915,20 +5120,23 @@ orchestrator.</p>
 
 
 
-<h2 id="cairn.domain.StopReason" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">StopReason</span>
+<h2 id="cairn.domain.ToolCallStart" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallStart</span>
 
 
-<a href="#cairn.domain.StopReason" class="headerlink" title="Permanent link">&para;</a></h2>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
 
+<a href="#cairn.domain.ToolCallStart" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ToolCallStart</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
+</span></code></pre></div>
 
     <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
 
 
 
-        <p>Why a model stopped generating.</p>
+        <p>A tool call has begun (ID and name known).</p>
 
 
 
@@ -4963,20 +5171,20 @@ orchestrator.</p>
 
 
 
-<h2 id="cairn.domain.ToolCallStatus" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolCallStatus</span>
+<h2 id="cairn.domain.ToolDefinition" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ToolDefinition</span>
 
 
-<a href="#cairn.domain.ToolCallStatus" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#cairn.domain.ToolDefinition" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
-        <p>Lifecycle state of a tool call.</p>
+        <p>Schema for a tool exposed to the model.</p>
 
 
 
@@ -5011,20 +5219,79 @@ orchestrator.</p>
 
 
 
-<h2 id="cairn.domain.UsageOperation" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UsageOperation</span>
+<h2 id="cairn.domain.UsageEvent" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">UsageEvent</span>
 
 
-<a href="#cairn.domain.UsageOperation" class="headerlink" title="Permanent link">&para;</a></h2>
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.domain.UsageEvent" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">UsageEvent</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">input_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">output_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">cache_read_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">cache_write_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Token consumption from a provider call.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="sessions">Sessions<a class="headerlink" href="#sessions" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.Session" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Session</span>
+
+
+<a href="#cairn.domain.Session" class="headerlink" title="Permanent link">&para;</a></h2>
 
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="enum.StrEnum">StrEnum</span></code></p>
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
 
 
 
-        <p>What triggered a provider call — for cost attribution.</p>
+        <p>A conversation session within cairn.</p>
+<p>Sessions are created once and treated as immutable records. Metadata
+updates (title, archived) produce new instances at the repository level.</p>
 
 
 

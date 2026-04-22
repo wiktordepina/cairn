@@ -12,31 +12,31 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0010-typed-middleware/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/reference/">
       
       
-        <link rel="prev" href="../0009-protocol-stubs/">
+        <link rel="prev" href="../tools/">
       
       
-        <link rel="next" href="../0011-explicit-turn-state-machine/">
+        <link rel="next" href="config/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>0010 Typed middleware - Cairn</title>
+        <title>Overview - Cairn</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0010-typed-middleware-over-generic-lifecycle-hooks" class="md-skip">
+        <a href="#api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0010 Typed middleware
+              Overview
             
           </span>
         </div>
@@ -244,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -265,7 +265,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../configuration/" class="md-tabs__link">
+        <a href="../configuration/" class="md-tabs__link">
           
   
   
@@ -287,7 +287,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../architecture/" class="md-tabs__link">
+        <a href="../architecture/" class="md-tabs__link">
           
   
   
@@ -305,11 +305,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../reference/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
           
   
   
@@ -327,13 +329,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../decisions/" class="md-tabs__link">
           
   
   
@@ -375,7 +375,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -405,7 +405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -492,7 +492,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -520,7 +520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../providers/" class="md-nav__link">
+      <a href="../providers/" class="md-nav__link">
         
   
   
@@ -548,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         
   
   
@@ -645,7 +645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -673,7 +673,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../orchestrator/" class="md-nav__link">
+      <a href="../orchestrator/" class="md-nav__link">
         
   
   
@@ -701,7 +701,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../persistence/" class="md-nav__link">
+      <a href="../persistence/" class="md-nav__link">
         
   
   
@@ -729,321 +729,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Reference
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/config/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Config
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/domain/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Domain
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/logging/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Logging
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/orchestrator/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Orchestrator
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/persistence/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Persistence
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/providers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Providers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/ssl/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SSL
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/tools/" class="md-nav__link">
+      <a href="../tools/" class="md-nav__link">
         
   
   
@@ -1084,30 +770,6 @@
       
         
           
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
         
       
         
@@ -1142,11 +804,349 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="domain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="orchestrator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="ssl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../decisions/" class="md-nav__link ">
               
   
   
@@ -1164,13 +1164,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1190,7 +1190,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-per-profile-sqlite/" class="md-nav__link">
+      <a href="../decisions/0001-per-profile-sqlite/" class="md-nav__link">
         
   
   
@@ -1218,7 +1218,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
+      <a href="../decisions/0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1246,7 +1246,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-secret-ref-schemes/" class="md-nav__link">
+      <a href="../decisions/0003-secret-ref-schemes/" class="md-nav__link">
         
   
   
@@ -1274,7 +1274,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-hand-rolled-migrations/" class="md-nav__link">
+      <a href="../decisions/0004-hand-rolled-migrations/" class="md-nav__link">
         
   
   
@@ -1302,7 +1302,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-per-provider-adapters/" class="md-nav__link">
+      <a href="../decisions/0005-per-provider-adapters/" class="md-nav__link">
         
   
   
@@ -1330,7 +1330,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-role-based-model-selection/" class="md-nav__link">
+      <a href="../decisions/0006-role-based-model-selection/" class="md-nav__link">
         
   
   
@@ -1358,7 +1358,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-memory-space-at-repo-layer/" class="md-nav__link">
+      <a href="../decisions/0007-memory-space-at-repo-layer/" class="md-nav__link">
         
   
   
@@ -1386,7 +1386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0008-tool-call-state-column/" class="md-nav__link">
+      <a href="../decisions/0008-tool-call-state-column/" class="md-nav__link">
         
   
   
@@ -1414,7 +1414,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0009-protocol-stubs/" class="md-nav__link">
+      <a href="../decisions/0009-protocol-stubs/" class="md-nav__link">
         
   
   
@@ -1439,37 +1439,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0010 Typed middleware
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../decisions/0010-typed-middleware/" class="md-nav__link">
         
   
   
@@ -1485,59 +1458,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1550,7 +1470,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-explicit-turn-state-machine/" class="md-nav__link">
+      <a href="../decisions/0011-explicit-turn-state-machine/" class="md-nav__link">
         
   
   
@@ -1578,7 +1498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-no-fk-on-turn-id/" class="md-nav__link">
+      <a href="../decisions/0012-no-fk-on-turn-id/" class="md-nav__link">
         
   
   
@@ -1606,7 +1526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0013-tier-taxonomy/" class="md-nav__link">
+      <a href="../decisions/0013-tier-taxonomy/" class="md-nav__link">
         
   
   
@@ -1634,7 +1554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0014-tool-decorator/" class="md-nav__link">
+      <a href="../decisions/0014-tool-decorator/" class="md-nav__link">
         
   
   
@@ -1662,7 +1582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0015-session-allowlist-exact-match/" class="md-nav__link">
+      <a href="../decisions/0015-session-allowlist-exact-match/" class="md-nav__link">
         
   
   
@@ -1690,7 +1610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0016-no-shell-in-v1/" class="md-nav__link">
+      <a href="../decisions/0016-no-shell-in-v1/" class="md-nav__link">
         
   
   
@@ -1718,7 +1638,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
+      <a href="../decisions/0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
         
   
   
@@ -1746,7 +1666,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0018-docs-site-tooling/" class="md-nav__link">
+      <a href="../decisions/0018-docs-site-tooling/" class="md-nav__link">
         
   
   
@@ -1774,7 +1694,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0019-docstrings-google-style/" class="md-nav__link">
+      <a href="../decisions/0019-docstrings-google-style/" class="md-nav__link">
         
   
   
@@ -1802,7 +1722,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0020-auto-generated-api-reference/" class="md-nav__link">
+      <a href="../decisions/0020-auto-generated-api-reference/" class="md-nav__link">
         
   
   
@@ -1857,32 +1777,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
+  <a href="#modules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
+        Modules
       
     </span>
   </a>
@@ -1906,7 +1804,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0010-typed-middleware.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/reference/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1914,76 +1812,25 @@
   
 
 
-<h1 id="0010-typed-middleware-over-generic-lifecycle-hooks">0010 — Typed middleware over generic lifecycle hooks<a class="headerlink" href="#0010-typed-middleware-over-generic-lifecycle-hooks" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
-<strong>Status:</strong> accepted</p>
-<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The orchestrator needs extensibility seams for cross-cutting concerns:
-memory injection into the request, tool-result sanitisation, approval
-gating, observability. The natural anti-pattern is LangChain-style
-generic <code>Callbacks</code> with twenty-odd lifecycle methods (<code>on_llm_start</code>,
-<code>on_llm_end</code>, <code>on_tool_start</code>, etc.) — a surface area that grows
-every release, where most methods are unused, and where stateful
-interactions are easy to get wrong.</p>
-<p>What we want:</p>
+<!-- Generated by docs/gen_ref_pages.py from src/cairn/<module>/__init__.py.
+     Do not edit by hand — re-run the generator instead. -->
+
+<h1 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
+<p>Auto-generated from each package's <code>__all__</code>. Pages are grouped by
+the <code># Section</code> comments inside <code>__all__</code>, so editorial structure
+lives next to the code rather than in hand-curated reference pages.</p>
+<p>Contributors: see <code>docs/gen_ref_pages.py</code> and <code>AGENTS.md</code> for the
+regeneration workflow.</p>
+<h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Narrow, typed contracts</strong>: each seam does one thing, with a
-  specific input and output type.</li>
-<li><strong>Composable</strong>: an ordered list of extensions at each seam, not
-  a single pluggable callback.</li>
-<li><strong>Discoverable</strong>: the list of seams IS the extensibility surface;
-  no hidden hook names.</li>
-</ul>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Four seams, each a distinct <code>Protocol</code> with a single method:</p>
-<ul>
-<li><strong><code>MessagePreparer</code></strong> — <code>prepare(request, ctx) -&gt; ProviderRequest</code>.
-  Rewrites the request before the provider sees it. Canonical uses:
-  memory injection (memory brick), compaction (context-manager brick),
-  prompt-cache markers.</li>
-<li><strong><code>ToolApprover</code></strong> — <code>decide(request, ctx) -&gt; ApprovalDecision</code>
-  (outcome ∈ {APPROVE, REJECT, ESCALATE}). The chain runs in order;
-  the first non-ESCALATE wins. An empty or all-ESCALATE chain falls
-  through to the <code>ApprovalGateway</code> (a single protocol at the end,
-  typically the UI).</li>
-<li><strong><code>ResultTransformer</code></strong> — <code>transform(result, tool_call, ctx) -&gt; result</code>.
-  Rewrites a tool result before it hits the session. Canonical uses:
-  spotlighting, Unicode stripping, secret redaction.</li>
-<li><strong><code>UIEventObserver</code></strong> — <code>observe(event)</code>. Sync. Fire-and-forget.
-  Cannot mutate events, cannot back-pressure. Failed observers are
-  logged at ERROR and swallowed. Canonical uses: structured logging,
-  metrics, cost dashboards.</li>
-</ul>
-<p>Each seam is an ordered list at <code>Orchestrator.__init__</code>. The
-orchestrator calls them inline at well-defined points in the turn
-loop — no reflection, no dynamic dispatch.</p>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
-<ul>
-<li>The extensibility surface is enumerable. Four protocols, four points
-  in the turn loop.</li>
-<li>Each protocol has a narrow, typed signature. Pyright catches misuse.</li>
-<li>Adding new behaviour follows a pattern: decide which seam it fits,
-  implement the one-method protocol, register at construction.</li>
-<li>Observers that raise don't break the turn.</li>
-</ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>If a future cross-cutting concern doesn't fit one of the four seams,
-  we add a fifth (with a new protocol) rather than stretching an
-  existing one. That's a deliberate design constraint.</li>
-<li>No access to "orchestrator internals" through the middleware — every
-  protocol gets a read-only <code>TurnContext</code> and the target of the
-  transformation. A middleware wanting to peek at, say, the
-  <code>turn_repo</code> would need an explicit new protocol dependency.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>Writing a new preparer/approver/transformer/observer is ~20–50 LOC.</li>
-<li>Composing their order in the harness-assembly layer is a source of
-  subtle bugs (spotlight-before-redact vs redact-before-spotlight).
-  Mitigation: the defaults are opinionated and documented; most users
-  won't reorder.</li>
+<li><a href="config/">Config</a> — <code>cairn.config</code></li>
+<li><a href="domain/">Domain</a> — <code>cairn.domain</code></li>
+<li><a href="logging/">Logging</a> — <code>cairn.logging</code></li>
+<li><a href="orchestrator/">Orchestrator</a> — <code>cairn.orchestrator</code></li>
+<li><a href="persistence/">Persistence</a> — <code>cairn.persistence</code></li>
+<li><a href="providers/">Providers</a> — <code>cairn.providers</code></li>
+<li><a href="ssl/">SSL</a> — <code>cairn.ssl</code></li>
+<li><a href="tools/">Tools</a> — <code>cairn.tools</code></li>
 </ul>
 
 
@@ -2060,10 +1907,10 @@ loop — no reflection, no dynamic dispatch.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>
