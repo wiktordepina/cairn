@@ -9,6 +9,10 @@
          <lastmod>2026-04-22</lastmod>
     </url>
     <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/compaction/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
          <loc>https://wiktordepina.github.io/cairn/dev/configuration/</loc>
          <lastmod>2026-04-22</lastmod>
     </url>
@@ -145,7 +149,23 @@
          <lastmod>2026-04-22</lastmod>
     </url>
     <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0027-truncation-before-summarisation/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0028-turn-block-granularity/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0029-context-budget-advisory/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
          <loc>https://wiktordepina.github.io/cairn/dev/reference/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/reference/compaction/</loc>
          <lastmod>2026-04-22</lastmod>
     </url>
     <url>

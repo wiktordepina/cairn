@@ -12,31 +12,31 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0009-protocol-stubs/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/compaction/">
       
       
-        <link rel="prev" href="../0008-tool-call-state-column/">
+        <link rel="prev" href="../memory/">
       
       
-        <link rel="next" href="../0010-typed-middleware/">
+        <link rel="next" href="../observability/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>0009 Protocol stubs - Cairn</title>
+        <title>Compaction - Cairn</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0009-protocol-shaped-collaborators-with-default-stubs" class="md-skip">
+        <a href="#compaction" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0009 Protocol stubs
+              Compaction
             
           </span>
         </div>
@@ -244,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -261,11 +261,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../configuration/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../configuration/" class="md-tabs__link">
           
   
   
@@ -287,7 +289,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../architecture/" class="md-tabs__link">
+        <a href="../architecture/" class="md-tabs__link">
           
   
   
@@ -309,7 +311,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../reference/" class="md-tabs__link">
+        <a href="../reference/" class="md-tabs__link">
           
   
   
@@ -327,13 +329,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../decisions/" class="md-tabs__link">
           
   
   
@@ -375,7 +375,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -405,7 +405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -429,8 +429,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -448,19 +450,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -478,7 +483,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -496,7 +501,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -524,7 +529,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../providers/" class="md-nav__link">
+      <a href="../providers/" class="md-nav__link">
         
   
   
@@ -552,7 +557,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../memory/" class="md-nav__link">
+      <a href="../memory/" class="md-nav__link">
         
   
   
@@ -577,10 +582,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../compaction/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compaction
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -596,6 +628,114 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it does
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-it-doesnt-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What it doesn't do
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turn-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-advisory-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The advisory budget
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -608,7 +748,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         
   
   
@@ -705,7 +845,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -733,7 +873,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../orchestrator/" class="md-nav__link">
+      <a href="../orchestrator/" class="md-nav__link">
         
   
   
@@ -761,7 +901,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../persistence/" class="md-nav__link">
+      <a href="../persistence/" class="md-nav__link">
         
   
   
@@ -789,7 +929,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tools/" class="md-nav__link">
+      <a href="../tools/" class="md-nav__link">
         
   
   
@@ -867,7 +1007,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
+            <a href="../reference/" class="md-nav__link ">
               
   
   
@@ -911,7 +1051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/compaction/" class="md-nav__link">
+      <a href="../reference/compaction/" class="md-nav__link">
         
   
   
@@ -939,7 +1079,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/config/" class="md-nav__link">
+      <a href="../reference/config/" class="md-nav__link">
         
   
   
@@ -967,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/domain/" class="md-nav__link">
+      <a href="../reference/domain/" class="md-nav__link">
         
   
   
@@ -995,7 +1135,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/logging/" class="md-nav__link">
+      <a href="../reference/logging/" class="md-nav__link">
         
   
   
@@ -1023,7 +1163,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/memory/" class="md-nav__link">
+      <a href="../reference/memory/" class="md-nav__link">
         
   
   
@@ -1051,7 +1191,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/orchestrator/" class="md-nav__link">
+      <a href="../reference/orchestrator/" class="md-nav__link">
         
   
   
@@ -1079,7 +1219,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/persistence/" class="md-nav__link">
+      <a href="../reference/persistence/" class="md-nav__link">
         
   
   
@@ -1107,7 +1247,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/providers/" class="md-nav__link">
+      <a href="../reference/providers/" class="md-nav__link">
         
   
   
@@ -1135,7 +1275,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/ssl/" class="md-nav__link">
+      <a href="../reference/ssl/" class="md-nav__link">
         
   
   
@@ -1163,7 +1303,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/tools/" class="md-nav__link">
+      <a href="../reference/tools/" class="md-nav__link">
         
   
   
@@ -1195,8 +1335,6 @@
       
   
   
-    
-  
   
   
     
@@ -1268,23 +1406,20 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../decisions/" class="md-nav__link ">
               
   
   
@@ -1302,13 +1437,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1328,7 +1463,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-per-profile-sqlite/" class="md-nav__link">
+      <a href="../decisions/0001-per-profile-sqlite/" class="md-nav__link">
         
   
   
@@ -1356,7 +1491,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
+      <a href="../decisions/0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1384,7 +1519,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-secret-ref-schemes/" class="md-nav__link">
+      <a href="../decisions/0003-secret-ref-schemes/" class="md-nav__link">
         
   
   
@@ -1412,7 +1547,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-hand-rolled-migrations/" class="md-nav__link">
+      <a href="../decisions/0004-hand-rolled-migrations/" class="md-nav__link">
         
   
   
@@ -1440,7 +1575,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-per-provider-adapters/" class="md-nav__link">
+      <a href="../decisions/0005-per-provider-adapters/" class="md-nav__link">
         
   
   
@@ -1468,7 +1603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-role-based-model-selection/" class="md-nav__link">
+      <a href="../decisions/0006-role-based-model-selection/" class="md-nav__link">
         
   
   
@@ -1496,7 +1631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-memory-space-at-repo-layer/" class="md-nav__link">
+      <a href="../decisions/0007-memory-space-at-repo-layer/" class="md-nav__link">
         
   
   
@@ -1524,7 +1659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0008-tool-call-state-column/" class="md-nav__link">
+      <a href="../decisions/0008-tool-call-state-column/" class="md-nav__link">
         
   
   
@@ -1549,37 +1684,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0009 Protocol stubs
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../decisions/0009-protocol-stubs/" class="md-nav__link">
         
   
   
@@ -1595,59 +1703,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1660,7 +1715,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0010-typed-middleware/" class="md-nav__link">
+      <a href="../decisions/0010-typed-middleware/" class="md-nav__link">
         
   
   
@@ -1688,7 +1743,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-explicit-turn-state-machine/" class="md-nav__link">
+      <a href="../decisions/0011-explicit-turn-state-machine/" class="md-nav__link">
         
   
   
@@ -1716,7 +1771,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-no-fk-on-turn-id/" class="md-nav__link">
+      <a href="../decisions/0012-no-fk-on-turn-id/" class="md-nav__link">
         
   
   
@@ -1744,7 +1799,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0013-tier-taxonomy/" class="md-nav__link">
+      <a href="../decisions/0013-tier-taxonomy/" class="md-nav__link">
         
   
   
@@ -1772,7 +1827,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0014-tool-decorator/" class="md-nav__link">
+      <a href="../decisions/0014-tool-decorator/" class="md-nav__link">
         
   
   
@@ -1800,7 +1855,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0015-session-allowlist-exact-match/" class="md-nav__link">
+      <a href="../decisions/0015-session-allowlist-exact-match/" class="md-nav__link">
         
   
   
@@ -1828,7 +1883,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0016-no-shell-in-v1/" class="md-nav__link">
+      <a href="../decisions/0016-no-shell-in-v1/" class="md-nav__link">
         
   
   
@@ -1856,7 +1911,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
+      <a href="../decisions/0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
         
   
   
@@ -1884,7 +1939,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0018-docs-site-tooling/" class="md-nav__link">
+      <a href="../decisions/0018-docs-site-tooling/" class="md-nav__link">
         
   
   
@@ -1912,7 +1967,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0019-docstrings-google-style/" class="md-nav__link">
+      <a href="../decisions/0019-docstrings-google-style/" class="md-nav__link">
         
   
   
@@ -1940,7 +1995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0020-auto-generated-api-reference/" class="md-nav__link">
+      <a href="../decisions/0020-auto-generated-api-reference/" class="md-nav__link">
         
   
   
@@ -1968,7 +2023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0021-tier-1-memory-first/" class="md-nav__link">
+      <a href="../decisions/0021-tier-1-memory-first/" class="md-nav__link">
         
   
   
@@ -1996,7 +2051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0022-memory-dedup-threshold/" class="md-nav__link">
+      <a href="../decisions/0022-memory-dedup-threshold/" class="md-nav__link">
         
   
   
@@ -2024,7 +2079,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0023-jsonl-log-no-rebuild/" class="md-nav__link">
+      <a href="../decisions/0023-jsonl-log-no-rebuild/" class="md-nav__link">
         
   
   
@@ -2052,7 +2107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0024-memory-md-as-index/" class="md-nav__link">
+      <a href="../decisions/0024-memory-md-as-index/" class="md-nav__link">
         
   
   
@@ -2080,7 +2135,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0025-extraction-role-and-local-models/" class="md-nav__link">
+      <a href="../decisions/0025-extraction-role-and-local-models/" class="md-nav__link">
         
   
   
@@ -2108,7 +2163,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0026-per-turn-extraction-with-context/" class="md-nav__link">
+      <a href="../decisions/0026-per-turn-extraction-with-context/" class="md-nav__link">
         
   
   
@@ -2136,7 +2191,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0027-truncation-before-summarisation/" class="md-nav__link">
+      <a href="../decisions/0027-truncation-before-summarisation/" class="md-nav__link">
         
   
   
@@ -2164,7 +2219,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0028-turn-block-granularity/" class="md-nav__link">
+      <a href="../decisions/0028-turn-block-granularity/" class="md-nav__link">
         
   
   
@@ -2192,7 +2247,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0029-context-budget-advisory/" class="md-nav__link">
+      <a href="../decisions/0029-context-budget-advisory/" class="md-nav__link">
         
   
   
@@ -2247,10 +2302,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
+  <a href="#what-it-does" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context
+        What it does
       
     </span>
   </a>
@@ -2258,10 +2313,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
+  <a href="#what-it-doesnt-do" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision
+        What it doesn't do
       
     </span>
   </a>
@@ -2269,10 +2324,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
+  <a href="#turn-blocks" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consequences
+        Turn blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-advisory-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The advisory budget
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI events
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related ADRs
       
     </span>
   </a>
@@ -2296,7 +2406,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0009-protocol-stubs.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/compaction.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2304,76 +2414,187 @@
   
 
 
-<h1 id="0009-protocol-shaped-collaborators-with-default-stubs">0009 — Protocol-shaped collaborators with default stubs<a class="headerlink" href="#0009-protocol-shaped-collaborators-with-default-stubs" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
-<strong>Status:</strong> accepted</p>
-<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The orchestrator has a lot of collaborators: context assembly, memory,
-tools, extraction, approval, cost tracking, model resolution, providers,
-persistence. In the obvious implementation, the orchestrator takes
-concrete types, imports them, and calls their methods. That creates a
-hard dependency on each of those bricks existing in its final shape
-before the orchestrator can ship.</p>
-<p>Two consequences of that approach:</p>
+<h1 id="compaction">Compaction<a class="headerlink" href="#compaction" title="Permanent link">&para;</a></h1>
+<p>Every long-lived conversation eventually outgrows the model's
+context window. Cairn's compaction brick keeps the provider
+request under budget by dropping the oldest turns from the
+conversation history before each provider call.</p>
+<div class="admonition note">
+<p class="admonition-title">V1 scope — truncation only</p>
+<p>V1 compaction is truncation with a preserve-floor. LLM-driven
+summarisation (turn the oldest span into a paragraph) is a V2
+feature; the foundation below is the shape V2 will slot into
+as a second strategy behind the same <code>MessagePreparer</code>
+interface.</p>
+</div>
+<h2 id="what-it-does">What it does<a class="headerlink" href="#what-it-does" title="Permanent link">&para;</a></h2>
+<p><code>TruncatingCompactor</code> is a <code>MessagePreparer</code> that sits in the
+orchestrator's prepare chain. On every turn:</p>
 <ol>
-<li><strong>Blocking.</strong> The orchestrator can't be written (let alone tested)
-   before every downstream brick is complete. The "pivotal brick" ends
-   up being the last one delivered.</li>
-<li><strong>Coupling.</strong> Changes to a collaborator's internal API ripple through
-   the orchestrator even when the collaborator's <em>role</em> hasn't
-   changed.</li>
+<li>Calculate the effective budget:
+   <code>context_window − max_tokens − safety_margin_tokens</code>.</li>
+<li>Count tokens for the full request via the provider's native
+   tokenizer.</li>
+<li>If the request fits, return it unchanged.</li>
+<li>If not, group <code>request.messages</code> into <strong>turn blocks</strong> and
+   drop them from the front one at a time, re-counting after
+   each drop, until the request fits or the preserve-floor
+   (<code>preserve_last_n_turns</code>) is reached.</li>
+<li>If the floor is reached and the request is <em>still</em> over
+   budget, emit a <code>BudgetOverflowAdvisory</code> and hand the
+   decision to the configured <code>BudgetOverflowGateway</code>.</li>
 </ol>
-<p>Alternatives:</p>
+<p>Every successful compaction emits a <code>HistoryCompacted</code> UI event
+so the UI can show "history truncated — N messages dropped".</p>
+<h2 id="what-it-doesnt-do">What it doesn't do<a class="headerlink" href="#what-it-doesnt-do" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Protocols + stubs.</strong> Every collaborator is a <code>Protocol</code>; a default
-  stub implementation ships in <code>cairn.orchestrator</code> for each. Real
-  implementations plug in by name at construction.</li>
-<li><strong>Interfaces + DI container.</strong> Same idea, heavier machinery.</li>
-<li><strong>Concrete base classes.</strong> Some of the same benefit with less rigour;
-  introduces inheritance, which we wanted to avoid.</li>
+<li>It doesn't touch the identity triple, MEMORY.md, convention
+  files, retrieved memories, tool definitions, or the current
+  user turn. Those all live in <code>ProviderRequest.system</code> and
+  related protected segments (see <a href="../architecture/">architecture §4.12</a>).</li>
+<li>It doesn't summarise. Dropped turns are gone as far as the
+  model is concerned — but the memory brick has already
+  extracted durable facts into <code>memory_entries</code>, so long-lived
+  information survives compaction via a different path.</li>
+<li>It doesn't slice mid-turn. Dropping a partial turn breaks
+  tool-use/tool-result pairing (see
+  <a href="../decisions/0028-turn-block-granularity/">ADR 0028</a>).</li>
 </ul>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Every orchestrator dependency is a <code>Protocol</code> (<code>@runtime_checkable</code>
-where practical). Default stubs ship in <code>cairn.orchestrator._stubs</code>:</p>
+<h2 id="turn-blocks">Turn blocks<a class="headerlink" href="#turn-blocks" title="Permanent link">&para;</a></h2>
+<p>A "turn block" is a contiguous run of messages that starts at a
+user message whose content is <em>not</em> purely tool results. A block
+that contains an assistant tool call always also contains the
+user message that carries the tool result, so dropping the block
+is always safe.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[user: &quot;find X&quot;]              ┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>[assistant: tool_use(grep)]   ├─ one turn block
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>[user: tool_result]           │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>[assistant: &quot;found it&quot;]       ┘
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[user: &quot;now edit&quot;]            ┐
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>[assistant: &quot;done&quot;]           ┘ another turn block
+</span></code></pre></div>
+<p>See <a href="../decisions/0028-turn-block-granularity/">ADR 0028</a> for the
+full rationale.</p>
+<h2 id="the-advisory-budget">The advisory budget<a class="headerlink" href="#the-advisory-budget" title="Permanent link">&para;</a></h2>
+<p>The <strong>compaction budget is advisory, not hard.</strong> If the
+preserve-floor is reached and the surviving request is still
+over budget, <code>TruncatingCompactor</code> doesn't silently block or
+silently overflow — it consults a <code>BudgetOverflowGateway</code>:</p>
 <ul>
-<li><code>NullMemoryService</code>, <code>NullExtractionQueue</code> — safely ignored.</li>
-<li><code>EmptyToolRegistry</code> + <code>RaisingToolRunner</code> — paired so the runner
-  can never be called.</li>
-<li><code>AutoApproveGateway</code>, <code>DenyAllGateway</code> — context-appropriate
-  defaults.</li>
-<li><code>MinimalContextManager</code> — passes through history.</li>
+<li><code>"continue"</code> — the request goes to the provider as-is. The
+  surviving messages often still fit the model's hard
+  <code>context_window</code> because <code>safety_margin_tokens</code> leaves real
+  headroom.</li>
+<li><code>"terminate"</code> — the compactor raises <code>BudgetOverflowDeclined</code>.
+  The orchestrator catches this, emits
+  <code>TurnAborted(reason="user_declined_overflow")</code>, and archives
+  the session.</li>
 </ul>
-<p>The orchestrator constructor enforces nothing at the type level about
-which implementation is passed; the harness-assembly layer (CLI) wires
-real ones in production.</p>
-<p>Test fakes (<code>FakeProvider</code>, <code>RecordingToolRunner</code>, <code>SpyMemoryService</code>,
-etc.) live under <code>tests/orchestrator/_fakes.py</code>; they are test-only and
-not part of the shipped package.</p>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
+<p>Two stub gateways ship:</p>
 <ul>
-<li>The orchestrator shipped as a complete, tested brick before tools,
-  memory, or the UI existed. Real collaborators plug in when their
-  bricks land.</li>
-<li>Tests run in milliseconds because they never touch real providers or
-  UIs. The whole 15-test orchestrator suite runs in under a second.</li>
-<li>Swapping a collaborator — e.g. a different memory retriever —
-  requires exactly one change at construction, no orchestrator edits.</li>
+<li><code>AutoContinueOverflowGateway</code> — always <code>"continue"</code>.</li>
+<li><code>AutoTerminateOverflowGateway</code> — always <code>"terminate"</code>; the
+  orchestrator default, so headless and CI runs fail loudly.</li>
 </ul>
-<p><strong>Harder:</strong></p>
+<p>The interactive gateway (UI prompt with amber warning + icon,
+per-session decision memory) lands with the UI brick.</p>
+<p>Full rationale in
+<a href="../decisions/0029-context-budget-advisory/">ADR 0029</a>.</p>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p><code>CompactionConfig</code> hangs off <code>ProfileConfig.compaction</code>, so every
+persona gets its own settings:</p>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">[profiles.companion.compaction]</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">preserve_last_n_turns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">safety_margin_tokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2048</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">min_history_tokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1024</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">[profiles.tool-heavy-persona.compaction]</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">preserve_last_n_turns</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="w">   </span><span class="c1"># longer floor for agentic runs</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Knob</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td><code>true</code></td>
+<td>Master kill switch. <code>false</code> disables truncation entirely.</td>
+</tr>
+<tr>
+<td><code>preserve_last_n_turns</code></td>
+<td><code>6</code></td>
+<td>Hard floor on surviving turn blocks.</td>
+</tr>
+<tr>
+<td><code>safety_margin_tokens</code></td>
+<td><code>2048</code></td>
+<td>Held back from <code>context_window</code> on top of reserved output tokens.</td>
+</tr>
+<tr>
+<td><code>min_history_tokens</code></td>
+<td><code>1024</code></td>
+<td>If the effective budget falls below this, log ERROR and pass the request through unchanged.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ui-events">UI events<a class="headerlink" href="#ui-events" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HistoryCompacted{reason="budget"}</code></td>
+<td>Normal path — blocks dropped, request now fits.</td>
+</tr>
+<tr>
+<td><code>BudgetOverflowAdvisory</code></td>
+<td>Preserve-floor hit, request still over budget; gateway decision pending.</td>
+</tr>
+<tr>
+<td><code>HistoryCompacted{reason="preserve_floor_hit"}</code></td>
+<td>Gateway picked <code>"continue"</code>.</td>
+</tr>
+<tr>
+<td><code>TurnAborted(reason="user_declined_overflow")</code></td>
+<td>Gateway picked <code>"terminate"</code>.</td>
+</tr>
+<tr>
+<td><code>SessionArchived</code></td>
+<td>Follow-up to the terminate path — session is archived.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="wiring">Wiring<a class="headerlink" href="#wiring" title="Permanent link">&para;</a></h2>
+<p>At orchestrator construction:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">cairn.compaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">TruncatingCompactor</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">compactor</span> <span class="o">=</span> <span class="n">TruncatingCompactor</span><span class="p">(</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">profile</span><span class="o">.</span><span class="n">compaction</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">model_registry</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">provider_registry</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="n">overflow_gateway</span><span class="o">=</span><span class="n">ui_overflow_gateway</span><span class="p">,</span>  <span class="c1"># or a stub pre-UI</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">orchestrator</span> <span class="o">=</span> <span class="n">Orchestrator</span><span class="p">(</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="o">...</span><span class="p">,</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="n">preparers</span><span class="o">=</span><span class="p">(</span><span class="n">compactor</span><span class="p">,),</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="related-adrs">Related ADRs<a class="headerlink" href="#related-adrs" title="Permanent link">&para;</a></h2>
 <ul>
-<li>A mis-wired orchestrator (stub where a real impl was expected)
-  silently degrades. Mitigation: the CLI's harness-assembly fails loud
-  if it finds a stub where it was supposed to wire something real.</li>
-<li>Protocol drift: if the protocol and the implementation disagree,
-  pyright catches it at build time; runtime duck-typing is a weaker
-  guarantee.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>Adding a new collaborator means: a new protocol + a new stub + a
-  constructor parameter. Roughly 50 LOC of overhead per new
-  collaborator. Worth it.</li>
+<li><a href="../decisions/0027-truncation-before-summarisation/">ADR 0027 — Truncation before summarisation</a></li>
+<li><a href="../decisions/0028-turn-block-granularity/">ADR 0028 — Turn-block granularity</a></li>
+<li><a href="../decisions/0029-context-budget-advisory/">ADR 0029 — Context budget is advisory</a></li>
 </ul>
 
 
@@ -2450,10 +2671,10 @@ not part of the shipped package.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

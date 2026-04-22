@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0009-protocol-stubs/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0028-turn-block-granularity/">
       
       
-        <link rel="prev" href="../0008-tool-call-state-column/">
+        <link rel="prev" href="../0027-truncation-before-summarisation/">
       
       
-        <link rel="next" href="../0010-typed-middleware/">
+        <link rel="next" href="../0029-context-budget-advisory/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>0009 Protocol stubs - Cairn</title>
+        <title>0028 Turn-block granularity - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0009-protocol-shaped-collaborators-with-default-stubs" class="md-skip">
+        <a href="#0028-turn-block-granularity-for-truncation" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0009 Protocol stubs
+              0028 Turn-block granularity
             
           </span>
         </div>
@@ -1549,37 +1549,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0009 Protocol stubs
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0009-protocol-stubs/" class="md-nav__link">
         
   
   
@@ -1595,59 +1568,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2161,10 +2081,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0028-turn-block-granularity/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0028 Turn-block granularity
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2180,6 +2127,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2279,6 +2290,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2296,7 +2318,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0009-protocol-stubs.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0028-turn-block-granularity.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2304,77 +2326,70 @@
   
 
 
-<h1 id="0009-protocol-shaped-collaborators-with-default-stubs">0009 — Protocol-shaped collaborators with default stubs<a class="headerlink" href="#0009-protocol-shaped-collaborators-with-default-stubs" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
+<h1 id="0028-turn-block-granularity-for-truncation">0028 — Turn-block granularity for truncation<a class="headerlink" href="#0028-turn-block-granularity-for-truncation" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-22
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The orchestrator has a lot of collaborators: context assembly, memory,
-tools, extraction, approval, cost tracking, model resolution, providers,
-persistence. In the obvious implementation, the orchestrator takes
-concrete types, imports them, and calls their methods. That creates a
-hard dependency on each of those bricks existing in its final shape
-before the orchestrator can ship.</p>
-<p>Two consequences of that approach:</p>
+<p>Truncation (ADR 0027) needs to pick a boundary between messages
+that should stay and messages that should go. The naive choice
+— drop the first N messages — breaks two invariants that every
+provider we ship assumes:</p>
 <ol>
-<li><strong>Blocking.</strong> The orchestrator can't be written (let alone tested)
-   before every downstream brick is complete. The "pivotal brick" ends
-   up being the last one delivered.</li>
-<li><strong>Coupling.</strong> Changes to a collaborator's internal API ripple through
-   the orchestrator even when the collaborator's <em>role</em> hasn't
-   changed.</li>
+<li><strong>Tool pairing.</strong> An assistant <code>ToolUseBlock</code> must be followed
+   by a user <code>ToolResultBlock</code> with the same <code>tool_use_id</code>.
+   Drop the user message that carries the result while keeping
+   the assistant's tool call and Anthropic rejects the request;
+   OpenAI is slightly more forgiving but behaves unpredictably.</li>
+<li><strong>First-message role.</strong> Anthropic requires the first message
+   in <code>messages</code> to be <code>role=user</code> with non-tool-result content.</li>
 </ol>
-<p>Alternatives:</p>
-<ul>
-<li><strong>Protocols + stubs.</strong> Every collaborator is a <code>Protocol</code>; a default
-  stub implementation ships in <code>cairn.orchestrator</code> for each. Real
-  implementations plug in by name at construction.</li>
-<li><strong>Interfaces + DI container.</strong> Same idea, heavier machinery.</li>
-<li><strong>Concrete base classes.</strong> Some of the same benefit with less rigour;
-  introduces inheritance, which we wanted to avoid.</li>
-</ul>
+<p>A per-provider fix (scan each request, fix up pairs
+provider-side) is fragile: the set of invariants changes as
+providers evolve, and the fix-up logic has to live in every
+translator.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Every orchestrator dependency is a <code>Protocol</code> (<code>@runtime_checkable</code>
-where practical). Default stubs ship in <code>cairn.orchestrator._stubs</code>:</p>
-<ul>
-<li><code>NullMemoryService</code>, <code>NullExtractionQueue</code> — safely ignored.</li>
-<li><code>EmptyToolRegistry</code> + <code>RaisingToolRunner</code> — paired so the runner
-  can never be called.</li>
-<li><code>AutoApproveGateway</code>, <code>DenyAllGateway</code> — context-appropriate
-  defaults.</li>
-<li><code>MinimalContextManager</code> — passes through history.</li>
-</ul>
-<p>The orchestrator constructor enforces nothing at the type level about
-which implementation is passed; the harness-assembly layer (CLI) wires
-real ones in production.</p>
-<p>Test fakes (<code>FakeProvider</code>, <code>RecordingToolRunner</code>, <code>SpyMemoryService</code>,
-etc.) live under <code>tests/orchestrator/_fakes.py</code>; they are test-only and
-not part of the shipped package.</p>
+<p><strong>Compaction drops whole "turn blocks" from the front of the
+message list.</strong> A turn block is a contiguous range of messages
+that starts at a user message whose content is <em>not</em> purely
+tool results. Every message belongs to exactly one block.</p>
+<p>The <code>iter_turn_blocks</code> helper in <code>cairn.compaction</code> walks the
+message list left-to-right, opens a new block whenever it sees a
+user message with real content (i.e. not purely
+<code>ToolResultBlock</code>s), and yields the block bounds.
+<code>TruncatingCompactor</code> drops blocks whole; it never slices within
+a block.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
 <ul>
-<li>The orchestrator shipped as a complete, tested brick before tools,
-  memory, or the UI existed. Real collaborators plug in when their
-  bricks land.</li>
-<li>Tests run in milliseconds because they never touch real providers or
-  UIs. The whole 15-test orchestrator suite runs in under a second.</li>
-<li>Swapping a collaborator — e.g. a different memory retriever —
-  requires exactly one change at construction, no orchestrator edits.</li>
+<li><strong>Positive.</strong> Tool-pair integrity is automatic — a tool call
+  and its result always belong to the same block, so dropping
+  the block drops them together.</li>
+<li><strong>Positive.</strong> The first surviving message is always a user
+  message with real content — exactly what Anthropic requires.</li>
+<li><strong>Positive.</strong> No per-provider logic. The translator in each
+  provider adapter stays unchanged.</li>
+<li><strong>Negative.</strong> Block granularity wastes a small amount of
+  budget: at the moment compaction decides it fits, the last
+  dropped block might have been only ~20% over budget.
+  Acceptable — the <code>safety_margin_tokens</code> knob already accounts
+  for worse imprecision than this, and the alternative is the
+  per-provider fragility above.</li>
+<li><strong>Negative.</strong> A pathological single-block conversation (one
+  user message followed by dozens of tool-call rounds) can't be
+  trimmed at all. In practice this is rare; when it happens, the
+  overflow advisory from ADR 0029 surfaces the problem to the
+  user.</li>
 </ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>A mis-wired orchestrator (stub where a real impl was expected)
-  silently degrades. Mitigation: the CLI's harness-assembly fails loud
-  if it finds a stub where it was supposed to wire something real.</li>
-<li>Protocol drift: if the protocol and the implementation disagree,
-  pyright catches it at build time; runtime duck-typing is a weaker
-  guarantee.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>Adding a new collaborator means: a new protocol + a new stub + a
-  constructor parameter. Roughly 50 LOC of overhead per new
-  collaborator. Worth it.</li>
-</ul>
+<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p><strong>Per-message truncation with a post-pass that re-pairs orphaned
+tool calls.</strong> Rejected — it needs to synthesise plausible
+<code>ToolResultBlock</code> content, which requires either lying to the
+model ("tool call failed") or running the tool again. Both are
+worse than dropping a whole block.</p>
+<p><strong>Provider-specific block shapes.</strong> Rejected as premature —
+every provider we ship today respects the same tool-pair
+invariant, and changing strategy per provider would force the
+compactor to know which provider it's compacting for. That
+couples two layers that are currently independent.</p>
 
 
 

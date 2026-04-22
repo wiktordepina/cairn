@@ -39,6 +39,7 @@ SRC_ROOT = REPO_ROOT / "src" / "cairn"
 OUT_ROOT = REPO_ROOT / "docs" / "reference"
 
 REFERENCE_MODULES: list[tuple[str, str]] = [
+    ("compaction", "Compaction"),
     ("config", "Config"),
     ("domain", "Domain"),
     ("logging", "Logging"),

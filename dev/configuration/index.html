@@ -444,6 +444,8 @@
       
         
       
+        
+      
     
     
     
@@ -665,6 +667,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#compaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compaction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#delegation-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -793,6 +806,34 @@
     
   
     Memory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compaction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compaction
   
 
     
@@ -1053,6 +1094,8 @@
       
         
       
+        
+      
     
     
     
@@ -1105,6 +1148,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/compaction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compaction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1377,6 +1448,12 @@
       
         
           
+        
+      
+        
+      
+        
+      
         
       
         
@@ -2213,6 +2290,90 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0027-truncation-before-summarisation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0027 Truncation before summarisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0028-turn-block-granularity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0028 Turn-block granularity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0029-context-budget-advisory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0029 Context budget is advisory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2346,6 +2507,17 @@
     <span class="md-ellipsis">
       
         convention_files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compaction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compaction
       
     </span>
   </a>
@@ -2848,6 +3020,12 @@ in the registry with that role.</p>
 <td>defaults</td>
 <td>See <a href="#convention_files"><code>convention_files</code></a>.</td>
 </tr>
+<tr>
+<td><code>compaction</code></td>
+<td>table</td>
+<td>defaults</td>
+<td>See <a href="#compaction"><code>compaction</code></a>.</td>
+</tr>
 </tbody>
 </table>
 <p>Path fields support <code>~</code> and <code>$VAR</code> expansion.</p>
@@ -2937,6 +3115,46 @@ in the registry with that role.</p>
 <td>list</td>
 <td><code>[]</code></td>
 <td>Absolute paths prepended to the search list.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="compaction"><code>compaction</code><a class="headerlink" href="#compaction" title="Permanent link">&para;</a></h3>
+<p>Controls conversation-history truncation before each provider call.
+Per-persona via profile (each persona has its own <code>compaction</code> block).
+See <a href="../compaction/">Compaction</a> for the full guide.</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Default</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>enabled</code></td>
+<td>bool</td>
+<td><code>true</code></td>
+<td>Master kill switch; <code>false</code> disables truncation entirely.</td>
+</tr>
+<tr>
+<td><code>preserve_last_n_turns</code></td>
+<td>int</td>
+<td><code>6</code></td>
+<td>Hard floor on surviving turn blocks. Raise for tool-heavy personas.</td>
+</tr>
+<tr>
+<td><code>safety_margin_tokens</code></td>
+<td>int</td>
+<td><code>2048</code></td>
+<td>Held back from <code>context_window</code> on top of reserved output tokens.</td>
+</tr>
+<tr>
+<td><code>min_history_tokens</code></td>
+<td>int</td>
+<td><code>1024</code></td>
+<td>If effective budget falls below this, log ERROR and pass the request through unchanged.</td>
 </tr>
 </tbody>
 </table>

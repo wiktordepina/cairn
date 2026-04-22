@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0009-protocol-stubs/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/reference/compaction/">
       
       
-        <link rel="prev" href="../0008-tool-call-state-column/">
+        <link rel="prev" href="../">
       
       
-        <link rel="next" href="../0010-typed-middleware/">
+        <link rel="next" href="../config/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>0009 Protocol stubs - Cairn</title>
+        <title>Compaction - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0009-protocol-shaped-collaborators-with-default-stubs" class="md-skip">
+        <a href="#compaction-api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0009 Protocol stubs
+              Compaction
             
           </span>
         </div>
@@ -305,11 +305,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../reference/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -327,13 +329,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../decisions/" class="md-tabs__link">
           
   
   
@@ -821,380 +821,6 @@
       
   
   
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Reference
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Reference
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/compaction/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Compaction
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/config/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Config
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/domain/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Domain
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/logging/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Logging
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/memory/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Memory
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/orchestrator/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Orchestrator
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/persistence/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Persistence
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/providers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Providers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/ssl/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SSL
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../reference/tools/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Tools
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -1204,44 +830,6 @@
       
         
           
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
         
       
         
@@ -1280,11 +868,663 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
             <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compaction
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compaction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#preparer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preparer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.TruncatingCompactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TruncatingCompactor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#config-re-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Config re-export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;CompactionConfig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" CompactionConfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.enabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.preserve_last_n_turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;preserve_last_n_turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.safety_margin_tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;safety_margin_tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.min_history_tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;min_history_tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gateway-protocol-stubs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway protocol + stubs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.BudgetOverflowGateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetOverflowGateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.AutoContinueOverflowGateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AutoContinueOverflowGateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.AutoTerminateOverflowGateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AutoTerminateOverflowGateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.BudgetOverflowDeclined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetOverflowDeclined
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turn-block-utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn-block utilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.iter_turn_blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;iter_turn_blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.TurnBlock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnBlock
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Config
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../domain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Domain
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../orchestrator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestrator
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../persistence/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Persistence
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../providers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ssl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tools/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../decisions/" class="md-nav__link ">
               
   
   
@@ -1302,13 +1542,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1328,7 +1568,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-per-profile-sqlite/" class="md-nav__link">
+      <a href="../../decisions/0001-per-profile-sqlite/" class="md-nav__link">
         
   
   
@@ -1356,7 +1596,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
+      <a href="../../decisions/0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1384,7 +1624,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-secret-ref-schemes/" class="md-nav__link">
+      <a href="../../decisions/0003-secret-ref-schemes/" class="md-nav__link">
         
   
   
@@ -1412,7 +1652,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-hand-rolled-migrations/" class="md-nav__link">
+      <a href="../../decisions/0004-hand-rolled-migrations/" class="md-nav__link">
         
   
   
@@ -1440,7 +1680,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-per-provider-adapters/" class="md-nav__link">
+      <a href="../../decisions/0005-per-provider-adapters/" class="md-nav__link">
         
   
   
@@ -1468,7 +1708,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-role-based-model-selection/" class="md-nav__link">
+      <a href="../../decisions/0006-role-based-model-selection/" class="md-nav__link">
         
   
   
@@ -1496,7 +1736,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-memory-space-at-repo-layer/" class="md-nav__link">
+      <a href="../../decisions/0007-memory-space-at-repo-layer/" class="md-nav__link">
         
   
   
@@ -1524,7 +1764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0008-tool-call-state-column/" class="md-nav__link">
+      <a href="../../decisions/0008-tool-call-state-column/" class="md-nav__link">
         
   
   
@@ -1549,37 +1789,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0009 Protocol stubs
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../decisions/0009-protocol-stubs/" class="md-nav__link">
         
   
   
@@ -1595,59 +1808,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1660,7 +1820,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0010-typed-middleware/" class="md-nav__link">
+      <a href="../../decisions/0010-typed-middleware/" class="md-nav__link">
         
   
   
@@ -1688,7 +1848,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-explicit-turn-state-machine/" class="md-nav__link">
+      <a href="../../decisions/0011-explicit-turn-state-machine/" class="md-nav__link">
         
   
   
@@ -1716,7 +1876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-no-fk-on-turn-id/" class="md-nav__link">
+      <a href="../../decisions/0012-no-fk-on-turn-id/" class="md-nav__link">
         
   
   
@@ -1744,7 +1904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0013-tier-taxonomy/" class="md-nav__link">
+      <a href="../../decisions/0013-tier-taxonomy/" class="md-nav__link">
         
   
   
@@ -1772,7 +1932,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0014-tool-decorator/" class="md-nav__link">
+      <a href="../../decisions/0014-tool-decorator/" class="md-nav__link">
         
   
   
@@ -1800,7 +1960,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0015-session-allowlist-exact-match/" class="md-nav__link">
+      <a href="../../decisions/0015-session-allowlist-exact-match/" class="md-nav__link">
         
   
   
@@ -1828,7 +1988,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0016-no-shell-in-v1/" class="md-nav__link">
+      <a href="../../decisions/0016-no-shell-in-v1/" class="md-nav__link">
         
   
   
@@ -1856,7 +2016,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
+      <a href="../../decisions/0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
         
   
   
@@ -1884,7 +2044,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0018-docs-site-tooling/" class="md-nav__link">
+      <a href="../../decisions/0018-docs-site-tooling/" class="md-nav__link">
         
   
   
@@ -1912,7 +2072,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0019-docstrings-google-style/" class="md-nav__link">
+      <a href="../../decisions/0019-docstrings-google-style/" class="md-nav__link">
         
   
   
@@ -1940,7 +2100,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0020-auto-generated-api-reference/" class="md-nav__link">
+      <a href="../../decisions/0020-auto-generated-api-reference/" class="md-nav__link">
         
   
   
@@ -1968,7 +2128,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0021-tier-1-memory-first/" class="md-nav__link">
+      <a href="../../decisions/0021-tier-1-memory-first/" class="md-nav__link">
         
   
   
@@ -1996,7 +2156,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0022-memory-dedup-threshold/" class="md-nav__link">
+      <a href="../../decisions/0022-memory-dedup-threshold/" class="md-nav__link">
         
   
   
@@ -2024,7 +2184,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0023-jsonl-log-no-rebuild/" class="md-nav__link">
+      <a href="../../decisions/0023-jsonl-log-no-rebuild/" class="md-nav__link">
         
   
   
@@ -2052,7 +2212,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0024-memory-md-as-index/" class="md-nav__link">
+      <a href="../../decisions/0024-memory-md-as-index/" class="md-nav__link">
         
   
   
@@ -2080,7 +2240,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0025-extraction-role-and-local-models/" class="md-nav__link">
+      <a href="../../decisions/0025-extraction-role-and-local-models/" class="md-nav__link">
         
   
   
@@ -2108,7 +2268,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0026-per-turn-extraction-with-context/" class="md-nav__link">
+      <a href="../../decisions/0026-per-turn-extraction-with-context/" class="md-nav__link">
         
   
   
@@ -2136,7 +2296,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0027-truncation-before-summarisation/" class="md-nav__link">
+      <a href="../../decisions/0027-truncation-before-summarisation/" class="md-nav__link">
         
   
   
@@ -2164,7 +2324,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0028-turn-block-granularity/" class="md-nav__link">
+      <a href="../../decisions/0028-turn-block-granularity/" class="md-nav__link">
         
   
   
@@ -2192,7 +2352,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0029-context-budget-advisory/" class="md-nav__link">
+      <a href="../../decisions/0029-context-budget-advisory/" class="md-nav__link">
         
   
   
@@ -2247,10 +2407,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
+  <a href="#preparer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context
+        Preparer
       
     </span>
   </a>
@@ -2258,10 +2418,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
+  <a href="#cairn.compaction.TruncatingCompactor" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TruncatingCompactor
       
     </span>
   </a>
@@ -2269,10 +2429,170 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
+  <a href="#config-re-export" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consequences
+        Config re-export
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;CompactionConfig
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" CompactionConfig">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.enabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;enabled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.preserve_last_n_turns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;preserve_last_n_turns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.safety_margin_tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;safety_margin_tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.compaction.CompactionConfig.min_history_tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;min_history_tokens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gateway-protocol-stubs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway protocol + stubs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.BudgetOverflowGateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetOverflowGateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.AutoContinueOverflowGateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AutoContinueOverflowGateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.AutoTerminateOverflowGateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AutoTerminateOverflowGateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.BudgetOverflowDeclined" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetOverflowDeclined
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#turn-block-utilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Turn-block utilities
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.iter_turn_blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-function"></code>&nbsp;iter_turn_blocks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.compaction.TurnBlock" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TurnBlock
       
     </span>
   </a>
@@ -2296,7 +2616,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0009-protocol-stubs.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/reference/compaction.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2304,77 +2624,516 @@
   
 
 
-<h1 id="0009-protocol-shaped-collaborators-with-default-stubs">0009 — Protocol-shaped collaborators with default stubs<a class="headerlink" href="#0009-protocol-shaped-collaborators-with-default-stubs" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
-<strong>Status:</strong> accepted</p>
-<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>The orchestrator has a lot of collaborators: context assembly, memory,
-tools, extraction, approval, cost tracking, model resolution, providers,
-persistence. In the obvious implementation, the orchestrator takes
-concrete types, imports them, and calls their methods. That creates a
-hard dependency on each of those bricks existing in its final shape
-before the orchestrator can ship.</p>
-<p>Two consequences of that approach:</p>
-<ol>
-<li><strong>Blocking.</strong> The orchestrator can't be written (let alone tested)
-   before every downstream brick is complete. The "pivotal brick" ends
-   up being the last one delivered.</li>
-<li><strong>Coupling.</strong> Changes to a collaborator's internal API ripple through
-   the orchestrator even when the collaborator's <em>role</em> hasn't
-   changed.</li>
-</ol>
-<p>Alternatives:</p>
-<ul>
-<li><strong>Protocols + stubs.</strong> Every collaborator is a <code>Protocol</code>; a default
-  stub implementation ships in <code>cairn.orchestrator</code> for each. Real
-  implementations plug in by name at construction.</li>
-<li><strong>Interfaces + DI container.</strong> Same idea, heavier machinery.</li>
-<li><strong>Concrete base classes.</strong> Some of the same benefit with less rigour;
-  introduces inheritance, which we wanted to avoid.</li>
-</ul>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Every orchestrator dependency is a <code>Protocol</code> (<code>@runtime_checkable</code>
-where practical). Default stubs ship in <code>cairn.orchestrator._stubs</code>:</p>
-<ul>
-<li><code>NullMemoryService</code>, <code>NullExtractionQueue</code> — safely ignored.</li>
-<li><code>EmptyToolRegistry</code> + <code>RaisingToolRunner</code> — paired so the runner
-  can never be called.</li>
-<li><code>AutoApproveGateway</code>, <code>DenyAllGateway</code> — context-appropriate
-  defaults.</li>
-<li><code>MinimalContextManager</code> — passes through history.</li>
-</ul>
-<p>The orchestrator constructor enforces nothing at the type level about
-which implementation is passed; the harness-assembly layer (CLI) wires
-real ones in production.</p>
-<p>Test fakes (<code>FakeProvider</code>, <code>RecordingToolRunner</code>, <code>SpyMemoryService</code>,
-etc.) live under <code>tests/orchestrator/_fakes.py</code>; they are test-only and
-not part of the shipped package.</p>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
-<ul>
-<li>The orchestrator shipped as a complete, tested brick before tools,
-  memory, or the UI existed. Real collaborators plug in when their
-  bricks land.</li>
-<li>Tests run in milliseconds because they never touch real providers or
-  UIs. The whole 15-test orchestrator suite runs in under a second.</li>
-<li>Swapping a collaborator — e.g. a different memory retriever —
-  requires exactly one change at construction, no orchestrator edits.</li>
-</ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>A mis-wired orchestrator (stub where a real impl was expected)
-  silently degrades. Mitigation: the CLI's harness-assembly fails loud
-  if it finds a stub where it was supposed to wire something real.</li>
-<li>Protocol drift: if the protocol and the implementation disagree,
-  pyright catches it at build time; runtime duck-typing is a weaker
-  guarantee.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>Adding a new collaborator means: a new protocol + a new stub + a
-  constructor parameter. Roughly 50 LOC of overhead per new
-  collaborator. Worth it.</li>
-</ul>
+<!-- Generated by docs/gen_ref_pages.py from src/cairn/<module>/__init__.py.
+     Do not edit by hand — re-run the generator instead. -->
+
+<h1 id="compaction-api-reference">Compaction — API reference<a class="headerlink" href="#compaction-api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="preparer">Preparer<a class="headerlink" href="#preparer" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.compaction.TruncatingCompactor" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TruncatingCompactor</span>
+
+
+<a href="#cairn.compaction.TruncatingCompactor" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TruncatingCompactor</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            CompactionConfig (cairn.config.CompactionConfig)" href="../config/#cairn.config.CompactionConfig">CompactionConfig</a></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">model_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ModelRegistry (cairn.config.ModelRegistry)" href="../config/#cairn.config.ModelRegistry">ModelRegistry</a></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">provider_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRegistry (cairn.providers.ProviderRegistry)" href="../providers/#cairn.providers.ProviderRegistry">ProviderRegistry</a></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">overflow_gateway</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            BudgetOverflowGateway (cairn.compaction._gateway.BudgetOverflowGateway)" href="#cairn.compaction.BudgetOverflowGateway">BudgetOverflowGateway</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">event_sink</span><span class="p">:</span> <span class="n"><span title="cairn.compaction._preparer.EventSink">EventSink</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Message preparer that drops oldest turn blocks to fit a budget.</p>
+<p>Implements the <code>MessagePreparer</code> protocol from
+<code>cairn.orchestrator._middleware</code>. The preparer is stateless per
+turn — any decision memory (e.g. "user already accepted overflow
+for this session") lives on the <code>BudgetOverflowGateway</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="config-re-export">Config re-export<a class="headerlink" href="#config-re-export" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.compaction.CompactionConfig" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">CompactionConfig</span>
+
+
+<a href="#cairn.compaction.CompactionConfig" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="pydantic.BaseModel">BaseModel</span></code></p>
+
+
+
+        <p>Tunables for conversation-history compaction.</p>
+<p>All knobs live on <code>ProfileConfig.compaction</code>; each persona is its
+own profile, so overrides are per-persona by construction.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="cairn.compaction.CompactionConfig.enabled" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">enabled</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#cairn.compaction.CompactionConfig.enabled" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">enabled</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">True</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Master kill switch. <code>False</code> disables the preparer entirely —
+history is never truncated. Useful when debugging
+context-loss bugs.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="cairn.compaction.CompactionConfig.preserve_last_n_turns" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">preserve_last_n_turns</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#cairn.compaction.CompactionConfig.preserve_last_n_turns" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">preserve_last_n_turns</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">6</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Hard floor on surviving turn blocks. Default 6 covers ~3
+user/assistant round trips. Tool-heavy personas may want to
+raise this.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="cairn.compaction.CompactionConfig.safety_margin_tokens" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">safety_margin_tokens</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#cairn.compaction.CompactionConfig.safety_margin_tokens" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">safety_margin_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">2048</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Tokens held back from <code>context_window</code> on top of
+<code>request.max_tokens</code> to cover tokenizer drift and
+retrieved-memory slop.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="cairn.compaction.CompactionConfig.min_history_tokens" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">min_history_tokens</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-class-attribute"><code>class-attribute</code></small>
+      <small class="doc doc-label doc-label-instance-attribute"><code>instance-attribute</code></small>
+  </span>
+
+<a href="#cairn.compaction.CompactionConfig.min_history_tokens" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">min_history_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">1024</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>If <code>context_window - max_tokens - safety_margin</code> falls below
+this, the profile is misconfigured — log ERROR and pass the
+request through unchanged.</p>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="gateway-protocol-stubs">Gateway protocol + stubs<a class="headerlink" href="#gateway-protocol-stubs" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.compaction.BudgetOverflowGateway" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BudgetOverflowGateway</span>
+
+
+<a href="#cairn.compaction.BudgetOverflowGateway" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+
+
+
+        <p>Resolves a preserve-floor overflow into a user decision.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.compaction.AutoContinueOverflowGateway" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AutoContinueOverflowGateway</span>
+
+
+<a href="#cairn.compaction.AutoContinueOverflowGateway" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Always returns <code>'continue'</code>. Useful for tests and non-interactive runs
+where the operator has explicitly accepted the overflow risk.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.compaction.AutoTerminateOverflowGateway" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AutoTerminateOverflowGateway</span>
+
+
+<a href="#cairn.compaction.AutoTerminateOverflowGateway" class="headerlink" title="Permanent link">&para;</a></h2>
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Always returns <code>'terminate'</code>. The orchestrator default — fails
+loudly rather than silently overflowing the provider.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.compaction.BudgetOverflowDeclined" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BudgetOverflowDeclined</span>
+
+
+<a href="#cairn.compaction.BudgetOverflowDeclined" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">BudgetOverflowDeclined</span><span class="p">(</span><span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">turn_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="Exception">Exception</span></code></p>
+
+
+
+        <p>Raised by <code>TruncatingCompactor</code> when the overflow gateway
+resolved the advisory as <code>terminate</code>. The orchestrator catches
+this in the turn loop, emits <code>TurnAborted</code> with
+<code>reason='user_declined_overflow'</code>, and archives the session.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="turn-block-utilities">Turn-block utilities<a class="headerlink" href="#turn-block-utilities" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="cairn.compaction.iter_turn_blocks" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-function"></code>            <span class="doc doc-object-name doc-function-name">iter_turn_blocks</span>
+
+
+<a href="#cairn.compaction.iter_turn_blocks" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">iter_turn_blocks</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">messages</span><span class="p">:</span> <span class="n"><span title="collections.abc.Sequence">Sequence</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            Message (cairn.domain.Message)" href="../domain/#cairn.domain.Message">Message</a></span><span class="p">],</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.Iterator">Iterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            TurnBlock
+
+
+  
+      dataclass
+   (cairn.compaction._turns.TurnBlock)" href="#cairn.compaction.TurnBlock">TurnBlock</a></span><span class="p">]</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+        <p>Yield <code>TurnBlock</code>s covering <code>messages</code> from left to right.</p>
+<p>A new block opens at every user message that is <em>not</em> pure tool
+results. All messages belong to exactly one block. If the first
+message is already an assistant reply or a pure-tool-result user
+message (unusual, but legal when replaying from a checkpoint), it
+is folded into the first block that opens after it, or — if no
+such block exists — into a single block spanning the whole
+sequence.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.compaction.TurnBlock" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TurnBlock</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.compaction.TurnBlock" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TurnBlock</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">start</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">end</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">message_count</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">has_tool_pair</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>A contiguous range of messages forming a single logical turn.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
 
 
 

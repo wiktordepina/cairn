@@ -442,6 +442,8 @@
       
         
       
+        
+      
     
     
     
@@ -558,6 +560,34 @@
     
   
     Memory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../compaction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compaction
   
 
     
@@ -820,6 +850,8 @@
       
         
       
+        
+      
     
     
     
@@ -875,6 +907,34 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compaction/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compaction
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -1192,6 +1252,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cairn.domain.BudgetOverflowAdvisory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetOverflowAdvisory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cairn.domain.DelegationCompleted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1207,6 +1278,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DelegationSpawned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.HistoryCompacted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;HistoryCompacted
       
     </span>
   </a>
@@ -1805,6 +1887,12 @@
       
         
           
+        
+      
+        
+      
+        
+      
         
       
         
@@ -2641,6 +2729,90 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0027-truncation-before-summarisation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0027 Truncation before summarisation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0028-turn-block-granularity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0028 Turn-block granularity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0029-context-budget-advisory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0029 Context budget is advisory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2895,6 +3067,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cairn.domain.BudgetOverflowAdvisory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;BudgetOverflowAdvisory
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cairn.domain.DelegationCompleted" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2910,6 +3093,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;DelegationSpawned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.domain.HistoryCompacted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;HistoryCompacted
       
     </span>
   </a>
@@ -4122,6 +4316,66 @@ blocks = content_list_adapter.validate_json(json_bytes)
 
 
 
+<h2 id="cairn.domain.BudgetOverflowAdvisory" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">BudgetOverflowAdvisory</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.domain.BudgetOverflowAdvisory" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">BudgetOverflowAdvisory</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">turn_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">tokens_projected</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">context_window</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">safety_margin</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">overflow_tokens</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">will_fit_context_window</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Compaction hit the preserve-floor and the request still exceeds the
+advisory budget. Awaits a user decision via <code>BudgetOverflowGateway</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
 <h2 id="cairn.domain.DelegationCompleted" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">DelegationCompleted</span>
 
@@ -4190,6 +4444,65 @@ blocks = content_list_adapter.validate_json(json_bytes)
 
 
         <p>A delegation sub-session has been created.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.domain.HistoryCompacted" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">HistoryCompacted</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.domain.HistoryCompacted" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">HistoryCompacted</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">turn_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">blocks_dropped</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">messages_dropped</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">tokens_before</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">tokens_after</span><span class="p">:</span> <span class="n"><span title="int">int</span></span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">reason</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Conversation history was truncated before the provider call.</p>
 
 
 
@@ -4664,25 +4977,37 @@ blocks = content_list_adapter.validate_json(json_bytes)
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnBlocked">TurnBlocked</span></span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnIncomplete">TurnIncomplete</span></span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.BudgetWarning">BudgetWarning</span></span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionCreated
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            HistoryCompacted
+
+
+  
+      dataclass
+   (cairn.domain._events.HistoryCompacted)" href="#cairn.domain.HistoryCompacted">HistoryCompacted</a></span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            BudgetOverflowAdvisory
+
+
+  
+      dataclass
+   (cairn.domain._events.BudgetOverflowAdvisory)" href="#cairn.domain.BudgetOverflowAdvisory">BudgetOverflowAdvisory</a></span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionCreated
 
 
   
       dataclass
    (cairn.domain._events.SessionCreated)" href="#cairn.domain.SessionCreated">SessionCreated</a></span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionResumed
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionResumed
 
 
   
       dataclass
    (cairn.domain._events.SessionResumed)" href="#cairn.domain.SessionResumed">SessionResumed</a></span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionArchived
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionArchived
 
 
   
       dataclass
    (cairn.domain._events.SessionArchived)" href="#cairn.domain.SessionArchived">SessionArchived</a></span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="p">)</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
