@@ -21,6 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      # actions: write is required so the final step can call
+      # `gh workflow run docs.yml`. Without it the dispatch fails
+      # with HTTP 403 "Resource not accessible by integration",
+      # leaving the release tagged but the docs site frozen at
+      # the previous version.
+      actions: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -107,8 +113,15 @@ jobs:
       # docs.yml never runs and `mike` never cuts the release alias.
       # Manually dispatch the docs workflow against the newly-created
       # tag to keep the published docs in lock-step with releases.
+      #
+      # Note: this step runs even when the tag already existed (e.g.
+      # because a prior attempt created the tag but died before
+      # dispatching docs — which happened on the v0.8.0 release
+      # before `actions: write` was added above). A redundant
+      # dispatch against an existing tag is harmless; a missed one
+      # leaves the docs site frozen.
       - name: Trigger docs deploy for the new tag
-        if: steps.detect.outputs.bumped == 'true' && steps.tagcheck.outputs.exists == 'false'
+        if: steps.detect.outputs.bumped == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.detect.outputs.current }}
