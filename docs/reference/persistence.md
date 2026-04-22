@@ -37,6 +37,8 @@
 
 ## Records
 
+::: cairn.persistence.MemoryHit
+
 ::: cairn.persistence.ToolCallRecord
 
 ::: cairn.persistence.UsageRecord
@@ -44,6 +46,8 @@
 ## Repos
 
 ::: cairn.persistence.ApprovalDecisionRepo
+
+::: cairn.persistence.MemoryRepo
 
 ::: cairn.persistence.MessageRepo
 
