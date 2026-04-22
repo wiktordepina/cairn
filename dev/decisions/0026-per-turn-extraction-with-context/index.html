@@ -12,13 +12,11 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0002-three-tier-config-merge/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0026-per-turn-extraction-with-context/">
       
       
-        <link rel="prev" href="../0001-per-profile-sqlite/">
+        <link rel="prev" href="../0025-extraction-role-and-local-models/">
       
-      
-        <link rel="next" href="../0003-secret-ref-schemes/">
       
       
         
@@ -29,7 +27,7 @@
     
     
       
-        <title>0002 Three-tier config merge - Cairn</title>
+        <title>0026 Per-turn extraction with context - Cairn</title>
       
     
     
@@ -82,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0002-three-tier-config-merge-user-project-local" class="md-skip">
+        <a href="#0026-per-turn-extraction-with-n-turn-context-window-and-length-gate" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0002 Three-tier config merge
+              0026 Per-turn extraction with context
             
           </span>
         </div>
@@ -1287,37 +1285,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0002 Three-tier config merge
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1333,59 +1304,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2039,10 +1957,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0026-per-turn-extraction-with-context/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0026 Per-turn extraction with context
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2058,6 +2003,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2129,6 +2138,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2146,7 +2166,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0002-three-tier-config-merge.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0026-per-turn-extraction-with-context.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2154,70 +2174,77 @@
   
 
 
-<h1 id="0002-three-tier-config-merge-user-project-local">0002 — Three-tier config merge (user / project / local)<a class="headerlink" href="#0002-three-tier-config-merge-user-project-local" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
+<h1 id="0026-per-turn-extraction-with-n-turn-context-window-and-length-gate">0026 — Per-turn extraction with N-turn context window and length gate<a class="headerlink" href="#0026-per-turn-extraction-with-n-turn-context-window-and-length-gate" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-22
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Cairn runs in two overlapping contexts: a personal, long-lived
-relationship with a companion (which has the user's global preferences)
-and a per-project working surface (which may have project-specific
-overrides — different convention-file rules, different model choices,
-different budgets). Two flat config files don't cover this; one flat
-file forces the user to repeat boilerplate across projects.</p>
-<p>Patterns considered:</p>
-<ol>
-<li><strong>Single file.</strong> Simple, but no project-specific overrides.</li>
-<li><strong>User file + project file with project-wins precedence.</strong> Covers
-   most of the need but forces personal tweaks to land in a checked-in
-   project file.</li>
-<li><strong>User + project + local</strong> (three layers): personal defaults,
-   project overrides (checked in, shared with the team), and local
-   overrides (gitignored, your personal per-project tweaks).</li>
-</ol>
-<p>We also considered CLI flags as a fourth effective layer (they are —
-see below).</p>
+<p>The architecture doc says: "after each completed companion turn,
+asynchronously. Queue-based, uses the utility model. The
+Orchestrator does not wait." That is the shape shipped in V1.</p>
+<p>During design review the alternative — <em>per-session</em> extraction at
+session close — was raised. Session-level extraction is cheaper
+(one utility call per session instead of per-turn) and less noisy
+(short back-and-forths don't individually trigger calls).</p>
+<p>The trade-offs were analysed and per-turn won, but with two
+additions that address the raised concerns.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Config is merged in this order, with later tiers winning:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>user  &lt;  project  &lt;  local  &lt;  CLI flags
-</span></code></pre></div>
+<p><strong>Extract per-turn, but:</strong></p>
+<ol>
+<li><strong>Include the previous <code>extraction_context_turns</code> turns (default
+   3) as disambiguation context</strong> alongside the latest turn in the
+   prompt. Context turns are marked <code>[context]</code>; the target turn is
+   marked <code>[LATEST]</code>. Observations are extracted from the LATEST
+   portion only; prior turns exist so the model can resolve
+   references like "do that" or "like we discussed".</li>
+<li><strong>Apply a length gate before paying for the call.</strong> If the
+   latest turn's combined user + assistant text is below
+   <code>MemoryConfig.min_extraction_chars</code> (default 200), skip
+   extraction entirely. Avoids burning utility-model calls on
+   "thanks"/"ok"/"yes" turns where there's nothing to observe.</li>
+</ol>
+<p><strong>Cost control levers stacked:</strong></p>
 <ul>
-<li><strong>User</strong> — <code>$XDG_CONFIG_HOME/cairn/config.toml</code>. Personal global
-  defaults.</li>
-<li><strong>Project</strong> — <code>&lt;repo&gt;/.cairn/config.toml</code>. Team-level overrides.
-  Checked into the repo.</li>
-<li><strong>Local</strong> — <code>&lt;repo&gt;/.cairn/config.local.toml</code>. Personal per-project
-  tweaks. Gitignored.</li>
-<li><strong>CLI flags</strong> — highest priority, per-invocation.</li>
+<li>Length gate skips cheap-noise turns.</li>
+<li><code>max_extraction_cost_usd = 0.01</code> per-call cap truncates
+  extractions that run away mid-stream.</li>
+<li><code>max_pending_extractions = 100</code> drops oldest queued jobs if the
+  queue saturates — better to miss old observations than to OOM.</li>
+<li>Dedup collapses repeated observations at store time, so even
+  noisy per-turn extraction shouldn't grow <code>memory_entries</code>
+  unboundedly.</li>
 </ul>
-<p>Project discovery walks upward from the current directory looking for a
-<code>.cairn/config.toml</code>, stopping at the git root by default.</p>
-<p>Active-profile resolution follows the same precedence: <code>--profile</code> flag</p>
-<blockquote>
-<p>local &gt; project &gt; user.</p>
-</blockquote>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
 <ul>
-<li>Teams can commit <code>.cairn/config.toml</code> as a shared baseline without
-  forcing every developer to share the same local preferences.</li>
-<li>Individual developers keep their API keys and per-machine paths in
-  <code>config.local.toml</code> without risk of checking them in.</li>
-<li>Adding ad-hoc overrides for experimentation is a CLI flag.</li>
+<li><strong>Positive.</strong> Observations from a turn are retrievable in the very
+  next turn. Per-session extraction means nothing from an ongoing
+  session is retrievable until it closes — painful for long
+  working sessions.</li>
+<li><strong>Positive.</strong> Session-resume is trivial — extraction is
+  incremental, so resuming a session is just "keep extracting per
+  turn". Per-session extraction would need to track "did we already
+  extract this close-event" on resume.</li>
+<li><strong>Positive.</strong> Crash mid-session loses at most one turn's worth of
+  extractions, not the entire session's.</li>
+<li><strong>Negative.</strong> Higher call count. At ~$0.005 per Haiku extraction
+  and 50–100 extracted turns/day, this is ~$9–18/month — bounded,
+  and the local-model path (<a href="../0025-extraction-role-and-local-models/">ADR 0025</a>)
+  brings it to zero for self-hosted users.</li>
+<li><strong>Negative.</strong> Turn-level prompts lack session-level summarisation
+  — the extractor sees 3 prior turns, not "the arc of the
+  conversation". V2 reflection fills this gap by synthesising
+  across observations after the fact.</li>
 </ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>Debugging "why is this value what it is?" requires understanding the
-  merge. A <code>cairn config show</code> command (planned) and a future
-  <code>config diff</code> view mitigate this.</li>
-<li>Three-way merges for <code>delegation_tools</code> arrays and similar list-valued
-  fields require a merge policy. The current policy is "replace, don't
-  concatenate" — simpler and less surprising than concatenation.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>The loader carries explicit tier metadata alongside values so
-  eventual tooling can answer "which file provided this value?".</li>
-</ul>
+<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p><strong>Per-session extraction at archive time.</strong> Cheaper, cleaner single
+prompt, but breaks next-turn retrieval and complicates resume.</p>
+<p><strong>Per-turn with the full session transcript each time.</strong> Would
+balloon input tokens on long sessions and duplicate extraction work
+across overlapping windows — the dedup path would absorb the damage
+but we'd pay for the tokens anyway.</p>
+<p><strong>Per-turn with no context at all.</strong> Tried first. Short turns like
+"yes, do that" produce empty observations because the extractor
+doesn't know what "that" refers to. Adding 3 prior turns as context
+was the smallest addition that fixed it.</p>
 
 
 

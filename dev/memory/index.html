@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/orchestrator/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/memory/">
       
       
-        <link rel="prev" href="../architecture/">
+        <link rel="prev" href="../providers/">
       
       
-        <link rel="next" href="../persistence/">
+        <link rel="next" href="../observability/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Orchestrator - Cairn</title>
+        <title>Memory - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#orchestrator" class="md-skip">
+        <a href="#memory" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Orchestrator
+              Memory
             
           </span>
         </div>
@@ -261,10 +261,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../configuration/" class="md-tabs__link">
           
   
@@ -283,12 +285,10 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../architecture/" class="md-tabs__link">
           
   
@@ -429,8 +429,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -446,19 +448,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -476,7 +481,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -547,10 +552,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../memory/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -566,6 +598,192 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-extraction-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How extraction works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How extraction works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-extractor-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The extractor call
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost cap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-retrieval-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How retrieval works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-prompt-assembly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System prompt assembly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-disk-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-disk layout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="On-disk layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memorymd-as-an-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MEMORY.md as an index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonl-observation-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONL observation log
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invariants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -610,10 +828,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -629,22 +845,19 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
   
@@ -662,7 +875,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -705,37 +918,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Orchestrator
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../orchestrator/" class="md-nav__link">
         
   
   
@@ -751,175 +937,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#shape" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Shape
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#public-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Public API
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#turn-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Turn lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ui-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI events
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#extensibility-four-middleware-seams" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Extensibility — four middleware seams
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-and-retry-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error and retry policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cancellation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cancellation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#crash-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Crash recovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#budget-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Budget enforcement
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dispatch-and-delegation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dispatch and delegation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Dispatch and delegation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#delegation-events-are-not-yet-emitted" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Delegation events are not yet emitted
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#protocols-and-stubs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocols and stubs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-adrs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related ADRs
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2213,10 +2230,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#shape" class="md-nav__link">
+  <a href="#layers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Shape
+        Layers
       
     </span>
   </a>
@@ -2224,110 +2241,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#public-api" class="md-nav__link">
+  <a href="#how-extraction-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Public API
+        How extraction works
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#turn-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Turn lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ui-events" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        UI events
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#extensibility-four-middleware-seams" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Extensibility — four middleware seams
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-and-retry-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error and retry policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cancellation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cancellation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#crash-recovery" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Crash recovery
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#budget-enforcement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Budget enforcement
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dispatch-and-delegation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dispatch and delegation
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Dispatch and delegation">
+    <nav class="md-nav" aria-label="How extraction works">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#delegation-events-are-not-yet-emitted" class="md-nav__link">
+  <a href="#the-extractor-call" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Delegation events are not yet emitted
+        The extractor call
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost-cap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost cap
       
     </span>
   </a>
@@ -2340,10 +2291,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#protocols-and-stubs" class="md-nav__link">
+  <a href="#how-retrieval-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Protocols and stubs
+        How retrieval works
       
     </span>
   </a>
@@ -2351,10 +2302,93 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#related-adrs" class="md-nav__link">
+  <a href="#system-prompt-assembly" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Related ADRs
+        System prompt assembly
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#on-disk-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        On-disk layout
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="On-disk layout">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#memorymd-as-an-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MEMORY.md as an index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jsonl-observation-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        JSONL observation log
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invariants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invariants
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API reference
       
     </span>
   </a>
@@ -2378,7 +2412,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/orchestrator.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/memory.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2386,362 +2420,313 @@
   
 
 
-<h1 id="orchestrator">Orchestrator<a class="headerlink" href="#orchestrator" title="Permanent link">&para;</a></h1>
-<p>The orchestrator is cairn's turn loop: the one place that ties
-providers, persistence, memory, tools, context assembly, and the UI
-together. It is intentionally the most composed brick in the project —
-everything else participates in the turn lifecycle by implementing a
-narrow protocol that the orchestrator consumes.</p>
-<h2 id="shape">Shape<a class="headerlink" href="#shape" title="Permanent link">&para;</a></h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Orchestrator</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="c1"># Core collaborators (injected protocols)</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">provider_registry</span><span class="o">=...</span><span class="p">,</span>   <span class="c1"># ProviderRegistry</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">model_registry</span><span class="o">=...</span><span class="p">,</span>      <span class="c1"># ModelRegistry</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">session_manager</span><span class="o">=...</span><span class="p">,</span>     <span class="c1"># SessionManager</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">context_manager</span><span class="o">=...</span><span class="p">,</span>     <span class="c1"># ContextManager — assembles ProviderRequest</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">tool_registry</span><span class="o">=...</span><span class="p">,</span>       <span class="c1"># ToolRegistry — scoped tool discovery</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">tool_runner</span><span class="o">=...</span><span class="p">,</span>         <span class="c1"># ToolRunner — per-tool lifecycle</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">memory_service</span><span class="o">=...</span><span class="p">,</span>      <span class="c1"># MemoryService — retrieval</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">extraction_queue</span><span class="o">=...</span><span class="p">,</span>    <span class="c1"># ExtractionQueue — async post-turn work</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="n">approval_gateway</span><span class="o">=...</span><span class="p">,</span>    <span class="c1"># ApprovalGateway — terminal approver</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="n">cost_tracker</span><span class="o">=...</span><span class="p">,</span>        <span class="c1"># CostTracker — record + budget verdict</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">turn_repo</span><span class="o">=...</span><span class="p">,</span>           <span class="c1"># TurnRepo</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">message_repo</span><span class="o">=...</span><span class="p">,</span>        <span class="c1"># MessageRepo</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">clock</span><span class="o">=...</span><span class="p">,</span>               <span class="c1"># Clock</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">config</span><span class="o">=</span><span class="n">OrchestratorConfig</span><span class="p">(),</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="c1"># Middleware chains (ordered, default empty)</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">preparers</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>         <span class="c1"># MessagePreparer — rewrite request</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">approvers</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>         <span class="c1"># ToolApprover — gate tool execution</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">transformers</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>      <span class="c1"># ResultTransformer — scrub tool results</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">observers</span><span class="o">=</span><span class="p">[</span><span class="o">...</span><span class="p">],</span>         <span class="c1"># UIEventObserver — sync fan-out</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">)</span>
-</span></code></pre></div>
-<h2 id="public-api">Public API<a class="headerlink" href="#public-api" title="Permanent link">&para;</a></h2>
+<h1 id="memory">Memory<a class="headerlink" href="#memory" title="Permanent link">&para;</a></h1>
+<p>Cairn's memory layer is the substrate of mutual investment: facts,
+preferences, decisions, and relationships surfaced across sessions so
+the companion actually gets better at working with you. This page
+covers what tier 1 ships in V1, how extraction and retrieval are
+wired, and where the on-disk artefacts live.</p>
+<div class="admonition note">
+<p class="admonition-title">V1 scope — tier 1 only</p>
+<p>V1 ships the tier-1 observation layer: post-turn extraction into
+SQLite + JSONL, composite-scored retrieval, and read-side loading
+of MEMORY.md / soul_document.md / user_context.md. The V2
+reflection pipeline and curation UI are not part of this release.</p>
+</div>
+<h2 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h2>
+<p>Three tiers, per the architecture doc:</p>
 <table>
 <thead>
 <tr>
-<th>Method</th>
+<th>Tier</th>
+<th>What</th>
+<th>V1 status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1 — Observations</td>
+<td>Raw extractions written automatically post-turn</td>
+<td><strong>Shipped</strong></td>
+</tr>
+<tr>
+<td>2 — Reflections</td>
+<td>Synthesised insights from unreflected observations</td>
+<td>Deferred to V2</td>
+</tr>
+<tr>
+<td>3 — MEMORY.md</td>
+<td>Curated, high-confidence facts</td>
+<td>Read-side shipped; curation UI in V2</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-extraction-works">How extraction works<a class="headerlink" href="#how-extraction-works" title="Permanent link">&para;</a></h2>
+<p>After a companion turn completes, the orchestrator emits
+<code>ObservationExtractionRequested</code> and calls
+<code>ExtractionQueue.submit(session_id, since_idx, turn_id)</code>.
+<code>ObservationExtractionQueue</code> picks up the job asynchronously — the
+turn loop never waits.</p>
+<p>The queue applies three gates before paying for an extraction:</p>
+<ol>
+<li><strong>Length gate.</strong> If the latest turn's combined user + assistant
+   text is below <code>MemoryConfig.min_extraction_chars</code> (default 200), the
+   job is skipped. Avoids burning utility-model calls on
+   "thanks"/"ok"/"yes" turns.</li>
+<li><strong>Persona opt-out.</strong> Persona sessions extract by default; set
+   <code>MemoryConfig.extract_from_personas = false</code> to turn off for an
+   intentionally stateless persona.</li>
+<li><strong>Tool-only turns.</strong> Turns where the assistant produced no prose
+   but did invoke tools still yield extractions by default. Disable
+   with <code>MemoryConfig.extract_from_tool_only_turns = false</code>.</li>
+</ol>
+<p>A job that clears the gates is dispatched under a per-memory-space
+<code>asyncio.Lock</code> — two jobs for the same space serialise, but different
+spaces run in parallel. The queue is bounded: overflow drops the
+oldest queued job and logs a WARNING.</p>
+<h3 id="the-extractor-call">The extractor call<a class="headerlink" href="#the-extractor-call" title="Permanent link">&para;</a></h3>
+<p>The <code>Extractor</code> loads the latest turn plus
+<code>MemoryConfig.extraction_context_turns</code> (default 3) preceding turns,
+renders them with <code>[context]</code> / <code>[LATEST]</code> markers, and streams the
+<code>ModelRole.EXTRACTION</code> model with the prompt at
+<code>cairn/memory/_prompts/extract.md</code>. Response shape:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;observations&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;User prefers British English spelling.&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;entry_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;preference&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">&quot;importance&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p">]</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Each observation is stored via <code>MemoryRepo.store()</code> (which runs
+dedup-on-store) and appended to the JSONL log. Usage is recorded with
+<code>operation=extraction</code> so cost aggregations work.</p>
+<h3 id="model-selection">Model selection<a class="headerlink" href="#model-selection" title="Permanent link">&para;</a></h3>
+<p><code>ModelRole.EXTRACTION</code> resolves via the <code>ModelRegistry</code>. If no model
+carries that role, the extractor falls back to <code>ModelRole.UTILITY</code>, so
+profiles that haven't opted in to a dedicated extractor keep working
+without change.</p>
+<p>For local-model users, <code>ExtractionResponse.model_json_schema()</code> gives
+a JSON schema you can wire into llama.cpp (GBNF), vLLM
+(guided-decoding), or LM Studio (JSON schema) to keep a small local
+model's output parseable:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;from cairn.memory import ExtractionResponse; import json; </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="s2">  print(json.dumps(ExtractionResponse.model_json_schema(), indent=2))&quot;</span>
+</span></code></pre></div>
+<p>Point your profile's provider <code>base_url</code> at the local server and set
+the extraction model there. Typical setups run Qwen 2.5 7B Instruct
+(Q4_K_M) or Llama 3.1 8B Instruct, both ~5 GB VRAM.</p>
+<h3 id="cost-cap">Cost cap<a class="headerlink" href="#cost-cap" title="Permanent link">&para;</a></h3>
+<p><code>MemoryConfig.max_extraction_cost_usd</code> (default <code>$0.01</code>) is a per-call
+cap. When usage events cross the threshold mid-stream, extraction
+truncates and records what parsed so far. With Anthropic Haiku 4.5
+prices, a typical extraction lands around $0.005–0.006, so the default
+cap is about 2× typical cost.</p>
+<h2 id="how-retrieval-works">How retrieval works<a class="headerlink" href="#how-retrieval-works" title="Permanent link">&para;</a></h2>
+<p>Before each companion turn, the orchestrator's context manager calls
+<code>MemoryService.retrieve(space, query, k)</code>. V1's service:</p>
+<ol>
+<li>Pulls <code>3*k</code> candidates from <code>MemoryRepo.search()</code> (FTS5 BM25).</li>
+<li>Rescores each with the arch-doc composite:</li>
+</ol>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>score = 0.3 · recency + 0.3 · importance + 0.4 · relevance
+</span></code></pre></div>
+<ul>
+<li><code>recency = exp(-ln(2) · age_days / half_life)</code> — half-life 90
+     days for semantic entries, 3 days for episodic (events and tasks
+     decay fast so the retrieval layer naturally forgets them).</li>
+<li><code>importance = (importance - 1) / 9</code> — normalises 1..10 to 0..1.</li>
+<li><code>relevance = 1 / (1 + bm25)</code> — FTS5 BM25 is lower=better, so
+     inversion pulls stronger matches toward 1.</li>
+<li>Sorts by composite score, truncates to top-k.</li>
+<li>Truncates each entry's content to
+   <code>MemoryConfig.retrieval_content_truncate</code> (default 200 chars) so
+   the system prompt payload stays bounded.</li>
+</ul>
+<p><code>composite_score()</code> is a pure function; golden-value tests catch
+formula drift.</p>
+<h2 id="system-prompt-assembly">System prompt assembly<a class="headerlink" href="#system-prompt-assembly" title="Permanent link">&para;</a></h2>
+<p><code>StandardContextManager</code> wraps each source in a tagged section:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;identity&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="cm">&lt;!-- soul_document.md --&gt;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">&lt;/identity&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">&lt;user_context&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="cm">&lt;!-- user_context.md --&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">&lt;/user_context&gt;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nt">&lt;memory_index&gt;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="cm">&lt;!-- MEMORY.md verbatim --&gt;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nt">&lt;/memory_index&gt;</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nt">&lt;retrieved_memories&gt;</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>-<span class="w"> </span>[preference]<span class="w"> </span>User<span class="w"> </span>prefers<span class="w"> </span>British<span class="w"> </span>English<span class="w"> </span>(importance<span class="w"> </span>7)
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>-<span class="w"> </span>[relationship]<span class="w"> </span>Cody<span class="w"> </span>—<span class="w"> </span>4yo<span class="w"> </span>brindle<span class="w"> </span>whippet<span class="w"> </span>(importance<span class="w"> </span>10)
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nt">&lt;/retrieved_memories&gt;</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="nt">&lt;persona_system_prompt&gt;</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span><span class="cm">&lt;!-- per-persona prompt, if any --&gt;</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="nt">&lt;/persona_system_prompt&gt;</span>
+</span></code></pre></div>
+<p>Empty sources are omitted entirely — no stubby tags. The persona
+prompt is last so per-persona guidance has last-word effect. Docs are
+read lazily and cached for the manager's lifetime; call
+<code>ProfileDocLoader.invalidate()</code> to force a re-read (hook for
+<code>/reload</code> once the UI brick lands).</p>
+<h2 id="on-disk-layout">On-disk layout<a class="headerlink" href="#on-disk-layout" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>$XDG_DATA_HOME/cairn/&lt;profile&gt;/
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  cairn.db                              &lt;- SQLite (memory_entries + FTS5)
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  memory/
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    observations/
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      2026-04-22.jsonl                  &lt;- one observation per line
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      2026-04-23.jsonl
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>$XDG_CONFIG_HOME/cairn/&lt;profile&gt;/
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  soul_document.md                      &lt;- identity
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  user_context.md                       &lt;- free-form user context
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>  MEMORY.md                             &lt;- curated index (short)
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  memories/
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    stack-and-tools.md                  &lt;- one curated memory per file
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    keto-diet.md
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    ...
+</span></code></pre></div>
+<h3 id="memorymd-as-an-index">MEMORY.md as an index<a class="headerlink" href="#memorymd-as-an-index" title="Permanent link">&para;</a></h3>
+<p>Unlike the monolithic MEMORY.md described in the architecture doc, V1
+treats MEMORY.md as a <strong>short index</strong> of one-line entries, each linking
+to a per-memory body under <code>memories/</code>. Format (matches the
+convention used by <code>mait-code</code>'s auto-memory system):</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="gh"># Memory</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Stack and tools</span>](<span class="na">memories/stack-and-tools.md</span>) — Python, Go, Terraform
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Ketogenic diet preference</span>](<span class="na">memories/keto-diet.md</span>) — &lt;5g sugar per 100g
+</span></code></pre></div>
+<p>Per-memory files carry frontmatter:</p>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>---
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>name: Stack and tools
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>description: Primary languages, infra, OS
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="gu">type: user</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="gu">---</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>Python, Go, shell scripting. AWS, Docker, Terraform, Ansible...
+</span></code></pre></div>
+<p>In V1 only the MEMORY.md index is loaded into every companion prompt
+(cheap, ~1–2 k tokens regardless of how many curated memories exist).
+Individual <code>memories/&lt;slug&gt;.md</code> files are not read by the runtime —
+they'll surface via retrieval once the V2 curation UI exists. Until
+then, users hand-edit the index and the body files.</p>
+<h3 id="jsonl-observation-log">JSONL observation log<a class="headerlink" href="#jsonl-observation-log" title="Permanent link">&para;</a></h3>
+<p>Every observation extracted is appended to
+<code>&lt;profile&gt;/memory/observations/YYYY-MM-DD.jsonl</code> as a single JSON
+line. Files roll at UTC midnight. The V3 multi-machine-sync brick
+will add a JSONL → SQLite rebuild tool; V1 writes both but doesn't
+ship rebuild. No fsync per line — SQLite is the primary durability
+store, so losing the tail on a crash is acceptable.</p>
+<h2 id="invariants">Invariants<a class="headerlink" href="#invariants" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Every <code>memory_entries</code> row has a non-null <code>memory_space</code>.</li>
+<li>All retrieval queries include <code>WHERE memory_space = ?</code>.</li>
+<li>Observation extraction is never kicked off for a session with
+   <code>memory_space IS NULL</code>.</li>
+<li>Deleting a session does <strong>not</strong> delete its memory entries — they
+   outlive the conversation. A cascade would be tempting and wrong:
+   memory is the point.</li>
+</ol>
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<p>All tunables live under <code>ProfileConfig.memory</code> (see the
+<a href="../reference/config/"><code>MemoryConfig</code></a> reference):</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
 <th>Purpose</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>start_session(*, type, persona, model?, memory_space?) -&gt; Session</code></td>
-<td>Create a new session, emit <code>SessionCreated</code>.</td>
+<td><code>extraction_context_turns</code></td>
+<td><code>3</code></td>
+<td>Prior turns included as disambiguation context</td>
 </tr>
 <tr>
-<td><code>resume_session(session_id) -&gt; Session</code></td>
-<td>Fetch an existing session, emit <code>SessionResumed</code>.</td>
+<td><code>min_extraction_chars</code></td>
+<td><code>200</code></td>
+<td>Length gate — skip sub-threshold turns</td>
 </tr>
 <tr>
-<td><code>archive_session(session_id)</code></td>
-<td>Archive, emit <code>SessionArchived</code>.</td>
+<td><code>extract_from_personas</code></td>
+<td><code>true</code></td>
+<td>Extract from persona sessions</td>
 </tr>
 <tr>
-<td><code>run_turn(session_id, user_msg) -&gt; AsyncIterator[UIEvent]</code></td>
-<td>Run one turn. Yields events.</td>
+<td><code>extract_from_tool_only_turns</code></td>
+<td><code>true</code></td>
+<td>Extract from tool-only turns</td>
 </tr>
 <tr>
-<td><code>cancel(session_id)</code></td>
-<td>Signal cancellation. The in-flight turn (if any) ends in <code>TurnAborted</code>.</td>
+<td><code>max_extraction_cost_usd</code></td>
+<td><code>0.01</code></td>
+<td>Per-call cost cap</td>
 </tr>
 <tr>
-<td><code>resume_aborted_turns() -&gt; list[str]</code></td>
-<td>Mark any turns left non-terminal by a prior crash as <code>ABORTED</code>. Returns the session IDs affected.</td>
+<td><code>max_pending_extractions</code></td>
+<td><code>100</code></td>
+<td>Queue size before drop-oldest</td>
+</tr>
+<tr>
+<td><code>retrieval_k</code></td>
+<td><code>8</code></td>
+<td>Default top-k per retrieval</td>
+</tr>
+<tr>
+<td><code>retrieval_content_truncate</code></td>
+<td><code>200</code></td>
+<td>Per-entry char cap in system prompt</td>
+</tr>
+<tr>
+<td><code>observation_log_fsync</code></td>
+<td><code>false</code></td>
+<td>Fsync each JSONL append</td>
 </tr>
 </tbody>
 </table>
-<h2 id="turn-lifecycle">Turn lifecycle<a class="headerlink" href="#turn-lifecycle" title="Permanent link">&para;</a></h2>
-<p>Every turn walks an explicit state machine. The <code>turns</code> table's
-<code>state</code> column is authoritative; transitions are conditional <code>UPDATE</code>
-statements.</p>
-<pre class="mermaid"><code>stateDiagram-v2
-    direction TB
-    [*] --&gt; pre_turn
-    pre_turn: pre-turn check
-    pre_turn --&gt; [*]: block
-    pre_turn --&gt; STARTED: proceed
-    STARTED --&gt; MEMORY_RETRIEVAL
-    MEMORY_RETRIEVAL --&gt; ITERATION
-    ITERATION --&gt; CONTEXT_ASSEMBLY
-    CONTEXT_ASSEMBLY --&gt; PROVIDER_STREAMING
-    PROVIDER_STREAMING --&gt; TOOL_DISPATCH: tool calls
-    TOOL_DISPATCH --&gt; ITERATION
-    PROVIDER_STREAMING --&gt; FINALISING: no tools
-    FINALISING --&gt; EXTRACTION_ENQUEUED
-    EXTRACTION_ENQUEUED --&gt; COMPLETED
-    COMPLETED --&gt; [*]</code></pre>
-<p>Notes on the transitions:</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p><strong>"Why isn't the companion remembering X?"</strong></p>
 <ul>
-<li><strong>pre-turn check</strong> runs <code>CostTracker.should_block_turn</code>. <code>BLOCK</code>
-  emits <code>TurnBlocked</code> and returns. <code>WARN</code> proceeds and emits
-  <code>BudgetWarning</code>. <code>PROCEED</code> proceeds silently.</li>
-<li><strong>STARTED</strong> is reached after the user message is persisted and the
-  <code>turns</code> row is inserted.</li>
-<li><strong>MEMORY_RETRIEVAL</strong> is skipped for memoryless sessions (ephemeral,
-  or persona with <code>memory_space = None</code>).</li>
-<li><strong>EXTRACTION_ENQUEUED</strong> is skipped for ephemeral or memoryless
-  sessions; the queued task is what runs observation extraction
-  asynchronously after the turn returns.</li>
-<li><strong>COMPLETED</strong> emits <code>TurnComplete(stop_reason)</code>.</li>
-<li><strong>ABORTED</strong> is reachable from any state via user cancel, process
-  crash, or unrecoverable error. The <code>turns</code> row's <code>state</code> column is
-  conditionally updated; the previous state is recorded in
-  <code>aborted_from</code>.</li>
+<li>Did the turn that mentioned X clear the length gate? Very short
+  turns skip extraction.</li>
+<li>Is the session a persona with <code>extract_from_personas = false</code>?</li>
+<li>Did the extraction call hit the cost cap? Check the <code>model_usage</code>
+  table with <code>operation='extraction'</code>.</li>
+<li>Did MEMORY.md grow past the 20 KB defensive cap? Check logs for
+  <code>profile doc … exceeds cap</code> warnings.</li>
+<li>Did the extractor parse the response? Malformed JSON drops the
+  batch; look for <code>failed to parse response</code> in the cairn log.</li>
 </ul>
-<p>Each transition:</p>
-<ol>
-<li>Updates the <code>turns</code> row (conditional <code>UPDATE</code>; invalid transitions
-   raise <code>InvalidTurnTransition</code>).</li>
-<li>Emits a structured log record.</li>
-<li>Emits a <code>UIEvent</code> when there's a public-facing event for the
-   transition (not every state has one — <code>MEMORY_RETRIEVAL</code> is
-   internal).</li>
-</ol>
-<h2 id="ui-events">UI events<a class="headerlink" href="#ui-events" title="Permanent link">&para;</a></h2>
-<p>All events carry <code>turn_id</code> (except session-lifecycle events, which are
-pre-/post-turn). The full union:</p>
-<table>
-<thead>
-<tr>
-<th>Event</th>
-<th>When</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>UserMessagePersisted</code></td>
-<td>User message written, turn row inserted</td>
-</tr>
-<tr>
-<td><code>AssistantTextDelta</code></td>
-<td>Per-token text chunk from the provider</td>
-</tr>
-<tr>
-<td><code>AssistantMessageComplete</code></td>
-<td>Assistant message persisted, usage recorded</td>
-</tr>
-<tr>
-<td><code>ToolCallPlanned</code></td>
-<td>Model emitted a tool call; approval pending</td>
-</tr>
-<tr>
-<td><code>ToolCallApproved</code></td>
-<td>An approver cleared the call</td>
-</tr>
-<tr>
-<td><code>ToolCallRejected</code></td>
-<td>An approver (or gateway) blocked it</td>
-</tr>
-<tr>
-<td><code>ToolCallStarted</code></td>
-<td>Execution began</td>
-</tr>
-<tr>
-<td><code>ToolCallCompleted</code></td>
-<td>Execution finished (status + is_error on the event)</td>
-</tr>
-<tr>
-<td><code>DelegationSpawned</code> / <code>DelegationCompleted</code></td>
-<td>Not yet emitted — see <em>Dispatch and delegation</em> below.</td>
-</tr>
-<tr>
-<td><code>ObservationExtractionRequested</code></td>
-<td>Post-turn extraction enqueued</td>
-</tr>
-<tr>
-<td><code>TurnComplete</code></td>
-<td>Clean completion + stop_reason</td>
-</tr>
-<tr>
-<td><code>TurnAborted</code></td>
-<td>User cancel / crash / error</td>
-</tr>
-<tr>
-<td><code>TurnBlocked</code></td>
-<td>Pre-turn budget check blocked</td>
-</tr>
-<tr>
-<td><code>TurnIncomplete</code></td>
-<td>Ran into <code>max_tokens</code> mid-tool-call</td>
-</tr>
-<tr>
-<td><code>BudgetWarning</code></td>
-<td>Crossed the soft-warn threshold</td>
-</tr>
-<tr>
-<td><code>SessionCreated</code> / <code>SessionResumed</code> / <code>SessionArchived</code></td>
-<td>Lifecycle</td>
-</tr>
-</tbody>
-</table>
-<h2 id="extensibility-four-middleware-seams">Extensibility — four middleware seams<a class="headerlink" href="#extensibility-four-middleware-seams" title="Permanent link">&para;</a></h2>
-<ol>
-<li><strong><code>MessagePreparer</code></strong> — <code>prepare(request, ctx) -&gt; request</code>. Rewrites
-   the <code>ProviderRequest</code> before the model sees it. Canonical uses:
-   memory injection, compaction, prompt-cache markers.</li>
-<li><strong><code>ToolApprover</code></strong> — <code>decide(request, ctx) -&gt; ApprovalDecision</code>.
-   Returns APPROVE, REJECT, or ESCALATE. First non-ESCALATE wins; if
-   the chain exhausts, the <code>ApprovalGateway</code> is the terminal authority.</li>
-<li><strong><code>ResultTransformer</code></strong> — <code>transform(result, tool_call, ctx) -&gt; result</code>.
-   Rewrites a tool result before it's appended to the session.
-   Canonical uses: spotlighting (security-doc §3), invisible-Unicode
-   stripping, secret redaction.</li>
-<li><strong><code>UIEventObserver</code></strong> — <code>observe(event)</code>. Sync, side-effecting,
-   can't mutate, can't back-pressure. Failed observers are logged and
-   swallowed. Canonical uses: structured logging, metrics, cost
-   dashboards.</li>
-</ol>
-<p>All four are ordered lists, registered at construction. Defaults are
-empty — each brick that needs middleware supplies its own at the
-harness-assembly layer (CLI entry point).</p>
-<h2 id="error-and-retry-policy">Error and retry policy<a class="headerlink" href="#error-and-retry-policy" title="Permanent link">&para;</a></h2>
-<p>Three layers:</p>
+<p><strong>"Retrieval returns nothing even though MemoryRepo has data."</strong></p>
 <ul>
-<li><strong>Provider transport</strong> (retries: 5xx, 429) — inside the SDK / adapter.</li>
-<li><strong>Orchestrator</strong> (model-behaviour retries: malformed tool-call JSON,
-  unknown tool name) — feeds a tool-error result back to the model.
-  Capped by <code>max_model_behaviour_retries</code> (default 2).</li>
-<li><strong>Tool</strong> (<code>ToolRetry</code> exception) — inside <code>ToolRunner</code>.</li>
+<li>Is the retrieval space the right one? Companion sessions use
+  <code>companion</code>; persona sessions use <code>persona:&lt;name&gt;</code>.</li>
+<li>Does the query contain any significant (non-stopword) terms? All
+  stopwords → empty query → empty result.</li>
+<li>Try <code>await repo.recent(space)</code> in a REPL to confirm rows exist
+  under that space.</li>
 </ul>
-<p>Iteration loops are capped by <code>OrchestratorConfig.max_iterations</code>
-(default 10). Wall-clock cap per turn is
-<code>max_turn_duration_s</code> (default 600s).</p>
-<h2 id="cancellation">Cancellation<a class="headerlink" href="#cancellation" title="Permanent link">&para;</a></h2>
-<p><code>Orchestrator.cancel(session_id)</code> sets a per-session <code>asyncio.Event</code>.
-The turn loop checks between awaits. On cancel:</p>
-<ol>
-<li><code>CancelledError</code> raised at the next await.</li>
-<li>Outer handler persists whatever's committable: the partial
-   assistant message (if any), the user message (already persisted),
-   any completed tool calls.</li>
-<li><code>turns</code> row transitions to <code>ABORTED</code> with <code>aborted_reason='user_cancel'</code>.</li>
-<li><code>TurnAborted</code> emitted to observers + caller.</li>
-</ol>
-<p>Ephemeral artefacts (in-flight tool invocations that had already
-started) remain their tool-run layer's concern — the orchestrator
-does not try to unwind partial tool execution.</p>
-<h2 id="crash-recovery">Crash recovery<a class="headerlink" href="#crash-recovery" title="Permanent link">&para;</a></h2>
-<p>On application startup, call <code>await orch.resume_aborted_turns()</code>. The
-repo scans for <code>turns.state NOT IN ('completed', 'aborted')</code> and marks
-every match <code>ABORTED</code> with <code>aborted_reason='process_crash'</code>. The method
-returns the set of affected session IDs so the UI can surface a
-"resume from your message?" prompt.</p>
-<p>Mid-stream tokens are not replayed (LLM output isn't deterministic).
-If a tool call had already <em>completed</em> before the crash, its result is
-in the DB — a future "continue from stored results" affordance can use
-that, but V1 default is "re-ask".</p>
-<h2 id="budget-enforcement">Budget enforcement<a class="headerlink" href="#budget-enforcement" title="Permanent link">&para;</a></h2>
-<p>The orchestrator enforces two scopes directly:</p>
+<p><strong>"Observations extracted but I don't see them in the next turn."</strong></p>
 <ul>
-<li><strong>Per-turn iteration cap</strong> (<code>OrchestratorConfig.max_iterations</code>)
-  — the tool loop's for-loop bound.</li>
-<li><strong>Per-session and daily spend caps</strong> via
-  <code>CostTracker.should_block_turn()</code>. <code>BLOCK</code> short-circuits the turn
-  before any writes; <code>WARN</code> proceeds but emits <code>BudgetWarning</code>.</li>
+<li>Retrieval pulls only the top-k by composite score. A very old or
+  low-importance entry can lose to fresher candidates. <code>/memory</code> will
+  expose the full list once the UI ships.</li>
 </ul>
-<p>Per-delegation cost caps live inside <code>DelegationTool.invoke</code> — when
-the accumulated sub-session cost exceeds <code>DelegationToolConfig.max_cost_usd</code>
-the stream breaks early and the result carries a truncation note.</p>
-<h2 id="dispatch-and-delegation">Dispatch and delegation<a class="headerlink" href="#dispatch-and-delegation" title="Permanent link">&para;</a></h2>
-<p>When the model emits a tool call, the orchestrator walks each call
-through approval, runs it via the injected <code>ToolRunner</code>, applies the
-result-transformer chain, and re-joins the streamed results into the
-next iteration.</p>
-<p>The responsibility split with the runner:</p>
+<h2 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Orchestrator</strong> owns the approval chain (<code>ToolApprover</code> middleware
-  then the terminal <code>ApprovalGateway</code>), emits all <code>ToolCallPlanned /
-  Approved / Rejected / Started / Completed</code> events, applies the
-  <code>ResultTransformer</code> chain, and measures per-call duration.</li>
-<li><strong>Runner</strong> (<code>DefaultToolRunner</code> in <code>cairn.tools</code>) owns the
-  <code>tool_calls</code> and <code>approval_decisions</code> DB writes, <code>asyncio.timeout</code>
-  enforcement around <code>tool.invoke</code>, and synthesising an error
-  <code>ToolResultBlock</code> when the decision is REJECT or the call fails.</li>
-</ul>
-<p>The runner is called <strong>once per tool call, on both approve and reject
-paths</strong> — so the approval audit row in <code>approval_decisions</code> always
-lands regardless of outcome.</p>
-<h3 id="delegation-events-are-not-yet-emitted">Delegation events are not yet emitted<a class="headerlink" href="#delegation-events-are-not-yet-emitted" title="Permanent link">&para;</a></h3>
-<p><code>DelegationSpawned</code> and <code>DelegationCompleted</code> are defined in the
-domain event union and <code>DelegationTool</code> exists, but the orchestrator
-currently does not emit them. The sub-session's ID is created inside
-<code>DelegationTool.invoke()</code> and the <code>Tool</code> protocol has no back-channel
-to report it to the orchestrator. Resolving this needs either a
-callback on <code>TurnContext</code> or a post-hoc <code>SessionRepo.children_of()</code>
-query; deferred to a follow-up. Users can still observe delegation
-activity via <code>UsageRepo</code> rows where <code>operation = delegation</code> and via
-<code>SessionRepo.children_of(parent)</code>.</p>
-<h2 id="protocols-and-stubs">Protocols and stubs<a class="headerlink" href="#protocols-and-stubs" title="Permanent link">&para;</a></h2>
-<p>Every collaborator the orchestrator consumes is a protocol. Default
-stubs are shipped in <code>cairn.orchestrator</code>:</p>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Default stub</th>
-<th>Behaviour</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>ContextManager</code></td>
-<td><code>MinimalContextManager</code></td>
-<td>Passes through; no compaction.</td>
-</tr>
-<tr>
-<td><code>MemoryService</code></td>
-<td><code>NullMemoryService</code></td>
-<td>Returns <code>[]</code>.</td>
-</tr>
-<tr>
-<td><code>ExtractionQueue</code></td>
-<td><code>NullExtractionQueue</code></td>
-<td>No-op submit.</td>
-</tr>
-<tr>
-<td><code>ToolRegistry</code></td>
-<td><code>EmptyToolRegistry</code></td>
-<td>No tools.</td>
-</tr>
-<tr>
-<td><code>ToolRunner</code></td>
-<td><code>RaisingToolRunner</code></td>
-<td>Raises; safe because <code>EmptyToolRegistry</code> gives it nothing to run.</td>
-</tr>
-<tr>
-<td><code>ApprovalGateway</code></td>
-<td><code>AutoApproveGateway</code> / <code>DenyAllGateway</code></td>
-<td>Approve-all / deny-all.</td>
-</tr>
-<tr>
-<td><code>Clock</code></td>
-<td><code>SystemClock</code> (prod), <code>FrozenClock</code> (tests)</td>
-<td>Wall clock / deterministic.</td>
-</tr>
-<tr>
-<td><code>CostTracker</code></td>
-<td><code>BasicCostTracker</code></td>
-<td>Fully functional against <code>UsageRepo</code>.</td>
-</tr>
-</tbody>
-</table>
-<p>Real implementations land with their respective bricks. <code>ToolRegistry</code>
-and <code>ToolRunner</code> now have real implementations in <code>cairn.tools</code>
-(<code>DefaultToolRegistry</code>, <code>DefaultToolRunner</code>) and are what the harness
-wires in at startup; the stubs remain for tests and for orchestrator
-unit tests that need to exercise the turn loop without real tools.
-<code>MemoryService</code> and <code>ApprovalGateway</code> stubs still ship as the default
-— the memory brick and the UI's real approval gateway are still to
-land. The orchestrator can be constructed and fully tested today with
-any mix of stubs and real implementations.</p>
-<h2 id="related-adrs">Related ADRs<a class="headerlink" href="#related-adrs" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="../decisions/0009-protocol-stubs/">0009 — Protocol-shaped collaborators with default stubs</a></li>
-<li><a href="../decisions/0010-typed-middleware/">0010 — Typed middleware over generic lifecycle hooks</a></li>
-<li><a href="../decisions/0011-explicit-turn-state-machine/">0011 — <code>turns</code> table with an explicit state machine</a></li>
-<li><a href="../decisions/0012-no-fk-on-turn-id/">0012 — No FK on <code>turn_id</code> columns</a></li>
+<li><a href="../reference/memory/"><code>cairn.memory</code></a></li>
+<li><a href="../reference/persistence/"><code>cairn.persistence</code></a> (see <code>MemoryRepo</code>,
+  <code>MemoryHit</code>, <code>memory_dir_for_profile</code>)</li>
+<li><a href="../reference/config/"><code>cairn.config</code></a> (see <code>MemoryConfig</code>,
+  <code>ModelRole.EXTRACTION</code>)</li>
 </ul>
 
 

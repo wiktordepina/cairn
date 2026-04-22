@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0002-three-tier-config-merge/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0024-memory-md-as-index/">
       
       
-        <link rel="prev" href="../0001-per-profile-sqlite/">
+        <link rel="prev" href="../0023-jsonl-log-no-rebuild/">
       
       
-        <link rel="next" href="../0003-secret-ref-schemes/">
+        <link rel="next" href="../0025-extraction-role-and-local-models/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>0002 Three-tier config merge - Cairn</title>
+        <title>0024 MEMORY.md as an index - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0002-three-tier-config-merge-user-project-local" class="md-skip">
+        <a href="#0024-memorymd-as-an-index-of-memoriesslugmd-bodies" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0002 Three-tier config merge
+              0024 MEMORY.md as an index
             
           </span>
         </div>
@@ -1287,37 +1287,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0002 Three-tier config merge
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1333,59 +1306,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1983,10 +1903,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0024-memory-md-as-index/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0024 MEMORY.md as an index
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2002,6 +1949,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2129,6 +2140,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2146,7 +2168,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0002-three-tier-config-merge.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0024-memory-md-as-index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2154,70 +2176,86 @@
   
 
 
-<h1 id="0002-three-tier-config-merge-user-project-local">0002 — Three-tier config merge (user / project / local)<a class="headerlink" href="#0002-three-tier-config-merge-user-project-local" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
-<strong>Status:</strong> accepted</p>
+<h1 id="0024-memorymd-as-an-index-of-memoriesslugmd-bodies">0024 — <code>MEMORY.md</code> as an index of <code>memories/&lt;slug&gt;.md</code> bodies<a class="headerlink" href="#0024-memorymd-as-an-index-of-memoriesslugmd-bodies" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-22
+<strong>Status:</strong> accepted
+<strong>Deviates from:</strong> architecture doc §4.11 (which describes a
+monolithic MEMORY.md).</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Cairn runs in two overlapping contexts: a personal, long-lived
-relationship with a companion (which has the user's global preferences)
-and a per-project working surface (which may have project-specific
-overrides — different convention-file rules, different model choices,
-different budgets). Two flat config files don't cover this; one flat
-file forces the user to repeat boilerplate across projects.</p>
-<p>Patterns considered:</p>
-<ol>
-<li><strong>Single file.</strong> Simple, but no project-specific overrides.</li>
-<li><strong>User file + project file with project-wins precedence.</strong> Covers
-   most of the need but forces personal tweaks to land in a checked-in
-   project file.</li>
-<li><strong>User + project + local</strong> (three layers): personal defaults,
-   project overrides (checked in, shared with the team), and local
-   overrides (gitignored, your personal per-project tweaks).</li>
-</ol>
-<p>We also considered CLI flags as a fourth effective layer (they are —
-see below).</p>
+<p>The architecture doc describes MEMORY.md as "the highest-confidence
+facts, loaded into every companion session… hard cap around 150
+lines." Under that model, every curated fact lives inline in the
+single file, and every turn's system prompt pays the full MEMORY.md
+payload even when only a fraction of the content is relevant.</p>
+<p>The user asked for the <code>mait-code</code> / Claude-Code convention instead:
+MEMORY.md is a <em>short</em> index of links, and each curated memory
+lives in its own file under <code>memories/</code>, with frontmatter. Rationale:</p>
+<ul>
+<li><strong>Token-cost stability.</strong> A 100-line index stays ~1–2 k tokens no
+  matter how many curated memories accumulate. A monolithic file
+  grows unbounded and bleeds the system-prompt budget.</li>
+<li><strong>Consistency with the user's existing system.</strong> Cairn will sit
+  alongside mait-code in the user's workflow; matching the same
+  file layout means curated memories can be migrated between
+  systems without reformatting.</li>
+<li><strong>Clean V2 path.</strong> When the reflection pipeline lands and starts
+  auto-proposing curated memories, it can write a new
+  <code>memories/&lt;slug&gt;.md</code> + append one line to MEMORY.md without
+  touching a monolithic blob.</li>
+</ul>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Config is merged in this order, with later tiers winning:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>user  &lt;  project  &lt;  local  &lt;  CLI flags
+<p><strong>Curated memory in V1 has two on-disk surfaces:</strong></p>
+<ul>
+<li><code>MEMORY.md</code> — a short index of <code>- [Title](memories/&lt;slug&gt;.md) —
+  hook</code> lines. Loaded verbatim into every companion system prompt
+  via <code>ProfileDocLoader.load_memory_index()</code>.</li>
+<li><code>memories/&lt;slug&gt;.md</code> — per-memory body files carrying frontmatter:</li>
+</ul>
+<div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>name: Stack and tools
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>description: Primary languages, infra, OS
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gu">type: user</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gu">---</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Python, Go, shell scripting. AWS, Docker, Terraform...
 </span></code></pre></div>
-<ul>
-<li><strong>User</strong> — <code>$XDG_CONFIG_HOME/cairn/config.toml</code>. Personal global
-  defaults.</li>
-<li><strong>Project</strong> — <code>&lt;repo&gt;/.cairn/config.toml</code>. Team-level overrides.
-  Checked into the repo.</li>
-<li><strong>Local</strong> — <code>&lt;repo&gt;/.cairn/config.local.toml</code>. Personal per-project
-  tweaks. Gitignored.</li>
-<li><strong>CLI flags</strong> — highest priority, per-invocation.</li>
-</ul>
-<p>Project discovery walks upward from the current directory looking for a
-<code>.cairn/config.toml</code>, stopping at the git root by default.</p>
-<p>Active-profile resolution follows the same precedence: <code>--profile</code> flag</p>
-<blockquote>
-<p>local &gt; project &gt; user.</p>
-</blockquote>
+<p><strong>V1 loads MEMORY.md only.</strong> The <code>memories/</code> folder exists on disk
+and is hand-edited by the user; individual body files are NOT read
+by the runtime in V1. Retrieval unification — surfacing specific
+body files when relevant to the current query — is a V2 concern,
+tied to the curation UI.</p>
+<p><strong>The frontmatter keys (<code>name</code>, <code>description</code>, <code>type</code>) match
+mait-code's convention</strong> so users running both systems can copy
+files between them.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
 <ul>
-<li>Teams can commit <code>.cairn/config.toml</code> as a shared baseline without
-  forcing every developer to share the same local preferences.</li>
-<li>Individual developers keep their API keys and per-machine paths in
-  <code>config.local.toml</code> without risk of checking them in.</li>
-<li>Adding ad-hoc overrides for experimentation is a CLI flag.</li>
+<li><strong>Positive.</strong> System prompt token cost of the curated tier is
+  bounded and predictable.</li>
+<li><strong>Positive.</strong> Body files can grow arbitrarily without hurting
+  every turn's context budget.</li>
+<li><strong>Positive.</strong> V2 can add a retrieval path that parses
+  frontmatter, indexes <code>description</code> into <code>memory_entries</code>, and
+  fetches specific bodies on demand — without changing the on-disk
+  format.</li>
+<li><strong>Negative.</strong> Contents of <code>memories/&lt;slug&gt;.md</code> files are invisible
+  to the companion until V2. A user who writes a detailed body
+  expecting it to be in context will be surprised. The docs page
+  calls this out.</li>
+<li><strong>Negative.</strong> Deviates from the architecture doc. Future readers
+  diffing the code against §4.11 will notice — this ADR exists so
+  they find the reason quickly.</li>
 </ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>Debugging "why is this value what it is?" requires understanding the
-  merge. A <code>cairn config show</code> command (planned) and a future
-  <code>config diff</code> view mitigate this.</li>
-<li>Three-way merges for <code>delegation_tools</code> arrays and similar list-valued
-  fields require a merge policy. The current policy is "replace, don't
-  concatenate" — simpler and less surprising than concatenation.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>The loader carries explicit tier metadata alongside values so
-  eventual tooling can answer "which file provided this value?".</li>
-</ul>
+<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p><strong>Ship the monolithic MEMORY.md per the architecture doc.</strong>
+Predictable, matches the spec, but breaks the token-cost property
+once curated memory accumulates.</p>
+<p><strong>Index + load all bodies into context.</strong> Same token blowout
+problem as monolithic.</p>
+<p><strong>Index only, with a <code>/memory show &lt;slug&gt;</code> tool that loads a body
+on demand.</strong> Attractive, but needs a tool-calling surface and a
+curated-memory search index — both V2 scope. Deferred.</p>
+<p><strong>Frontmatter with our own keys (not matching mait-code).</strong> Would
+fragment the user's cross-system workflow. Rejected.</p>
 
 
 

@@ -13,6 +13,10 @@
          <lastmod>2026-04-22</lastmod>
     </url>
     <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/memory/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
          <loc>https://wiktordepina.github.io/cairn/dev/observability/</loc>
          <lastmod>2026-04-22</lastmod>
     </url>
@@ -117,6 +121,30 @@
          <lastmod>2026-04-22</lastmod>
     </url>
     <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0021-tier-1-memory-first/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0022-memory-dedup-threshold/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0023-jsonl-log-no-rebuild/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0024-memory-md-as-index/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0025-extraction-role-and-local-models/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0026-per-turn-extraction-with-context/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
          <loc>https://wiktordepina.github.io/cairn/dev/reference/</loc>
          <lastmod>2026-04-22</lastmod>
     </url>
@@ -130,6 +158,10 @@
     </url>
     <url>
          <loc>https://wiktordepina.github.io/cairn/dev/reference/logging/</loc>
+         <lastmod>2026-04-22</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/reference/memory/</loc>
          <lastmod>2026-04-22</lastmod>
     </url>
     <url>

@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0002-three-tier-config-merge/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0023-jsonl-log-no-rebuild/">
       
       
-        <link rel="prev" href="../0001-per-profile-sqlite/">
+        <link rel="prev" href="../0022-memory-dedup-threshold/">
       
       
-        <link rel="next" href="../0003-secret-ref-schemes/">
+        <link rel="next" href="../0024-memory-md-as-index/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>0002 Three-tier config merge - Cairn</title>
+        <title>0023 JSONL log without V1 rebuild - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0002-three-tier-config-merge-user-project-local" class="md-skip">
+        <a href="#0023-ship-the-jsonl-observation-log-without-the-v1-rebuild-path" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0002 Three-tier config merge
+              0023 JSONL log without V1 rebuild
             
           </span>
         </div>
@@ -1287,37 +1287,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0002 Three-tier config merge
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1333,59 +1306,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1955,10 +1875,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0023-jsonl-log-no-rebuild/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0023 JSONL log without V1 rebuild
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1974,6 +1921,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2129,6 +2140,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2146,7 +2168,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0002-three-tier-config-merge.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0023-jsonl-log-no-rebuild.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2154,70 +2176,55 @@
   
 
 
-<h1 id="0002-three-tier-config-merge-user-project-local">0002 — Three-tier config merge (user / project / local)<a class="headerlink" href="#0002-three-tier-config-merge-user-project-local" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
+<h1 id="0023-ship-the-jsonl-observation-log-without-the-v1-rebuild-path">0023 — Ship the JSONL observation log without the V1 rebuild path<a class="headerlink" href="#0023-ship-the-jsonl-observation-log-without-the-v1-rebuild-path" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-22
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Cairn runs in two overlapping contexts: a personal, long-lived
-relationship with a companion (which has the user's global preferences)
-and a per-project working surface (which may have project-specific
-overrides — different convention-file rules, different model choices,
-different budgets). Two flat config files don't cover this; one flat
-file forces the user to repeat boilerplate across projects.</p>
-<p>Patterns considered:</p>
-<ol>
-<li><strong>Single file.</strong> Simple, but no project-specific overrides.</li>
-<li><strong>User file + project file with project-wins precedence.</strong> Covers
-   most of the need but forces personal tweaks to land in a checked-in
-   project file.</li>
-<li><strong>User + project + local</strong> (three layers): personal defaults,
-   project overrides (checked in, shared with the team), and local
-   overrides (gitignored, your personal per-project tweaks).</li>
-</ol>
-<p>We also considered CLI flags as a fourth effective layer (they are —
-see below).</p>
+<p>Architecture doc §4.11 describes a per-day JSONL log as the
+"source of truth" for observations, with SQLite as a derived index:
+"the SQLite index can be rebuilt from it. Makes git-based
+multi-machine sync trivial."</p>
+<p>Implementing both the write path and the rebuild tool would stretch
+the tier-1 brick's scope. The rebuild tool is only useful alongside
+multi-machine sync, which isn't on the V1 roadmap.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Config is merged in this order, with later tiers winning:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>user  &lt;  project  &lt;  local  &lt;  CLI flags
-</span></code></pre></div>
-<ul>
-<li><strong>User</strong> — <code>$XDG_CONFIG_HOME/cairn/config.toml</code>. Personal global
-  defaults.</li>
-<li><strong>Project</strong> — <code>&lt;repo&gt;/.cairn/config.toml</code>. Team-level overrides.
-  Checked into the repo.</li>
-<li><strong>Local</strong> — <code>&lt;repo&gt;/.cairn/config.local.toml</code>. Personal per-project
-  tweaks. Gitignored.</li>
-<li><strong>CLI flags</strong> — highest priority, per-invocation.</li>
-</ul>
-<p>Project discovery walks upward from the current directory looking for a
-<code>.cairn/config.toml</code>, stopping at the git root by default.</p>
-<p>Active-profile resolution follows the same precedence: <code>--profile</code> flag</p>
-<blockquote>
-<p>local &gt; project &gt; user.</p>
-</blockquote>
+<p><strong>V1 writes both the SQLite row and the JSONL line for every
+observation, but ships no rebuild-from-JSONL tool.</strong> The rebuild
+path lands with the V3 multi-machine-sync brick.</p>
+<p>The JSONL file shape matches <code>memory_entries</code> column-for-column
+(via <code>Observation.model_dump_json()</code>) so the future rebuild tool is
+a straight Pydantic parse + repo insert.</p>
+<p><strong>No fsync per append.</strong> Default
+<code>MemoryConfig.observation_log_fsync = False</code>. SQLite is the real
+durability store; losing the last few JSONL lines on process crash
+is acceptable — those observations still exist in the database.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
 <ul>
-<li>Teams can commit <code>.cairn/config.toml</code> as a shared baseline without
-  forcing every developer to share the same local preferences.</li>
-<li>Individual developers keep their API keys and per-machine paths in
-  <code>config.local.toml</code> without risk of checking them in.</li>
-<li>Adding ad-hoc overrides for experimentation is a CLI flag.</li>
+<li><strong>Positive.</strong> V1 users who don't need multi-machine sync pay no
+  observable cost: the log writes are cheap (no fsync), take no
+  disk-space overhead worth mentioning, and are only read if/when
+  the rebuild tool arrives.</li>
+<li><strong>Positive.</strong> The V3 rebuild tool can assume the log format is
+  stable — data written from 0.7.0 onward will be compatible with
+  the eventual rebuild.</li>
+<li><strong>Negative.</strong> The log is effectively dead weight until V3. If we
+  cut V3, the log should be demoted to a debugging aid or removed.</li>
+<li><strong>Negative.</strong> JSONL and SQLite can drift if a bug ships — writes
+  happen under different paths. The extractor catches exceptions
+  from either side and logs at ERROR, but doesn't attempt to roll
+  back the other. V1 accepts the risk; tests cover the happy path
+  and the store-failure path separately.</li>
 </ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>Debugging "why is this value what it is?" requires understanding the
-  merge. A <code>cairn config show</code> command (planned) and a future
-  <code>config diff</code> view mitigate this.</li>
-<li>Three-way merges for <code>delegation_tools</code> arrays and similar list-valued
-  fields require a merge policy. The current policy is "replace, don't
-  concatenate" — simpler and less surprising than concatenation.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>The loader carries explicit tier metadata alongside values so
-  eventual tooling can answer "which file provided this value?".</li>
-</ul>
+<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p><strong>Skip the JSONL entirely.</strong> Would break the arch-doc "source of
+truth" invariant. If we cut V3, this becomes the right decision in
+retrospect — but hedging is cheap.</p>
+<p><strong>fsync per append for V1.</strong> Slows extraction; provides durability
+the primary SQLite store already delivers. Not worth it.</p>
+<p><strong>Log to SQLite-backed append-only table instead of JSONL.</strong> Would
+duplicate storage without the git-friendly line-oriented property
+that made JSONL attractive for eventual sync. Not worth the
+migration.</p>
 
 
 

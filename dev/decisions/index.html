@@ -440,6 +440,8 @@
       
         
       
+        
+      
     
     
     
@@ -528,6 +530,34 @@
     
   
     Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
   
 
     
@@ -786,6 +816,8 @@
       
         
       
+        
+      
     
     
     
@@ -911,6 +943,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
   
 
     
@@ -1084,6 +1144,18 @@
       
         
           
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
         
       
         
@@ -1743,6 +1815,174 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="0021-tier-1-memory-first/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0021 Tier-1 memory first
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="0022-memory-dedup-threshold/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0022 Memory dedup threshold
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="0023-jsonl-log-no-rebuild/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0023 JSONL log without V1 rebuild
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="0024-memory-md-as-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0024 MEMORY.md as an index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="0025-extraction-role-and-local-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0025 Extraction role and local models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="0026-per-turn-extraction-with-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0026 Per-turn extraction with context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2014,6 +2254,41 @@ Python" or "use SQLite" — those are load-bearing but uncontested.</p>
 <tr>
 <td><a href="0019-docstrings-google-style/">0019</a></td>
 <td>Docstrings follow Google style</td>
+<td>accepted</td>
+</tr>
+<tr>
+<td><a href="0020-auto-generated-api-reference/">0020</a></td>
+<td>Auto-generated API reference from <code>__all__</code></td>
+<td>accepted</td>
+</tr>
+<tr>
+<td><a href="0021-tier-1-memory-first/">0021</a></td>
+<td>Ship tier-1 memory first, defer reflection and curation UI</td>
+<td>accepted</td>
+</tr>
+<tr>
+<td><a href="0022-memory-dedup-threshold/">0022</a></td>
+<td>Dedup observations via <code>SequenceMatcher.ratio() &gt;= 0.90</code></td>
+<td>accepted</td>
+</tr>
+<tr>
+<td><a href="0023-jsonl-log-no-rebuild/">0023</a></td>
+<td>Ship the JSONL observation log without the V1 rebuild path</td>
+<td>accepted</td>
+</tr>
+<tr>
+<td><a href="0024-memory-md-as-index/">0024</a></td>
+<td><code>MEMORY.md</code> as an index of <code>memories/&lt;slug&gt;.md</code> bodies</td>
+<td>accepted</td>
+</tr>
+<tr>
+<td><a href="0025-extraction-role-and-local-models/">0025</a></td>
+<td>Dedicated <code>ModelRole.EXTRACTION</code> with a first-class local-model path</td>
+<td>accepted</td>
+</tr>
+<tr>
+<td><a href="0026-per-turn-extraction-with-context/">0026</a></td>
+<td>Per-turn extraction with N-turn context window and length gate</td>
 <td>accepted</td>
 </tr>
 </tbody>

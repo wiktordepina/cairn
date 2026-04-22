@@ -440,6 +440,8 @@
       
         
       
+        
+      
     
     
     
@@ -528,6 +530,34 @@
     
   
     Providers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
   
 
     
@@ -915,6 +945,8 @@
       
         
       
+        
+      
     
     
     
@@ -1040,6 +1072,34 @@
     
   
     Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/memory/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Memory
   
 
     
@@ -1211,6 +1271,18 @@
       
         
           
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
         
       
         
@@ -1867,6 +1939,174 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0021-tier-1-memory-first/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0021 Tier-1 memory first
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0022-memory-dedup-threshold/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0022 Memory dedup threshold
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0023-jsonl-log-no-rebuild/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0023 JSONL log without V1 rebuild
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0024-memory-md-as-index/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0024 MEMORY.md as an index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0025-extraction-role-and-local-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0025 Extraction role and local models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0026-per-turn-extraction-with-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0026 Per-turn extraction with context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2067,8 +2307,8 @@ independently testable and, where reasonable, independently swappable.</p>
 <pre class="mermaid"><code>flowchart TD
     UI["&lt;b&gt;UI&lt;/b&gt;&lt;br/&gt;&lt;i&gt;Textual — planned&lt;/i&gt;"]
     ORCH["&lt;b&gt;Orchestrator&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
-    CTX["&lt;b&gt;Context manager&lt;/b&gt;&lt;br/&gt;&lt;i&gt;planned&lt;/i&gt;"]
-    MEM["&lt;b&gt;Memory&lt;/b&gt;&lt;br/&gt;&lt;i&gt;planned&lt;/i&gt;"]
+    CTX["&lt;b&gt;Context manager&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
+    MEM["&lt;b&gt;Memory&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
     TOOLS["&lt;b&gt;Tool system&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
     PROV["&lt;b&gt;Providers&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
     PERS["&lt;b&gt;Persistence&lt;/b&gt;&lt;br/&gt;&lt;i&gt;shipped&lt;/i&gt;"]
@@ -2100,12 +2340,12 @@ independently testable and, where reasonable, independently swappable.</p>
 <td>Turn loop, state machine, middleware chains, cancellation</td>
 </tr>
 <tr>
-<td><strong>Context manager</strong> <em>(planned)</em></td>
+<td><strong>Context manager</strong></td>
 <td>Assembles the provider request: soul, memory, conventions, history</td>
 </tr>
 <tr>
-<td><strong>Memory</strong> <em>(planned)</em></td>
-<td>Tier-1 retrieval and observation extraction</td>
+<td><strong>Memory</strong></td>
+<td>Tier-1 observation extraction, retrieval, MEMORY.md loading</td>
 </tr>
 <tr>
 <td><strong>Tool system</strong></td>
@@ -2117,7 +2357,7 @@ independently testable and, where reasonable, independently swappable.</p>
 </tr>
 <tr>
 <td><strong>Persistence</strong></td>
-<td>Sessions, messages, tool calls, turns, usage; memory tables planned</td>
+<td>Sessions, messages, tool calls, turns, usage, memory entries</td>
 </tr>
 <tr>
 <td><strong>Config</strong></td>
@@ -2206,8 +2446,12 @@ independently testable and, where reasonable, independently swappable.</p>
 <td>Shipped (0.6.0)</td>
 </tr>
 <tr>
-<td>Memory (tier-1)</td>
-<td>Planned</td>
+<td>Observability — bootstrap modules</td>
+<td>Shipped (0.7.0)</td>
+</tr>
+<tr>
+<td>Memory (tier-1) — extraction, retrieval, context assembly</td>
+<td>Shipped (0.7.0)</td>
 </tr>
 <tr>
 <td>Compaction</td>
@@ -2226,7 +2470,7 @@ independently testable and, where reasonable, independently swappable.</p>
 <td>Planned</td>
 </tr>
 <tr>
-<td>Observability</td>
+<td>Observability — tranche 2 (structured observer)</td>
 <td>Planned</td>
 </tr>
 <tr>
@@ -2258,6 +2502,7 @@ independently testable and, where reasonable, independently swappable.</p>
 <li><a href="../persistence/">Persistence</a> — on-disk layout.</li>
 <li><a href="../orchestrator/">Orchestrator</a> — the turn loop.</li>
 <li><a href="../tools/">Tools</a> — tool system, built-in catalogue, security primitives.</li>
+<li><a href="../memory/">Memory</a> — tier-1 extraction, retrieval, MEMORY.md loading.</li>
 <li><a href="../decisions/">ADRs</a> — the <em>why</em> behind non-obvious decisions.</li>
 </ul>
 

@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0002-three-tier-config-merge/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0021-tier-1-memory-first/">
       
       
-        <link rel="prev" href="../0001-per-profile-sqlite/">
+        <link rel="prev" href="../0020-auto-generated-api-reference/">
       
       
-        <link rel="next" href="../0003-secret-ref-schemes/">
+        <link rel="next" href="../0022-memory-dedup-threshold/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>0002 Three-tier config merge - Cairn</title>
+        <title>0021 Tier-1 memory first - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0002-three-tier-config-merge-user-project-local" class="md-skip">
+        <a href="#0021-ship-tier-1-memory-first-defer-reflection-and-curation-ui" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0002 Three-tier config merge
+              0021 Tier-1 memory first
             
           </span>
         </div>
@@ -1287,37 +1287,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0002 Three-tier config merge
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1333,59 +1306,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1899,10 +1819,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0021-tier-1-memory-first/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0021 Tier-1 memory first
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1918,6 +1865,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2129,6 +2140,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2146,7 +2168,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0002-three-tier-config-merge.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0021-tier-1-memory-first.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2154,70 +2176,67 @@
   
 
 
-<h1 id="0002-three-tier-config-merge-user-project-local">0002 — Three-tier config merge (user / project / local)<a class="headerlink" href="#0002-three-tier-config-merge-user-project-local" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-20
+<h1 id="0021-ship-tier-1-memory-first-defer-reflection-and-curation-ui">0021 — Ship tier-1 memory first, defer reflection and curation UI<a class="headerlink" href="#0021-ship-tier-1-memory-first-defer-reflection-and-curation-ui" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-22
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Cairn runs in two overlapping contexts: a personal, long-lived
-relationship with a companion (which has the user's global preferences)
-and a per-project working surface (which may have project-specific
-overrides — different convention-file rules, different model choices,
-different budgets). Two flat config files don't cover this; one flat
-file forces the user to repeat boilerplate across projects.</p>
-<p>Patterns considered:</p>
-<ol>
-<li><strong>Single file.</strong> Simple, but no project-specific overrides.</li>
-<li><strong>User file + project file with project-wins precedence.</strong> Covers
-   most of the need but forces personal tweaks to land in a checked-in
-   project file.</li>
-<li><strong>User + project + local</strong> (three layers): personal defaults,
-   project overrides (checked in, shared with the team), and local
-   overrides (gitignored, your personal per-project tweaks).</li>
-</ol>
-<p>We also considered CLI flags as a fourth effective layer (they are —
-see below).</p>
+<p>Architecture doc §4.11 describes three memory tiers:</p>
+<ul>
+<li>Tier 1 — raw observations, extracted automatically post-turn.</li>
+<li>Tier 2 — reflections, synthesised from unreflected observations.</li>
+<li>Tier 3 — MEMORY.md, curated high-confidence facts plus (in this
+  repo's variant) per-memory bodies under <code>memories/</code>.</li>
+</ul>
+<p>Each tier has a write path (how entries are produced) and a read path
+(how entries re-enter the companion's context). Shipping all three
+write paths in V1 would stretch the memory brick across a reflection
+worker, a curation UI, an approval flow, and the retrieval surface —
+weeks of work before the companion remembers anything at all.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>Config is merged in this order, with later tiers winning:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>user  &lt;  project  &lt;  local  &lt;  CLI flags
-</span></code></pre></div>
+<p><strong>V1 ships tier 1 end-to-end plus the <em>read</em> side of tier 3</strong>:</p>
 <ul>
-<li><strong>User</strong> — <code>$XDG_CONFIG_HOME/cairn/config.toml</code>. Personal global
-  defaults.</li>
-<li><strong>Project</strong> — <code>&lt;repo&gt;/.cairn/config.toml</code>. Team-level overrides.
-  Checked into the repo.</li>
-<li><strong>Local</strong> — <code>&lt;repo&gt;/.cairn/config.local.toml</code>. Personal per-project
-  tweaks. Gitignored.</li>
-<li><strong>CLI flags</strong> — highest priority, per-invocation.</li>
+<li>Tier 1 — <code>MemoryRepo</code>, <code>ObservationLog</code>, <code>Extractor</code>,
+  <code>ObservationExtractionQueue</code>, <code>MemoryService</code> retrieval.</li>
+<li>Tier 3 — <code>StandardContextManager</code> reads MEMORY.md and loads it into
+  every companion prompt as an index.</li>
 </ul>
-<p>Project discovery walks upward from the current directory looking for a
-<code>.cairn/config.toml</code>, stopping at the git root by default.</p>
-<p>Active-profile resolution follows the same precedence: <code>--profile</code> flag</p>
-<blockquote>
-<p>local &gt; project &gt; user.</p>
-</blockquote>
+<p><strong>V1 does NOT ship</strong>:</p>
+<ul>
+<li>The tier-2 reflection pipeline (watermark, novelty gate, batching,
+  MEMORY.md auto-proposal with approval UI).</li>
+<li>A write path for tier 3 — curated memories are hand-edited in V1.
+  The <code>/remember</code> slash command that automates this lands with the UI
+  brick.</li>
+</ul>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
 <ul>
-<li>Teams can commit <code>.cairn/config.toml</code> as a shared baseline without
-  forcing every developer to share the same local preferences.</li>
-<li>Individual developers keep their API keys and per-machine paths in
-  <code>config.local.toml</code> without risk of checking them in.</li>
-<li>Adding ad-hoc overrides for experimentation is a CLI flag.</li>
+<li><strong>Positive.</strong> The companion remembers things from the first session
+  it runs. Retrieval surfaces tier-1 observations without a
+  reflection loop needing to decide what's worth keeping. MEMORY.md
+  and soul/user-context docs still flow into context, so curated
+  facts and identity are visible.</li>
+<li><strong>Positive.</strong> Tier 2 landing later is a pure addition — the tier-1
+  watermark column (<code>reflection_watermarks</code>) is the only new
+  persistence surface it needs.</li>
+<li><strong>Negative.</strong> Dedup across sessions relies on <code>SequenceMatcher</code>
+  only; true semantic near-duplicates ("User loves keto" vs "User is
+  on a ketogenic diet") will produce two rows. <a href="../0022-memory-dedup-threshold/">ADR 0022</a>
+  addresses the trade-off.</li>
+<li><strong>Negative.</strong> Without tier 2, curated MEMORY.md entries only change
+  when the user edits the file by hand. Some users won't curate;
+  their MEMORY.md will stay near-empty until V2.</li>
 </ul>
-<p><strong>Harder:</strong></p>
-<ul>
-<li>Debugging "why is this value what it is?" requires understanding the
-  merge. A <code>cairn config show</code> command (planned) and a future
-  <code>config diff</code> view mitigate this.</li>
-<li>Three-way merges for <code>delegation_tools</code> arrays and similar list-valued
-  fields require a merge policy. The current policy is "replace, don't
-  concatenate" — simpler and less surprising than concatenation.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>The loader carries explicit tier metadata alongside values so
-  eventual tooling can answer "which file provided this value?".</li>
-</ul>
+<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
+<p><strong>Ship tier 1 + tier 2 in V1, defer tier 3 write-side only.</strong> Tier 2
+needs a prompt, a worker, an approval surface, and a novelty gate —
+more scope than fits this release. Deferring keeps the V1 surface
+small and lets real usage inform the reflection prompt before we
+commit.</p>
+<p><strong>Skip tier 1, ship only MEMORY.md.</strong> Would mean the companion only
+remembers what the user manually curates. That's the shape of the
+mait-code "curated-only" mode, and it lost: people don't curate, so
+the companion doesn't remember, so the curation premise collapses.
+Tier 1 is the layer that makes the companion feel present.</p>
 
 
 
