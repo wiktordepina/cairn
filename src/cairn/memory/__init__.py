@@ -22,6 +22,7 @@ from cairn.memory._extractor import (
 )
 from cairn.memory._observation_log import Observation, ObservationLog
 from cairn.memory._queue import ObservationExtractionQueue
+from cairn.memory._retrieval import MemoryService, composite_score
 
 __all__ = [
     # Extraction engine
@@ -33,4 +34,7 @@ __all__ = [
     # Observation log
     "Observation",
     "ObservationLog",
+    # Retrieval
+    "MemoryService",
+    "composite_score",
 ]

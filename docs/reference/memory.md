@@ -20,3 +20,9 @@
 ::: cairn.memory.Observation
 
 ::: cairn.memory.ObservationLog
+
+## Retrieval
+
+::: cairn.memory.MemoryService
+
+::: cairn.memory.composite_score
