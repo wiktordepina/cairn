@@ -44,37 +44,39 @@ Cairn is built as a stack of independent bricks, each with a narrow
 responsibility and a clean protocol-shaped boundary. Bricks are
 independently testable and, where reasonable, independently swappable.
 
+```mermaid
+flowchart TD
+    UI["<b>UI</b><br/><i>Textual — planned</i>"]
+    ORCH["<b>Orchestrator</b><br/><i>shipped</i>"]
+    CTX["<b>Context manager</b><br/><i>planned</i>"]
+    MEM["<b>Memory</b><br/><i>planned</i>"]
+    TOOLS["<b>Tool system</b><br/><i>shipped</i>"]
+    PROV["<b>Providers</b><br/><i>shipped</i>"]
+    PERS["<b>Persistence</b><br/><i>shipped</i>"]
+    CFG["<b>Config</b><br/><i>shipped</i>"]
+
+    ORCH -- "AsyncIterator[UIEvent]" --> UI
+    ORCH --> CTX
+    ORCH --> MEM
+    ORCH --> TOOLS
+    ORCH --> PROV
+    CTX --> PERS
+    PROV --> PERS
+    PERS --> CFG
 ```
-┌───────────────────────────────────────────────────────────────────┐
-│                      UI (Textual, planned)                        │
-│         Chat screen · session list · command bar · /commands      │
-└─────────────────────────────▲─────────────────────────────────────┘
-                              │ AsyncIterator[UIEvent]
-┌─────────────────────────────┴─────────────────────────────────────┐
-│                       Orchestrator (shipped)                      │
-│   Turn loop · state machine · middleware chains · cancellation    │
-└──┬──────────────────┬──────────────────┬──────────────────┬───────┘
-   │                  │                  │                  │
-┌──▼───────┐   ┌──────▼──────┐   ┌───────▼───────┐   ┌──────▼──────┐
-│ Context  │   │ Memory      │   │ Tool system   │   │ Providers   │
-│ manager  │   │ (planned)   │   │ (shipped —    │   │ (shipped)   │
-│(planned) │   │             │   │ foundation,   │   │             │
-│          │   │             │   │ built-ins,    │   │             │
-│          │   │             │   │ runner,       │   │             │
-│          │   │             │   │ delegation)   │   │             │
-└──┬───────┘   └─────────────┘   └───────────────┘   └─────────────┘
-   │                                                          │
-   │                                                          │
-┌──▼──────────────────────────────────────────────────────────▼───┐
-│                     Persistence (shipped)                       │
-│      Session · Message · ToolCall · Usage · Memory (planned)    │
-└──────────────────────────┬──────────────────────────────────────┘
-                           │
-                  ┌────────▼──────────┐
-                  │  Config (shipped) │
-                  │  TOML · profiles  │
-                  └───────────────────┘
-```
+
+Each brick at a glance:
+
+| Brick | Responsibility |
+|---|---|
+| **UI** *(planned)* | Chat screen, session list, command bar, `/commands` |
+| **Orchestrator** | Turn loop, state machine, middleware chains, cancellation |
+| **Context manager** *(planned)* | Assembles the provider request: soul, memory, conventions, history |
+| **Memory** *(planned)* | Tier-1 retrieval and observation extraction |
+| **Tool system** | Decorator, registry, runner, delegation, security middleware |
+| **Providers** | Anthropic, OpenAI, OpenRouter adapters behind a narrow protocol |
+| **Persistence** | Sessions, messages, tool calls, turns, usage; memory tables planned |
+| **Config** | Schema-versioned TOML, profiles, secret references |
 
 ## Data flow of a companion turn
 
