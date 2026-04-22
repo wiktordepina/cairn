@@ -86,3 +86,10 @@ ongoing costs does this impose?
 | [0017](0017-ssrf-ip-pinning-deferred.md) | SSRF defence: IP pinning deferred in V1 | accepted |
 | [0018](0018-docs-site-tooling.md) | Documentation site tooling: MkDocs + Material + mkdocstrings | accepted |
 | [0019](0019-docstrings-google-style.md) | Docstrings follow Google style | accepted |
+| [0020](0020-auto-generated-api-reference.md) | Auto-generated API reference from `__all__` | accepted |
+| [0021](0021-tier-1-memory-first.md) | Ship tier-1 memory first, defer reflection and curation UI | accepted |
+| [0022](0022-memory-dedup-threshold.md) | Dedup observations via `SequenceMatcher.ratio() >= 0.90` | accepted |
+| [0023](0023-jsonl-log-no-rebuild.md) | Ship the JSONL observation log without the V1 rebuild path | accepted |
+| [0024](0024-memory-md-as-index.md) | `MEMORY.md` as an index of `memories/<slug>.md` bodies | accepted |
+| [0025](0025-extraction-role-and-local-models.md) | Dedicated `ModelRole.EXTRACTION` with a first-class local-model path | accepted |
+| [0026](0026-per-turn-extraction-with-context.md) | Per-turn extraction with N-turn context window and length gate | accepted |

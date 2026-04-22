@@ -48,8 +48,8 @@ independently testable and, where reasonable, independently swappable.
 flowchart TD
     UI["<b>UI</b><br/><i>Textual — planned</i>"]
     ORCH["<b>Orchestrator</b><br/><i>shipped</i>"]
-    CTX["<b>Context manager</b><br/><i>planned</i>"]
-    MEM["<b>Memory</b><br/><i>planned</i>"]
+    CTX["<b>Context manager</b><br/><i>shipped</i>"]
+    MEM["<b>Memory</b><br/><i>shipped</i>"]
     TOOLS["<b>Tool system</b><br/><i>shipped</i>"]
     PROV["<b>Providers</b><br/><i>shipped</i>"]
     PERS["<b>Persistence</b><br/><i>shipped</i>"]
@@ -71,11 +71,11 @@ Each brick at a glance:
 |---|---|
 | **UI** *(planned)* | Chat screen, session list, command bar, `/commands` |
 | **Orchestrator** | Turn loop, state machine, middleware chains, cancellation |
-| **Context manager** *(planned)* | Assembles the provider request: soul, memory, conventions, history |
-| **Memory** *(planned)* | Tier-1 retrieval and observation extraction |
+| **Context manager** | Assembles the provider request: soul, memory, conventions, history |
+| **Memory** | Tier-1 observation extraction, retrieval, MEMORY.md loading |
 | **Tool system** | Decorator, registry, runner, delegation, security middleware |
 | **Providers** | Anthropic, OpenAI, OpenRouter adapters behind a narrow protocol |
-| **Persistence** | Sessions, messages, tool calls, turns, usage; memory tables planned |
+| **Persistence** | Sessions, messages, tool calls, turns, usage, memory entries |
 | **Config** | Schema-versioned TOML, profiles, secret references |
 
 ## Data flow of a companion turn
@@ -134,12 +134,13 @@ Cairn is under active development. This table is authoritative; the
 | Orchestrator | Shipped (0.4.0) |
 | Tool system — foundation + built-in tools | Shipped (0.5.0) |
 | Tool system — runner + delegation + orchestrator integration | Shipped (0.6.0) |
-| Memory (tier-1) | Planned |
+| Observability — bootstrap modules | Shipped (0.7.0) |
+| Memory (tier-1) — extraction, retrieval, context assembly | Shipped (0.7.0) |
 | Compaction | Planned |
 | Convention files | Planned |
 | UI (Textual) | Planned |
 | CLI entry point | Planned |
-| Observability | Planned |
+| Observability — tranche 2 (structured observer) | Planned |
 | Reflection (tier-2 memory) | V2 |
 | Knowledge graph | V2 |
 | MCP client | V2 |
@@ -153,4 +154,5 @@ Cairn is under active development. This table is authoritative; the
 - [Persistence](persistence.md) — on-disk layout.
 - [Orchestrator](orchestrator.md) — the turn loop.
 - [Tools](tools.md) — tool system, built-in catalogue, security primitives.
+- [Memory](memory.md) — tier-1 extraction, retrieval, MEMORY.md loading.
 - [ADRs](decisions/README.md) — the *why* behind non-obvious decisions.
