@@ -143,9 +143,7 @@ async def _drain(queue: ObservationExtractionQueue, *, timeout: float = 1.0) -> 
 
 class TestHappyPath:
     @pytest.mark.asyncio
-    async def test_submit_triggers_extraction(
-        self, db, session_repo, message_repo
-    ):
+    async def test_submit_triggers_extraction(self, db, session_repo, message_repo):
         await _seed_session(db)
         since_idx = await _seed_turn(
             db,
@@ -180,9 +178,7 @@ class TestHappyPath:
 
 class TestGates:
     @pytest.mark.asyncio
-    async def test_length_gate_skips_short_turn(
-        self, db, session_repo, message_repo
-    ):
+    async def test_length_gate_skips_short_turn(self, db, session_repo, message_repo):
         await _seed_session(db)
         since_idx = await _seed_turn(
             db,
@@ -207,9 +203,7 @@ class TestGates:
         assert extractor.calls == []
 
     @pytest.mark.asyncio
-    async def test_memoryless_session_skipped(
-        self, db, session_repo, message_repo
-    ):
+    async def test_memoryless_session_skipped(self, db, session_repo, message_repo):
         await _seed_session(db, memory_space=None)
         since_idx = await _seed_turn(
             db,
@@ -248,9 +242,7 @@ class TestGates:
             extractor=extractor,
             session_repo=session_repo,
             message_repo=message_repo,
-            memory_config=MemoryConfig(
-                extract_from_personas=False, min_extraction_chars=20
-            ),
+            memory_config=MemoryConfig(extract_from_personas=False, min_extraction_chars=20),
         )
         await queue.start()
         queue.submit(session_id="sess-1", since_idx=since_idx, turn_id="turn-1")
@@ -260,9 +252,7 @@ class TestGates:
         assert extractor.calls == []
 
     @pytest.mark.asyncio
-    async def test_persona_extraction_enabled_by_default(
-        self, db, session_repo, message_repo
-    ):
+    async def test_persona_extraction_enabled_by_default(self, db, session_repo, message_repo):
         await _seed_session(db, session_type=SessionType.PERSONA, memory_space="persona:alex")
         since_idx = await _seed_turn(
             db,
@@ -311,9 +301,7 @@ class TestGates:
 
 class TestOverflow:
     @pytest.mark.asyncio
-    async def test_overflow_drops_oldest_and_warns(
-        self, db, session_repo, message_repo, caplog
-    ):
+    async def test_overflow_drops_oldest_and_warns(self, db, session_repo, message_repo, caplog):
         await _seed_session(db)
         since_idx = await _seed_turn(
             db,
@@ -330,9 +318,7 @@ class TestOverflow:
             extractor=extractor,
             session_repo=session_repo,
             message_repo=message_repo,
-            memory_config=MemoryConfig(
-                min_extraction_chars=20, max_pending_extractions=2
-            ),
+            memory_config=MemoryConfig(min_extraction_chars=20, max_pending_extractions=2),
         )
 
         queue.submit(session_id="sess-1", since_idx=since_idx, turn_id="first")

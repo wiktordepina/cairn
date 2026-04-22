@@ -249,9 +249,7 @@ class TestResponseParsing:
 
 
 class TestResolveModel:
-    def test_uses_extraction_role_when_present(
-        self, memory_repo, observation_log, clock
-    ):
+    def test_uses_extraction_role_when_present(self, memory_repo, observation_log, clock):
         provider = FakeProvider()
         extractor, _ = _build_extractor(
             provider=provider,

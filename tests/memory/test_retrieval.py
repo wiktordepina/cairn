@@ -136,23 +136,17 @@ class TestCompositeScore:
 class TestRetrieveBasics:
     @pytest.mark.asyncio
     async def test_empty_space_returns_empty(self, memory_repo, clock) -> None:
-        svc = MemoryService(
-            memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig()
-        )
+        svc = MemoryService(memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig())
         assert await svc.retrieve(space="", query="python", k=8) == []
 
     @pytest.mark.asyncio
     async def test_empty_query_returns_empty(self, memory_repo, clock) -> None:
-        svc = MemoryService(
-            memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig()
-        )
+        svc = MemoryService(memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig())
         assert await svc.retrieve(space="companion", query="   ", k=8) == []
 
     @pytest.mark.asyncio
     async def test_k_zero_returns_empty(self, memory_repo, clock) -> None:
-        svc = MemoryService(
-            memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig()
-        )
+        svc = MemoryService(memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig())
         assert await svc.retrieve(space="companion", query="x", k=0) == []
 
     @pytest.mark.asyncio
@@ -163,9 +157,7 @@ class TestRetrieveBasics:
             entry_type=MemoryEntryType.FACT,
             memory_class=MemoryClass.SEMANTIC,
         )
-        svc = MemoryService(
-            memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig()
-        )
+        svc = MemoryService(memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig())
         assert await svc.retrieve(space="companion", query="xenomorph", k=8) == []
 
 
@@ -186,9 +178,7 @@ class TestRetrieveTopK:
                 entry_type=MemoryEntryType.FACT,
                 memory_class=MemoryClass.SEMANTIC,
             )
-        svc = MemoryService(
-            memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig()
-        )
+        svc = MemoryService(memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig())
         out = await svc.retrieve(space="companion", query="python", k=2)
         assert len(out) == 2
 
@@ -206,9 +196,7 @@ class TestRetrieveTopK:
             entry_type=MemoryEntryType.FACT,
             memory_class=MemoryClass.SEMANTIC,
         )
-        svc = MemoryService(
-            memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig()
-        )
+        svc = MemoryService(memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig())
         companion = await svc.retrieve(space="companion", query="python", k=8)
         persona = await svc.retrieve(space="persona:alex", query="python", k=8)
         assert len(companion) == 1
@@ -219,9 +207,7 @@ class TestRetrieveTopK:
 
 class TestRetrieveRanking:
     @pytest.mark.asyncio
-    async def test_recent_important_beats_old_low_importance(
-        self, memory_repo, clock
-    ):
+    async def test_recent_important_beats_old_low_importance(self, memory_repo, clock):
         # Both match the query text; composite must prefer the recent +
         # important one even if BM25 alone would tie them.
         fresh = await memory_repo.store(
@@ -242,9 +228,7 @@ class TestRetrieveRanking:
         )
         assert fresh.id != stale.id
 
-        svc = MemoryService(
-            memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig()
-        )
+        svc = MemoryService(memory_repo=memory_repo, clock=clock, memory_config=MemoryConfig())
         out = await svc.retrieve(space="companion", query="python tooling", k=2)
         assert out[0].id == fresh.id
 
@@ -335,9 +319,7 @@ class TestClockInjection:
         # Both hit; both returned. What we can assert is that the
         # recency portion of the composite differs — easiest by computing
         # composite_score directly rather than peeking inside.
-        fresh_score = composite_score(
-            entry=fresh_out[0], bm25_score=0.0, now=NOW
-        )
+        fresh_score = composite_score(entry=fresh_out[0], bm25_score=0.0, now=NOW)
         future_score = composite_score(
             entry=future_out[0], bm25_score=0.0, now=NOW + timedelta(days=90)
         )

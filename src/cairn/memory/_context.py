@@ -213,9 +213,7 @@ class StandardContextManager:
 
     # ------------------------------------------------------------------
 
-    def _assemble_system_prompt(
-        self, retrieved_memories: list[MemoryEntry]
-    ) -> str:
+    def _assemble_system_prompt(self, retrieved_memories: list[MemoryEntry]) -> str:
         sections = [
             _wrap_section("identity", self._loader.load_soul_document()),
             _wrap_section("user_context", self._loader.load_user_context()),

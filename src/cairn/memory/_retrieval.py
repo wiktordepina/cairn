@@ -79,9 +79,7 @@ def composite_score(
     relevance = 1.0 / (1.0 + bm25_score) if (1.0 + bm25_score) > 0 else 0.0
 
     return (
-        _RECENCY_WEIGHT * recency
-        + _IMPORTANCE_WEIGHT * importance
-        + _RELEVANCE_WEIGHT * relevance
+        _RECENCY_WEIGHT * recency + _IMPORTANCE_WEIGHT * importance + _RELEVANCE_WEIGHT * relevance
     )
 
 

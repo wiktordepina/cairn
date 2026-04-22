@@ -123,9 +123,7 @@ class MemoryRepo:
             if existing is not None:
                 merged_importance = max(existing.importance, importance)
                 await conn.execute(
-                    "UPDATE memory_entries "
-                    "SET updated_at = ?, importance = ? "
-                    "WHERE id = ?",
+                    "UPDATE memory_entries SET updated_at = ?, importance = ? WHERE id = ?",
                     (now.isoformat(), merged_importance, existing.id),
                 )
                 return existing.model_copy(

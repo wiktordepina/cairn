@@ -72,9 +72,7 @@ class TestMigration:
         # Reopen; apply_pending is called inside connect() and must no-op
         # for already-applied migrations.
         conn = await db.connect()
-        cursor = await conn.execute(
-            "SELECT COUNT(*) FROM schema_migrations WHERE version = 3"
-        )
+        cursor = await conn.execute("SELECT COUNT(*) FROM schema_migrations WHERE version = 3")
         row = await cursor.fetchone()
         await cursor.close()
         assert row is not None and row[0] == 1
@@ -381,9 +379,7 @@ class TestSearch:
             entry_type=MemoryEntryType.PREFERENCE,
             memory_class=MemoryClass.SEMANTIC,
         )
-        fact_only = await repo.search(
-            "companion", "python", entry_types=[MemoryEntryType.FACT]
-        )
+        fact_only = await repo.search("companion", "python", entry_types=[MemoryEntryType.FACT])
         assert len(fact_only) == 1
         assert fact_only[0].entry.entry_type == MemoryEntryType.FACT
 
@@ -501,9 +497,7 @@ class TestSoak:
         # 50 unique slots × 3 templates = 150 unique observations.
         # We'll write each 7 times → 1050 store() calls.
         unique_contents = {
-            template.format(n=n)
-            for n in range(50)
-            for template in unique_templates
+            template.format(n=n) for n in range(50) for template in unique_templates
         }
         for _ in range(7):
             for content in sorted(unique_contents):

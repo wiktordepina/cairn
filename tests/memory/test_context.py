@@ -243,9 +243,7 @@ class TestStandardContextManager:
     async def test_base_persona_prompt_appended_last(self, tmp_path: Path) -> None:
         (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
         loader = _loader(tmp_path)
-        mgr = StandardContextManager(
-            loader=loader, base_system_prompt="You are the Alex persona."
-        )
+        mgr = StandardContextManager(loader=loader, base_system_prompt="You are the Alex persona.")
         req = await mgr.build_request(
             session=_session(),
             history=[],
@@ -260,9 +258,7 @@ class TestStandardContextManager:
         assert "You are the Alex persona." in req.system
 
     @pytest.mark.asyncio
-    async def test_no_sources_falls_back_to_builtin_soul_only(
-        self, tmp_path: Path
-    ) -> None:
+    async def test_no_sources_falls_back_to_builtin_soul_only(self, tmp_path: Path) -> None:
         """With every file missing and no base prompt, the builtin soul
         document is still emitted — we never ship a totally empty
         system prompt."""

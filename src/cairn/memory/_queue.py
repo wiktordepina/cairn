@@ -157,9 +157,7 @@ class ObservationExtractionQueue:
                 continue
             self._queue.task_done()
 
-            task = asyncio.create_task(
-                self._run_one(job), name=f"memory-extract-{job.turn_id}"
-            )
+            task = asyncio.create_task(self._run_one(job), name=f"memory-extract-{job.turn_id}")
             self._in_flight.add(task)
             task.add_done_callback(self._in_flight.discard)
 
@@ -168,9 +166,7 @@ class ObservationExtractionQueue:
         try:
             await self._do_extract(job)
         except Exception:  # noqa: BLE001
-            log.exception(
-                "extraction worker: unhandled failure for turn_id=%s", job.turn_id
-            )
+            log.exception("extraction worker: unhandled failure for turn_id=%s", job.turn_id)
 
     async def _do_extract(self, job: _Job) -> None:
         """Load transcript, apply gates, invoke the extractor.
@@ -192,10 +188,7 @@ class ObservationExtractionQueue:
             # Invariant #3: never extract from a memoryless session.
             return
 
-        if (
-            session.type == SessionType.PERSONA
-            and not self._config.extract_from_personas
-        ):
+        if session.type == SessionType.PERSONA and not self._config.extract_from_personas:
             return
 
         messages = await self._message_repo.list_for_session(job.session_id)
@@ -214,9 +207,7 @@ class ObservationExtractionQueue:
         # Context budget: rough message-count proxy for N turns.
         context_budget = max(self._config.extraction_context_turns, 0) * 4
         context_start = max(0, job.since_idx - context_budget)
-        context = [
-            m for m in messages if context_start <= m.idx < job.since_idx
-        ]
+        context = [m for m in messages if context_start <= m.idx < job.since_idx]
 
         # Anchor the observation to the last message of the latest turn,
         # typically the assistant's final message.

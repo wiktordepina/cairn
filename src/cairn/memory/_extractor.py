@@ -100,9 +100,7 @@ def _load_system_prompt() -> str:
     process restarts, and re-reading on every extraction is pure waste.
     """
     return (
-        resources.files("cairn.memory._prompts")
-        .joinpath("extract.md")
-        .read_text(encoding="utf-8")
+        resources.files("cairn.memory._prompts").joinpath("extract.md").read_text(encoding="utf-8")
     )
 
 
@@ -283,8 +281,7 @@ class Extractor:
                     cost_so_far = _compute_cost(model_cfg, usage_total)
                     if cost_so_far >= self._config.max_extraction_cost_usd:
                         log.warning(
-                            "extraction truncated by cost cap: "
-                            "turn_id=%s cost=%.4f cap=%.4f",
+                            "extraction truncated by cost cap: turn_id=%s cost=%.4f cap=%.4f",
                             turn_id,
                             cost_so_far,
                             self._config.max_extraction_cost_usd,
@@ -390,9 +387,7 @@ class Extractor:
                 cost_usd=cost_usd,
             )
         except Exception:  # noqa: BLE001
-            log.exception(
-                "extractor: cost-tracker record failed; turn_id=%s", turn_id
-            )
+            log.exception("extractor: cost-tracker record failed; turn_id=%s", turn_id)
 
 
 # ---------------------------------------------------------------------------
