@@ -3,6 +3,18 @@
 
 # Memory — API reference
 
+## Extraction engine
+
+::: cairn.memory.ExtractedObservation
+
+::: cairn.memory.ExtractionResponse
+
+::: cairn.memory.ExtractionResult
+
+::: cairn.memory.Extractor
+
+::: cairn.memory.ObservationExtractionQueue
+
 ## Observation log
 
 ::: cairn.memory.Observation

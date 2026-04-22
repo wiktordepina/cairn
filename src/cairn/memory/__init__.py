@@ -14,9 +14,22 @@ The persistence schema lives in `cairn.persistence`; the domain types
 `cairn.domain`. This module owns everything in between.
 """
 
+from cairn.memory._extractor import (
+    ExtractedObservation,
+    ExtractionResponse,
+    ExtractionResult,
+    Extractor,
+)
 from cairn.memory._observation_log import Observation, ObservationLog
+from cairn.memory._queue import ObservationExtractionQueue
 
 __all__ = [
+    # Extraction engine
+    "ExtractedObservation",
+    "ExtractionResponse",
+    "ExtractionResult",
+    "Extractor",
+    "ObservationExtractionQueue",
     # Observation log
     "Observation",
     "ObservationLog",

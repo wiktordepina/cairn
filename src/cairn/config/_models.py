@@ -19,6 +19,7 @@ class ModelRole(StrEnum):
 
     PRIMARY = "primary"
     UTILITY = "utility"
+    EXTRACTION = "extraction"
     REASONING = "reasoning"
     CODING = "coding"
     VISION = "vision"
@@ -150,6 +151,58 @@ class ConventionFilesConfig(BaseModel):
     user_level_paths: list[str] = []
 
 
+class MemoryConfig(BaseModel):
+    """Tunables for the memory brick.
+
+    All knobs live on `ProfileConfig.memory`. Defaults are the shipped
+    V1 values — changing them is a profile-level override, not a
+    system-wide one.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    # Extraction ---------------------------------------------------------
+    extraction_context_turns: int = 3
+    """Number of prior turns to include as context when extracting from
+    the latest turn. Helps disambiguate short replies ("yes, do that")
+    without re-extracting old material."""
+
+    min_extraction_chars: int = 200
+    """Skip extraction when the latest turn's combined user + assistant
+    text is below this length. Avoids spending utility-model calls on
+    "thanks!" / "ok" / "yes that works" turns."""
+
+    extract_from_personas: bool = True
+    """If False, persona sessions don't trigger extraction. Keep True
+    unless a persona is intentionally stateless."""
+
+    extract_from_tool_only_turns: bool = True
+    """If True, extract even from turns where the assistant produced no
+    user-facing prose but did invoke tools. The length gate still
+    applies to the combined transcript."""
+
+    max_extraction_cost_usd: float = 0.01
+    """Per-extraction cost cap. Mid-stream responses truncating past
+    this limit still record whatever was parsed so far."""
+
+    max_pending_extractions: int = 100
+    """Hard cap on queued extraction jobs. Overflows drop the oldest
+    queued job and log a WARNING."""
+
+    # Retrieval ----------------------------------------------------------
+    retrieval_k: int = 8
+    """Top-k memories surfaced per turn."""
+
+    retrieval_content_truncate: int = 200
+    """Per-entry content truncation when rendering retrieved memories
+    into the system prompt."""
+
+    # Observation log ----------------------------------------------------
+    observation_log_fsync: bool = False
+    """Fsync each JSONL append. Default off — SQLite is the durability
+    store; losing the last few lines of JSONL on crash is acceptable."""
+
+
 class DelegationToolConfig(BaseModel):
     """Configuration for a delegation tool (consult another model)."""
 
@@ -230,6 +283,7 @@ class ProfileConfig(BaseModel):
     delegation_tools: list[DelegationToolConfig] = []
     budgets: BudgetConfig = BudgetConfig()
     convention_files: ConventionFilesConfig = ConventionFilesConfig()
+    memory: MemoryConfig = MemoryConfig()
 
 
 class CairnConfig(BaseModel):

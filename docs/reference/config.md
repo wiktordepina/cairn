@@ -15,6 +15,8 @@
 
 ::: cairn.config.DelegationToolConfig
 
+::: cairn.config.MemoryConfig
+
 ::: cairn.config.ModelConfig
 
 ::: cairn.config.ModelRole
