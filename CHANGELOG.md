@@ -10,8 +10,80 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-Convention files, UI, CLI entry point, and observability tranche 2
-(log redaction, structured `UIEventObserver`) are still to land.
+UI, CLI entry point, and observability tranche 2 (log redaction,
+structured `UIEventObserver`) are still to land.
+
+## [0.9.0] — 2026-04-23
+
+Ships project convention-file loading: `AGENTS.md` / `CLAUDE.md` /
+`CAIRN.md` discovery, a pluggable trust gate, and injection into
+the system prompt as a dedicated `<project_conventions>` segment.
+Design doc: `.plan/conventions-brick-design.md`.
+
+### Added — conventions
+
+- **`cairn.conventions` module** (`src/cairn/conventions/`):
+    - `discover_project_files` + `discover_user_files` — walk up
+      from cwd to a configurable boundary (git root by default),
+      take the nearest match per filename, with optional nested
+      descent for monorepos. Skips common build/dep dirs, hidden
+      dirs, and symlinks. Capped by `max_nested_depth` (default 3).
+      User-level fallback paths open verbatim with `~`/`$VAR`
+      expansion.
+    - `TrustGate` protocol with three V1 implementations:
+      `AlwaysTrustGate`, `AllowlistTrustGate` (backed by
+      `AllowlistStore` reading
+      `$XDG_CONFIG_HOME/cairn/trusted_projects.toml`), and
+      `DenyingPromptTrustGate` — a placeholder for
+      `trust_policy="prompt"` until the UI brick lands, DENYs
+      with a once-per-project WARNING. See
+      [ADR 0031](docs/decisions/0031-trust-prompt-deferred.md).
+    - `AllowlistStore` with full add / remove / list / contains
+      surface — V1 uses only `contains()`, but the other methods
+      ship now so the CLI brick's `cairn trust` subcommand has a
+      stable target.
+    - `ConventionLoader` — caches discovery + trust check + read
+      per session. `enabled=False` short-circuits with no disk
+      I/O. `invalidate()` drops the cache for `/reload`.
+    - `ConventionFile` frozen dataclass + `wrap_one` /
+      `render_conventions` helpers emit the
+      `<project_conventions source="..." path="...">` envelope
+      per arch doc §4.12.
+- **`ConventionFilesConfig.max_nested_depth`** new field
+  (default 3) — caps nested descent. Additive pydantic default,
+  no TOML migration.
+- **`StandardContextManager` extended** with optional
+  `conventions: ConventionLoader | None` kwarg. When provided,
+  a `<project_conventions>` section lands between
+  `<user_context>` and `<memory_index>` — matches arch doc §4.12
+  assembly order. `conventions=None` preserves the pre-brick
+  layout (regression guard).
+- **Read handling**: UTF-8 with `errors="replace"`, 64 KiB
+  default cap per file, paragraph-boundary truncation with an
+  HTML-comment suffix recording original size. Binary files
+  (null byte in first 1 KiB) skipped with a WARNING.
+
+### Added — docs + ADRs
+
+- New guide page `docs/conventions.md` walking through
+  discovery, the trust gate, user-level fallbacks, size caps,
+  and the system-prompt envelope format.
+- [ADR 0030 — Convention-file ordering](docs/decisions/0030-convention-file-ordering.md)
+  captures the broad-to-specific layering decision.
+- [ADR 0031 — `trust_policy="prompt"` deferred](docs/decisions/0031-trust-prompt-deferred.md)
+  explains the conservative default pending UI.
+- [ADR 0032 — No Cursor / Cline in V1](docs/decisions/0032-convention-files-no-cursor-cline.md)
+  keeps the default filename list tight.
+- `docs/architecture.md` status table: convention files marked
+  Shipped at 0.9.0.
+- Auto-generated `docs/reference/conventions.md`.
+
+### Added — tests
+
+- **+52 tests** across `tests/conventions/` (22 discovery, 15
+  trust, 9 loader, 3 render) and `tests/memory/test_context.py`
+  (+3 integration tests covering the new section's position and
+  None-fallback behaviour).
 
 ## [0.8.0] — 2026-04-22
 

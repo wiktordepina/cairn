@@ -137,7 +137,7 @@ Cairn is under active development. This table is authoritative; the
 | Observability — bootstrap modules | Shipped (0.7.0) |
 | Memory (tier-1) — extraction, retrieval, context assembly | Shipped (0.7.0) |
 | Compaction | Shipped (0.8.0) |
-| Convention files | Planned |
+| Convention files | Shipped (0.9.0) |
 | UI (Textual) | Planned |
 | CLI entry point | Planned |
 | Observability — tranche 2 (structured observer) | Planned |
