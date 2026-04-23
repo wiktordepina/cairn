@@ -13,6 +13,7 @@ from cairn.domain._events import (
     BudgetWarning,
     DelegationCompleted,
     DelegationSpawned,
+    ObservationExtractionCompleted,
     ObservationExtractionRequested,
     SessionArchived,
     SessionCreated,
@@ -86,6 +87,26 @@ class TestUIEvents:
     def test_observation_extraction_requested(self) -> None:
         ev = ObservationExtractionRequested(session_id="sess-001", turn_id="t-1")
         assert ev.session_id == "sess-001"
+
+    def test_observation_extraction_completed_defaults(self) -> None:
+        ev = ObservationExtractionCompleted(
+            session_id="sess-001",
+            turn_id="t-1",
+            status="succeeded",
+        )
+        assert ev.observations_written == 0
+        assert ev.cost_usd == 0.0
+        assert ev.reason is None
+
+    def test_observation_extraction_completed_with_detail(self) -> None:
+        ev = ObservationExtractionCompleted(
+            session_id="sess-001",
+            turn_id="t-1",
+            status="gated",
+            reason="persona_opt_out",
+        )
+        assert ev.status == "gated"
+        assert ev.reason == "persona_opt_out"
 
     def test_turn_complete(self) -> None:
         ev = TurnComplete(session_id="sess-001", turn_id="t-1", stop_reason=StopReason.END_TURN)

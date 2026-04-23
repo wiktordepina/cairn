@@ -51,6 +51,8 @@
 
 ::: cairn.domain.HistoryCompacted
 
+::: cairn.domain.ObservationExtractionCompleted
+
 ::: cairn.domain.ObservationExtractionRequested
 
 ::: cairn.domain.SessionArchived

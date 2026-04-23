@@ -107,6 +107,34 @@ class ObservationExtractionRequested:
 
 
 @dataclass(frozen=True, slots=True)
+class ObservationExtractionCompleted:
+    """Memory observation extraction has finished.
+
+    Pairs 1:1 with an earlier `ObservationExtractionRequested` for the
+    same `turn_id`. Fires on every post-submit terminal path — gates,
+    successes, and failures — so the UI can always close the loop on
+    the earlier request indicator.
+
+    `status` is one of:
+
+    - ``"succeeded"`` — extractor ran and wrote ≥ 0 observations cleanly.
+    - ``"gated"`` — queue short-circuited before calling the extractor
+      (persona opt-out, length gate, memoryless session, missing
+      session, no latest messages). `reason` carries the specific gate.
+    - ``"failed"`` — extractor raised, parsing failed, or the cost cap
+      fired before any observation could be written. `reason` carries
+      detail where available.
+    """
+
+    session_id: str
+    turn_id: str
+    status: str  # 'succeeded' | 'gated' | 'failed'
+    observations_written: int = 0
+    cost_usd: float = 0.0
+    reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class TurnComplete:
     """A full turn (user message → assistant response) has finished cleanly."""
 
@@ -214,6 +242,7 @@ UIEvent = (
     | DelegationSpawned
     | DelegationCompleted
     | ObservationExtractionRequested
+    | ObservationExtractionCompleted
     | TurnComplete
     | TurnAborted
     | TurnBlocked
