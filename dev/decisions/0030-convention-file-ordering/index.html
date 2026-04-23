@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0022-memory-dedup-threshold/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0030-convention-file-ordering/">
       
       
-        <link rel="prev" href="../0021-tier-1-memory-first/">
+        <link rel="prev" href="../0029-context-budget-advisory/">
       
       
-        <link rel="next" href="../0023-jsonl-log-no-rebuild/">
+        <link rel="next" href="../0031-trust-prompt-deferred/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>0022 Memory dedup threshold - Cairn</title>
+        <title>0030 Convention-file ordering - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0022-dedup-observations-via-sequencematcherratio-090" class="md-skip">
+        <a href="#0030-convention-file-ordering-user-level-before-project-broad-before-specific" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0022 Memory dedup threshold
+              0030 Convention-file ordering
             
           </span>
         </div>
@@ -1979,37 +1979,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0022 Memory dedup threshold
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0022-memory-dedup-threshold/" class="md-nav__link">
         
   
   
@@ -2025,70 +1998,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2294,10 +2203,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0030-convention-file-ordering/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0030 Convention-file ordering
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2313,6 +2249,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alternatives-considered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternatives considered
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2468,7 +2468,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0022-memory-dedup-threshold.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0030-convention-file-ordering.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2476,70 +2476,62 @@
   
 
 
-<h1 id="0022-dedup-observations-via-sequencematcherratio-090">0022 — Dedup observations via <code>SequenceMatcher.ratio() &gt;= 0.90</code><a class="headerlink" href="#0022-dedup-observations-via-sequencematcherratio-090" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-22
+<h1 id="0030-convention-file-ordering-user-level-before-project-broad-before-specific">0030 — Convention-file ordering: user-level before project, broad-before-specific<a class="headerlink" href="#0030-convention-file-ordering-user-level-before-project-broad-before-specific" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-23
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Observations surface repeatedly across sessions. Without dedup, the
-same fact re-observed ten times produces ten rows, noise drowns out
-signal in retrieval, and the JSONL log balloons. Mait-code hit this
-problem and landed on a <code>difflib.SequenceMatcher.ratio()</code>-based
-dedup path that compares new content against recent FTS5 candidates
-of the same space and type.</p>
-<p>V1 cairn adopts the same approach. Threshold choice and scope need
-to be documented so future changes are informed.</p>
+<p>Cairn reads multiple convention files per session:</p>
+<ul>
+<li>zero or more user-level fallback files
+  (e.g. <code>$XDG_CONFIG_HOME/cairn/CAIRN.md</code>),</li>
+<li>the nearest project file per configured filename (<code>CAIRN.md</code>,
+  <code>AGENTS.md</code>, <code>CLAUDE.md</code> by default), walked up to the git root,</li>
+<li>any additional matches in nested directories under cwd when
+  <code>search_subdirs</code> is true.</li>
+</ul>
+<p>All of them ride in the <code>&lt;project_conventions&gt;</code> segment of the
+system prompt. The question is the order in which we stack them.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><code>MemoryRepo.store()</code> runs this flow inside a <code>BEGIN IMMEDIATE</code>
-transaction:</p>
+<p><strong>Broad → specific:</strong></p>
 <ol>
-<li>Extract up to 8 significant words from the new content
-   (lowercase, stopword-filtered).</li>
-<li>FTS5 <code>MATCH</code> query, OR-joined over those words, filtered by
-   <code>memory_space</code> + <code>entry_type</code>, <code>LIMIT 20</code>.</li>
-<li>Compute <code>SequenceMatcher(None, new_content, candidate).ratio()</code>
-   for each candidate.</li>
-<li>If <code>ratio &gt;= 0.90</code>: UPDATE the existing row's <code>updated_at</code> and
-   <code>importance = MAX(existing, new)</code>; return the refreshed row.</li>
-<li>Otherwise: INSERT the new row.</li>
+<li>User-level files, in declared <code>user_level_paths</code> order.</li>
+<li>Project files matched by ancestor walk, nearest-wins, in the
+   <code>filenames</code> config order.</li>
+<li>Project files matched by nested descent, shallower first.</li>
 </ol>
-<p><strong>Threshold: 0.90.</strong> Chosen to match mait-code's empirically-tuned
-value. 0.90 catches near-duplicates (one-word changes, synonym
-swaps of short content) without false-positives on semantically
-distinct but lexically overlapping observations.</p>
-<p><strong>Scope: same space AND same entry type.</strong> Different spaces are
-always distinct by invariant. Different entry types (e.g. fact vs
-preference) are considered distinct because their downstream
-handling differs — a fact and a preference about the same topic
-aren't duplicates even if their text happens to overlap.</p>
+<p>The model reads all of them — a later file does not mechanically
+override an earlier one. But when two files contradict, the
+convention we want is that <strong>more specific context wins</strong>: a
+per-package <code>AGENTS.md</code> should override a repo-root one; a
+repo-root one should override the user's global default.</p>
+<p>Placing broader files earlier and more specific files later lines
+up with standard prompt-ordering intuition ("recency wins"):
+re-asserting a fact later in the prompt is the cleanest way to
+signal precedence without the model having to reconcile explicit
+priority metadata.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Positive.</strong> Same fact re-observed collapses to one row with a
-  refreshed timestamp — recency correctly reflects the latest
-  observation.</li>
-<li><strong>Positive.</strong> The <code>BEGIN IMMEDIATE</code> ensures two concurrent
-  extractors can't race-insert near-duplicates.</li>
-<li><strong>Negative.</strong> Semantic near-duplicates with lexically different
-  phrasings ("User loves keto" vs "User is on a ketogenic diet")
-  produce two rows. V3 adds vector search; at that point dedup can
-  upgrade to a cosine-similarity gate.</li>
-<li><strong>Negative.</strong> <code>SequenceMatcher</code> is O(N*M). With 20 candidates × ~200
-  char content each, runtime is negligible today; at 100k+ entries
-  per space we'd want to revisit.</li>
+<li>Users get predictable ordering without having to configure it.</li>
+<li>A user can layer "my defaults → this project → this package"
+  without editing the project's convention files.</li>
+<li>The trust gate only applies to project files — user-level
+  files are under the user's own config dir, same trust boundary
+  as soul document / user-context / MEMORY.md. Inconsistent
+  treatment of home-dir content would be a worse precedent to
+  set than the minor asymmetry this introduces.</li>
 </ul>
 <h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<p><strong>Exact-string dedup (<code>content = ?</code> lookup).</strong> Zero overhead, but
-misses near-duplicates — the common case is a rephrasing, not a
-verbatim match.</p>
-<p><strong>Content hashing (SHA-256).</strong> Same shortcoming as exact-string:
-hashes aren't fuzzy.</p>
-<p><strong>Embeddings-based dedup.</strong> Robust against rephrasing but requires a
-model, a vector column, and an embedding provider. Deferred to V3.</p>
-<p><strong>Threshold at 0.95.</strong> Tried during design; too strict — it let
-through "User prefers Python" and "User prefers python" as
-distinct (punctuation/casing differences can drop the ratio below
-0.95 on short inputs).</p>
-<p><strong>Threshold at 0.80.</strong> Too lenient — overlapping but genuinely
-different observations would merge and one would be lost.</p>
+<ul>
+<li><strong>Explicit priority on each config entry.</strong> Rejected as
+  unnecessary ceremony — the natural layering covers the common
+  case, and users who truly want a different precedence can
+  achieve it by re-ordering <code>user_level_paths</code> or renaming files.</li>
+<li><strong>Load all files in <code>filenames</code> config order with no
+  broad-before-specific rule.</strong> Rejected because a user-level
+  fallback file with the same basename as a project file would
+  then appear after the project file on some sessions and before
+  it on others depending on declaration quirks.</li>
+</ul>
 
 
 

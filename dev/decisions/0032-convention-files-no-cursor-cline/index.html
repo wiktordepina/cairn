@@ -12,13 +12,11 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0022-memory-dedup-threshold/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0032-convention-files-no-cursor-cline/">
       
       
-        <link rel="prev" href="../0021-tier-1-memory-first/">
+        <link rel="prev" href="../0031-trust-prompt-deferred/">
       
-      
-        <link rel="next" href="../0023-jsonl-log-no-rebuild/">
       
       
         
@@ -29,7 +27,7 @@
     
     
       
-        <title>0022 Memory dedup threshold - Cairn</title>
+        <title>0032 No Cursor/Cline in V1 - Cairn</title>
       
     
     
@@ -82,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0022-dedup-observations-via-sequencematcherratio-090" class="md-skip">
+        <a href="#0032-no-support-for-cursor-mdc-cline-clinerules-in-v1" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0022 Memory dedup threshold
+              0032 No Cursor/Cline in V1
             
           </span>
         </div>
@@ -1979,37 +1977,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0022 Memory dedup threshold
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0022-memory-dedup-threshold/" class="md-nav__link">
         
   
   
@@ -2025,70 +1996,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2350,10 +2257,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0032-convention-files-no-cursor-cline/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0032 No Cursor/Cline in V1
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2369,6 +2303,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2440,17 +2427,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives considered
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2468,7 +2444,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0022-memory-dedup-threshold.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0032-convention-files-no-cursor-cline.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2476,70 +2452,87 @@
   
 
 
-<h1 id="0022-dedup-observations-via-sequencematcherratio-090">0022 — Dedup observations via <code>SequenceMatcher.ratio() &gt;= 0.90</code><a class="headerlink" href="#0022-dedup-observations-via-sequencematcherratio-090" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-22
+<h1 id="0032-no-support-for-cursor-mdc-cline-clinerules-in-v1">0032 — No support for Cursor <code>.mdc</code> / Cline <code>.clinerules</code> in V1<a class="headerlink" href="#0032-no-support-for-cursor-mdc-cline-clinerules-in-v1" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-23
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Observations surface repeatedly across sessions. Without dedup, the
-same fact re-observed ten times produces ten rows, noise drowns out
-signal in retrieval, and the JSONL log balloons. Mait-code hit this
-problem and landed on a <code>difflib.SequenceMatcher.ratio()</code>-based
-dedup path that compares new content against recent FTS5 candidates
-of the same space and type.</p>
-<p>V1 cairn adopts the same approach. Threshold choice and scope need
-to be documented so future changes are informed.</p>
+<p>Arch doc §4.12 enumerates the convention-file landscape as of
+April 2026:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Origin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AGENTS.md</code></td>
+<td>Open spec, Linux-Foundation-stewarded</td>
+</tr>
+<tr>
+<td><code>CLAUDE.md</code></td>
+<td>Claude Code</td>
+</tr>
+<tr>
+<td><code>GEMINI.md</code></td>
+<td>Gemini CLI</td>
+</tr>
+<tr>
+<td><code>.cursor/rules/*.mdc</code></td>
+<td>Cursor</td>
+</tr>
+<tr>
+<td><code>.clinerules</code></td>
+<td>Cline</td>
+</tr>
+<tr>
+<td><code>CAIRN.md</code></td>
+<td>Cairn</td>
+</tr>
+</tbody>
+</table>
+<p>The table lists all of them for landscape completeness, not as a
+ship list. The V1 brick ships the default <code>filenames</code> list as
+<code>["CAIRN.md", "AGENTS.md", "CLAUDE.md"]</code>.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><code>MemoryRepo.store()</code> runs this flow inside a <code>BEGIN IMMEDIATE</code>
-transaction:</p>
-<ol>
-<li>Extract up to 8 significant words from the new content
-   (lowercase, stopword-filtered).</li>
-<li>FTS5 <code>MATCH</code> query, OR-joined over those words, filtered by
-   <code>memory_space</code> + <code>entry_type</code>, <code>LIMIT 20</code>.</li>
-<li>Compute <code>SequenceMatcher(None, new_content, candidate).ratio()</code>
-   for each candidate.</li>
-<li>If <code>ratio &gt;= 0.90</code>: UPDATE the existing row's <code>updated_at</code> and
-   <code>importance = MAX(existing, new)</code>; return the refreshed row.</li>
-<li>Otherwise: INSERT the new row.</li>
-</ol>
-<p><strong>Threshold: 0.90.</strong> Chosen to match mait-code's empirically-tuned
-value. 0.90 catches near-duplicates (one-word changes, synonym
-swaps of short content) without false-positives on semantically
-distinct but lexically overlapping observations.</p>
-<p><strong>Scope: same space AND same entry type.</strong> Different spaces are
-always distinct by invariant. Different entry types (e.g. fact vs
-preference) are considered distinct because their downstream
-handling differs — a fact and a preference about the same topic
-aren't duplicates even if their text happens to overlap.</p>
+<p>V1 ships three filenames in the default list. Cursor's
+<code>.cursor/rules/*.mdc</code> and Cline's <code>.clinerules</code> are <strong>not</strong> in
+defaults and <strong>not</strong> supported by the discovery logic.</p>
+<p>Reasons:</p>
+<ul>
+<li><code>.mdc</code> is a directory glob (multiple files per rule-set), not a
+  single file — supporting it requires a different shape of
+  discovery than the walk-up-and-take-one pattern we have. It
+  would either force restructuring the discovery logic or
+  becoming a second discovery path; neither is worth the
+  complexity without a user asking for it.</li>
+<li><code>.clinerules</code> is supported only by Cline and has no
+  corresponding open spec. Its format is not plain Markdown
+  (it's an inline-comment-heavy plaintext format specific to
+  Cline's parser). Including it by default leaks Cline-isms into
+  every cairn session.</li>
+<li><code>GEMINI.md</code> is plain Markdown and would be trivially
+  supportable by adding it to defaults, but we chose not to —
+  every filename in the default list increases the surface area
+  that a cloned repo can use to smuggle instructions into the
+  model's system prompt.</li>
+</ul>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Positive.</strong> Same fact re-observed collapses to one row with a
-  refreshed timestamp — recency correctly reflects the latest
-  observation.</li>
-<li><strong>Positive.</strong> The <code>BEGIN IMMEDIATE</code> ensures two concurrent
-  extractors can't race-insert near-duplicates.</li>
-<li><strong>Negative.</strong> Semantic near-duplicates with lexically different
-  phrasings ("User loves keto" vs "User is on a ketogenic diet")
-  produce two rows. V3 adds vector search; at that point dedup can
-  upgrade to a cosine-similarity gate.</li>
-<li><strong>Negative.</strong> <code>SequenceMatcher</code> is O(N*M). With 20 candidates × ~200
-  char content each, runtime is negligible today; at 100k+ entries
-  per space we'd want to revisit.</li>
+<li>Users who want Cursor / Cline / Gemini compatibility can add
+  the relevant filenames to <code>convention_files.filenames</code> in
+  their profile. For <code>.mdc</code> they're out of luck until proper
+  glob support lands.</li>
+<li>We reserve the right to move these into defaults later once a
+  user with a concrete need asks. The bar is "real user, real
+  workflow," not "would be nice to have."</li>
+<li>This ADR intentionally keeps defaults conservative — the
+  security doc's threat model (§3) treats every convention file
+  as untrusted prompt input, and the default list should be the
+  minimum users likely already want, not the maximum we could
+  support.</li>
 </ul>
-<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<p><strong>Exact-string dedup (<code>content = ?</code> lookup).</strong> Zero overhead, but
-misses near-duplicates — the common case is a rephrasing, not a
-verbatim match.</p>
-<p><strong>Content hashing (SHA-256).</strong> Same shortcoming as exact-string:
-hashes aren't fuzzy.</p>
-<p><strong>Embeddings-based dedup.</strong> Robust against rephrasing but requires a
-model, a vector column, and an embedding provider. Deferred to V3.</p>
-<p><strong>Threshold at 0.95.</strong> Tried during design; too strict — it let
-through "User prefers Python" and "User prefers python" as
-distinct (punctuation/casing differences can drop the ratio below
-0.95 on short inputs).</p>
-<p><strong>Threshold at 0.80.</strong> Too lenient — overlapping but genuinely
-different observations would merge and one would be lost.</p>
 
 
 

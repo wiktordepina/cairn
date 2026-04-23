@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0022-memory-dedup-threshold/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0031-trust-prompt-deferred/">
       
       
-        <link rel="prev" href="../0021-tier-1-memory-first/">
+        <link rel="prev" href="../0030-convention-file-ordering/">
       
       
-        <link rel="next" href="../0023-jsonl-log-no-rebuild/">
+        <link rel="next" href="../0032-convention-files-no-cursor-cline/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>0022 Memory dedup threshold - Cairn</title>
+        <title>0031 Trust prompt deferred - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0022-dedup-observations-via-sequencematcherratio-090" class="md-skip">
+        <a href="#0031-trust_policyprompt-deferred-to-the-ui-brick" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0022 Memory dedup threshold
+              0031 Trust prompt deferred
             
           </span>
         </div>
@@ -1979,37 +1979,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0022 Memory dedup threshold
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0022-memory-dedup-threshold/" class="md-nav__link">
         
   
   
@@ -2025,70 +1998,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives considered
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2322,10 +2231,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0031-trust-prompt-deferred/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0031 Trust prompt deferred
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2341,6 +2277,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2440,17 +2429,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#alternatives-considered" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternatives considered
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -2468,7 +2446,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0022-memory-dedup-threshold.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0031-trust-prompt-deferred.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2476,70 +2454,64 @@
   
 
 
-<h1 id="0022-dedup-observations-via-sequencematcherratio-090">0022 — Dedup observations via <code>SequenceMatcher.ratio() &gt;= 0.90</code><a class="headerlink" href="#0022-dedup-observations-via-sequencematcherratio-090" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-22
+<h1 id="0031-trust_policyprompt-deferred-to-the-ui-brick">0031 — <code>trust_policy="prompt"</code> deferred to the UI brick<a class="headerlink" href="#0031-trust_policyprompt-deferred-to-the-ui-brick" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-23
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p>Observations surface repeatedly across sessions. Without dedup, the
-same fact re-observed ten times produces ten rows, noise drowns out
-signal in retrieval, and the JSONL log balloons. Mait-code hit this
-problem and landed on a <code>difflib.SequenceMatcher.ratio()</code>-based
-dedup path that compares new content against recent FTS5 candidates
-of the same space and type.</p>
-<p>V1 cairn adopts the same approach. Threshold choice and scope need
-to be documented so future changes are informed.</p>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p><code>MemoryRepo.store()</code> runs this flow inside a <code>BEGIN IMMEDIATE</code>
-transaction:</p>
+<p>Arch doc §4.12 defines three trust policies for project
+convention files:</p>
+<ul>
+<li><code>prompt</code> (default) — on first encounter, show the user the
+  file's path and first ~20 lines, require approval.</li>
+<li><code>always</code> — load every project's files unconditionally.</li>
+<li><code>project_allowlist</code> — load only from paths on a user-managed
+  allowlist.</li>
+</ul>
+<p>The convention-files brick ships before the UI brick. "Prompt on
+first encounter" is fundamentally a UI interaction; there's no
+headless way to ask the user mid-turn from the core library.</p>
+<p>Three options for what happens when a user's profile still has
+<code>trust_policy="prompt"</code> after this brick lands but before the UI
+brick does:</p>
 <ol>
-<li>Extract up to 8 significant words from the new content
-   (lowercase, stopword-filtered).</li>
-<li>FTS5 <code>MATCH</code> query, OR-joined over those words, filtered by
-   <code>memory_space</code> + <code>entry_type</code>, <code>LIMIT 20</code>.</li>
-<li>Compute <code>SequenceMatcher(None, new_content, candidate).ratio()</code>
-   for each candidate.</li>
-<li>If <code>ratio &gt;= 0.90</code>: UPDATE the existing row's <code>updated_at</code> and
-   <code>importance = MAX(existing, new)</code>; return the refreshed row.</li>
-<li>Otherwise: INSERT the new row.</li>
+<li><strong>Silently fall back to <code>always</code>.</strong> Convenient but misleading
+   — users who chose <code>prompt</code> specifically wanted a safety gate,
+   and silently removing it is the exact opposite of what they
+   asked for.</li>
+<li><strong>Silently fall back to <code>project_allowlist</code> with an empty
+   allowlist.</strong> Same effect as DENY, but provides no visible
+   signal that anything is degraded.</li>
+<li><strong>DENY with a visible WARNING (once per project per process).</strong>
+   Preserves the "this is gated" semantics the user chose, and
+   makes the degradation visible so they can switch policy
+   explicitly.</li>
 </ol>
-<p><strong>Threshold: 0.90.</strong> Chosen to match mait-code's empirically-tuned
-value. 0.90 catches near-duplicates (one-word changes, synonym
-swaps of short content) without false-positives on semantically
-distinct but lexically overlapping observations.</p>
-<p><strong>Scope: same space AND same entry type.</strong> Different spaces are
-always distinct by invariant. Different entry types (e.g. fact vs
-preference) are considered distinct because their downstream
-handling differs — a fact and a preference about the same topic
-aren't duplicates even if their text happens to overlap.</p>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p><code>DenyingPromptTrustGate</code> — option 3. DENY every check, log
+<code>WARNING: trust_policy='prompt' requires the UI brick (not yet
+shipped). Switch to 'always' or 'project_allowlist' in your
+profile config.</code> once per distinct project in a given process.</p>
+<p>Rationale: the <code>prompt</code> default exists specifically so the user
+gets a safety checkpoint. With no UI we can't ask, so we skip
+rather than degrade the gate into something weaker that looks
+the same.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Positive.</strong> Same fact re-observed collapses to one row with a
-  refreshed timestamp — recency correctly reflects the latest
-  observation.</li>
-<li><strong>Positive.</strong> The <code>BEGIN IMMEDIATE</code> ensures two concurrent
-  extractors can't race-insert near-duplicates.</li>
-<li><strong>Negative.</strong> Semantic near-duplicates with lexically different
-  phrasings ("User loves keto" vs "User is on a ketogenic diet")
-  produce two rows. V3 adds vector search; at that point dedup can
-  upgrade to a cosine-similarity gate.</li>
-<li><strong>Negative.</strong> <code>SequenceMatcher</code> is O(N*M). With 20 candidates × ~200
-  char content each, runtime is negligible today; at 100k+ entries
-  per space we'd want to revisit.</li>
+<li><strong>Out-of-the-box experience</strong>: until a user changes their
+  <code>trust_policy</code>, no project convention files load. This matches
+  the conservative default posture of security doc §3 ("treat
+  untrusted input conservatively") but does mean "step one after
+  install is often to switch trust policy."</li>
+<li><strong>Documented upgrade path</strong>: <code>docs/conventions.md</code> tells users
+  to set <code>trust_policy = "always"</code> for "I only ever work in my
+  own repos" ergonomics, or <code>project_allowlist</code> + hand-edit
+  <code>trusted_projects.toml</code> for safer fine-grained control.</li>
+<li>When the UI brick lands, a real <code>PromptingTrustGate</code> will
+  replace <code>DenyingPromptTrustGate</code> in <code>trust_gate_for_policy()</code>.
+  Profiles already configured with <code>trust_policy="prompt"</code> will
+  get the real UX automatically — no migration, no config
+  change required.</li>
 </ul>
-<h2 id="alternatives-considered">Alternatives considered<a class="headerlink" href="#alternatives-considered" title="Permanent link">&para;</a></h2>
-<p><strong>Exact-string dedup (<code>content = ?</code> lookup).</strong> Zero overhead, but
-misses near-duplicates — the common case is a rephrasing, not a
-verbatim match.</p>
-<p><strong>Content hashing (SHA-256).</strong> Same shortcoming as exact-string:
-hashes aren't fuzzy.</p>
-<p><strong>Embeddings-based dedup.</strong> Robust against rephrasing but requires a
-model, a vector column, and an embedding provider. Deferred to V3.</p>
-<p><strong>Threshold at 0.95.</strong> Tried during design; too strict — it let
-through "User prefers Python" and "User prefers python" as
-distinct (punctuation/casing differences can drop the ratio below
-0.95 on short inputs).</p>
-<p><strong>Threshold at 0.80.</strong> Too lenient — overlapping but genuinely
-different observations would merge and one would be lost.</p>
 
 
 
