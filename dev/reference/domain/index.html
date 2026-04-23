@@ -1356,6 +1356,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cairn.domain.ObservationExtractionCompleted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ObservationExtractionCompleted
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cairn.domain.ObservationExtractionRequested" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3261,6 +3272,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cairn.domain.ObservationExtractionCompleted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ObservationExtractionCompleted
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cairn.domain.ObservationExtractionRequested" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4687,6 +4709,78 @@ advisory budget. Awaits a user decision via <code>BudgetOverflowGateway</code>.<
 
 
 
+<h2 id="cairn.domain.ObservationExtractionCompleted" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ObservationExtractionCompleted</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-dataclass"><code>dataclass</code></small>
+  </span>
+
+<a href="#cairn.domain.ObservationExtractionCompleted" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ObservationExtractionCompleted</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">turn_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">status</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">observations_written</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">cost_usd</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">reason</span><span class="p">:</span> <span class="n"><span title="str">str</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Memory observation extraction has finished.</p>
+<p>Pairs 1:1 with an earlier <code>ObservationExtractionRequested</code> for the
+same <code>turn_id</code>. Fires on every post-submit terminal path — gates,
+successes, and failures — so the UI can always close the loop on
+the earlier request indicator.</p>
+<p><code>status</code> is one of:</p>
+<ul>
+<li><code>"succeeded"</code> — extractor ran and wrote ≥ 0 observations cleanly.</li>
+<li><code>"gated"</code> — queue short-circuited before calling the extractor
+  (persona opt-out, length gate, memoryless session, missing
+  session, no latest messages). <code>reason</code> carries the specific gate.</li>
+<li><code>"failed"</code> — extractor raised, parsing failed, or the cost cap
+  fired before any observation could be written. <code>reason</code> carries
+  detail where available.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
 <h2 id="cairn.domain.ObservationExtractionRequested" class="doc doc-heading">
 <code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ObservationExtractionRequested</span>
 
@@ -5117,47 +5211,53 @@ advisory budget. Awaits a user decision via <code>BudgetOverflowGateway</code>.<
   
       dataclass
    (cairn.domain._events.ObservationExtractionRequested)" href="#cairn.domain.ObservationExtractionRequested">ObservationExtractionRequested</a></span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            TurnComplete
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            ObservationExtractionCompleted
+
+
+  
+      dataclass
+   (cairn.domain._events.ObservationExtractionCompleted)" href="#cairn.domain.ObservationExtractionCompleted">ObservationExtractionCompleted</a></span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            TurnComplete
 
 
   
       dataclass
    (cairn.domain._events.TurnComplete)" href="#cairn.domain.TurnComplete">TurnComplete</a></span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnAborted">TurnAborted</span></span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnBlocked">TurnBlocked</span></span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnIncomplete">TurnIncomplete</span></span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.BudgetWarning">BudgetWarning</span></span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            HistoryCompacted
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnAborted">TurnAborted</span></span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnBlocked">TurnBlocked</span></span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.TurnIncomplete">TurnIncomplete</span></span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="o">|</span> <span class="n"><span title="cairn.domain._events.BudgetWarning">BudgetWarning</span></span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            HistoryCompacted
 
 
   
       dataclass
    (cairn.domain._events.HistoryCompacted)" href="#cairn.domain.HistoryCompacted">HistoryCompacted</a></span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            BudgetOverflowAdvisory
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            BudgetOverflowAdvisory
 
 
   
       dataclass
    (cairn.domain._events.BudgetOverflowAdvisory)" href="#cairn.domain.BudgetOverflowAdvisory">BudgetOverflowAdvisory</a></span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionCreated
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionCreated
 
 
   
       dataclass
    (cairn.domain._events.SessionCreated)" href="#cairn.domain.SessionCreated">SessionCreated</a></span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionResumed
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionResumed
 
 
   
       dataclass
    (cairn.domain._events.SessionResumed)" href="#cairn.domain.SessionResumed">SessionResumed</a></span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionArchived
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="o">|</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionArchived
 
 
   
       dataclass
    (cairn.domain._events.SessionArchived)" href="#cairn.domain.SessionArchived">SessionArchived</a></span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="p">)</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">)</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents first">
