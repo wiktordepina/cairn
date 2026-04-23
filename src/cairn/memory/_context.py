@@ -207,9 +207,7 @@ class StandardContextManager:
         retrieved_memories: list[MemoryEntry],
         tools: list[ToolDefinition],
     ) -> ProviderRequest:
-        convention_files = (
-            await self._conventions.load() if self._conventions is not None else []
-        )
+        convention_files = await self._conventions.load() if self._conventions is not None else []
         system = self._assemble_system_prompt(retrieved_memories, convention_files)
         return ProviderRequest(
             model=session.model,
