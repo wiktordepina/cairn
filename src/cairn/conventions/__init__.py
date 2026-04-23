@@ -16,6 +16,8 @@ from cairn.conventions._discovery import (
     discover_user_files,
     find_git_root,
 )
+from cairn.conventions._loader import ConventionLoader
+from cairn.conventions._render import ConventionFile, render_conventions, wrap_one
 from cairn.conventions._trust import (
     AllowlistStore,
     AllowlistTrustGate,
@@ -33,6 +35,8 @@ __all__ = [
     "AllowlistStore",
     "AllowlistTrustGate",
     "AlwaysTrustGate",
+    "ConventionFile",
+    "ConventionLoader",
     "ConventionSource",
     "DenyingPromptTrustGate",
     "TrustDecision",
@@ -42,5 +46,7 @@ __all__ = [
     "discover_project_files",
     "discover_user_files",
     "find_git_root",
+    "render_conventions",
     "trust_gate_for_policy",
+    "wrap_one",
 ]
