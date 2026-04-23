@@ -332,7 +332,10 @@ class Extractor:
                     source_session_id=source_session_id,
                     source_message_id=source_message_id,
                 )
-                await self._observation_log.append(Observation.from_entry(stored))
+                await self._observation_log.append(
+                    Observation.from_entry(stored),
+                    now=self._clock.now(),
+                )
                 written += 1
             except Exception:  # noqa: BLE001
                 log.exception(

@@ -25,11 +25,13 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from cairn.conventions import ConventionFile, render_conventions
 from cairn.domain._provider import ProviderRequest
 
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from cairn.conventions import ConventionLoader
     from cairn.domain._memory import MemoryEntry
     from cairn.domain._messages import Message
     from cairn.domain._provider import ToolDefinition
@@ -190,9 +192,11 @@ class StandardContextManager:
         self,
         *,
         loader: ProfileDocLoader,
+        conventions: ConventionLoader | None = None,
         base_system_prompt: str = "",
     ) -> None:
         self._loader = loader
+        self._conventions = conventions
         self._base_prompt = base_system_prompt
 
     async def build_request(
@@ -203,7 +207,8 @@ class StandardContextManager:
         retrieved_memories: list[MemoryEntry],
         tools: list[ToolDefinition],
     ) -> ProviderRequest:
-        system = self._assemble_system_prompt(retrieved_memories)
+        convention_files = await self._conventions.load() if self._conventions is not None else []
+        system = self._assemble_system_prompt(retrieved_memories, convention_files)
         return ProviderRequest(
             model=session.model,
             messages=list(history),
@@ -213,10 +218,15 @@ class StandardContextManager:
 
     # ------------------------------------------------------------------
 
-    def _assemble_system_prompt(self, retrieved_memories: list[MemoryEntry]) -> str:
+    def _assemble_system_prompt(
+        self,
+        retrieved_memories: list[MemoryEntry],
+        convention_files: list[ConventionFile],
+    ) -> str:
         sections = [
             _wrap_section("identity", self._loader.load_soul_document()),
             _wrap_section("user_context", self._loader.load_user_context()),
+            render_conventions(convention_files),
             _wrap_section("memory_index", self._loader.load_memory_index()),
             _wrap_section(
                 "retrieved_memories",
