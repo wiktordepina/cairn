@@ -23,10 +23,15 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 from cairn.domain._enums import SessionType
+from cairn.domain._events import ObservationExtractionCompleted
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from cairn.config._models import MemoryConfig
-    from cairn.memory._extractor import Extractor
+    from cairn.domain._events import UIEvent
+    from cairn.memory._extractor import ExtractionResult, Extractor
+    from cairn.orchestrator._middleware import UIEventObserver
     from cairn.persistence._messages_repo import MessageRepo
     from cairn.persistence._sessions_repo import SessionRepo
 
@@ -68,11 +73,13 @@ class ObservationExtractionQueue:
         session_repo: SessionRepo,
         message_repo: MessageRepo,
         memory_config: MemoryConfig,
+        observers: Sequence[UIEventObserver] = (),
     ) -> None:
         self._extractor = extractor
         self._session_repo = session_repo
         self._message_repo = message_repo
         self._config = memory_config
+        self._observers = tuple(observers)
         self._queue: asyncio.Queue[_Job] = asyncio.Queue(
             maxsize=memory_config.max_pending_extractions,
         )
@@ -162,17 +169,32 @@ class ObservationExtractionQueue:
             task.add_done_callback(self._in_flight.discard)
 
     async def _run_one(self, job: _Job) -> None:
-        """Extract one job. Any exception is logged and swallowed."""
+        """Extract one job. Any exception is logged and swallowed.
+
+        Always emits a single `ObservationExtractionCompleted` event —
+        pairing with the orchestrator's earlier
+        `ObservationExtractionRequested` for the same `turn_id`.
+        """
         try:
-            await self._do_extract(job)
+            event = await self._do_extract(job)
         except Exception:  # noqa: BLE001
             log.exception("extraction worker: unhandled failure for turn_id=%s", job.turn_id)
+            event = ObservationExtractionCompleted(
+                session_id=job.session_id,
+                turn_id=job.turn_id,
+                status="failed",
+                reason="exception",
+            )
+        self._fanout(event)
 
-    async def _do_extract(self, job: _Job) -> None:
+    async def _do_extract(self, job: _Job) -> ObservationExtractionCompleted:
         """Load transcript, apply gates, invoke the extractor.
 
         Per-space lock is acquired only for the extraction call itself;
         the load path is safe to run concurrently for the same space.
+
+        Returns the `ObservationExtractionCompleted` event that should
+        be fanned out for this job.
         """
         session = await self._session_repo.get(job.session_id)
         if session is None:
@@ -181,28 +203,28 @@ class ObservationExtractionQueue:
                 job.session_id,
                 job.turn_id,
             )
-            return
+            return _gated(job, "session_missing")
 
         memory_space = session.memory_space
         if memory_space is None:
             # Invariant #3: never extract from a memoryless session.
-            return
+            return _gated(job, "memoryless")
 
         if session.type == SessionType.PERSONA and not self._config.extract_from_personas:
-            return
+            return _gated(job, "persona_opt_out")
 
         messages = await self._message_repo.list_for_session(job.session_id)
         latest = [m for m in messages if m.idx >= job.since_idx]
         if not latest:
-            return
+            return _gated(job, "no_latest_messages")
 
         # Length gate — combined text of the latest turn only.
         latest_text_len = sum(len(m.get_text()) for m in latest)
         has_latest_text = latest_text_len > 0
         if not has_latest_text and not self._config.extract_from_tool_only_turns:
-            return
+            return _gated(job, "tool_only_turn")
         if latest_text_len < self._config.min_extraction_chars:
-            return
+            return _gated(job, "too_short")
 
         # Context budget: rough message-count proxy for N turns.
         context_budget = max(self._config.extraction_context_turns, 0) * 4
@@ -215,7 +237,7 @@ class ObservationExtractionQueue:
 
         lock = self._space_locks.setdefault(memory_space, asyncio.Lock())
         async with lock:
-            await self._extractor.extract(
+            result = await self._extractor.extract(
                 memory_space=memory_space,
                 turn_id=job.turn_id,
                 source_session_id=job.session_id,
@@ -223,3 +245,54 @@ class ObservationExtractionQueue:
                 context_messages=context,
                 latest_messages=latest,
             )
+        return _completion_from_result(job, result)
+
+    def _fanout(self, event: UIEvent) -> None:
+        for obs in self._observers:
+            try:
+                obs.observe(event)
+            except Exception:  # noqa: BLE001
+                log.exception(
+                    "extraction queue observer failed: %s",
+                    type(obs).__name__,
+                )
+
+
+def _gated(job: _Job, reason: str) -> ObservationExtractionCompleted:
+    """Build a 'gated' completion for a pre-extractor short-circuit."""
+    return ObservationExtractionCompleted(
+        session_id=job.session_id,
+        turn_id=job.turn_id,
+        status="gated",
+        reason=reason,
+    )
+
+
+def _completion_from_result(
+    job: _Job,
+    result: ExtractionResult,
+) -> ObservationExtractionCompleted:
+    """Collapse an `ExtractionResult` into a completion event.
+
+    A parse failure, or a cost-cap hit that prevented any observation
+    from landing, maps to `status="failed"`. Everything else — including
+    a successful call that happened to extract zero observations —
+    maps to `status="succeeded"`.
+    """
+    if result.parse_failed:
+        reason = "parse_failed"
+        status = "failed"
+    elif result.truncated_by_cost_cap and result.observations_written == 0:
+        reason = "cost_cap"
+        status = "failed"
+    else:
+        reason = "cost_cap_partial" if result.truncated_by_cost_cap else None
+        status = "succeeded"
+    return ObservationExtractionCompleted(
+        session_id=job.session_id,
+        turn_id=job.turn_id,
+        status=status,
+        observations_written=result.observations_written,
+        cost_usd=result.cost_usd,
+        reason=reason,
+    )

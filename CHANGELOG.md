@@ -13,6 +13,22 @@ don't change the public surface. Everything is still in flux.
 UI, CLI entry point, and observability tranche 2 (log redaction,
 structured `UIEventObserver`) are still to land.
 
+### Added
+
+- **`ObservationExtractionCompleted` UI event** (`cairn.domain`) —
+  emitted by `ObservationExtractionQueue` once per submitted job and
+  paired 1:1 with the earlier `ObservationExtractionRequested` for
+  the same `turn_id`. `status` carries `succeeded` / `gated` /
+  `failed`; `reason` carries the specific cause (e.g.
+  `persona_opt_out`, `too_short`, `parse_failed`, `cost_cap`,
+  `exception`). Unblocks the forthcoming UI memory-write toast.
+- **`ObservationExtractionQueue.observers`** — new optional
+  constructor kwarg accepting a `Sequence[UIEventObserver]`.
+  Fan-out mirrors the orchestrator's pattern: observer exceptions
+  are logged and swallowed so one buggy observer can't block the
+  queue. Default is `()` — existing callers keep working
+  unchanged.
+
 ## [0.9.0] — 2026-04-23
 
 Ships project convention-file loading: `AGENTS.md` / `CLAUDE.md` /
