@@ -298,3 +298,77 @@ class TestStandardContextManager:
         assert req.messages == [msg]
         assert req.tools == tools
         assert req.model == "claude-opus-4-7"
+
+    @pytest.mark.asyncio
+    async def test_conventions_inserted_between_user_context_and_memory_index(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        from cairn.config import ConventionFilesConfig
+        from cairn.conventions import AlwaysTrustGate, ConventionLoader
+
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        (tmp_path / "user_context.md").write_text("USERCTX", encoding="utf-8")
+        (tmp_path / "MEMORY.md").write_text("- [x](m/x.md) hook", encoding="utf-8")
+
+        repo = tmp_path / "repo"
+        repo.mkdir()
+        (repo / ".git").mkdir()
+        (repo / "AGENTS.md").write_text("PROJECT RULES", encoding="utf-8")
+
+        conventions = ConventionLoader(
+            config=ConventionFilesConfig(filenames=["AGENTS.md"]),
+            trust_gate=AlwaysTrustGate(),
+            cwd=repo,
+        )
+        mgr = StandardContextManager(loader=_loader(tmp_path), conventions=conventions)
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+        )
+        assert req.system is not None
+        user_pos = req.system.index("<user_context>")
+        conv_pos = req.system.index("<project_conventions")
+        mem_pos = req.system.index("<memory_index>")
+        assert user_pos < conv_pos < mem_pos
+        assert "PROJECT RULES" in req.system
+        assert 'source="AGENTS.md"' in req.system
+
+    @pytest.mark.asyncio
+    async def test_conventions_none_keeps_pre_brick_layout(self, tmp_path: Path) -> None:
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        mgr = StandardContextManager(loader=_loader(tmp_path), conventions=None)
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+        )
+        assert req.system is not None
+        assert "<project_conventions" not in req.system
+
+    @pytest.mark.asyncio
+    async def test_empty_convention_load_omits_section(self, tmp_path: Path) -> None:
+        from cairn.config import ConventionFilesConfig
+        from cairn.conventions import AlwaysTrustGate, ConventionLoader
+
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        empty_repo = tmp_path / "empty"
+        empty_repo.mkdir()
+        (empty_repo / ".git").mkdir()
+        conventions = ConventionLoader(
+            config=ConventionFilesConfig(filenames=["AGENTS.md"]),
+            trust_gate=AlwaysTrustGate(),
+            cwd=empty_repo,
+        )
+        mgr = StandardContextManager(loader=_loader(tmp_path), conventions=conventions)
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+        )
+        assert req.system is not None
+        assert "<project_conventions" not in req.system
