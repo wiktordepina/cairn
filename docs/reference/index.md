@@ -14,6 +14,7 @@ regeneration workflow.
 
 - [Compaction](compaction.md) — `cairn.compaction`
 - [Config](config.md) — `cairn.config`
+- [Conventions](conventions.md) — `cairn.conventions`
 - [Domain](domain.md) — `cairn.domain`
 - [Logging](logging.md) — `cairn.logging`
 - [Memory](memory.md) — `cairn.memory`

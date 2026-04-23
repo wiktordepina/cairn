@@ -41,6 +41,7 @@ OUT_ROOT = REPO_ROOT / "docs" / "reference"
 REFERENCE_MODULES: list[tuple[str, str]] = [
     ("compaction", "Compaction"),
     ("config", "Config"),
+    ("conventions", "Conventions"),
     ("domain", "Domain"),
     ("logging", "Logging"),
     ("memory", "Memory"),

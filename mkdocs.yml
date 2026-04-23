@@ -116,6 +116,7 @@ nav:
       - Configuration: configuration.md
       - Providers: providers.md
       - Memory: memory.md
+      - Conventions: conventions.md
       - Compaction: compaction.md
       - Observability: observability.md
   - Architecture:
@@ -127,6 +128,7 @@ nav:
       - Overview: reference/index.md
       - Compaction: reference/compaction.md
       - Config: reference/config.md
+      - Conventions: reference/conventions.md
       - Domain: reference/domain.md
       - Logging: reference/logging.md
       - Memory: reference/memory.md
@@ -166,3 +168,6 @@ nav:
       - "0027 Truncation before summarisation": decisions/0027-truncation-before-summarisation.md
       - "0028 Turn-block granularity": decisions/0028-turn-block-granularity.md
       - "0029 Context budget is advisory": decisions/0029-context-budget-advisory.md
+      - "0030 Convention-file ordering": decisions/0030-convention-file-ordering.md
+      - "0031 Trust prompt deferred": decisions/0031-trust-prompt-deferred.md
+      - "0032 No Cursor/Cline in V1": decisions/0032-convention-files-no-cursor-cline.md
