@@ -147,6 +147,7 @@ class ConventionFilesConfig(BaseModel):
     walk_up_to: Literal["git_root", "filesystem_root", "cwd_only"] = "git_root"
     search_subdirs: bool = True
     max_bytes_per_file: int = 65_536
+    max_nested_depth: int = 3
     trust_policy: Literal["prompt", "always", "project_allowlist"] = "prompt"
     user_level_paths: list[str] = []
 
