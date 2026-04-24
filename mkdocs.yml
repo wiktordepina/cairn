@@ -118,6 +118,7 @@ nav:
       - Memory: memory.md
       - Conventions: conventions.md
       - Compaction: compaction.md
+      - UI: ui.md
       - Observability: observability.md
   - Architecture:
       - Overview: architecture.md
@@ -171,3 +172,6 @@ nav:
       - "0030 Convention-file ordering": decisions/0030-convention-file-ordering.md
       - "0031 Trust prompt deferred": decisions/0031-trust-prompt-deferred.md
       - "0032 No Cursor/Cline in V1": decisions/0032-convention-files-no-cursor-cline.md
+      - "0033 Textual for the UI": decisions/0033-textual-for-ui.md
+      - "0034 Single-loop sync observer": decisions/0034-single-loop-sync-observer.md
+      - "0035 Remember-for-session gating": decisions/0035-remember-for-session-gating.md

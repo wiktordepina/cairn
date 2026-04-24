@@ -93,3 +93,12 @@ ongoing costs does this impose?
 | [0024](0024-memory-md-as-index.md) | `MEMORY.md` as an index of `memories/<slug>.md` bodies | accepted |
 | [0025](0025-extraction-role-and-local-models.md) | Dedicated `ModelRole.EXTRACTION` with a first-class local-model path | accepted |
 | [0026](0026-per-turn-extraction-with-context.md) | Per-turn extraction with N-turn context window and length gate | accepted |
+| [0027](0027-truncation-before-summarisation.md) | Compaction ships truncation first, summarisation in V2 | accepted |
+| [0028](0028-turn-block-granularity.md) | Compaction operates on turn blocks | accepted |
+| [0029](0029-context-budget-advisory.md) | Context budget is advisory, not enforced | accepted |
+| [0030](0030-convention-file-ordering.md) | Convention-file ordering: user → ancestor → nested | accepted |
+| [0031](0031-trust-prompt-deferred.md) | `trust_policy="prompt"` deferred to the UI brick | accepted |
+| [0032](0032-convention-files-no-cursor-cline.md) | No Cursor / Cline convention files in V1 | accepted |
+| [0033](0033-textual-for-ui.md) | Textual for the interactive UI | accepted |
+| [0034](0034-single-loop-sync-observer.md) | Single-loop invariant: synchronous UI observer | accepted |
+| [0035](0035-remember-for-session-gating.md) | "Remember for this session" gated to tier ≤ 3 | accepted |
