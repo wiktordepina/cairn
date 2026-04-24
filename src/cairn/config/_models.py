@@ -7,7 +7,14 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Any, ClassVar, Literal, Self
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    field_validator,
+    model_validator,
+)
 
 # ---------------------------------------------------------------------------
 # Enums
@@ -299,6 +306,45 @@ class ModelConfig(BaseModel):
     roles: set[ModelRole] = set()
 
 
+_HEX_COLOUR_PATTERN = "#RRGGBB"
+
+
+class UIConfig(BaseModel):
+    """Textual UI knobs per profile.
+
+    Resolved Q6: per-profile rather than top-level so persona
+    profiles can carry their own accent colours.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    theme: Literal["auto", "light", "dark"] = "auto"
+    session_type_colours: dict[str, str] = {}
+    show_cost_in_header: bool = True
+    max_chat_log_messages: int = 500
+    cost_display_precision: int = Field(default=6, ge=0, le=10)
+    """Decimal places rendered by the cost meter. Six is enough to
+    show cheap models' per-turn spend; drop to 4 if you prefer a
+    calmer header."""
+
+    @field_validator("session_type_colours")
+    @classmethod
+    def _validate_hex_colours(cls, value: dict[str, str]) -> dict[str, str]:
+        for session_type, colour in value.items():
+            if not (colour.startswith("#") and len(colour) == 7):
+                raise ValueError(
+                    f"session_type_colours[{session_type!r}] must be a "
+                    f"{_HEX_COLOUR_PATTERN} hex string, got {colour!r}"
+                )
+            try:
+                int(colour[1:], 16)
+            except ValueError as exc:
+                raise ValueError(
+                    f"session_type_colours[{session_type!r}] is not valid hex: {colour!r}"
+                ) from exc
+        return value
+
+
 class ProfileConfig(BaseModel):
     """Configuration for a named profile (companion, work, etc.)."""
 
@@ -316,6 +362,7 @@ class ProfileConfig(BaseModel):
     convention_files: ConventionFilesConfig = ConventionFilesConfig()
     memory: MemoryConfig = MemoryConfig()
     compaction: CompactionConfig = CompactionConfig()
+    ui: UIConfig = UIConfig()
 
 
 class CairnConfig(BaseModel):

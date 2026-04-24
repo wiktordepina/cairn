@@ -45,6 +45,8 @@
 
 ::: cairn.domain.BudgetOverflowAdvisory
 
+::: cairn.domain.BudgetWarning
+
 ::: cairn.domain.DelegationCompleted
 
 ::: cairn.domain.DelegationSpawned
@@ -61,11 +63,23 @@
 
 ::: cairn.domain.SessionResumed
 
+::: cairn.domain.ToolCallApproved
+
 ::: cairn.domain.ToolCallCompleted
+
+::: cairn.domain.ToolCallPlanned
+
+::: cairn.domain.ToolCallRejected
 
 ::: cairn.domain.ToolCallStarted
 
+::: cairn.domain.TurnAborted
+
+::: cairn.domain.TurnBlocked
+
 ::: cairn.domain.TurnComplete
+
+::: cairn.domain.TurnIncomplete
 
 ::: cairn.domain.UIEvent
 

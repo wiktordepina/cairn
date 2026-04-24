@@ -1,0 +1,350 @@
+"""The single-session chat screen.
+
+Tranche 1 composition: `SessionHeader` + `ChatLog` + `CommandBar` +
+`CostMeter`. `CommandBar.Submitted` routes to the slash-command
+registry (when the input starts with `/`) or to the orchestrator as
+a user-message turn (to be wired in the bootstrap PR).
+"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, cast
+
+from textual.screen import Screen
+
+from cairn.ui._widgets import (
+    ActivityIndicator,
+    Banner,
+    ChatLog,
+    CommandBar,
+    CompletionMenu,
+    CostMeter,
+    MessageView,
+    SessionHeader,
+    ToolRow,
+)
+
+if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
+    from textual.app import ComposeResult
+
+    from cairn.domain import (
+        AssistantMessageComplete,
+        AssistantTextDelta,
+        BudgetOverflowAdvisory,
+        BudgetWarning,
+        HistoryCompacted,
+        Session,
+        ToolCallApproved,
+        ToolCallCompleted,
+        ToolCallPlanned,
+        ToolCallRejected,
+        ToolCallStarted,
+        TurnAborted,
+        TurnBlocked,
+        TurnComplete,
+        TurnIncomplete,
+        UserMessagePersisted,
+    )
+    from cairn.ui._app import CairnApp
+
+
+class SessionScreen(Screen[None]):
+    """Screen holding one session's transcript.
+
+    Widget surface is intentionally small for Tranche 1. The
+    observer drives updates; the screen owns layout and the message
+    lookup cache.
+    """
+
+    def __init__(
+        self,
+        *,
+        session: Session,
+        cost_precision: int = 6,
+        cost_source: Callable[[], Awaitable[float]] | None = None,
+    ) -> None:
+        super().__init__()
+        self._session = session
+        self._cost_precision = cost_precision
+        self._cost_source = cost_source
+
+    @property
+    def session(self) -> Session:
+        return self._session
+
+    def compose(self) -> ComposeResult:
+        yield SessionHeader(session=self._session)
+        yield ChatLog(id="chat")
+        completion = CompletionMenu(id="completion")
+        yield completion
+        yield CommandBar(completion=completion)
+        yield CostMeter(precision=self._cost_precision)
+
+    # -- Command bar wiring ---------------------------------------------
+
+    def on_input_changed(self, event: CommandBar.Changed) -> None:
+        """Keep the completion menu in sync with the bar's value."""
+        if not isinstance(event.input, CommandBar):
+            return
+        app = cast("CairnApp", self.app)
+        self._completion.sync(event.value, app.command_registry)
+
+    async def on_input_submitted(self, event: CommandBar.Submitted) -> None:
+        """Handle Enter in the command bar.
+
+        `/command` forms dispatch through the registry; plain text is
+        submitted to the orchestrator as a user turn — the observer
+        then drives the transcript, cost meter, and tool rows as
+        events arrive.
+        """
+        if not isinstance(event.input, CommandBar):
+            return
+        line = event.value
+        event.input.clear()
+        # Dismiss the completion menu on any submit — the value has
+        # been cleared and the popover would otherwise linger after
+        # the command runs.
+        self._completion.close()
+        if line.startswith("/"):
+            app = cast("CairnApp", self.app)
+            result = await app.command_registry.dispatch(app, line)
+            if result.status == "unknown":
+                self._chat_log.append_banner(
+                    Banner(text=result.message or "unknown command", kind="error")
+                )
+            return
+        text = line.strip()
+        if not text:
+            return
+        self._dispatch_turn(text)
+
+    def _dispatch_turn(self, text: str) -> None:
+        """Build a user `Message`, stage its text, kick off a worker
+        that drives the orchestrator turn. Event-driven UI updates
+        arrive via the observer on the same event loop."""
+        from cairn.domain._content import TextBlock
+        from cairn.domain._messages import Message
+
+        user_msg = Message(role="user")
+        user_msg.content.append(TextBlock(text=text))
+        self.stage_user_message(message_id=user_msg.id, text=text)
+
+        app = cast("CairnApp", self.app)
+        orchestrator = app.orchestrator
+        session_id = self._session.id
+
+        async def _drive() -> None:
+            async for _event in orchestrator.run_turn(session_id, user_msg):
+                pass
+
+        self._activity.set_thinking()
+        self.run_worker(
+            _drive(),
+            name=f"turn-{user_msg.id}",
+            exclusive=False,
+            exit_on_error=False,
+        )
+
+    # -- Observer callbacks ---------------------------------------------
+
+    def append_user_message(self, event: UserMessagePersisted) -> None:
+        """Mount a new `MessageView` for a just-persisted user message.
+
+        The persisted row is the source of truth for content, but the
+        orchestrator doesn't carry the text in the event — the
+        currently-submitted user message is held on the screen while
+        the turn runs (future work) or the screen re-reads from
+        persistence. Tranche 1's test harness passes the text
+        explicitly via `stage_user_message` below, so this method
+        only sets up the `MessageView` slot for the id.
+        """
+        view = self._staged_user.pop(event.message_id, None)
+        if view is None:
+            view = MessageView(message_id=event.message_id, role="user")
+        self._chat_log.append_message(view)
+
+    def append_delta(self, event: AssistantTextDelta) -> None:
+        """Append text to an assistant message, creating it on first delta."""
+        view = self._chat_log.find_message(event.message_id)
+        if view is None:
+            view = MessageView(message_id=event.message_id, role="assistant")
+            self._chat_log.append_message(view)
+        view.append_text(event.text)
+        self._chat_log.follow_tail()
+        if self._activity.state == "thinking":
+            self._activity.set_streaming()
+
+    def finalise_assistant_message(self, event: AssistantMessageComplete) -> None:
+        """Mark an assistant message as sealed (no more deltas)."""
+        view = self._chat_log.find_message(event.message_id)
+        if view is not None:
+            view.seal()
+
+    def finalise_turn(self, event: TurnComplete) -> None:
+        """Per-turn wrap-up hook — stop the activity indicator and
+        refresh the cost meter from the injected `cost_source` (when
+        bootstrap supplied one)."""
+        del event
+        self._activity.set_idle()
+        self._refresh_cost_from_source()
+
+    def _refresh_cost_from_source(self) -> None:
+        """Spawn a worker that reads the authoritative session cost
+        and updates the meter. No-op when no source is configured
+        (test harnesses with mock orchestrators)."""
+        source = self._cost_source
+        if source is None:
+            return
+
+        async def _load() -> None:
+            try:
+                cost = await source()
+            except Exception:  # noqa: BLE001 — cost refresh must never break a turn
+                return
+            self._cost_meter.set_cost(cost)
+
+        self.run_worker(
+            _load(),
+            name="refresh-cost",
+            exclusive=False,
+            exit_on_error=False,
+        )
+
+    def set_cost(self, cost_usd: float, *, warn: bool = False) -> None:
+        """Update the cost meter. Called by the bootstrap layer on
+        `TurnComplete` (authoritative) and by the observer on
+        `BudgetWarning` (warn=True)."""
+        self._cost_meter.set_cost(cost_usd, warn=warn)
+
+    def show_budget_warning(self, event: BudgetWarning) -> None:
+        """Render the budget-warning state in the cost meter."""
+        self.set_cost(event.cost_usd, warn=True)
+
+    # -- Tool-call observer callbacks -----------------------------------
+
+    def note_tool_plan(self, event: ToolCallPlanned) -> None:
+        """Mount a new `ToolRow` for a freshly-planned tool call."""
+        row = ToolRow(tool_call_id=event.tool_call_id, tool_name=event.tool_name)
+        self._chat_log.append_tool_row(row)
+
+    def mark_tool_approved(self, event: ToolCallApproved) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_approved(event.approved_by)
+
+    def mark_tool_rejected(self, event: ToolCallRejected) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_rejected(event.decided_by, event.reason)
+
+    def mark_tool_started(self, event: ToolCallStarted) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_running()
+        self._activity.set_tool(event.tool_name)
+
+    def mark_tool_completed(self, event: ToolCallCompleted) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_completed(
+                status=event.status,
+                is_error=event.is_error,
+                duration_ms=event.duration_ms,
+            )
+        # After tool completion the LLM usually resumes streaming;
+        # fall back to "thinking" so the header shows activity until
+        # the first delta arrives.
+        if self._activity.state == "tool":
+            self._activity.set_thinking()
+
+    # -- Turn-state observer callbacks ----------------------------------
+
+    def show_aborted(self, event: TurnAborted) -> None:
+        detail = event.message or event.reason
+        self._chat_log.append_banner(Banner(text=f"✗ turn aborted — {detail}", kind="error"))
+        self._activity.set_idle()
+
+    def show_blocked(self, event: TurnBlocked) -> None:
+        self._chat_log.append_banner(
+            Banner(text=f"◷ turn blocked — {event.message}", kind="warning")
+        )
+        self._activity.set_idle()
+
+    def show_incomplete(self, event: TurnIncomplete) -> None:
+        del event
+        self._chat_log.append_banner(
+            Banner(text="… stopped at max_tokens with a partial tool call", kind="muted")
+        )
+        self._activity.set_idle()
+
+    def show_compaction(self, event: HistoryCompacted) -> None:
+        text = (
+            f"⇣ history compacted ({event.reason}): "
+            f"dropped {event.messages_dropped} messages, "
+            f"{event.tokens_before} → {event.tokens_after} tokens"
+        )
+        self._chat_log.append_banner(Banner(text=text, kind="muted"))
+
+    def show_overflow_advisory(self, event: BudgetOverflowAdvisory) -> None:
+        # Full modal dialog lands in Tranche 3; Tranche 1 surfaces a
+        # prominent warning banner so advisory-overflow isn't silent.
+        text = (
+            f"⚠ context-budget overflow: projected {event.tokens_projected} tokens "
+            f"vs {event.context_window}-token window "
+            f"(+{event.overflow_tokens})"
+        )
+        self._chat_log.append_banner(Banner(text=text, kind="warning"))
+
+    # -- Public helpers (for command handlers + bootstrap) --------------
+
+    def append_banner(self, banner: Banner) -> None:
+        """Mount an ad-hoc banner in the chat log."""
+        self._chat_log.append_banner(banner)
+
+    @property
+    def current_cost_usd(self) -> float:
+        """Current cost reading on the cost meter."""
+        return self._cost_meter.cost_usd
+
+    # -- Helpers for the pilot harness ----------------------------------
+
+    def stage_user_message(self, *, message_id: str, text: str) -> None:
+        """Pre-register the text for an upcoming `UserMessagePersisted`.
+
+        The orchestrator's `UserMessagePersisted` event carries only
+        the message id + turn id — not the text — because the text
+        was supplied by the caller who persisted it. The app layer
+        stages the text here so the observer can mount a widget with
+        the right body when the event arrives.
+        """
+        self._staged_user[message_id] = MessageView(
+            message_id=message_id,
+            role="user",
+            text=text,
+        )
+
+    # -- Private --------------------------------------------------------
+
+    @property
+    def _chat_log(self) -> ChatLog:
+        return self.query_one("#chat", ChatLog)
+
+    @property
+    def _cost_meter(self) -> CostMeter:
+        return self.query_one(CostMeter)
+
+    @property
+    def _activity(self) -> ActivityIndicator:
+        return self.query_one(ActivityIndicator)
+
+    @property
+    def _completion(self) -> CompletionMenu:
+        return self.query_one(CompletionMenu)
+
+    _staged_user: dict[str, MessageView]
+
+    def on_mount(self) -> None:
+        self._staged_user = {}
+        self.query_one(CommandBar).focus()
