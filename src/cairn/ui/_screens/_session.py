@@ -48,6 +48,7 @@ if TYPE_CHECKING:
         UserMessagePersisted,
     )
     from cairn.ui._app import CairnApp
+    from cairn.ui._context_report import ContextReportInput
 
 
 class SessionScreen(Screen[None]):
@@ -64,11 +65,22 @@ class SessionScreen(Screen[None]):
         session: Session,
         cost_precision: int = 6,
         cost_source: Callable[[], Awaitable[float]] | None = None,
+        context_source: Callable[[], Awaitable[ContextReportInput]] | None = None,
     ) -> None:
         super().__init__()
         self._session = session
         self._cost_precision = cost_precision
         self._cost_source = cost_source
+        self._context_source = context_source
+
+    @property
+    def context_source(
+        self,
+    ) -> Callable[[], Awaitable[ContextReportInput]] | None:
+        """Optional async callback surfacing `(context_window, model, last_usage)`
+        for the `/context` slash command. None in tests with mock
+        orchestrators; bootstrap-supplied in production."""
+        return self._context_source
 
     @property
     def session(self) -> Session:
@@ -348,3 +360,13 @@ class SessionScreen(Screen[None]):
     def on_mount(self) -> None:
         self._staged_user = {}
         self.query_one(CommandBar).focus()
+        app = cast("CairnApp", self.app)
+        resumed = app.take_resumed_turn_count()
+        if resumed > 0:
+            noun = "turn" if resumed == 1 else "turns"
+            self._chat_log.append_banner(
+                Banner(
+                    text=f"↺ recovered {resumed} aborted {noun} from previous run",
+                    kind="muted",
+                )
+            )

@@ -175,6 +175,24 @@ class UsageRepo:
         await cursor.close()
         return float(row[0]) if row is not None else 0.0
 
+    async def most_recent_primary_turn(self, session_id: str) -> UsageRecord | None:
+        """Return the most recent `PRIMARY_TURN` usage row for a session.
+
+        Used by the UI's `/context` command to surface the last
+        prompt's token footprint. Returns None when the session has
+        no recorded primary-turn activity yet.
+        """
+        conn = await self._db.connect()
+        cursor = await conn.execute(
+            f"SELECT {_SELECT_COLS} FROM model_usage "
+            "WHERE session_id = ? AND operation = ? "
+            "ORDER BY timestamp DESC LIMIT 1",
+            (session_id, UsageOperation.PRIMARY_TURN.value),
+        )
+        row = await cursor.fetchone()
+        await cursor.close()
+        return _row_to_record(row) if row is not None else None
+
     async def cost_for_turn(self, turn_id: str) -> float:
         """Sum all provider calls attributed to a single orchestrator turn.
 

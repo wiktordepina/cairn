@@ -10,36 +10,87 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-UI, CLI entry point, and observability tranche 2 (log redaction,
-structured `UIEventObserver`) are still to land.
+Observability tranche 2 (log redaction, structured
+`UIEventObserver`) remains the next planned release.
+
+## [0.10.0] — 2026-04-24
+
+Ships the interactive Textual UI — the first release where
+`cairn` is usable end-to-end as a chat companion. Closes the UI
+brick; subsequent polish (session-list sidebar, delegation
+inline cards, memory-write toast, extended slash catalogue)
+lands as follow-up PRs against `main`.
 
 ### Added
 
+- **`cairn.ui` — Textual app.** `CairnApp` + `SessionScreen`
+  composing `SessionHeader`, `ChatLog` (streaming `MessageView`
+  widgets, inline `ToolRow` lifecycle cards, `Banner` notices),
+  `CommandBar`, `CompletionMenu` popover, `CostMeter`, and a
+  four-state `ActivityIndicator`. `TextualUIEventObserver`
+  routes every tranche-1 `UIEvent` to widget mutations on the
+  single asyncio event loop.
+- **`TextualApprovalGateway` + `ApprovalModal`.** Real
+  tier-3+ approval UX: tier-3 calls render a
+  "remember this exact call for the session" checkbox wiring
+  `SessionAllowlist`; tier-4+ calls render the checkbox
+  disabled (ADR 0035). Keybindings: `y` approve, `n` reject,
+  `escape` reject-dismiss.
+- **`TextualPromptTrustGate` + `TrustPromptModal`.** First-run
+  three-way trust decision for project convention files when
+  `trust_policy="prompt"` is set. Outcomes: trust-once (process
+  only), trust-project (persist to `AllowlistStore`), deny. See
+  [ADR 0036](docs/decisions/0036-trust-prompt-three-way-choice.md).
+  Replaces `DenyingPromptTrustGate`, closing ADR 0031's gap.
+- **Slash-command registry** with a completion popover
+  (`CompletionMenu`). Initial catalogue: `/help`, `/cost`,
+  `/tools`, `/context`, `/new`, `/ephemeral`, `/quit`.
+- **`/context` slash command.** Shows the current session's
+  context-budget usage — used/budget tokens, cache read/write
+  split, fresh input, output tokens for the last turn. Reads
+  from `UsageRepo.most_recent_primary_turn` + `ModelConfig.context_window`.
+  Per-segment breakdown lands with the stacked-bar follow-up.
+- **Crash-recovery banner.** Bootstrap calls
+  `Orchestrator.resume_aborted_turns()` once at boot; the UI
+  surfaces the count as a muted banner on first session-screen
+  mount when it's > 0.
+- **`UIConfig`** on `ProfileConfig.ui` — `theme` (auto / light /
+  dark), `session_type_colours` (hex overrides),
+  `show_cost_in_header`, `max_chat_log_messages`,
+  `cost_display_precision` (0..10, default 6).
+- **`cairn` console entry (minimal).** `--profile NAME`,
+  `--version`, `--help`. Bootstrap: `setup_logging()`,
+  `setup_ssl()`, orchestrator graph assembly,
+  `App.run_async()` on one event loop. Registered as a
+  `console_scripts` entry in `pyproject.toml`.
+- **`UsageRepo.most_recent_primary_turn`** — fetches the
+  latest `PRIMARY_TURN` usage row for a session (drives
+  `/context`).
 - **`ObservationExtractionCompleted` UI event** (`cairn.domain`) —
-  emitted by `ObservationExtractionQueue` once per submitted job and
-  paired 1:1 with the earlier `ObservationExtractionRequested` for
-  the same `turn_id`. `status` carries `succeeded` / `gated` /
-  `failed`; `reason` carries the specific cause (e.g.
-  `persona_opt_out`, `too_short`, `parse_failed`, `cost_cap`,
-  `exception`). Unblocks the forthcoming UI memory-write toast.
-- **`ObservationExtractionQueue.observers`** — new optional
-  constructor kwarg accepting a `Sequence[UIEventObserver]`.
-  Fan-out mirrors the orchestrator's pattern: observer exceptions
-  are logged and swallowed so one buggy observer can't block the
-  queue. Default is `()` — existing callers keep working
-  unchanged.
-- **`cairn.ui` package — Tranche 1 scaffolding.** `CairnApp`
-  (`textual.App`) holding a single `SessionScreen`;
-  `MessageView` (streaming Markdown widget); `ChatLog`
-  (`VerticalScroll` container with auto-scroll + id lookup);
-  `TextualUIEventObserver` routing `UserMessagePersisted` /
-  `AssistantTextDelta` / `AssistantMessageComplete` /
-  `TurnComplete` to screen methods; `_theme.py` with the
-  companion-teal / persona-amber / ephemeral-grey default
-  palette. `textual>=0.80,<0.90` added as a runtime dep. The
-  approval gateway, command bar, session header, cost meter,
-  and CLI entry point are still to land in subsequent commits
-  on `feat/ui`.
+  emitted by `ObservationExtractionQueue` once per submitted job
+  and paired 1:1 with the earlier `ObservationExtractionRequested`
+  for the same `turn_id`. Unblocks the post-0.10.0 memory-write
+  toast.
+- **`ObservationExtractionQueue.observers`** — optional
+  constructor kwarg for `UIEventObserver` fan-out.
+- **ADRs.** 0033 (Textual for the UI), 0034 (single-loop sync
+  observer invariant), 0035 (remember-for-session gated to
+  tier ≤ 3), 0036 (trust-prompt three-way choice).
+- **Guide.** New [`docs/ui.md`](docs/ui.md). `docs/conventions.md`
+  refreshed to reflect the live three-way trust UX.
+
+### Changed
+
+- `ConventionLoader` is now wired into the UI bootstrap
+  (previously constructed but unused in tranche 1). Under
+  `trust_policy="prompt"` it uses the real
+  `TextualPromptTrustGate`; other policies are unchanged.
+- `CommandRegistry.match` / completion popover semantics: when
+  multiple commands share a prefix (e.g. `/co` matches both
+  `/context` and `/cost`), the popover lists them in
+  alphabetical order with the first entry pre-highlighted.
+
+## [0.9.0] — 2026-04-23
 
 ## [0.9.0] — 2026-04-23
 

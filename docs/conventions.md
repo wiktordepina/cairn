@@ -10,13 +10,15 @@ This page covers how discovery works, how the trust gate protects
 you from instructions smuggled in via a freshly cloned repo, and
 how to configure both per profile.
 
-!!! note "V1 scope — discovery + loading"
-    V1 ships: discovery, the trust gate with `always` /
+!!! note "V1 scope"
+    Shipped at 0.9.0: discovery, the trust gate with `always` /
     `project_allowlist`, loading, size-capped paragraph
-    truncation, and injection into the system prompt. The
-    `/conventions` slash command and the interactive
-    first-encounter prompt (`trust_policy="prompt"`) land with
-    the UI brick.
+    truncation, and injection into the system prompt.
+    Shipped at 0.10.0: the interactive first-encounter prompt
+    for `trust_policy="prompt"` (`TextualPromptTrustGate`; see
+    [`docs/ui.md#convention-file-trust-prompt`](ui.md#convention-file-trust-prompt)).
+    The `/conventions` slash command lands as a post-0.10.0
+    polish PR.
 
 ## What files get loaded
 
@@ -103,14 +105,23 @@ trust_policy = "project_allowlist"
 
 ### `trust_policy = "prompt"` (the default)
 
-On V1, this policy currently **denies** all project files with a
-visible WARNING, because interactive per-project prompting
-requires the UI brick. When the UI lands, the same setting will
-switch to "on first encounter, show you the file and ask" — no
-config change required. See
-[ADR 0031](decisions/0031-trust-prompt-deferred.md).
+On first encounter with each project, cairn shows a modal with
+the project path, the convention-file names it found, and a
+20-line preview of the first file. Three choices:
 
-Until then, choose one of the explicit policies below.
+- **Trust once** — allow for this process only.
+- **Trust project** — persist to
+  `$XDG_CONFIG_HOME/cairn/trusted_projects.toml` so future
+  processes default to ALLOW without prompting.
+- **Deny** — skip loading this project's conventions.
+
+Decisions cache per-process so repeated checks within the same
+session never re-prompt. Projects in the allowlist bypass the
+modal entirely. See
+[ADR 0031](decisions/0031-trust-prompt-deferred.md) for the
+policy history and
+[ADR 0036](decisions/0036-trust-prompt-three-way-choice.md) for
+the three-way choice rationale.
 
 ### `trust_policy = "always"`
 

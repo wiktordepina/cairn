@@ -24,6 +24,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from cairn.config import ConfigError, ModelRegistry, SecretResolver, load_config
+from cairn.conventions import (
+    AllowlistStore,
+    ConventionLoader,
+    default_allowlist_path,
+    trust_gate_for_policy,
+)
 from cairn.domain._enums import SessionType
 from cairn.memory import (
     Extractor,
@@ -71,8 +77,10 @@ from cairn.tools.builtin import (
 )
 from cairn.tools.security import WorkspaceSandbox
 from cairn.ui._app import CairnApp
+from cairn.ui._context_report import ContextReportInput
 from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
+from cairn.ui._trust_gate import TextualPromptTrustGate
 
 if TYPE_CHECKING:
     from cairn.config._models import CairnConfig
@@ -136,7 +144,23 @@ async def _run(config: CairnConfig) -> int:
         user_context_path=active.user_context_path,
         memory_md_path=active.memory_md_path,
     )
-    context_manager = StandardContextManager(loader=doc_loader, conventions=None)
+    # Convention loader is constructed with a placeholder trust gate
+    # when the policy is "prompt"; the real gate (`TextualPromptTrustGate`)
+    # needs the app, which is constructed later. The swap happens
+    # post-app-construction below — same circular-dep pattern the
+    # approval gateway uses.
+    allowlist_store = AllowlistStore(default_allowlist_path())
+    conventions_policy = active.convention_files.trust_policy
+    initial_trust_gate = trust_gate_for_policy(
+        conventions_policy,
+        allowlist_store=allowlist_store,
+    )
+    convention_loader = ConventionLoader(
+        config=active.convention_files,
+        trust_gate=initial_trust_gate,
+        cwd=Path.cwd(),
+    )
+    context_manager = StandardContextManager(loader=doc_loader, conventions=convention_loader)
 
     memory_service = MemoryService(
         memory_repo=memory_repo,
@@ -188,6 +212,9 @@ async def _run(config: CairnConfig) -> int:
     )
 
     # -- Async setup that needs the loop -------------------------------
+    # Sweep for turns the previous process left non-terminal; the UI
+    # surfaces a banner when the count > 0.
+    resumed = await orchestrator.resume_aborted_turns()
     session = await orchestrator.start_session(
         type=SessionType.COMPANION,
         persona="companion",
@@ -197,18 +224,35 @@ async def _run(config: CairnConfig) -> int:
     async def _session_cost() -> float:
         return await usage_repo.total_cost_for_session(session.id)
 
+    primary_model = model_registry.resolve(active.primary_model)
+
+    async def _context_report() -> ContextReportInput:
+        return ContextReportInput(
+            context_window=primary_model.context_window,
+            model=primary_model.id,
+            last_usage=await usage_repo.most_recent_primary_turn(session.id),
+        )
+
     app = CairnApp(
         orchestrator=orchestrator,
         session=session,
         tool_registry=tool_registry,
         ui_config=active.ui,
         cost_source=_session_cost,
+        context_source=_context_report,
+        resumed_turn_count=len(resumed),
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,
         session_allowlist=session_allowlist,
     )
     orchestrator._observers = (TextualUIEventObserver(app=app),)  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+
+    if conventions_policy == "prompt":
+        convention_loader._trust_gate = TextualPromptTrustGate(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+            app=app,
+            store=allowlist_store,
+        )
 
     try:
         await app.run_async()

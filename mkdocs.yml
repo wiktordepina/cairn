@@ -175,3 +175,4 @@ nav:
       - "0033 Textual for the UI": decisions/0033-textual-for-ui.md
       - "0034 Single-loop sync observer": decisions/0034-single-loop-sync-observer.md
       - "0035 Remember-for-session gating": decisions/0035-remember-for-session-gating.md
+      - "0036 Trust-prompt three-way choice": decisions/0036-trust-prompt-three-way-choice.md
