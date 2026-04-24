@@ -17,6 +17,7 @@ from cairn.ui._commands import (
 from cairn.ui._widgets import Banner, ChatLog, CommandBar, MessageView
 
 if TYPE_CHECKING:
+    from cairn.domain._messages import Message
     from cairn.domain._sessions import Session
     from cairn.orchestrator import Orchestrator
 
@@ -168,8 +169,27 @@ class TestCommandBarDispatch:
             assert "not-a-thing" in str(banners[0].renderable)
 
     @pytest.mark.asyncio
-    async def test_plain_text_mounts_user_message(self, companion_session: Session) -> None:
+    async def test_plain_text_dispatches_turn(self, companion_session: Session) -> None:
+        """Plain text stages its body and hands off to `orchestrator.run_turn`.
+
+        The `MessageView` isn't mounted until `UserMessagePersisted`
+        routes through the observer — that round-trip is covered by
+        the observer tests. This test verifies the screen's half of
+        the handoff: staging + orchestrator invocation.
+        """
+        dispatched: list[tuple[str, Message]] = []
+
+        async def _empty_stream() -> None:
+            if False:
+                yield  # pragma: no cover
+
+        def _run_turn(session_id: str, user_msg: Message) -> object:
+            dispatched.append((session_id, user_msg))
+            return _empty_stream()
+
         app = _app_for(companion_session)
+        app.orchestrator.run_turn = Mock(side_effect=_run_turn)
+
         async with app.run_test() as pilot:
             await pilot.pause()
             screen = app.current_session_screen
@@ -179,11 +199,17 @@ class TestCommandBarDispatch:
             await bar.action_submit()
             await pilot.pause()
 
+            assert len(dispatched) == 1
+            session_id, user_msg = dispatched[0]
+            assert session_id == companion_session.id
+            assert user_msg.role == "user"
+            assert user_msg.id in screen._staged_user
+            assert screen._staged_user[user_msg.id].text == "hello companion"
+
+            # Widget mounting is the observer's job — no MessageView
+            # until `UserMessagePersisted` fires.
             chat_log = screen.query_one(ChatLog)
-            views = list(chat_log.query(MessageView))
-            assert len(views) == 1
-            assert views[0].role == "user"
-            assert views[0].text == "hello companion"
+            assert list(chat_log.query(MessageView)) == []
 
     @pytest.mark.asyncio
     async def test_empty_submit_is_ignored(self, companion_session: Session) -> None:

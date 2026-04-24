@@ -39,9 +39,9 @@ def colour_for(
         Hex colour string (e.g. ``"#3bb0a8"``).
     """
     if overrides:
-        if session_type in overrides:
-            return overrides[session_type]  # pyright: ignore[reportReturnType]
-        key = session_type.value
-        if key in overrides:
-            return overrides[key]  # pyright: ignore[reportReturnType]
+        merged: dict[object, str] = dict(overrides)  # type: ignore[arg-type]
+        if session_type in merged:
+            return merged[session_type]
+        if session_type.value in merged:
+            return merged[session_type.value]
     return DEFAULT_SESSION_TYPE_COLOURS[session_type]

@@ -74,8 +74,9 @@ class SessionScreen(Screen[None]):
         """Handle Enter in the command bar.
 
         `/command` forms dispatch through the registry; plain text is
-        mounted in the chat log (turn-dispatch wiring lands with the
-        bootstrap PR).
+        submitted to the orchestrator as a user turn — the observer
+        then drives the transcript, cost meter, and tool rows as
+        events arrive.
         """
         if not isinstance(event.input, CommandBar):
             return
@@ -89,16 +90,36 @@ class SessionScreen(Screen[None]):
                     Banner(text=result.message or "unknown command", kind="error")
                 )
             return
-        # Plain text: mount immediately so the user sees their input.
-        # The orchestrator handoff for turn execution lands with the
-        # bootstrap PR; for now the typed text is visible in the log.
         text = line.strip()
         if not text:
             return
-        from uuid import uuid4
+        self._dispatch_turn(text)
 
-        message_id = f"pending-{uuid4().hex[:8]}"
-        self._chat_log.append_message(MessageView(message_id=message_id, role="user", text=text))
+    def _dispatch_turn(self, text: str) -> None:
+        """Build a user `Message`, stage its text, kick off a worker
+        that drives the orchestrator turn. Event-driven UI updates
+        arrive via the observer on the same event loop."""
+        from cairn.domain._content import TextBlock
+        from cairn.domain._messages import Message
+
+        user_msg = Message(role="user")
+        user_msg.content.append(TextBlock(text=text))
+        self.stage_user_message(message_id=user_msg.id, text=text)
+
+        app = cast("CairnApp", self.app)
+        orchestrator = app.orchestrator
+        session_id = self._session.id
+
+        async def _drive() -> None:
+            async for _event in orchestrator.run_turn(session_id, user_msg):
+                pass
+
+        self.run_worker(
+            _drive(),
+            name=f"turn-{user_msg.id}",
+            exclusive=False,
+            exit_on_error=False,
+        )
 
     # -- Observer callbacks ---------------------------------------------
 

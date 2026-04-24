@@ -33,21 +33,35 @@ class TestCLISmoke:
         err = capsys.readouterr().err
         assert "unrecognized arguments" in err or "--nonsense" in err
 
-    def test_launch_returns_exit_code(self, capsys: pytest.CaptureFixture[str]) -> None:
-        """The Tranche 1 stub `launch()` returns 2 (not-yet-wired)."""
-        code = main([])
-        assert code == 2
-        err = capsys.readouterr().err
-        assert "not yet functional" in err
+    def test_launch_is_invoked(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """`main([])` hands off to `_bootstrap.launch` and returns its
+        exit code without spinning up the Textual app."""
+        import cairn.ui._bootstrap as bootstrap
+
+        captured: dict[str, str | None] = {}
+
+        def _fake_launch(*, profile_name: str | None) -> int:
+            captured["profile_name"] = profile_name
+            return 42
+
+        monkeypatch.setattr(bootstrap, "launch", _fake_launch)
+        assert main([]) == 42
+        assert captured == {"profile_name": None}
 
     def test_profile_flag_passes_through_to_launch(
-        self, capsys: pytest.CaptureFixture[str]
+        self, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        code = main(["--profile", "work"])
-        assert code == 2
-        # Stub doesn't actually use the profile yet; this just
-        # confirms argparse doesn't choke on the flag.
-        capsys.readouterr()
+        import cairn.ui._bootstrap as bootstrap
+
+        captured: dict[str, str | None] = {}
+
+        def _fake_launch(*, profile_name: str | None) -> int:
+            captured["profile_name"] = profile_name
+            return 0
+
+        monkeypatch.setattr(bootstrap, "launch", _fake_launch)
+        assert main(["--profile", "work"]) == 0
+        assert captured == {"profile_name": "work"}
 
     def test_entry_point_is_wired_in_pyproject(self) -> None:
         """`cairn` entry point resolves to `cairn.cli:main`."""
