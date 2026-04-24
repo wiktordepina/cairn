@@ -116,13 +116,16 @@ async def _handle_cost(app: CairnApp, _tail: str) -> None:
     Tranche 1 reads the values from the cost meter (authoritative
     feed from the cost-tracker lands with the bootstrap PR).
     """
-    from cairn.ui._widgets import Banner
+    from cairn.ui._widgets import Banner, CostMeter
 
     screen = app.current_session_screen
     if screen is None:
         return
     cost = screen.current_cost_usd
-    screen.append_banner(Banner(text=f"session cost: ${cost:.4f}", kind="muted"))
+    precision = screen.query_one(CostMeter).precision
+    screen.append_banner(
+        Banner(text=f"session cost: ${cost:.{precision}f}", kind="muted")
+    )
 
 
 async def _handle_tools(app: CairnApp, _tail: str) -> None:

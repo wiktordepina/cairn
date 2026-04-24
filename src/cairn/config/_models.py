@@ -7,7 +7,14 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Any, ClassVar, Literal, Self
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    field_validator,
+    model_validator,
+)
 
 # ---------------------------------------------------------------------------
 # Enums
@@ -315,6 +322,10 @@ class UIConfig(BaseModel):
     session_type_colours: dict[str, str] = {}
     show_cost_in_header: bool = True
     max_chat_log_messages: int = 500
+    cost_display_precision: int = Field(default=6, ge=0, le=10)
+    """Decimal places rendered by the cost meter. Six is enough to
+    show cheap models' per-turn spend; drop to 4 if you prefer a
+    calmer header."""
 
     @field_validator("session_type_colours")
     @classmethod

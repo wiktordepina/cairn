@@ -14,6 +14,7 @@ from textual.containers import Horizontal
 from textual.widgets import Label
 
 from cairn.ui._theme import colour_for
+from cairn.ui._widgets._activity import ActivityIndicator
 
 if TYPE_CHECKING:
     from textual.app import ComposeResult
@@ -72,6 +73,12 @@ class SessionHeader(Horizontal):
     SessionHeader > Label {
         margin: 0 1 0 0;
     }
+    SessionHeader > .-title {
+        width: 1fr;
+    }
+    SessionHeader > ActivityIndicator {
+        margin: 0;
+    }
     """
 
     def __init__(
@@ -90,4 +97,7 @@ class SessionHeader(Horizontal):
             overrides=self._overrides,
         )
         title = self._session.title or "(untitled)"
-        yield Label(f"{self._session.persona} · {self._session.model} · {title}")
+        title_label = Label(f"{self._session.persona} · {self._session.model} · {title}")
+        title_label.add_class("-title")
+        yield title_label
+        yield ActivityIndicator()

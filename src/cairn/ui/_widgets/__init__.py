@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from cairn.ui._widgets._activity import ActivityIndicator, ActivityState
 from cairn.ui._widgets._banner import Banner
 from cairn.ui._widgets._chat_log import ChatLog
 from cairn.ui._widgets._command_bar import CommandBar
@@ -11,6 +12,8 @@ from cairn.ui._widgets._message import MessageView
 from cairn.ui._widgets._tool_row import ToolRow
 
 __all__ = [
+    "ActivityIndicator",
+    "ActivityState",
     "Banner",
     "ChatLog",
     "CommandBar",

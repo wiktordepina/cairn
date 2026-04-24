@@ -14,6 +14,9 @@ from textual.widgets import Label
 if TYPE_CHECKING:
     from cairn.domain._enums import ToolCallStatus
 
+_SPINNER_FRAMES = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+_SPINNER_INTERVAL = 0.1
+
 
 class ToolRow(Label):
     """Single-line status indicator for a tool call."""
@@ -40,6 +43,8 @@ class ToolRow(Label):
         self._tool_call_id = tool_call_id
         self._tool_name = tool_name
         self._status: ToolCallStatus | None = None
+        self._spinner_timer: object | None = None
+        self._spinner_frame: int = 0
 
     @property
     def tool_call_id(self) -> str:
@@ -57,13 +62,14 @@ class ToolRow(Label):
         self.update(f"⚙ approved ({approved_by}): {self._tool_name}…")
 
     def mark_rejected(self, decided_by: str, reason: str | None) -> None:
+        self._stop_spinner()
         tail = f" — {reason}" if reason else ""
         self.update(f"⚙ rejected ({decided_by}): {self._tool_name}{tail}")
         self.set_class(True, "-error")
 
     def mark_running(self) -> None:
-        self.update(f"⚙ running: {self._tool_name}…")
         self.set_class(True, "-running")
+        self._start_spinner()
 
     def mark_completed(
         self,
@@ -72,6 +78,7 @@ class ToolRow(Label):
         is_error: bool,
         duration_ms: int | None,
     ) -> None:
+        self._stop_spinner()
         self._status = status
         duration = f" · {duration_ms} ms" if duration_ms is not None else ""
         glyph = "✗" if is_error else "✓"
@@ -79,3 +86,28 @@ class ToolRow(Label):
         self.set_class(False, "-running")
         self.set_class(is_error, "-error")
         self.set_class(not is_error, "-completed")
+
+    # -- Spinner internals ---------------------------------------------
+
+    def _start_spinner(self) -> None:
+        self._spinner_frame = 0
+        self._render_spinner_frame()
+        if self._spinner_timer is None:
+            self._spinner_timer = self.set_interval(_SPINNER_INTERVAL, self._tick_spinner)
+
+    def _stop_spinner(self) -> None:
+        timer = self._spinner_timer
+        if timer is None:
+            return
+        self._spinner_timer = None
+        stop = getattr(timer, "stop", None)
+        if callable(stop):
+            stop()
+
+    def _tick_spinner(self) -> None:
+        self._spinner_frame = (self._spinner_frame + 1) % len(_SPINNER_FRAMES)
+        self._render_spinner_frame()
+
+    def _render_spinner_frame(self) -> None:
+        glyph = _SPINNER_FRAMES[self._spinner_frame]
+        self.update(f"{glyph} running: {self._tool_name}…")

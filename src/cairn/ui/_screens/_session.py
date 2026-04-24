@@ -13,6 +13,7 @@ from typing import TYPE_CHECKING, cast
 from textual.screen import Screen
 
 from cairn.ui._widgets import (
+    ActivityIndicator,
     Banner,
     ChatLog,
     CommandBar,
@@ -54,9 +55,10 @@ class SessionScreen(Screen[None]):
     lookup cache.
     """
 
-    def __init__(self, *, session: Session) -> None:
+    def __init__(self, *, session: Session, cost_precision: int = 6) -> None:
         super().__init__()
         self._session = session
+        self._cost_precision = cost_precision
 
     @property
     def session(self) -> Session:
@@ -66,7 +68,7 @@ class SessionScreen(Screen[None]):
         yield SessionHeader(session=self._session)
         yield ChatLog(id="chat")
         yield CommandBar()
-        yield CostMeter()
+        yield CostMeter(precision=self._cost_precision)
 
     # -- Command bar wiring ---------------------------------------------
 
@@ -114,6 +116,7 @@ class SessionScreen(Screen[None]):
             async for _event in orchestrator.run_turn(session_id, user_msg):
                 pass
 
+        self._activity.set_thinking()
         self.run_worker(
             _drive(),
             name=f"turn-{user_msg.id}",
@@ -146,6 +149,8 @@ class SessionScreen(Screen[None]):
             view = MessageView(message_id=event.message_id, role="assistant")
             self._chat_log.append_message(view)
         view.append_text(event.text)
+        if self._activity.state == "thinking":
+            self._activity.set_streaming()
 
     def finalise_assistant_message(self, event: AssistantMessageComplete) -> None:
         """Mark an assistant message as sealed (no more deltas)."""
@@ -154,9 +159,10 @@ class SessionScreen(Screen[None]):
             view.seal()
 
     def finalise_turn(self, event: TurnComplete) -> None:
-        """Per-turn wrap-up hook. Filled in by the bootstrap wiring PR
-        once the screen has a cost-tracker reference."""
+        """Per-turn wrap-up hook — stop the activity indicator. Cost
+        updates come from the bootstrap layer via `set_cost`."""
         del event
+        self._activity.set_idle()
 
     def set_cost(self, cost_usd: float, *, warn: bool = False) -> None:
         """Update the cost meter. Called by the bootstrap layer on
@@ -189,6 +195,7 @@ class SessionScreen(Screen[None]):
         row = self._chat_log.find_tool_row(event.tool_call_id)
         if row is not None:
             row.mark_running()
+        self._activity.set_tool(event.tool_name)
 
     def mark_tool_completed(self, event: ToolCallCompleted) -> None:
         row = self._chat_log.find_tool_row(event.tool_call_id)
@@ -198,23 +205,31 @@ class SessionScreen(Screen[None]):
                 is_error=event.is_error,
                 duration_ms=event.duration_ms,
             )
+        # After tool completion the LLM usually resumes streaming;
+        # fall back to "thinking" so the header shows activity until
+        # the first delta arrives.
+        if self._activity.state == "tool":
+            self._activity.set_thinking()
 
     # -- Turn-state observer callbacks ----------------------------------
 
     def show_aborted(self, event: TurnAborted) -> None:
         detail = event.message or event.reason
         self._chat_log.append_banner(Banner(text=f"✗ turn aborted — {detail}", kind="error"))
+        self._activity.set_idle()
 
     def show_blocked(self, event: TurnBlocked) -> None:
         self._chat_log.append_banner(
             Banner(text=f"◷ turn blocked — {event.message}", kind="warning")
         )
+        self._activity.set_idle()
 
     def show_incomplete(self, event: TurnIncomplete) -> None:
         del event
         self._chat_log.append_banner(
             Banner(text="… stopped at max_tokens with a partial tool call", kind="muted")
         )
+        self._activity.set_idle()
 
     def show_compaction(self, event: HistoryCompacted) -> None:
         text = (
@@ -271,6 +286,10 @@ class SessionScreen(Screen[None]):
     @property
     def _cost_meter(self) -> CostMeter:
         return self.query_one(CostMeter)
+
+    @property
+    def _activity(self) -> ActivityIndicator:
+        return self.query_one(ActivityIndicator)
 
     _staged_user: dict[str, MessageView]
 

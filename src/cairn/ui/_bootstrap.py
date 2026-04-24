@@ -198,6 +198,7 @@ async def _run(config: CairnConfig) -> int:
         orchestrator=orchestrator,
         session=session,
         tool_registry=tool_registry,
+        ui_config=active.ui,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,
