@@ -40,6 +40,14 @@ class ChatLog(VerticalScroll):
         self.mount(banner)
         self.scroll_end(animate=False)
 
+    _TAIL_SLACK = 3
+    """Rows of slack before the bottom that still count as "at the tail".
+
+    Streaming content can grow the max faster than the viewport
+    snaps, so a narrow threshold leaves the user stranded mid-stream.
+    Three rows is enough to absorb a paragraph-worth of deltas
+    without fighting a user who scrolled up to read history."""
+
     def follow_tail(self) -> None:
         """Scroll to the bottom *iff* the user is already near it.
 
@@ -48,9 +56,7 @@ class ChatLog(VerticalScroll):
         view without yanking the viewport when the user has
         deliberately scrolled up to read earlier turns.
         """
-        # 1 row of slack: streaming content that just pushed the max
-        # beyond the current viewport still counts as "at the bottom".
-        if self.scroll_y >= self.max_scroll_y - 1:
+        if self.scroll_y >= self.max_scroll_y - self._TAIL_SLACK:
             self.scroll_end(animate=False)
 
     def find_message(self, message_id: str) -> MessageView | None:
