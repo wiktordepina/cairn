@@ -95,7 +95,11 @@ class MessageView(Static):
     # -- Internals ------------------------------------------------------
 
     def _render_plain(self) -> None:
-        self.update(self.text)
+        # Trailing newlines would render as an extra empty row the
+        # `border-left` paints a stub bar on until `seal()` swaps in
+        # the Markdown render. Strip only the trailing ones so
+        # mid-buffer line breaks keep streaming correctly.
+        self.update(self.text.rstrip("\n"))
 
     def _render_markdown(self) -> None:
         body = self.text

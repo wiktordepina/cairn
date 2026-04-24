@@ -103,6 +103,32 @@ class TestStreamingFlow:
             # Not sealed until AssistantMessageComplete arrives.
             assert "-sealed" not in view.classes
 
+    @pytest.mark.asyncio
+    async def test_streaming_strips_trailing_newline_from_render(
+        self, companion_session: Session
+    ) -> None:
+        """A trailing `\\n` in the streamed buffer must not render as a
+        second empty row — otherwise `border-left` paints a stub
+        green bar on the blank line until `seal()` replaces it."""
+        app = _mint_app(companion_session)
+        observer = TextualUIEventObserver(app)
+
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            observer.observe(
+                AssistantTextDelta(message_id="msg-a1", turn_id="t-1", text="hello\n")
+            )
+            await pilot.pause()
+
+            screen = app.current_session_screen
+            assert screen is not None
+            view = screen.query_one(ChatLog).find_message("msg-a1")
+            assert view is not None
+            # Buffer retains the raw delta so a follow-up delta can
+            # append after the newline; the rendered value does not.
+            assert view.text == "hello\n"
+            assert view.renderable == "hello"
+
 
 class TestChatLogLookup:
     @pytest.mark.asyncio
