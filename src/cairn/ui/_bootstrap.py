@@ -24,6 +24,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
 from cairn.config import ConfigError, ModelRegistry, SecretResolver, load_config
+from cairn.conventions import (
+    AllowlistStore,
+    ConventionLoader,
+    default_allowlist_path,
+    trust_gate_for_policy,
+)
 from cairn.domain._enums import SessionType
 from cairn.memory import (
     Extractor,
@@ -73,6 +79,7 @@ from cairn.tools.security import WorkspaceSandbox
 from cairn.ui._app import CairnApp
 from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
+from cairn.ui._trust_gate import TextualPromptTrustGate
 
 if TYPE_CHECKING:
     from cairn.config._models import CairnConfig
@@ -136,7 +143,23 @@ async def _run(config: CairnConfig) -> int:
         user_context_path=active.user_context_path,
         memory_md_path=active.memory_md_path,
     )
-    context_manager = StandardContextManager(loader=doc_loader, conventions=None)
+    # Convention loader is constructed with a placeholder trust gate
+    # when the policy is "prompt"; the real gate (`TextualPromptTrustGate`)
+    # needs the app, which is constructed later. The swap happens
+    # post-app-construction below — same circular-dep pattern the
+    # approval gateway uses.
+    allowlist_store = AllowlistStore(default_allowlist_path())
+    conventions_policy = active.convention_files.trust_policy
+    initial_trust_gate = trust_gate_for_policy(
+        conventions_policy,
+        allowlist_store=allowlist_store,
+    )
+    convention_loader = ConventionLoader(
+        config=active.convention_files,
+        trust_gate=initial_trust_gate,
+        cwd=Path.cwd(),
+    )
+    context_manager = StandardContextManager(loader=doc_loader, conventions=convention_loader)
 
     memory_service = MemoryService(
         memory_repo=memory_repo,
@@ -209,6 +232,12 @@ async def _run(config: CairnConfig) -> int:
         session_allowlist=session_allowlist,
     )
     orchestrator._observers = (TextualUIEventObserver(app=app),)  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+
+    if conventions_policy == "prompt":
+        convention_loader._trust_gate = TextualPromptTrustGate(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+            app=app,
+            store=allowlist_store,
+        )
 
     try:
         await app.run_async()
