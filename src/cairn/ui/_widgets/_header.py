@@ -77,7 +77,9 @@ class SessionHeader(Horizontal):
         width: 1fr;
     }
     SessionHeader > ActivityIndicator {
+        dock: right;
         margin: 0;
+        width: 18;
     }
     """
 

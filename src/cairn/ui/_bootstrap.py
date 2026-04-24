@@ -194,11 +194,15 @@ async def _run(config: CairnConfig) -> int:
     )
     await extraction_queue.start()
 
+    async def _session_cost() -> float:
+        return await usage_repo.total_cost_for_session(session.id)
+
     app = CairnApp(
         orchestrator=orchestrator,
         session=session,
         tool_registry=tool_registry,
         ui_config=active.ui,
+        cost_source=_session_cost,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,

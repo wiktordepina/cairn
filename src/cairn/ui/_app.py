@@ -16,10 +16,14 @@ from cairn.ui._commands import CommandRegistry, build_default_registry
 from cairn.ui._screens import SessionScreen
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
     from cairn.config import UIConfig
     from cairn.domain import Session
     from cairn.orchestrator import Orchestrator
     from cairn.orchestrator._protocols import ToolRegistry
+
+    CostSource = Callable[[], Awaitable[float]]
 
 
 class CairnApp(App[None]):
@@ -41,6 +45,7 @@ class CairnApp(App[None]):
         command_registry: CommandRegistry | None = None,
         tool_registry: ToolRegistry | None = None,
         ui_config: UIConfig | None = None,
+        cost_source: CostSource | None = None,
     ) -> None:
         super().__init__()
         self._orchestrator = orchestrator
@@ -48,6 +53,7 @@ class CairnApp(App[None]):
         self._session_screen: SessionScreen | None = None
         self._command_registry = command_registry or build_default_registry()
         self._tool_registry = tool_registry
+        self._cost_source = cost_source
         from cairn.config import UIConfig as _UIConfig
 
         self._ui_config = ui_config or _UIConfig()
@@ -83,6 +89,7 @@ class CairnApp(App[None]):
         screen = SessionScreen(
             session=self._session,
             cost_precision=self._ui_config.cost_display_precision,
+            cost_source=self._cost_source,
         )
         self._session_screen = screen
         await self.push_screen(screen)

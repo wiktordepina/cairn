@@ -24,6 +24,8 @@ from cairn.ui._widgets import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Awaitable, Callable
+
     from textual.app import ComposeResult
 
     from cairn.domain import (
@@ -55,10 +57,17 @@ class SessionScreen(Screen[None]):
     lookup cache.
     """
 
-    def __init__(self, *, session: Session, cost_precision: int = 6) -> None:
+    def __init__(
+        self,
+        *,
+        session: Session,
+        cost_precision: int = 6,
+        cost_source: Callable[[], Awaitable[float]] | None = None,
+    ) -> None:
         super().__init__()
         self._session = session
         self._cost_precision = cost_precision
+        self._cost_source = cost_source
 
     @property
     def session(self) -> Session:
@@ -149,6 +158,7 @@ class SessionScreen(Screen[None]):
             view = MessageView(message_id=event.message_id, role="assistant")
             self._chat_log.append_message(view)
         view.append_text(event.text)
+        self._chat_log.follow_tail()
         if self._activity.state == "thinking":
             self._activity.set_streaming()
 
@@ -159,10 +169,34 @@ class SessionScreen(Screen[None]):
             view.seal()
 
     def finalise_turn(self, event: TurnComplete) -> None:
-        """Per-turn wrap-up hook — stop the activity indicator. Cost
-        updates come from the bootstrap layer via `set_cost`."""
+        """Per-turn wrap-up hook — stop the activity indicator and
+        refresh the cost meter from the injected `cost_source` (when
+        bootstrap supplied one)."""
         del event
         self._activity.set_idle()
+        self._refresh_cost_from_source()
+
+    def _refresh_cost_from_source(self) -> None:
+        """Spawn a worker that reads the authoritative session cost
+        and updates the meter. No-op when no source is configured
+        (test harnesses with mock orchestrators)."""
+        source = self._cost_source
+        if source is None:
+            return
+
+        async def _load() -> None:
+            try:
+                cost = await source()
+            except Exception:  # noqa: BLE001 — cost refresh must never break a turn
+                return
+            self._cost_meter.set_cost(cost)
+
+        self.run_worker(
+            _load(),
+            name="refresh-cost",
+            exclusive=False,
+            exit_on_error=False,
+        )
 
     def set_cost(self, cost_usd: float, *, warn: bool = False) -> None:
         """Update the cost meter. Called by the bootstrap layer on

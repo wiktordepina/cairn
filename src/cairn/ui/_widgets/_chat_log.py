@@ -24,6 +24,7 @@ class ChatLog(VerticalScroll):
     DEFAULT_CSS = """
     ChatLog {
         height: 1fr;
+        padding-top: 1;
     }
     """
 
@@ -38,6 +39,19 @@ class ChatLog(VerticalScroll):
     def append_banner(self, banner: Banner) -> None:
         self.mount(banner)
         self.scroll_end(animate=False)
+
+    def follow_tail(self) -> None:
+        """Scroll to the bottom *iff* the user is already near it.
+
+        Called by the screen whenever a child's content grows (most
+        notably streaming assistant deltas), so live updates stay in
+        view without yanking the viewport when the user has
+        deliberately scrolled up to read earlier turns.
+        """
+        # 1 row of slack: streaming content that just pushed the max
+        # beyond the current viewport still counts as "at the bottom".
+        if self.scroll_y >= self.max_scroll_y - 1:
+            self.scroll_end(animate=False)
 
     def find_message(self, message_id: str) -> MessageView | None:
         for child in self.children:
