@@ -141,9 +141,7 @@ class ApprovalModal(ModalScreen[ApprovalModalResult]):
 
     def _complete(self, outcome: ApprovalOutcome, *, reason: str | None) -> None:
         remember = self._remember_checked() if outcome is ApprovalOutcome.APPROVE else False
-        self.dismiss(
-            ApprovalModalResult(outcome=outcome, remember=remember, reason=reason)
-        )
+        self.dismiss(ApprovalModalResult(outcome=outcome, remember=remember, reason=reason))
 
     def _remember_checked(self) -> bool:
         if self._tier_4_plus:

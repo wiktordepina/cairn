@@ -156,9 +156,7 @@ class TestApprovalModal:
 
 class TestTextualApprovalGateway:
     @pytest.mark.asyncio
-    async def test_approve_flow_returns_user_decision(
-        self, companion_session: Session
-    ) -> None:
+    async def test_approve_flow_returns_user_decision(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         allowlist = SessionAllowlist()
         gateway = TextualApprovalGateway(app=app, session_allowlist=allowlist)
@@ -186,9 +184,7 @@ class TestTextualApprovalGateway:
             assert holder[0].decided_by == "user"
 
     @pytest.mark.asyncio
-    async def test_remember_path_records_allowlist_entry(
-        self, companion_session: Session
-    ) -> None:
+    async def test_remember_path_records_allowlist_entry(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         allowlist = SessionAllowlist()
         gateway = TextualApprovalGateway(app=app, session_allowlist=allowlist)
@@ -224,9 +220,7 @@ class TestTextualApprovalGateway:
             assert second.decided_by == "auto:session-allowlist"
 
     @pytest.mark.asyncio
-    async def test_reject_does_not_record_allowlist(
-        self, companion_session: Session
-    ) -> None:
+    async def test_reject_does_not_record_allowlist(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         allowlist = SessionAllowlist()
         gateway = TextualApprovalGateway(app=app, session_allowlist=allowlist)

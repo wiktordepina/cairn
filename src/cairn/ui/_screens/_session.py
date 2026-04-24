@@ -1,16 +1,26 @@
 """The single-session chat screen.
 
-Tranche 1 composes a `SessionHeader` + `ChatLog` + `CostMeter`. The
-command bar lands in a follow-up commit on this branch.
+Tranche 1 composition: `SessionHeader` + `ChatLog` + `CommandBar` +
+`CostMeter`. `CommandBar.Submitted` routes to the slash-command
+registry (when the input starts with `/`) or to the orchestrator as
+a user-message turn (to be wired in the bootstrap PR).
 """
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, cast
 
 from textual.screen import Screen
 
-from cairn.ui._widgets import Banner, ChatLog, CostMeter, MessageView, SessionHeader, ToolRow
+from cairn.ui._widgets import (
+    Banner,
+    ChatLog,
+    CommandBar,
+    CostMeter,
+    MessageView,
+    SessionHeader,
+    ToolRow,
+)
 
 if TYPE_CHECKING:
     from textual.app import ComposeResult
@@ -33,6 +43,7 @@ if TYPE_CHECKING:
         TurnIncomplete,
         UserMessagePersisted,
     )
+    from cairn.ui._app import CairnApp
 
 
 class SessionScreen(Screen[None]):
@@ -54,7 +65,40 @@ class SessionScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield SessionHeader(session=self._session)
         yield ChatLog(id="chat")
+        yield CommandBar()
         yield CostMeter()
+
+    # -- Command bar wiring ---------------------------------------------
+
+    async def on_input_submitted(self, event: CommandBar.Submitted) -> None:
+        """Handle Enter in the command bar.
+
+        `/command` forms dispatch through the registry; plain text is
+        mounted in the chat log (turn-dispatch wiring lands with the
+        bootstrap PR).
+        """
+        if not isinstance(event.input, CommandBar):
+            return
+        line = event.value
+        event.input.clear()
+        if line.startswith("/"):
+            app = cast("CairnApp", self.app)
+            result = await app.command_registry.dispatch(app, line)
+            if result.status == "unknown":
+                self._chat_log.append_banner(
+                    Banner(text=result.message or "unknown command", kind="error")
+                )
+            return
+        # Plain text: mount immediately so the user sees their input.
+        # The orchestrator handoff for turn execution lands with the
+        # bootstrap PR; for now the typed text is visible in the log.
+        text = line.strip()
+        if not text:
+            return
+        from uuid import uuid4
+
+        message_id = f"pending-{uuid4().hex[:8]}"
+        self._chat_log.append_message(MessageView(message_id=message_id, role="user", text=text))
 
     # -- Observer callbacks ---------------------------------------------
 
@@ -168,6 +212,17 @@ class SessionScreen(Screen[None]):
             f"(+{event.overflow_tokens})"
         )
         self._chat_log.append_banner(Banner(text=text, kind="warning"))
+
+    # -- Public helpers (for command handlers + bootstrap) --------------
+
+    def append_banner(self, banner: Banner) -> None:
+        """Mount an ad-hoc banner in the chat log."""
+        self._chat_log.append_banner(banner)
+
+    @property
+    def current_cost_usd(self) -> float:
+        """Current cost reading on the cost meter."""
+        return self._cost_meter.cost_usd
 
     # -- Helpers for the pilot harness ----------------------------------
 
