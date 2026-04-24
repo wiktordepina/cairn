@@ -1,8 +1,7 @@
 """The single-session chat screen.
 
-Tranche 1 ships a minimal composition: a `ChatLog` for the
-transcript. The command bar, session header, and cost meter land in
-follow-up commits on this branch.
+Tranche 1 composes a `SessionHeader` + `ChatLog` + `CostMeter`. The
+command bar lands in a follow-up commit on this branch.
 """
 
 from __future__ import annotations
@@ -11,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from textual.screen import Screen
 
-from cairn.ui._widgets import ChatLog, MessageView
+from cairn.ui._widgets import ChatLog, CostMeter, MessageView, SessionHeader
 
 if TYPE_CHECKING:
     from textual.app import ComposeResult
@@ -19,6 +18,7 @@ if TYPE_CHECKING:
     from cairn.domain import (
         AssistantMessageComplete,
         AssistantTextDelta,
+        BudgetWarning,
         Session,
         TurnComplete,
         UserMessagePersisted,
@@ -42,7 +42,9 @@ class SessionScreen(Screen[None]):
         return self._session
 
     def compose(self) -> ComposeResult:
+        yield SessionHeader(session=self._session)
         yield ChatLog(id="chat")
+        yield CostMeter()
 
     # -- Observer callbacks ---------------------------------------------
 
@@ -77,9 +79,19 @@ class SessionScreen(Screen[None]):
             view.seal()
 
     def finalise_turn(self, event: TurnComplete) -> None:
-        """Hook for per-turn wrap-up. Tranche 1 is a no-op; the
-        cost meter lands in a follow-up commit."""
-        del event  # unused in Tranche 1
+        """Per-turn wrap-up hook. Filled in by the bootstrap wiring PR
+        once the screen has a cost-tracker reference."""
+        del event
+
+    def set_cost(self, cost_usd: float, *, warn: bool = False) -> None:
+        """Update the cost meter. Called by the bootstrap layer on
+        `TurnComplete` (authoritative) and by the observer on
+        `BudgetWarning` (warn=True)."""
+        self._cost_meter.set_cost(cost_usd, warn=warn)
+
+    def show_budget_warning(self, event: BudgetWarning) -> None:
+        """Render the budget-warning state in the cost meter."""
+        self.set_cost(event.cost_usd, warn=True)
 
     # -- Helpers for the pilot harness ----------------------------------
 
@@ -103,6 +115,10 @@ class SessionScreen(Screen[None]):
     @property
     def _chat_log(self) -> ChatLog:
         return self.query_one("#chat", ChatLog)
+
+    @property
+    def _cost_meter(self) -> CostMeter:
+        return self.query_one(CostMeter)
 
     _staged_user: dict[str, MessageView]
 

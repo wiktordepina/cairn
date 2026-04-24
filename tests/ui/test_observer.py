@@ -16,6 +16,7 @@ import pytest
 from cairn.domain import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    BudgetWarning,
     StopReason,
     TurnComplete,
     UserMessagePersisted,
@@ -34,6 +35,7 @@ class _FakeScreen:
     append_delta_calls: list[AssistantTextDelta] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     finalise_assistant_calls: list[AssistantMessageComplete] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     finalise_turn_calls: list[TurnComplete] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_budget_warning_calls: list[BudgetWarning] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
 
     def append_user_message(self, event: UserMessagePersisted) -> None:
         self.append_user_message_calls.append(event)
@@ -46,6 +48,9 @@ class _FakeScreen:
 
     def finalise_turn(self, event: TurnComplete) -> None:
         self.finalise_turn_calls.append(event)
+
+    def show_budget_warning(self, event: BudgetWarning) -> None:
+        self.show_budget_warning_calls.append(event)
 
 
 @pytest.fixture
@@ -91,6 +96,14 @@ class TestObserverRouting:
         event = TurnComplete(session_id="sess-1", turn_id="t-1", stop_reason=StopReason.END_TURN)
         observer.observe(event)
         assert fake_screen.finalise_turn_calls == [event]
+
+    def test_budget_warning_routes_to_show_budget_warning(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = BudgetWarning(session_id="sess-1", turn_id="t-1", cost_usd=4.2, threshold_usd=4.0)
+        observer.observe(event)
+        assert fake_screen.show_budget_warning_calls == [event]
 
 
 class TestObserverRobustness:

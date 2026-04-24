@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING
 from cairn.domain import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    BudgetWarning,
     TurnComplete,
     UserMessagePersisted,
 )
@@ -77,6 +78,8 @@ class TextualUIEventObserver:
                 screen.finalise_assistant_message(event)
             case TurnComplete():
                 screen.finalise_turn(event)
+            case BudgetWarning():
+                screen.show_budget_warning(event)
             case _:
                 # Unhandled events are routed in subsequent commits on
                 # this branch. Silent no-op keeps the observer
