@@ -6,6 +6,7 @@ from cairn.ui._widgets._activity import ActivityIndicator, ActivityState
 from cairn.ui._widgets._banner import Banner
 from cairn.ui._widgets._chat_log import ChatLog
 from cairn.ui._widgets._command_bar import CommandBar
+from cairn.ui._widgets._completion import CompletionMenu
 from cairn.ui._widgets._cost_meter import CostMeter
 from cairn.ui._widgets._header import SessionHeader, SessionTypeBadge
 from cairn.ui._widgets._message import MessageView
@@ -17,6 +18,7 @@ __all__ = [
     "Banner",
     "ChatLog",
     "CommandBar",
+    "CompletionMenu",
     "CostMeter",
     "MessageView",
     "SessionHeader",

@@ -17,6 +17,7 @@ from cairn.ui._widgets import (
     Banner,
     ChatLog,
     CommandBar,
+    CompletionMenu,
     CostMeter,
     MessageView,
     SessionHeader,
@@ -76,10 +77,19 @@ class SessionScreen(Screen[None]):
     def compose(self) -> ComposeResult:
         yield SessionHeader(session=self._session)
         yield ChatLog(id="chat")
-        yield CommandBar()
+        completion = CompletionMenu(id="completion")
+        yield completion
+        yield CommandBar(completion=completion)
         yield CostMeter(precision=self._cost_precision)
 
     # -- Command bar wiring ---------------------------------------------
+
+    def on_input_changed(self, event: CommandBar.Changed) -> None:
+        """Keep the completion menu in sync with the bar's value."""
+        if not isinstance(event.input, CommandBar):
+            return
+        app = cast("CairnApp", self.app)
+        self._completion.sync(event.value, app.command_registry)
 
     async def on_input_submitted(self, event: CommandBar.Submitted) -> None:
         """Handle Enter in the command bar.
@@ -93,6 +103,10 @@ class SessionScreen(Screen[None]):
             return
         line = event.value
         event.input.clear()
+        # Dismiss the completion menu on any submit — the value has
+        # been cleared and the popover would otherwise linger after
+        # the command runs.
+        self._completion.close()
         if line.startswith("/"):
             app = cast("CairnApp", self.app)
             result = await app.command_registry.dispatch(app, line)
@@ -324,6 +338,10 @@ class SessionScreen(Screen[None]):
     @property
     def _activity(self) -> ActivityIndicator:
         return self.query_one(ActivityIndicator)
+
+    @property
+    def _completion(self) -> CompletionMenu:
+        return self.query_one(CompletionMenu)
 
     _staged_user: dict[str, MessageView]
 
