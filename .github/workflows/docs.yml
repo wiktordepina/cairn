@@ -98,10 +98,18 @@ jobs:
           inputs.deploy_version == ''
         run: uv run mike deploy --push --update-aliases dev
 
-      - name: Deploy release (tag push)
+      # `release.yml` dispatches this workflow with `--ref v<version>`
+      # after creating a release, because GITHUB_TOKEN-created releases
+      # don't fire downstream triggers. That dispatch arrives here as
+      # `workflow_dispatch` on `refs/tags/v*` with no `deploy_version`
+      # input — accept it alongside the `release`-event and direct tag-
+      # push paths so the new version's docs actually publish.
+      - name: Deploy release (tag push or release.yml dispatch)
         if: |
           github.event_name == 'release' ||
-          (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v'))
+          ((github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+           startsWith(github.ref, 'refs/tags/v') &&
+           inputs.deploy_version == '')
         run: |
           set -euo pipefail
           VERSION="${GITHUB_REF_NAME#v}"
