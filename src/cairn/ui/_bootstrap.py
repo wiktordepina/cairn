@@ -211,6 +211,9 @@ async def _run(config: CairnConfig) -> int:
     )
 
     # -- Async setup that needs the loop -------------------------------
+    # Sweep for turns the previous process left non-terminal; the UI
+    # surfaces a banner when the count > 0.
+    resumed = await orchestrator.resume_aborted_turns()
     session = await orchestrator.start_session(
         type=SessionType.COMPANION,
         persona="companion",
@@ -226,6 +229,7 @@ async def _run(config: CairnConfig) -> int:
         tool_registry=tool_registry,
         ui_config=active.ui,
         cost_source=_session_cost,
+        resumed_turn_count=len(resumed),
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,

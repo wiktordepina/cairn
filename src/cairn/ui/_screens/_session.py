@@ -348,3 +348,13 @@ class SessionScreen(Screen[None]):
     def on_mount(self) -> None:
         self._staged_user = {}
         self.query_one(CommandBar).focus()
+        app = cast("CairnApp", self.app)
+        resumed = app.take_resumed_turn_count()
+        if resumed > 0:
+            noun = "turn" if resumed == 1 else "turns"
+            self._chat_log.append_banner(
+                Banner(
+                    text=f"↺ recovered {resumed} aborted {noun} from previous run",
+                    kind="muted",
+                )
+            )

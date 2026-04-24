@@ -46,6 +46,7 @@ class CairnApp(App[None]):
         tool_registry: ToolRegistry | None = None,
         ui_config: UIConfig | None = None,
         cost_source: CostSource | None = None,
+        resumed_turn_count: int = 0,
     ) -> None:
         super().__init__()
         self._orchestrator = orchestrator
@@ -54,6 +55,7 @@ class CairnApp(App[None]):
         self._command_registry = command_registry or build_default_registry()
         self._tool_registry = tool_registry
         self._cost_source = cost_source
+        self._pending_resumed_turn_count = resumed_turn_count
         from cairn.config import UIConfig as _UIConfig
 
         self._ui_config = ui_config or _UIConfig()
@@ -84,6 +86,17 @@ class CairnApp(App[None]):
     def ui_config(self) -> UIConfig:
         """Active profile's UI block (defaults when unset)."""
         return self._ui_config
+
+    def take_resumed_turn_count(self) -> int:
+        """Return the recorded count and clear it.
+
+        Screens read this on mount to surface a one-time crash-recovery
+        banner; subsequent screens see zero, which is what we want —
+        the count refers to the boot-time sweep, not ongoing state.
+        """
+        count = self._pending_resumed_turn_count
+        self._pending_resumed_turn_count = 0
+        return count
 
     async def on_mount(self) -> None:
         screen = SessionScreen(
