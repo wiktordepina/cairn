@@ -9,15 +9,16 @@ the full collaborator graph (config → persistence → providers →
 memory → tools → orchestrator) on a single asyncio event loop
 before mounting the app.
 
-!!! note "V1 scope — tranche 1"
-    Tranche 1 ships a single-session chat screen with streaming
+!!! note "V1 scope"
+    Ships at 0.10.0: single-session chat screen with streaming
     Markdown, tool-call lifecycle rows, tier-3+ approval modal,
     slash-command dispatch + completion popover, a four-state
-    activity indicator, and a live cost meter backed by
-    `UsageRepo`. Session switching, delegation inline cards, and
-    the memory-write toast land in tranche 2. The crash-recovery
-    banner, `/context` rendering, and the real prompt-trust gate
-    land in tranche 3.
+    activity indicator, a live cost meter backed by `UsageRepo`,
+    `/context` usage rendering, a crash-recovery banner, and the
+    real trust-prompt modal for `trust_policy="prompt"` on
+    project convention files. Session switching, delegation
+    inline cards, memory-write toast, and the extended slash
+    catalogue land as post-0.10.0 polish PRs.
 
 ## Layout
 
@@ -96,16 +97,39 @@ value being approved.
 
 ## Slash commands
 
-The command bar accepts a small set of tranche-1 commands:
+The command bar accepts the following commands:
 
 | Command | Summary |
 |---|---|
 | `/help` | Print the command catalogue |
 | `/cost` | Show current session cost |
+| `/context` | Show context-budget usage (see below) |
 | `/tools` | List tools available in this session |
-| `/new` | Placeholder — session-type picker lands in tranche 2 |
-| `/ephemeral <model>` | Placeholder — ephemeral spawn lands in tranche 2 |
+| `/new` | Placeholder — session-type picker lands post-0.10.0 |
+| `/ephemeral <model>` | Placeholder — ephemeral spawn lands post-0.10.0 |
 | `/quit` | Exit the app |
+
+### `/context`
+
+Shows the current session's context-budget footprint as an inline
+muted banner:
+
+```
+context: 17,000 / 200,000 tokens (8% used) — model=claude-opus-4-7
+  cached: 10,000 (read) + 2,000 (write)
+  fresh:  5,000
+  output: 800 (this turn)
+  (segment breakdown unavailable in V1)
+```
+
+Reads the most-recent `PRIMARY_TURN` usage row from `UsageRepo`
+and the model's `context_window` from `ModelConfig`. The
+per-segment breakdown (`identity`, `user_context`,
+`project_conventions`, `memory_index`, `retrieved_memories`)
+needs a `ContextReport` from the context manager and lands with
+the stacked-bar follow-up. If the session has no usage recorded
+yet (fresh session, first turn still running), the banner shows
+the budget only with a "no primary-turn usage recorded yet" note.
 
 ### Completion popover
 
@@ -162,10 +186,43 @@ invalid values fail validation at config load.
 
 If the orchestrator was killed mid-turn (SIGKILL, process crash,
 host restart), the `turns` table will contain non-terminal rows
-on next boot. `Orchestrator.resume_aborted_turns()` marks them
-aborted with `reason='process_crash'`. The UI doesn't surface
-this today — a banner announcing "recovered N aborted turns"
-lands in tranche 3.
+on next boot. The bootstrap calls
+`Orchestrator.resume_aborted_turns()` once before mounting the
+app; any non-zero count surfaces as a muted banner at the top of
+the chat log:
+
+```
+↺ recovered 2 aborted turns from previous run
+```
+
+The banner is one-shot — a second screen mount in the same
+process will not duplicate it. There is no interactive
+recovery flow in V1 (the model's partial reply is persisted as
+far as it got and the conversation simply continues).
+
+## Convention-file trust prompt
+
+When `trust_policy="prompt"` is set on the active profile
+(`[profiles.*.convention_files]`), the UI presents a
+`TrustPromptModal` on first encounter with each project's
+convention files. The modal shows the project path, the
+filenames discovered, and a 20-line preview of the first file,
+then offers three outcomes:
+
+- **Trust once** (<kbd>o</kbd>) — ALLOW for this process only.
+- **Trust project** (<kbd>p</kbd>) — ALLOW plus persist to
+  `$XDG_CONFIG_HOME/cairn/trusted_projects.toml` so future
+  processes default to ALLOW without re-prompting.
+- **Deny** (<kbd>n</kbd> / <kbd>Esc</kbd>) — skip loading this
+  project's convention files.
+
+Decisions cache per-process, so repeated checks within the same
+session never re-prompt. Projects already in the allowlist
+bypass the modal entirely. See
+[ADR 0036](decisions/0036-trust-prompt-three-way-choice.md) for
+why we offer three outcomes rather than two and
+[`docs/conventions.md`](conventions.md) for the underlying
+trust-policy semantics.
 
 ## Troubleshooting
 
@@ -204,3 +261,6 @@ a chain, not the first.
 - [ADR 0035](decisions/0035-remember-for-session-gating.md) —
   why the "remember for this session" checkbox is disabled at
   tier 4+.
+- [ADR 0036](decisions/0036-trust-prompt-three-way-choice.md) —
+  why the trust-prompt modal offers three outcomes (trust-once
+  vs trust-project vs deny) instead of a binary allow/deny.
