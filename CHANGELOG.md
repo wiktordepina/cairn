@@ -28,6 +28,18 @@ structured `UIEventObserver`) are still to land.
   are logged and swallowed so one buggy observer can't block the
   queue. Default is `()` — existing callers keep working
   unchanged.
+- **`cairn.ui` package — Tranche 1 scaffolding.** `CairnApp`
+  (`textual.App`) holding a single `SessionScreen`;
+  `MessageView` (streaming Markdown widget); `ChatLog`
+  (`VerticalScroll` container with auto-scroll + id lookup);
+  `TextualUIEventObserver` routing `UserMessagePersisted` /
+  `AssistantTextDelta` / `AssistantMessageComplete` /
+  `TurnComplete` to screen methods; `_theme.py` with the
+  companion-teal / persona-amber / ephemeral-grey default
+  palette. `textual>=0.80,<0.90` added as a runtime dep. The
+  approval gateway, command bar, session header, cost meter,
+  and CLI entry point are still to land in subsequent commits
+  on `feat/ui`.
 
 ## [0.9.0] — 2026-04-23
 
