@@ -48,9 +48,7 @@ class TestCLISmoke:
         assert main([]) == 42
         assert captured == {"profile_name": None}
 
-    def test_profile_flag_passes_through_to_launch(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_profile_flag_passes_through_to_launch(self, monkeypatch: pytest.MonkeyPatch) -> None:
         import cairn.ui._bootstrap as bootstrap
 
         captured: dict[str, str | None] = {}

@@ -67,9 +67,7 @@ class TestCompletionMenuSync:
             assert menu.is_open is False
 
     @pytest.mark.asyncio
-    async def test_whitespace_after_command_closes(
-        self, companion_session: Session
-    ) -> None:
+    async def test_whitespace_after_command_closes(self, companion_session: Session) -> None:
         """Once the user types a space the menu should close — they're
         now typing arguments, not picking a command."""
         app = _app_for(companion_session)
@@ -93,9 +91,7 @@ class TestCompletionMenuSync:
             assert menu.is_open is False
 
     @pytest.mark.asyncio
-    async def test_bare_slash_shows_all_commands(
-        self, companion_session: Session
-    ) -> None:
+    async def test_bare_slash_shows_all_commands(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         async with app.run_test() as pilot:
             await pilot.pause()
@@ -148,9 +144,7 @@ class TestCommandBarKeyIntegration:
             assert first != second
 
     @pytest.mark.asyncio
-    async def test_up_arrow_moves_selection_backwards(
-        self, companion_session: Session
-    ) -> None:
+    async def test_up_arrow_moves_selection_backwards(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         async with app.run_test() as pilot:
             await pilot.pause()
@@ -248,9 +242,7 @@ class TestCommandBarKeyIntegration:
 
 class TestCompletionMenuEdgeCases:
     @pytest.mark.asyncio
-    async def test_tab_without_selection_is_noop(
-        self, companion_session: Session
-    ) -> None:
+    async def test_tab_without_selection_is_noop(self, companion_session: Session) -> None:
         """If the menu is open but nothing is highlighted, Tab should
         not mutate the input. Constructed by using a registry where
         sync can't pick anything — an empty filtered set closes the
@@ -271,9 +263,7 @@ class TestCompletionMenuEdgeCases:
             assert bar.value == "/c"
 
     @pytest.mark.asyncio
-    async def test_menu_not_wired_does_not_crash(
-        self, companion_session: Session
-    ) -> None:
+    async def test_menu_not_wired_does_not_crash(self, companion_session: Session) -> None:
         """A CommandBar constructed without a completion menu must
         still accept keys normally — the wiring is optional."""
         bar = CommandBar()  # no completion
@@ -286,9 +276,7 @@ class TestCompletionMenuEdgeCases:
 
 class TestDynamicRegistry:
     @pytest.mark.asyncio
-    async def test_custom_command_appears_in_menu(
-        self, companion_session: Session
-    ) -> None:
+    async def test_custom_command_appears_in_menu(self, companion_session: Session) -> None:
         """The registry is read at `sync()` time, so commands
         registered after startup (future `/persona` etc.) show up."""
         registry = CommandRegistry()

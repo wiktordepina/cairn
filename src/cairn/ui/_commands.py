@@ -123,9 +123,7 @@ async def _handle_cost(app: CairnApp, _tail: str) -> None:
         return
     cost = screen.current_cost_usd
     precision = screen.query_one(CostMeter).precision
-    screen.append_banner(
-        Banner(text=f"session cost: ${cost:.{precision}f}", kind="muted")
-    )
+    screen.append_banner(Banner(text=f"session cost: ${cost:.{precision}f}", kind="muted"))
 
 
 async def _handle_tools(app: CairnApp, _tail: str) -> None:

@@ -80,9 +80,7 @@ class TestActivityIndicatorWiring:
             assert ind.state == "thinking"
 
     @pytest.mark.asyncio
-    async def test_first_delta_transitions_to_streaming(
-        self, companion_session: Session
-    ) -> None:
+    async def test_first_delta_transitions_to_streaming(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         observer = TextualUIEventObserver(app)
 
@@ -91,9 +89,7 @@ class TestActivityIndicatorWiring:
             screen = app.current_session_screen
             assert screen is not None
             screen._activity.set_thinking()
-            observer.observe(
-                AssistantTextDelta(message_id="m-1", turn_id="t-1", text="Hi")
-            )
+            observer.observe(AssistantTextDelta(message_id="m-1", turn_id="t-1", text="Hi"))
             await pilot.pause()
             assert screen._activity.state == "streaming"
 
@@ -123,9 +119,7 @@ class TestActivityIndicatorWiring:
             assert ind.label == "web_fetch"
 
     @pytest.mark.asyncio
-    async def test_tool_completed_returns_to_thinking(
-        self, companion_session: Session
-    ) -> None:
+    async def test_tool_completed_returns_to_thinking(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         observer = TextualUIEventObserver(app)
 

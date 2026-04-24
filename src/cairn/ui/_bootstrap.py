@@ -276,6 +276,5 @@ class _PendingGateway:
         request: object,  # noqa: ARG002
     ) -> object:
         raise RuntimeError(
-            "approval gateway was queried before the UI was wired; "
-            "this is a bootstrap bug"
+            "approval gateway was queried before the UI was wired; this is a bootstrap bug"
         )
