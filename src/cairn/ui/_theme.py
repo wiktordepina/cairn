@@ -11,8 +11,8 @@ from __future__ import annotations
 from cairn.domain._enums import SessionType
 
 # Default accent per session type. Overridable via
-# `ProfileConfig.ui.session_type_colours` in a later PR; Tranche 1
-# uses the defaults directly.
+# `ProfileConfig.ui.session_type_colours` (keyed by the string form
+# of the session type, e.g. ``{"companion": "#ff0000"}``).
 DEFAULT_SESSION_TYPE_COLOURS: dict[SessionType, str] = {
     SessionType.COMPANION: "#3bb0a8",  # teal
     SessionType.PERSONA: "#e0a030",  # amber
@@ -23,17 +23,25 @@ DEFAULT_SESSION_TYPE_COLOURS: dict[SessionType, str] = {
 def colour_for(
     session_type: SessionType,
     *,
-    overrides: dict[SessionType, str] | None = None,
+    overrides: dict[SessionType, str] | dict[str, str] | None = None,
 ) -> str:
     """Return the hex colour for a session type.
 
     Args:
         session_type: The session type to look up.
-        overrides: Optional user-supplied overrides from config.
+        overrides: Optional user-supplied overrides. Keys may be the
+            `SessionType` enum value or the string form; `SessionType`
+            is a `StrEnum` so the two are interchangeable. Accepting
+            both lets callers pass `UIConfig.session_type_colours`
+            directly without enum coercion.
 
     Returns:
         Hex colour string (e.g. ``"#3bb0a8"``).
     """
-    if overrides and session_type in overrides:
-        return overrides[session_type]
+    if overrides:
+        if session_type in overrides:
+            return overrides[session_type]  # pyright: ignore[reportReturnType]
+        key = session_type.value
+        if key in overrides:
+            return overrides[key]  # pyright: ignore[reportReturnType]
     return DEFAULT_SESSION_TYPE_COLOURS[session_type]

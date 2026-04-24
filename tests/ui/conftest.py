@@ -11,14 +11,18 @@ Tranche 1 uses two patterns:
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from cairn.domain._enums import SessionType
 from cairn.domain._sessions import Session
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 
 @dataclass
@@ -45,3 +49,19 @@ def companion_session() -> Session:
         created_at=now,
         updated_at=now,
     )
+
+
+@pytest.fixture(autouse=True)
+def _restore_cairn_log_propagation() -> Iterator[None]:
+    """Keep `cairn.*` loggers visible to pytest's `caplog`.
+
+    `cairn.logging.setup_logging()` sets `propagate=False` on the
+    `cairn` namespace logger so the UI can own the terminal. Tests
+    that exercise `setup_logging()` (the CLI smoke tests) carry
+    that state forward to every later test in the process, which
+    blocks `caplog` from seeing `cairn.*` log records. Restore
+    propagation per test.
+    """
+    logger = logging.getLogger("cairn")
+    logger.propagate = True
+    yield

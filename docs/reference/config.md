@@ -29,6 +29,8 @@
 
 ::: cairn.config.SecretRef
 
+::: cairn.config.UIConfig
+
 ## Loading
 
 ::: cairn.config.ConfigError
