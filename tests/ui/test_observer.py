@@ -16,9 +16,20 @@ import pytest
 from cairn.domain import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    BudgetOverflowAdvisory,
     BudgetWarning,
+    HistoryCompacted,
     StopReason,
+    ToolCallApproved,
+    ToolCallCompleted,
+    ToolCallPlanned,
+    ToolCallRejected,
+    ToolCallStarted,
+    ToolCallStatus,
+    TurnAborted,
+    TurnBlocked,
     TurnComplete,
+    TurnIncomplete,
     UserMessagePersisted,
 )
 from cairn.ui._observer import TextualUIEventObserver
@@ -36,6 +47,16 @@ class _FakeScreen:
     finalise_assistant_calls: list[AssistantMessageComplete] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     finalise_turn_calls: list[TurnComplete] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     show_budget_warning_calls: list[BudgetWarning] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    note_tool_plan_calls: list[ToolCallPlanned] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    mark_tool_approved_calls: list[ToolCallApproved] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    mark_tool_rejected_calls: list[ToolCallRejected] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    mark_tool_started_calls: list[ToolCallStarted] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    mark_tool_completed_calls: list[ToolCallCompleted] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_aborted_calls: list[TurnAborted] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_blocked_calls: list[TurnBlocked] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_incomplete_calls: list[TurnIncomplete] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_compaction_calls: list[HistoryCompacted] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_overflow_calls: list[BudgetOverflowAdvisory] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
 
     def append_user_message(self, event: UserMessagePersisted) -> None:
         self.append_user_message_calls.append(event)
@@ -51,6 +72,36 @@ class _FakeScreen:
 
     def show_budget_warning(self, event: BudgetWarning) -> None:
         self.show_budget_warning_calls.append(event)
+
+    def note_tool_plan(self, event: ToolCallPlanned) -> None:
+        self.note_tool_plan_calls.append(event)
+
+    def mark_tool_approved(self, event: ToolCallApproved) -> None:
+        self.mark_tool_approved_calls.append(event)
+
+    def mark_tool_rejected(self, event: ToolCallRejected) -> None:
+        self.mark_tool_rejected_calls.append(event)
+
+    def mark_tool_started(self, event: ToolCallStarted) -> None:
+        self.mark_tool_started_calls.append(event)
+
+    def mark_tool_completed(self, event: ToolCallCompleted) -> None:
+        self.mark_tool_completed_calls.append(event)
+
+    def show_aborted(self, event: TurnAborted) -> None:
+        self.show_aborted_calls.append(event)
+
+    def show_blocked(self, event: TurnBlocked) -> None:
+        self.show_blocked_calls.append(event)
+
+    def show_incomplete(self, event: TurnIncomplete) -> None:
+        self.show_incomplete_calls.append(event)
+
+    def show_compaction(self, event: HistoryCompacted) -> None:
+        self.show_compaction_calls.append(event)
+
+    def show_overflow_advisory(self, event: BudgetOverflowAdvisory) -> None:
+        self.show_overflow_calls.append(event)
 
 
 @pytest.fixture
@@ -104,6 +155,110 @@ class TestObserverRouting:
         event = BudgetWarning(session_id="sess-1", turn_id="t-1", cost_usd=4.2, threshold_usd=4.0)
         observer.observe(event)
         assert fake_screen.show_budget_warning_calls == [event]
+
+    def test_tool_call_planned_routes_to_note_tool_plan(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = ToolCallPlanned(tool_call_id="tc-1", turn_id="t-1", tool_name="grep", args={})
+        observer.observe(event)
+        assert fake_screen.note_tool_plan_calls == [event]
+
+    def test_tool_call_approved_routes_to_mark_tool_approved(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = ToolCallApproved(tool_call_id="tc-1", turn_id="t-1", approved_by="user")
+        observer.observe(event)
+        assert fake_screen.mark_tool_approved_calls == [event]
+
+    def test_tool_call_rejected_routes_to_mark_tool_rejected(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = ToolCallRejected(
+            tool_call_id="tc-1", turn_id="t-1", decided_by="user", reason="no"
+        )
+        observer.observe(event)
+        assert fake_screen.mark_tool_rejected_calls == [event]
+
+    def test_tool_call_started_routes_to_mark_tool_started(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = ToolCallStarted(tool_call_id="tc-1", turn_id="t-1", tool_name="grep")
+        observer.observe(event)
+        assert fake_screen.mark_tool_started_calls == [event]
+
+    def test_tool_call_completed_routes_to_mark_tool_completed(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = ToolCallCompleted(
+            tool_call_id="tc-1",
+            turn_id="t-1",
+            status=ToolCallStatus.COMPLETED,
+            is_error=False,
+            duration_ms=12,
+        )
+        observer.observe(event)
+        assert fake_screen.mark_tool_completed_calls == [event]
+
+    def test_turn_aborted_routes_to_show_aborted(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = TurnAborted(session_id="sess-1", turn_id="t-1", reason="user_cancel")
+        observer.observe(event)
+        assert fake_screen.show_aborted_calls == [event]
+
+    def test_turn_blocked_routes_to_show_blocked(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = TurnBlocked(session_id="sess-1", turn_id="t-1", reason="budget", message="cap")
+        observer.observe(event)
+        assert fake_screen.show_blocked_calls == [event]
+
+    def test_turn_incomplete_routes_to_show_incomplete(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = TurnIncomplete(session_id="sess-1", turn_id="t-1")
+        observer.observe(event)
+        assert fake_screen.show_incomplete_calls == [event]
+
+    def test_history_compacted_routes_to_show_compaction(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = HistoryCompacted(
+            session_id="sess-1",
+            turn_id="t-1",
+            blocks_dropped=1,
+            messages_dropped=2,
+            tokens_before=10,
+            tokens_after=5,
+            reason="budget",
+        )
+        observer.observe(event)
+        assert fake_screen.show_compaction_calls == [event]
+
+    def test_overflow_advisory_routes_to_show_overflow(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = BudgetOverflowAdvisory(
+            session_id="sess-1",
+            turn_id="t-1",
+            tokens_projected=210_000,
+            context_window=200_000,
+            safety_margin=5_000,
+            overflow_tokens=10_000,
+            will_fit_context_window=False,
+        )
+        observer.observe(event)
+        assert fake_screen.show_overflow_calls == [event]
 
 
 class TestObserverRobustness:

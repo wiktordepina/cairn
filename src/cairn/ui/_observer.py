@@ -23,8 +23,18 @@ from typing import TYPE_CHECKING
 from cairn.domain import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    BudgetOverflowAdvisory,
     BudgetWarning,
+    HistoryCompacted,
+    ToolCallApproved,
+    ToolCallCompleted,
+    ToolCallPlanned,
+    ToolCallRejected,
+    ToolCallStarted,
+    TurnAborted,
+    TurnBlocked,
     TurnComplete,
+    TurnIncomplete,
     UserMessagePersisted,
 )
 
@@ -76,12 +86,32 @@ class TextualUIEventObserver:
                 screen.append_delta(event)
             case AssistantMessageComplete():
                 screen.finalise_assistant_message(event)
+            case ToolCallPlanned():
+                screen.note_tool_plan(event)
+            case ToolCallApproved():
+                screen.mark_tool_approved(event)
+            case ToolCallRejected():
+                screen.mark_tool_rejected(event)
+            case ToolCallStarted():
+                screen.mark_tool_started(event)
+            case ToolCallCompleted():
+                screen.mark_tool_completed(event)
             case TurnComplete():
                 screen.finalise_turn(event)
+            case TurnAborted():
+                screen.show_aborted(event)
+            case TurnBlocked():
+                screen.show_blocked(event)
+            case TurnIncomplete():
+                screen.show_incomplete(event)
             case BudgetWarning():
                 screen.show_budget_warning(event)
+            case HistoryCompacted():
+                screen.show_compaction(event)
+            case BudgetOverflowAdvisory():
+                screen.show_overflow_advisory(event)
             case _:
-                # Unhandled events are routed in subsequent commits on
-                # this branch. Silent no-op keeps the observer
-                # forward-compatible.
+                # Session-lifecycle, delegation, and observation-
+                # extraction events are Tranche 2 work. Silent no-op
+                # keeps forward compat for the event stream.
                 pass

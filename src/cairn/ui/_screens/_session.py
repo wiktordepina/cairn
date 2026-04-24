@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from textual.screen import Screen
 
-from cairn.ui._widgets import ChatLog, CostMeter, MessageView, SessionHeader
+from cairn.ui._widgets import Banner, ChatLog, CostMeter, MessageView, SessionHeader, ToolRow
 
 if TYPE_CHECKING:
     from textual.app import ComposeResult
@@ -18,9 +18,19 @@ if TYPE_CHECKING:
     from cairn.domain import (
         AssistantMessageComplete,
         AssistantTextDelta,
+        BudgetOverflowAdvisory,
         BudgetWarning,
+        HistoryCompacted,
         Session,
+        ToolCallApproved,
+        ToolCallCompleted,
+        ToolCallPlanned,
+        ToolCallRejected,
+        ToolCallStarted,
+        TurnAborted,
+        TurnBlocked,
         TurnComplete,
+        TurnIncomplete,
         UserMessagePersisted,
     )
 
@@ -92,6 +102,72 @@ class SessionScreen(Screen[None]):
     def show_budget_warning(self, event: BudgetWarning) -> None:
         """Render the budget-warning state in the cost meter."""
         self.set_cost(event.cost_usd, warn=True)
+
+    # -- Tool-call observer callbacks -----------------------------------
+
+    def note_tool_plan(self, event: ToolCallPlanned) -> None:
+        """Mount a new `ToolRow` for a freshly-planned tool call."""
+        row = ToolRow(tool_call_id=event.tool_call_id, tool_name=event.tool_name)
+        self._chat_log.append_tool_row(row)
+
+    def mark_tool_approved(self, event: ToolCallApproved) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_approved(event.approved_by)
+
+    def mark_tool_rejected(self, event: ToolCallRejected) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_rejected(event.decided_by, event.reason)
+
+    def mark_tool_started(self, event: ToolCallStarted) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_running()
+
+    def mark_tool_completed(self, event: ToolCallCompleted) -> None:
+        row = self._chat_log.find_tool_row(event.tool_call_id)
+        if row is not None:
+            row.mark_completed(
+                status=event.status,
+                is_error=event.is_error,
+                duration_ms=event.duration_ms,
+            )
+
+    # -- Turn-state observer callbacks ----------------------------------
+
+    def show_aborted(self, event: TurnAborted) -> None:
+        detail = event.message or event.reason
+        self._chat_log.append_banner(Banner(text=f"✗ turn aborted — {detail}", kind="error"))
+
+    def show_blocked(self, event: TurnBlocked) -> None:
+        self._chat_log.append_banner(
+            Banner(text=f"◷ turn blocked — {event.message}", kind="warning")
+        )
+
+    def show_incomplete(self, event: TurnIncomplete) -> None:
+        del event
+        self._chat_log.append_banner(
+            Banner(text="… stopped at max_tokens with a partial tool call", kind="muted")
+        )
+
+    def show_compaction(self, event: HistoryCompacted) -> None:
+        text = (
+            f"⇣ history compacted ({event.reason}): "
+            f"dropped {event.messages_dropped} messages, "
+            f"{event.tokens_before} → {event.tokens_after} tokens"
+        )
+        self._chat_log.append_banner(Banner(text=text, kind="muted"))
+
+    def show_overflow_advisory(self, event: BudgetOverflowAdvisory) -> None:
+        # Full modal dialog lands in Tranche 3; Tranche 1 surfaces a
+        # prominent warning banner so advisory-overflow isn't silent.
+        text = (
+            f"⚠ context-budget overflow: projected {event.tokens_projected} tokens "
+            f"vs {event.context_window}-token window "
+            f"(+{event.overflow_tokens})"
+        )
+        self._chat_log.append_banner(Banner(text=text, kind="warning"))
 
     # -- Helpers for the pilot harness ----------------------------------
 
