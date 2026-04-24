@@ -24,8 +24,10 @@ class Banner(Label):
 
     DEFAULT_CSS = """
     Banner {
-        margin: 0 2;
+        margin: 0 2 1 2;
         padding: 0 1;
+        width: 1fr;
+        height: auto;
     }
     Banner.-error {
         color: $error;

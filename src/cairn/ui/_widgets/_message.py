@@ -26,7 +26,7 @@ class MessageView(Markdown):
 
     DEFAULT_CSS = """
     MessageView {
-        margin: 1 2;
+        margin: 0 2 1 2;
         padding: 0 1;
     }
     MessageView.user {

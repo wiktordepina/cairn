@@ -20,7 +20,7 @@ class ToolRow(Label):
 
     DEFAULT_CSS = """
     ToolRow {
-        margin: 0 3;
+        margin: 0 3 1 3;
         padding: 0 1;
         color: $text-muted;
     }

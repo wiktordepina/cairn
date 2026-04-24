@@ -276,3 +276,4 @@ class SessionScreen(Screen[None]):
 
     def on_mount(self) -> None:
         self._staged_user = {}
+        self.query_one(CommandBar).focus()
