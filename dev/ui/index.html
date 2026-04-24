@@ -12,31 +12,31 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0017-ssrf-ip-pinning-deferred/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/ui/">
       
       
-        <link rel="prev" href="../0016-no-shell-in-v1/">
+        <link rel="prev" href="../compaction/">
       
       
-        <link rel="next" href="../0018-docs-site-tooling/">
+        <link rel="next" href="../observability/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>0017 SSRF IP pinning deferred - Cairn</title>
+        <title>UI - Cairn</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +55,9 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0017-ssrf-defence-ip-pinning-deferred-in-v1" class="md-skip">
+        <a href="#interactive-ui" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +102,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0017 SSRF IP pinning deferred
+              UI
             
           </span>
         </div>
@@ -244,7 +244,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -261,11 +261,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../configuration/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../configuration/" class="md-tabs__link">
           
   
   
@@ -287,7 +289,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../architecture/" class="md-tabs__link">
+        <a href="../architecture/" class="md-tabs__link">
           
   
   
@@ -309,7 +311,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../reference/" class="md-tabs__link">
+        <a href="../reference/" class="md-tabs__link">
           
   
   
@@ -327,13 +329,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../decisions/" class="md-tabs__link">
           
   
   
@@ -375,7 +375,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href=".." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -405,7 +405,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -429,8 +429,10 @@
       
   
   
+    
   
   
+  
     
     
       
@@ -452,19 +454,22 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
             
   
   
@@ -482,7 +487,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             
@@ -500,7 +505,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -528,7 +533,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../providers/" class="md-nav__link">
+      <a href="../providers/" class="md-nav__link">
         
   
   
@@ -556,7 +561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../memory/" class="md-nav__link">
+      <a href="../memory/" class="md-nav__link">
         
   
   
@@ -584,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../conventions/" class="md-nav__link">
+      <a href="../conventions/" class="md-nav__link">
         
   
   
@@ -612,7 +617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../compaction/" class="md-nav__link">
+      <a href="../compaction/" class="md-nav__link">
         
   
   
@@ -637,10 +642,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../ui/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -656,6 +688,153 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#message-rendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Message rendering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tool-call-rows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tool-call rows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approval-modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approval modal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slash-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slash commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slash commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#completion-popover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completion popover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#activity-indicator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activity indicator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crash-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crash recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -668,7 +847,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../observability/" class="md-nav__link">
+      <a href="../observability/" class="md-nav__link">
         
   
   
@@ -765,7 +944,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../architecture/" class="md-nav__link">
+      <a href="../architecture/" class="md-nav__link">
         
   
   
@@ -793,7 +972,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../orchestrator/" class="md-nav__link">
+      <a href="../orchestrator/" class="md-nav__link">
         
   
   
@@ -821,7 +1000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../persistence/" class="md-nav__link">
+      <a href="../persistence/" class="md-nav__link">
         
   
   
@@ -849,7 +1028,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tools/" class="md-nav__link">
+      <a href="../tools/" class="md-nav__link">
         
   
   
@@ -929,7 +1108,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
+            <a href="../reference/" class="md-nav__link ">
               
   
   
@@ -973,7 +1152,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/compaction/" class="md-nav__link">
+      <a href="../reference/compaction/" class="md-nav__link">
         
   
   
@@ -1001,7 +1180,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/config/" class="md-nav__link">
+      <a href="../reference/config/" class="md-nav__link">
         
   
   
@@ -1029,7 +1208,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/conventions/" class="md-nav__link">
+      <a href="../reference/conventions/" class="md-nav__link">
         
   
   
@@ -1057,7 +1236,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/domain/" class="md-nav__link">
+      <a href="../reference/domain/" class="md-nav__link">
         
   
   
@@ -1085,7 +1264,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/logging/" class="md-nav__link">
+      <a href="../reference/logging/" class="md-nav__link">
         
   
   
@@ -1113,7 +1292,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/memory/" class="md-nav__link">
+      <a href="../reference/memory/" class="md-nav__link">
         
   
   
@@ -1141,7 +1320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/orchestrator/" class="md-nav__link">
+      <a href="../reference/orchestrator/" class="md-nav__link">
         
   
   
@@ -1169,7 +1348,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/persistence/" class="md-nav__link">
+      <a href="../reference/persistence/" class="md-nav__link">
         
   
   
@@ -1197,7 +1376,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/providers/" class="md-nav__link">
+      <a href="../reference/providers/" class="md-nav__link">
         
   
   
@@ -1225,7 +1404,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/ssl/" class="md-nav__link">
+      <a href="../reference/ssl/" class="md-nav__link">
         
   
   
@@ -1253,7 +1432,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/tools/" class="md-nav__link">
+      <a href="../reference/tools/" class="md-nav__link">
         
   
   
@@ -1285,8 +1464,6 @@
       
   
   
-    
-  
   
   
     
@@ -1370,23 +1547,20 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../decisions/" class="md-nav__link ">
               
   
   
@@ -1404,13 +1578,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1430,7 +1604,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-per-profile-sqlite/" class="md-nav__link">
+      <a href="../decisions/0001-per-profile-sqlite/" class="md-nav__link">
         
   
   
@@ -1458,7 +1632,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
+      <a href="../decisions/0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1486,7 +1660,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0003-secret-ref-schemes/" class="md-nav__link">
+      <a href="../decisions/0003-secret-ref-schemes/" class="md-nav__link">
         
   
   
@@ -1514,7 +1688,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0004-hand-rolled-migrations/" class="md-nav__link">
+      <a href="../decisions/0004-hand-rolled-migrations/" class="md-nav__link">
         
   
   
@@ -1542,7 +1716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0005-per-provider-adapters/" class="md-nav__link">
+      <a href="../decisions/0005-per-provider-adapters/" class="md-nav__link">
         
   
   
@@ -1570,7 +1744,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0006-role-based-model-selection/" class="md-nav__link">
+      <a href="../decisions/0006-role-based-model-selection/" class="md-nav__link">
         
   
   
@@ -1598,7 +1772,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0007-memory-space-at-repo-layer/" class="md-nav__link">
+      <a href="../decisions/0007-memory-space-at-repo-layer/" class="md-nav__link">
         
   
   
@@ -1626,7 +1800,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0008-tool-call-state-column/" class="md-nav__link">
+      <a href="../decisions/0008-tool-call-state-column/" class="md-nav__link">
         
   
   
@@ -1654,7 +1828,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0009-protocol-stubs/" class="md-nav__link">
+      <a href="../decisions/0009-protocol-stubs/" class="md-nav__link">
         
   
   
@@ -1682,7 +1856,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0010-typed-middleware/" class="md-nav__link">
+      <a href="../decisions/0010-typed-middleware/" class="md-nav__link">
         
   
   
@@ -1710,7 +1884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-explicit-turn-state-machine/" class="md-nav__link">
+      <a href="../decisions/0011-explicit-turn-state-machine/" class="md-nav__link">
         
   
   
@@ -1738,7 +1912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0012-no-fk-on-turn-id/" class="md-nav__link">
+      <a href="../decisions/0012-no-fk-on-turn-id/" class="md-nav__link">
         
   
   
@@ -1766,7 +1940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0013-tier-taxonomy/" class="md-nav__link">
+      <a href="../decisions/0013-tier-taxonomy/" class="md-nav__link">
         
   
   
@@ -1794,7 +1968,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0014-tool-decorator/" class="md-nav__link">
+      <a href="../decisions/0014-tool-decorator/" class="md-nav__link">
         
   
   
@@ -1822,7 +1996,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0015-session-allowlist-exact-match/" class="md-nav__link">
+      <a href="../decisions/0015-session-allowlist-exact-match/" class="md-nav__link">
         
   
   
@@ -1850,7 +2024,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0016-no-shell-in-v1/" class="md-nav__link">
+      <a href="../decisions/0016-no-shell-in-v1/" class="md-nav__link">
         
   
   
@@ -1875,37 +2049,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0017 SSRF IP pinning deferred
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../decisions/0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
         
   
   
@@ -1921,59 +2068,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1986,7 +2080,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0018-docs-site-tooling/" class="md-nav__link">
+      <a href="../decisions/0018-docs-site-tooling/" class="md-nav__link">
         
   
   
@@ -2014,7 +2108,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0019-docstrings-google-style/" class="md-nav__link">
+      <a href="../decisions/0019-docstrings-google-style/" class="md-nav__link">
         
   
   
@@ -2042,7 +2136,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0020-auto-generated-api-reference/" class="md-nav__link">
+      <a href="../decisions/0020-auto-generated-api-reference/" class="md-nav__link">
         
   
   
@@ -2070,7 +2164,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0021-tier-1-memory-first/" class="md-nav__link">
+      <a href="../decisions/0021-tier-1-memory-first/" class="md-nav__link">
         
   
   
@@ -2098,7 +2192,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0022-memory-dedup-threshold/" class="md-nav__link">
+      <a href="../decisions/0022-memory-dedup-threshold/" class="md-nav__link">
         
   
   
@@ -2126,7 +2220,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0023-jsonl-log-no-rebuild/" class="md-nav__link">
+      <a href="../decisions/0023-jsonl-log-no-rebuild/" class="md-nav__link">
         
   
   
@@ -2154,7 +2248,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0024-memory-md-as-index/" class="md-nav__link">
+      <a href="../decisions/0024-memory-md-as-index/" class="md-nav__link">
         
   
   
@@ -2182,7 +2276,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0025-extraction-role-and-local-models/" class="md-nav__link">
+      <a href="../decisions/0025-extraction-role-and-local-models/" class="md-nav__link">
         
   
   
@@ -2210,7 +2304,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0026-per-turn-extraction-with-context/" class="md-nav__link">
+      <a href="../decisions/0026-per-turn-extraction-with-context/" class="md-nav__link">
         
   
   
@@ -2238,7 +2332,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0027-truncation-before-summarisation/" class="md-nav__link">
+      <a href="../decisions/0027-truncation-before-summarisation/" class="md-nav__link">
         
   
   
@@ -2266,7 +2360,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0028-turn-block-granularity/" class="md-nav__link">
+      <a href="../decisions/0028-turn-block-granularity/" class="md-nav__link">
         
   
   
@@ -2294,7 +2388,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0029-context-budget-advisory/" class="md-nav__link">
+      <a href="../decisions/0029-context-budget-advisory/" class="md-nav__link">
         
   
   
@@ -2322,7 +2416,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0030-convention-file-ordering/" class="md-nav__link">
+      <a href="../decisions/0030-convention-file-ordering/" class="md-nav__link">
         
   
   
@@ -2350,7 +2444,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0031-trust-prompt-deferred/" class="md-nav__link">
+      <a href="../decisions/0031-trust-prompt-deferred/" class="md-nav__link">
         
   
   
@@ -2378,7 +2472,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0032-convention-files-no-cursor-cline/" class="md-nav__link">
+      <a href="../decisions/0032-convention-files-no-cursor-cline/" class="md-nav__link">
         
   
   
@@ -2406,7 +2500,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0033-textual-for-ui/" class="md-nav__link">
+      <a href="../decisions/0033-textual-for-ui/" class="md-nav__link">
         
   
   
@@ -2434,7 +2528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0034-single-loop-sync-observer/" class="md-nav__link">
+      <a href="../decisions/0034-single-loop-sync-observer/" class="md-nav__link">
         
   
   
@@ -2462,7 +2556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0035-remember-for-session-gating/" class="md-nav__link">
+      <a href="../decisions/0035-remember-for-session-gating/" class="md-nav__link">
         
   
   
@@ -2517,10 +2611,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
+  <a href="#layout" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Context
+        Layout
       
     </span>
   </a>
@@ -2528,10 +2622,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
+  <a href="#message-rendering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decision
+        Message rendering
       
     </span>
   </a>
@@ -2539,10 +2633,104 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
+  <a href="#tool-call-rows" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Consequences
+        Tool-call rows
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approval-modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approval modal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slash-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Slash commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Slash commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#completion-popover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completion popover
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#activity-indicator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activity indicator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crash-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crash recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design notes
       
     </span>
   </a>
@@ -2566,7 +2754,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0017-ssrf-ip-pinning-deferred.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/ui.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2574,125 +2762,210 @@
   
 
 
-<h1 id="0017-ssrf-defence-ip-pinning-deferred-in-v1">0017 — SSRF defence: IP pinning deferred in V1<a class="headerlink" href="#0017-ssrf-defence-ip-pinning-deferred-in-v1" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-21
-<strong>Status:</strong> accepted</p>
-<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p><code>web_fetch</code> and any future URL-fetching tool run through the SSRF
-defence in <code>cairn.tools.security._ssrf</code>. The V1 implementation:</p>
+<h1 id="interactive-ui">Interactive UI<a class="headerlink" href="#interactive-ui" title="Permanent link">&para;</a></h1>
+<p>Cairn's interactive interface is a
+<a href="https://textual.textualize.io/">Textual</a> app: a chat transcript,
+a command bar, inline tool-call rows, an activity indicator, a
+cost meter, and a modal approval dialog for tier-3+ tool calls.
+Start it with <code>cairn --profile &lt;name&gt;</code>; the bootstrap assembles
+the full collaborator graph (config → persistence → providers →
+memory → tools → orchestrator) on a single asyncio event loop
+before mounting the app.</p>
+<div class="admonition note">
+<p class="admonition-title">V1 scope — tranche 1</p>
+<p>Tranche 1 ships a single-session chat screen with streaming
+Markdown, tool-call lifecycle rows, tier-3+ approval modal,
+slash-command dispatch + completion popover, a four-state
+activity indicator, and a live cost meter backed by
+<code>UsageRepo</code>. Session switching, delegation inline cards, and
+the memory-write toast land in tranche 2. The crash-recovery
+banner, <code>/context</code> rendering, and the real prompt-trust gate
+land in tranche 3.</p>
+</div>
+<h2 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">&para;</a></h2>
+<p>A session screen composes five widgets top-to-bottom:</p>
 <ol>
-<li>Validates the scheme (http/https only), hostname present, no
-   embedded credentials.</li>
-<li>Resolves the hostname via <code>getaddrinfo</code> and rejects if any
-   resolved IP falls in a blocked network (loopback, RFC1918
-   private, link-local — including cloud metadata 169.254.169.254,
-   IPv6 ULA/link-local/unspecified, carrier-grade NAT).</li>
-<li>Lets the HTTP client connect using the hostname (so DNS is
-   consulted again at connection time).</li>
+<li><strong><code>SessionHeader</code></strong> — session-type badge (companion / persona /
+   ephemeral, colour-keyed per
+   <a href="#ui-configuration"><code>UIConfig.session_type_colours</code></a>), session
+   title, and the docked <code>ActivityIndicator</code>.</li>
+<li><strong><code>ChatLog</code></strong> — scrolling container of <code>MessageView</code>,
+   <code>ToolRow</code>, and <code>Banner</code> widgets. Auto-scrolls to the tail when
+   the user is already near the bottom; respects manual scroll-up
+   within a 3-row slack.</li>
+<li><strong><code>CompletionMenu</code></strong> — hidden by default; opens into a
+   selectable list of slash-command matches when the command bar
+   starts with <code>/</code>.</li>
+<li><strong><code>CommandBar</code></strong> — single-line input. Plain text submits a
+   user turn; <code>/command</code> dispatches through the registry.</li>
+<li><strong><code>CostMeter</code></strong> — running session spend, precision controlled
+   by <code>UIConfig.cost_display_precision</code> (default 6 decimal
+   places). Refreshed from <code>UsageRepo</code> on every <code>TurnComplete</code>.</li>
 </ol>
-<p>Step 3 is the gap. Between the validation <code>getaddrinfo</code> and the
-client's actual connection, DNS could return a different address.
-A "textbook" DNS-rebinding attack works by:</p>
-<ol>
-<li>Attacker controls <code>evil.example.com</code>.</li>
-<li>First DNS query (validation) returns <code>1.2.3.4</code> — public IP,
-   passes.</li>
-<li>Second DNS query (connection) returns <code>127.0.0.1</code> or
-   <code>169.254.169.254</code> — the attacker has swapped records.</li>
-<li>Client connects to the internal address while thinking it's
-   fetching a public URL.</li>
-</ol>
-<p>The textbook mitigation is <strong>IP pinning</strong>: resolve the hostname,
-verify every IP is safe, then force the HTTP client to connect to
-one of those specific IPs while preserving the Host/SNI header.</p>
-<p>IP pinning on HTTPS is not difficult in principle but non-trivial
-in practice:</p>
+<h2 id="message-rendering">Message rendering<a class="headerlink" href="#message-rendering" title="Permanent link">&para;</a></h2>
+<p><code>MessageView</code> streams assistant output as plain text during a
+turn and swaps to a rich Markdown render when the
+<code>AssistantMessageComplete</code> event arrives. Mid-turn re-rendering
+of partially-parsed Markdown produces visible artefacts (stray
+<code>/</code>, mismatched headings, half-open code fences), so plain-text
+streaming is deliberate — the final render is the authoritative
+one.</p>
+<p>User messages render immediately on submission (staged by the
+screen, mounted when <code>UserMessagePersisted</code> arrives from the
+observer). The observer is a single-loop synchronous fan-out
+from the orchestrator — see
+<a href="../decisions/0034-single-loop-sync-observer/">ADR 0034</a>.</p>
+<h2 id="tool-call-rows">Tool-call rows<a class="headerlink" href="#tool-call-rows" title="Permanent link">&para;</a></h2>
+<p>Each planned tool call mounts a <code>ToolRow</code> in the chat log with a
+state machine:</p>
 <ul>
-<li>The TCP layer must connect to the pinned IP.</li>
-<li>The TLS layer must use the original hostname for SNI.</li>
-<li>The HTTP layer must use the original hostname for the <code>Host</code>
-  header.</li>
-<li>The certificate validation must still check the original
-  hostname.</li>
+<li><strong>planned</strong> — row appears; args rendered inline.</li>
+<li><strong>approved / rejected</strong> — coloured badge updates.</li>
+<li><strong>running</strong> — animated braille spinner appears to the left of
+  the tool name.</li>
+<li><strong>completed</strong> — spinner replaced by a status glyph (<code>✓</code> success,
+  <code>✗</code> failure, <code>⏱</code> timeout), duration rendered in ms.</li>
 </ul>
-<p>httpx supports some of this via custom <code>Transport</code> instances, but
-the clean shape needs a bespoke SSL context and a transport that
-overrides connection address without leaking the pinned IP to TLS.
-Doing it right is a careful piece of code; doing it wrong is a
-worse security posture than not trying (the pinned IP leaking
-into SNI would itself be a vulnerability).</p>
-<p>The practical threat picture also matters. For DNS rebinding to
-fire:</p>
+<p>While any tool is running, the header <code>ActivityIndicator</code> flips
+to <code>tool:&lt;name&gt;</code>. Between streaming and tool calls it settles to
+<code>thinking</code>; idle after the turn completes.</p>
+<h2 id="approval-modal">Approval modal<a class="headerlink" href="#approval-modal" title="Permanent link">&para;</a></h2>
+<p>Tier-3 and tier-4+ tool calls trigger an <code>ApprovalModal</code> —
+<code>push_screen_wait</code> on the modal blocks the orchestrator's approval
+middleware on the same event loop. Keybindings: <code>y</code> approves,
+<code>n</code> rejects, <code>escape</code> rejects-and-dismisses.</p>
 <ul>
-<li>The attacker must control DNS for the hostname in question.</li>
-<li>The attacker must time the rebinding precisely around our
-  validation and connection.</li>
-<li>The target must be reachable from the attacker's chosen victim
-  address (internal network addressable from the machine running
-  cairn).</li>
+<li><strong>Tier 3</strong> (e.g. <code>file_write</code>, delegation): the "Remember this
+  exact call for the session" checkbox is enabled. Ticking it
+  populates the <code>SessionAllowlist</code> so subsequent identical calls
+  skip the modal. See
+  <a href="../decisions/0015-session-allowlist-exact-match/">ADR 0015</a> for
+  the <code>(tool_name, sha256(sorted_json(args)))</code> match rule.</li>
+<li><strong>Tier 4+</strong>: the checkbox is rendered but disabled, with a
+  sub-label explaining why. See
+  <a href="../decisions/0035-remember-for-session-gating/">ADR 0035</a> for
+  the reasoning behind this asymmetry.</li>
 </ul>
-<p>That's a narrow attacker profile for a single-user desktop
-application. A server-side cairn deployment with an accessible
-internal network (AWS instance metadata, corporate intranet) would
-be the worst case, and the answer there is both IP pinning <em>and</em>
-outbound-firewall rules.</p>
-<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>V1 SSRF defence validates the hostname and its resolved IPs
-pre-flight but does not pin the connection IP. The <code>safe_fetch</code>
-helper (and <code>web_fetch</code>'s manual redirect walk) call
-<code>resolve_hostname</code> before every HTTP request, including every hop,
-so the attack window is bounded to "rebinds between
-<code>getaddrinfo</code> and <code>connect</code>" — typically milliseconds.</p>
-<p>The gap is documented:</p>
+<p>Args render as a truncated top-level list by default. At tier-4+
+they render as full pretty-printed JSON so the user can see every
+value being approved.</p>
+<h2 id="slash-commands">Slash commands<a class="headerlink" href="#slash-commands" title="Permanent link">&para;</a></h2>
+<p>The command bar accepts a small set of tranche-1 commands:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/help</code></td>
+<td>Print the command catalogue</td>
+</tr>
+<tr>
+<td><code>/cost</code></td>
+<td>Show current session cost</td>
+</tr>
+<tr>
+<td><code>/tools</code></td>
+<td>List tools available in this session</td>
+</tr>
+<tr>
+<td><code>/new</code></td>
+<td>Placeholder — session-type picker lands in tranche 2</td>
+</tr>
+<tr>
+<td><code>/ephemeral &lt;model&gt;</code></td>
+<td>Placeholder — ephemeral spawn lands in tranche 2</td>
+</tr>
+<tr>
+<td><code>/quit</code></td>
+<td>Exit the app</td>
+</tr>
+</tbody>
+</table>
+<h3 id="completion-popover">Completion popover<a class="headerlink" href="#completion-popover" title="Permanent link">&para;</a></h3>
+<p>Type <code>/</code> to open the <code>CompletionMenu</code> above the command bar. It
+filters as you type (prefix match, alphabetical). Key bindings
+while the menu is open:</p>
 <ul>
-<li>In this ADR.</li>
-<li>In <code>cairn.tools.security._ssrf</code>'s module docstring ("V1
-  limitation").</li>
-<li>In <code>docs/tools.md</code> under the SSRF defence section.</li>
+<li><kbd>↑</kbd> / <kbd>↓</kbd> — move the highlight.</li>
+<li><kbd>Tab</kbd> — complete the highlighted command into the
+  input (with a trailing space so the menu closes — a space
+  implies arguments are next).</li>
+<li><kbd>Esc</kbd> — dismiss the menu without clearing the input.</li>
+<li><kbd>Enter</kbd> — submits the current input value (always).</li>
 </ul>
-<p>When we ship IP pinning (V2), the plan is:</p>
-<ol>
-<li>Resolve the hostname, filter to safe IPs, pin one.</li>
-<li>Custom httpx <code>AsyncHTTPTransport</code> that overrides
-   connection address to the pinned IP.</li>
-<li>SSL context with the original hostname in SNI and
-   certificate verification.</li>
-<li>Tests that exercise the rebinding scenario end-to-end against
-   a controllable DNS stub.</li>
-</ol>
-<p>Deployments with harder SSRF requirements (cloud hosting,
-multi-tenant) should pair cairn's pre-flight validation with an
-outbound firewall rule — a belt-and-braces boundary at the
-network layer that's simpler and more robust than application-level
-pinning.</p>
-<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
-<p><strong>Easier:</strong></p>
+<p>Custom slash commands registered via <code>CommandRegistry.register</code>
+appear in the popover automatically — the menu reads the registry
+at keystroke time, not at mount.</p>
+<h2 id="activity-indicator">Activity indicator<a class="headerlink" href="#activity-indicator" title="Permanent link">&para;</a></h2>
+<p>Docked to the right of the header. Four states:</p>
 <ul>
-<li>V1 SSRF defence is understandable and reviewable in one module.
-  The blocked-networks list, the resolver check, and the
-  streaming-size cap are all visible in under 200 lines.</li>
-<li>Tests mock <code>socket.getaddrinfo</code> and <code>httpx.MockTransport</code> — no
-  bespoke TLS machinery needed.</li>
+<li><strong>idle</strong> — empty, muted colour.</li>
+<li><strong>thinking</strong> — the model is composing (between request and
+  first delta).</li>
+<li><strong>streaming</strong> — text deltas are flowing.</li>
+<li><strong>tool:&lt;name&gt;</strong> — a tool call is executing.</li>
 </ul>
-<p><strong>Harder:</strong></p>
+<p>States are driven by observer callbacks; the spinner frames at
+100 ms intervals while non-idle.</p>
+<h2 id="ui-configuration">UI configuration<a class="headerlink" href="#ui-configuration" title="Permanent link">&para;</a></h2>
+<p>All UI knobs live on <code>ProfileConfig.ui</code>:</p>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[profiles.companion.ui]</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span><span class="w">                           </span><span class="c1"># auto | light | dark</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">show_cost_in_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">max_chat_log_messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">cost_display_precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="w">               </span><span class="c1"># 0..10 decimal places</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">[profiles.companion.ui.session_type_colours]</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">companion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#2aa198&quot;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">persona</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#cb4b16&quot;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">ephemeral</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#586e75&quot;</span>
+</span></code></pre></div>
+<p>All fields are optional; the defaults match the palette above.
+Session-type colours must be 7-character <code>#RRGGBB</code> hex strings —
+invalid values fail validation at config load.</p>
+<h2 id="crash-recovery">Crash recovery<a class="headerlink" href="#crash-recovery" title="Permanent link">&para;</a></h2>
+<p>If the orchestrator was killed mid-turn (SIGKILL, process crash,
+host restart), the <code>turns</code> table will contain non-terminal rows
+on next boot. <code>Orchestrator.resume_aborted_turns()</code> marks them
+aborted with <code>reason='process_crash'</code>. The UI doesn't surface
+this today — a banner announcing "recovered N aborted turns"
+lands in tranche 3.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<p><strong>HTTPS errors behind a corporate MITM proxy (Netskope, Zscaler).</strong>
+The bootstrap calls <code>cairn.ssl.setup_ssl()</code> which injects the OS
+trust store into Python's <code>ssl</code> module via <code>truststore</code>. If this
+fails silently (Debug log: <code>truststore injection failed</code>),
+install <code>truststore</code> or set <code>SSL_CERT_FILE</code> manually before
+launching.</p>
+<p><strong><code>cairn</code> exits immediately with no UI.</strong> Check
+<code>$XDG_STATE_HOME/cairn/cairn.log</code> (platform-specific location via
+<code>platformdirs.user_log_path</code>) for the bootstrap traceback. The
+file logger is set up before any widget is mounted, so early
+errors are captured.</p>
+<p><strong>Cost meter stuck at <code>$0.000000</code>.</strong> The bootstrap wires the
+meter's <code>cost_source</code> callback to <code>UsageRepo.total_cost_for_
+session</code>. If the source raises, the callback swallows the error
+silently (a cost-refresh failure must not break a turn). Check
+the log for <code>refresh-cost</code> worker exceptions.</p>
+<p><strong>Approval modal doesn't appear for a tier-3 tool.</strong> Verify the
+tool's decorator tier (<code>@tool(tier=3)</code>). Tier ≤ 2 with
+<code>side_effects ∈ {none, read}</code> is auto-approved by the
+<code>AutoApproveReadOnly</code> approver — the modal is the last step of
+a chain, not the first.</p>
+<h2 id="design-notes">Design notes<a class="headerlink" href="#design-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Shipping on a server with an accessible internal network
-  (metadata service, intranet) without adding a firewall rule is
-  unsafe. The docs call this out, but a user who misses the
-  warning is exposed.</li>
-<li>A V2 upgrade path requires replacing the httpx client plumbing,
-  which will touch every URL-fetching tool. The current
-  <code>safe_fetch</code> + per-hop <code>resolve_hostname</code> structure already
-  centralises this, so the lift is bounded.</li>
-</ul>
-<p><strong>Ongoing cost:</strong></p>
-<ul>
-<li>Every release revisits this decision against the current threat
-  picture. If cairn grows a server-side deployment, the upgrade
-  becomes load-bearing.</li>
-<li>The module docstring and this ADR must stay in sync with the
-  implementation. When IP pinning lands, this ADR becomes
-  superseded, not edited.</li>
+<li><a href="../decisions/0033-textual-for-ui/">ADR 0033</a> — why Textual over
+  Rich-only / prompt-toolkit / web.</li>
+<li><a href="../decisions/0034-single-loop-sync-observer/">ADR 0034</a> — the
+  single-loop invariant and why the observer dispatches directly
+  instead of via <code>call_from_thread</code>.</li>
+<li><a href="../decisions/0035-remember-for-session-gating/">ADR 0035</a> —
+  why the "remember for this session" checkbox is disabled at
+  tier 4+.</li>
 </ul>
 
 
@@ -2769,10 +3042,10 @@ pinning.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

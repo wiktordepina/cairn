@@ -12,13 +12,11 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0017-ssrf-ip-pinning-deferred/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0035-remember-for-session-gating/">
       
       
-        <link rel="prev" href="../0016-no-shell-in-v1/">
+        <link rel="prev" href="../0034-single-loop-sync-observer/">
       
-      
-        <link rel="next" href="../0018-docs-site-tooling/">
       
       
         
@@ -29,7 +27,7 @@
     
     
       
-        <title>0017 SSRF IP pinning deferred - Cairn</title>
+        <title>0035 Remember-for-session gating - Cairn</title>
       
     
     
@@ -82,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#0017-ssrf-defence-ip-pinning-deferred-in-v1" class="md-skip">
+        <a href="#0035-remember-for-this-session-checkbox-gated-to-tier-3" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              0017 SSRF IP pinning deferred
+              0035 Remember-for-session gating
             
           </span>
         </div>
@@ -1875,37 +1873,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    0017 SSRF IP pinning deferred
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
         
   
   
@@ -1921,59 +1892,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Context
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Decision
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#consequences" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Consequences
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2459,10 +2377,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../0035-remember-for-session-gating/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0035 Remember-for-session gating
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2478,6 +2423,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2566,7 +2564,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0017-ssrf-ip-pinning-deferred.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0035-remember-for-session-gating.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2574,125 +2572,93 @@
   
 
 
-<h1 id="0017-ssrf-defence-ip-pinning-deferred-in-v1">0017 — SSRF defence: IP pinning deferred in V1<a class="headerlink" href="#0017-ssrf-defence-ip-pinning-deferred-in-v1" title="Permanent link">&para;</a></h1>
-<p><strong>Date:</strong> 2026-04-21
+<h1 id="0035-remember-for-this-session-checkbox-gated-to-tier-3">0035 — "Remember for this session" checkbox gated to tier ≤ 3<a class="headerlink" href="#0035-remember-for-this-session-checkbox-gated-to-tier-3" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-24
 <strong>Status:</strong> accepted</p>
 <h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
-<p><code>web_fetch</code> and any future URL-fetching tool run through the SSRF
-defence in <code>cairn.tools.security._ssrf</code>. The V1 implementation:</p>
+<p>The UI brick's <code>ApprovalModal</code> lets the user approve or reject a
+pending tool call. For tier-3 calls (mutating filesystem ops,
+delegation), re-approving the same <code>(tool_name, args)</code> tuple on
+every iteration of an edit session is tedious and trains the user
+to approve reflexively. <a href="../0015-session-allowlist-exact-match/">ADR 0015</a>
+established the runtime contract:
+<code>SessionAllowlist</code> caches <code>(tool_name, sha256(sorted_json(args)))</code>
+tuples, and a subsequent identical call skips the modal.</p>
+<p>The modal needs a visible affordance to populate that allowlist.
+Two axes to decide:</p>
 <ol>
-<li>Validates the scheme (http/https only), hostname present, no
-   embedded credentials.</li>
-<li>Resolves the hostname via <code>getaddrinfo</code> and rejects if any
-   resolved IP falls in a blocked network (loopback, RFC1918
-   private, link-local — including cloud metadata 169.254.169.254,
-   IPv6 ULA/link-local/unspecified, carrier-grade NAT).</li>
-<li>Lets the HTTP client connect using the hostname (so DNS is
-   consulted again at connection time).</li>
+<li><strong>Who is the affordance for?</strong> Every tool with an approval
+   gate, or only the ones the user is likely to invoke
+   repeatedly?</li>
+<li><strong>What's the default state?</strong> On (opt-out) or off (opt-in)?</li>
 </ol>
-<p>Step 3 is the gap. Between the validation <code>getaddrinfo</code> and the
-client's actual connection, DNS could return a different address.
-A "textbook" DNS-rebinding attack works by:</p>
-<ol>
-<li>Attacker controls <code>evil.example.com</code>.</li>
-<li>First DNS query (validation) returns <code>1.2.3.4</code> — public IP,
-   passes.</li>
-<li>Second DNS query (connection) returns <code>127.0.0.1</code> or
-   <code>169.254.169.254</code> — the attacker has swapped records.</li>
-<li>Client connects to the internal address while thinking it's
-   fetching a public URL.</li>
-</ol>
-<p>The textbook mitigation is <strong>IP pinning</strong>: resolve the hostname,
-verify every IP is safe, then force the HTTP client to connect to
-one of those specific IPs while preserving the Host/SNI header.</p>
-<p>IP pinning on HTTPS is not difficult in principle but non-trivial
-in practice:</p>
-<ul>
-<li>The TCP layer must connect to the pinned IP.</li>
-<li>The TLS layer must use the original hostname for SNI.</li>
-<li>The HTTP layer must use the original hostname for the <code>Host</code>
-  header.</li>
-<li>The certificate validation must still check the original
-  hostname.</li>
-</ul>
-<p>httpx supports some of this via custom <code>Transport</code> instances, but
-the clean shape needs a bespoke SSL context and a transport that
-overrides connection address without leaking the pinned IP to TLS.
-Doing it right is a careful piece of code; doing it wrong is a
-worse security posture than not trying (the pinned IP leaking
-into SNI would itself be a vulnerability).</p>
-<p>The practical threat picture also matters. For DNS rebinding to
-fire:</p>
-<ul>
-<li>The attacker must control DNS for the hostname in question.</li>
-<li>The attacker must time the rebinding precisely around our
-  validation and connection.</li>
-<li>The target must be reachable from the attacker's chosen victim
-  address (internal network addressable from the machine running
-  cairn).</li>
-</ul>
-<p>That's a narrow attacker profile for a single-user desktop
-application. A server-side cairn deployment with an accessible
-internal network (AWS instance metadata, corporate intranet) would
-be the worst case, and the answer there is both IP pinning <em>and</em>
-outbound-firewall rules.</p>
+<p>Tier-4+ tools in V1's taxonomy are the "network side-effects,
+external mutations, credential-touching" class. The whole point
+of tier-4 is that each invocation deserves conscious approval —
+the user looks at <em>this specific call's</em> args, not at a class of
+behaviour. Letting the modal offer a "remember this" affordance
+for tier-4 would normalise a pattern that shouldn't exist.</p>
+<p>Tier-3 is different. File writes under a sandboxed workspace with
+explicit paths are genuinely repeatable: an iterative
+"read → edit → save" loop fires the same <code>(file_write, path=X)</code>
+tuple multiple times in the same session, and the user only cares
+about approving <em>X</em> once.</p>
 <h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
-<p>V1 SSRF defence validates the hostname and its resolved IPs
-pre-flight but does not pin the connection IP. The <code>safe_fetch</code>
-helper (and <code>web_fetch</code>'s manual redirect walk) call
-<code>resolve_hostname</code> before every HTTP request, including every hop,
-so the attack window is bounded to "rebinds between
-<code>getaddrinfo</code> and <code>connect</code>" — typically milliseconds.</p>
-<p>The gap is documented:</p>
+<p>The "Remember this exact call for the session" checkbox in
+<code>ApprovalModal</code> is:</p>
 <ul>
-<li>In this ADR.</li>
-<li>In <code>cairn.tools.security._ssrf</code>'s module docstring ("V1
-  limitation").</li>
-<li>In <code>docs/tools.md</code> under the SSRF defence section.</li>
+<li><strong>Rendered for every call</strong> (so the affordance is discoverable
+  and the user learns what the allowlist is for).</li>
+<li><strong>Disabled — always off — when <code>request.risk_tier &gt;= 4</code></strong>, with
+  an explanatory sub-label: <em>"tier-4+ tools require explicit
+  approval every time"</em>.</li>
+<li><strong>Default unchecked</strong> at tier 3. Opt-in: the user ticks it only
+  when they know they'll call this again with identical args.</li>
 </ul>
-<p>When we ship IP pinning (V2), the plan is:</p>
-<ol>
-<li>Resolve the hostname, filter to safe IPs, pin one.</li>
-<li>Custom httpx <code>AsyncHTTPTransport</code> that overrides
-   connection address to the pinned IP.</li>
-<li>SSL context with the original hostname in SNI and
-   certificate verification.</li>
-<li>Tests that exercise the rebinding scenario end-to-end against
-   a controllable DNS stub.</li>
-</ol>
-<p>Deployments with harder SSRF requirements (cloud hosting,
-multi-tenant) should pair cairn's pre-flight validation with an
-outbound firewall rule — a belt-and-braces boundary at the
-network layer that's simpler and more robust than application-level
-pinning.</p>
+<p>On an approve-with-checkbox-ticked outcome, the UI gateway
+(<code>TextualApprovalGateway</code>) calls
+<code>SessionAllowlist.remember_user_approval(session_id, request)</code>
+before returning the approval decision. Rejection never
+populates the allowlist, regardless of checkbox state.</p>
+<p>The hashed args signature (sha256 of sorted-JSON) keeps the
+allowlist stable under key reordering but strict about value
+identity — changing any argument value re-prompts. Session
+archival drops the allowlist; process restart drops it; the
+<code>approval_decisions</code> audit row is the durable record.</p>
 <h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
 <p><strong>Easier:</strong></p>
 <ul>
-<li>V1 SSRF defence is understandable and reviewable in one module.
-  The blocked-networks list, the resolver check, and the
-  streaming-size cap are all visible in under 200 lines.</li>
-<li>Tests mock <code>socket.getaddrinfo</code> and <code>httpx.MockTransport</code> — no
-  bespoke TLS machinery needed.</li>
+<li>The iterative edit case is painless: approve the first
+  <code>file_write</code>, tick the box, subsequent identical writes skip
+  the modal.</li>
+<li>Users see the affordance immediately at tier-4 but can't
+  accidentally bypass the "every time" semantic — the checkbox
+  is visibly disabled with a reason.</li>
+<li>No separate tier-3 vs tier-4 modal — one modal, one rendering
+  path, one test surface. The tier test is a boolean on
+  <code>ApprovalRequest.risk_tier</code>.</li>
 </ul>
 <p><strong>Harder:</strong></p>
 <ul>
-<li>Shipping on a server with an accessible internal network
-  (metadata service, intranet) without adding a firewall rule is
-  unsafe. The docs call this out, but a user who misses the
-  warning is exposed.</li>
-<li>A V2 upgrade path requires replacing the httpx client plumbing,
-  which will touch every URL-fetching tool. The current
-  <code>safe_fetch</code> + per-hop <code>resolve_hostname</code> structure already
-  centralises this, so the lift is bounded.</li>
+<li>A user who <em>genuinely</em> wants "skip this specific web_fetch call
+  for the rest of the session" at tier-4 has no path short of
+  demoting the tool, which requires a code change. This is
+  deliberate: tier-4 means "you should want to look every time."</li>
+<li>The disabled checkbox takes visual real estate it can't
+  actually use at tier-4. Minor UX cost; the explanatory label
+  justifies the space.</li>
 </ul>
 <p><strong>Ongoing cost:</strong></p>
 <ul>
-<li>Every release revisits this decision against the current threat
-  picture. If cairn grows a server-side deployment, the upgrade
-  becomes load-bearing.</li>
-<li>The module docstring and this ADR must stay in sync with the
-  implementation. When IP pinning lands, this ADR becomes
-  superseded, not edited.</li>
+<li>The tier threshold (<code>4</code>) is defined in a module constant
+  (<code>_TIER_4_PLUS</code>) in <code>_approval.py</code>. Future tier-taxonomy
+  changes (e.g. splitting tier-4 into 4a/4b) would require
+  revisiting this gate; link back to this ADR in any such
+  commit.</li>
+<li>If a V2 affordance like "approve <code>file_write</code> under <code>src/**</code> for
+  this session" lands, it supersedes the per-call checkbox for
+  tier-3 but leaves the tier-4 lock-out unchanged. Write that
+  ADR when the feature lands.</li>
 </ul>
 
 

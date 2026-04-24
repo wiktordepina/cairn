@@ -45,6 +45,10 @@
          <lastmod>2026-04-24</lastmod>
     </url>
     <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/ui/</loc>
+         <lastmod>2026-04-24</lastmod>
+    </url>
+    <url>
          <loc>https://wiktordepina.github.io/cairn/dev/decisions/</loc>
          <lastmod>2026-04-24</lastmod>
     </url>
@@ -174,6 +178,18 @@
     </url>
     <url>
          <loc>https://wiktordepina.github.io/cairn/dev/decisions/0032-convention-files-no-cursor-cline/</loc>
+         <lastmod>2026-04-24</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0033-textual-for-ui/</loc>
+         <lastmod>2026-04-24</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0034-single-loop-sync-observer/</loc>
+         <lastmod>2026-04-24</lastmod>
+    </url>
+    <url>
+         <loc>https://wiktordepina.github.io/cairn/dev/decisions/0035-remember-for-session-gating/</loc>
          <lastmod>2026-04-24</lastmod>
     </url>
     <url>
