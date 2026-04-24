@@ -1827,6 +1827,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#cairn.persistence.UsageRepo.most_recent_primary_turn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;most_recent_primary_turn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cairn.persistence.UsageRepo.cost_for_turn" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1953,6 +1964,8 @@
       
         
           
+        
+      
         
       
         
@@ -3059,6 +3072,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../decisions/0036-trust-prompt-three-way-choice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0036 Trust-prompt three-way choice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -3679,6 +3720,17 @@
     <span class="md-ellipsis">
       
         <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;total_cost_for_session_tree
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.persistence.UsageRepo.most_recent_primary_turn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;most_recent_primary_turn
       
     </span>
   </a>
@@ -5232,6 +5284,35 @@ via <code>metadata={"retry_attempt": n, "previous_error": "..."}</code>.</p>
     <div class="doc doc-contents ">
 
         <p>Sum the session's own cost plus the cost of all child sessions.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.persistence.UsageRepo.most_recent_primary_turn" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">most_recent_primary_turn</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-async"><code>async</code></small>
+  </span>
+
+<a href="#cairn.persistence.UsageRepo.most_recent_primary_turn" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">most_recent_primary_turn</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">session_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            UsageRecord (cairn.persistence._records.UsageRecord)" href="#cairn.persistence.UsageRecord">UsageRecord</a></span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the most recent <code>PRIMARY_TURN</code> usage row for a session.</p>
+<p>Used by the UI's <code>/context</code> command to surface the last
+prompt's token footprint. Returns None when the session has
+no recorded primary-turn activity yet.</p>
 
 
     </div>

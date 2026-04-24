@@ -12,31 +12,29 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/decisions/0036-trust-prompt-three-way-choice/">
       
       
-        <link rel="prev" href="../reference/tools/">
+        <link rel="prev" href="../0035-remember-for-session-gating/">
       
-      
-        <link rel="next" href="0001-per-profile-sqlite/">
       
       
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Index - Cairn</title>
+        <title>0036 Trust-prompt three-way choice - Cairn</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -55,9 +53,9 @@
       
     
     
-      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +80,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#architecture-decision-records" class="md-skip">
+        <a href="#0036-trust-prompt-modal-offers-three-outcomes-not-two" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +100,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href="../.." title="Cairn" class="md-header__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -122,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Index
+              0036 Trust-prompt three-way choice
             
           </span>
         </div>
@@ -244,7 +242,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -265,7 +263,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../configuration/" class="md-tabs__link">
+        <a href="../../configuration/" class="md-tabs__link">
           
   
   
@@ -287,7 +285,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../architecture/" class="md-tabs__link">
+        <a href="../../architecture/" class="md-tabs__link">
           
   
   
@@ -309,7 +307,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../reference/" class="md-tabs__link">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   
@@ -333,7 +331,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="../" class="md-tabs__link">
           
   
   
@@ -375,7 +373,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
+    <a href="../.." title="Cairn" class="md-nav__button md-logo" aria-label="Cairn" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -405,7 +403,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -500,7 +498,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -528,7 +526,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../providers/" class="md-nav__link">
+      <a href="../../providers/" class="md-nav__link">
         
   
   
@@ -556,7 +554,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../memory/" class="md-nav__link">
+      <a href="../../memory/" class="md-nav__link">
         
   
   
@@ -584,7 +582,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../conventions/" class="md-nav__link">
+      <a href="../../conventions/" class="md-nav__link">
         
   
   
@@ -612,7 +610,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../compaction/" class="md-nav__link">
+      <a href="../../compaction/" class="md-nav__link">
         
   
   
@@ -640,7 +638,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ui/" class="md-nav__link">
+      <a href="../../ui/" class="md-nav__link">
         
   
   
@@ -668,7 +666,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../observability/" class="md-nav__link">
+      <a href="../../observability/" class="md-nav__link">
         
   
   
@@ -765,7 +763,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../architecture/" class="md-nav__link">
+      <a href="../../architecture/" class="md-nav__link">
         
   
   
@@ -793,7 +791,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../orchestrator/" class="md-nav__link">
+      <a href="../../orchestrator/" class="md-nav__link">
         
   
   
@@ -821,7 +819,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../persistence/" class="md-nav__link">
+      <a href="../../persistence/" class="md-nav__link">
         
   
   
@@ -849,7 +847,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../tools/" class="md-nav__link">
+      <a href="../../tools/" class="md-nav__link">
         
   
   
@@ -929,7 +927,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -973,7 +971,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/compaction/" class="md-nav__link">
+      <a href="../../reference/compaction/" class="md-nav__link">
         
   
   
@@ -1001,7 +999,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/config/" class="md-nav__link">
+      <a href="../../reference/config/" class="md-nav__link">
         
   
   
@@ -1029,7 +1027,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/conventions/" class="md-nav__link">
+      <a href="../../reference/conventions/" class="md-nav__link">
         
   
   
@@ -1057,7 +1055,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/domain/" class="md-nav__link">
+      <a href="../../reference/domain/" class="md-nav__link">
         
   
   
@@ -1085,7 +1083,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/logging/" class="md-nav__link">
+      <a href="../../reference/logging/" class="md-nav__link">
         
   
   
@@ -1113,7 +1111,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/memory/" class="md-nav__link">
+      <a href="../../reference/memory/" class="md-nav__link">
         
   
   
@@ -1141,7 +1139,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/orchestrator/" class="md-nav__link">
+      <a href="../../reference/orchestrator/" class="md-nav__link">
         
   
   
@@ -1169,7 +1167,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/persistence/" class="md-nav__link">
+      <a href="../../reference/persistence/" class="md-nav__link">
         
   
   
@@ -1197,7 +1195,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/providers/" class="md-nav__link">
+      <a href="../../reference/providers/" class="md-nav__link">
         
   
   
@@ -1225,7 +1223,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/ssl/" class="md-nav__link">
+      <a href="../../reference/ssl/" class="md-nav__link">
         
   
   
@@ -1253,7 +1251,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/tools/" class="md-nav__link">
+      <a href="../../reference/tools/" class="md-nav__link">
         
   
   
@@ -1388,7 +1386,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../" class="md-nav__link ">
               
   
   
@@ -1406,7 +1404,7 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_5" id="__nav_5_label" tabindex="">
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
@@ -1432,7 +1430,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0001-per-profile-sqlite/" class="md-nav__link">
+      <a href="../0001-per-profile-sqlite/" class="md-nav__link">
         
   
   
@@ -1460,7 +1458,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0002-three-tier-config-merge/" class="md-nav__link">
+      <a href="../0002-three-tier-config-merge/" class="md-nav__link">
         
   
   
@@ -1488,7 +1486,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0003-secret-ref-schemes/" class="md-nav__link">
+      <a href="../0003-secret-ref-schemes/" class="md-nav__link">
         
   
   
@@ -1516,7 +1514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0004-hand-rolled-migrations/" class="md-nav__link">
+      <a href="../0004-hand-rolled-migrations/" class="md-nav__link">
         
   
   
@@ -1544,7 +1542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0005-per-provider-adapters/" class="md-nav__link">
+      <a href="../0005-per-provider-adapters/" class="md-nav__link">
         
   
   
@@ -1572,7 +1570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0006-role-based-model-selection/" class="md-nav__link">
+      <a href="../0006-role-based-model-selection/" class="md-nav__link">
         
   
   
@@ -1600,7 +1598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0007-memory-space-at-repo-layer/" class="md-nav__link">
+      <a href="../0007-memory-space-at-repo-layer/" class="md-nav__link">
         
   
   
@@ -1628,7 +1626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0008-tool-call-state-column/" class="md-nav__link">
+      <a href="../0008-tool-call-state-column/" class="md-nav__link">
         
   
   
@@ -1656,7 +1654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0009-protocol-stubs/" class="md-nav__link">
+      <a href="../0009-protocol-stubs/" class="md-nav__link">
         
   
   
@@ -1684,7 +1682,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0010-typed-middleware/" class="md-nav__link">
+      <a href="../0010-typed-middleware/" class="md-nav__link">
         
   
   
@@ -1712,7 +1710,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0011-explicit-turn-state-machine/" class="md-nav__link">
+      <a href="../0011-explicit-turn-state-machine/" class="md-nav__link">
         
   
   
@@ -1740,7 +1738,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0012-no-fk-on-turn-id/" class="md-nav__link">
+      <a href="../0012-no-fk-on-turn-id/" class="md-nav__link">
         
   
   
@@ -1768,7 +1766,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0013-tier-taxonomy/" class="md-nav__link">
+      <a href="../0013-tier-taxonomy/" class="md-nav__link">
         
   
   
@@ -1796,7 +1794,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0014-tool-decorator/" class="md-nav__link">
+      <a href="../0014-tool-decorator/" class="md-nav__link">
         
   
   
@@ -1824,7 +1822,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0015-session-allowlist-exact-match/" class="md-nav__link">
+      <a href="../0015-session-allowlist-exact-match/" class="md-nav__link">
         
   
   
@@ -1852,7 +1850,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0016-no-shell-in-v1/" class="md-nav__link">
+      <a href="../0016-no-shell-in-v1/" class="md-nav__link">
         
   
   
@@ -1880,7 +1878,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
+      <a href="../0017-ssrf-ip-pinning-deferred/" class="md-nav__link">
         
   
   
@@ -1908,7 +1906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0018-docs-site-tooling/" class="md-nav__link">
+      <a href="../0018-docs-site-tooling/" class="md-nav__link">
         
   
   
@@ -1936,7 +1934,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0019-docstrings-google-style/" class="md-nav__link">
+      <a href="../0019-docstrings-google-style/" class="md-nav__link">
         
   
   
@@ -1964,7 +1962,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0020-auto-generated-api-reference/" class="md-nav__link">
+      <a href="../0020-auto-generated-api-reference/" class="md-nav__link">
         
   
   
@@ -1992,7 +1990,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0021-tier-1-memory-first/" class="md-nav__link">
+      <a href="../0021-tier-1-memory-first/" class="md-nav__link">
         
   
   
@@ -2020,7 +2018,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0022-memory-dedup-threshold/" class="md-nav__link">
+      <a href="../0022-memory-dedup-threshold/" class="md-nav__link">
         
   
   
@@ -2048,7 +2046,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0023-jsonl-log-no-rebuild/" class="md-nav__link">
+      <a href="../0023-jsonl-log-no-rebuild/" class="md-nav__link">
         
   
   
@@ -2076,7 +2074,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0024-memory-md-as-index/" class="md-nav__link">
+      <a href="../0024-memory-md-as-index/" class="md-nav__link">
         
   
   
@@ -2104,7 +2102,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0025-extraction-role-and-local-models/" class="md-nav__link">
+      <a href="../0025-extraction-role-and-local-models/" class="md-nav__link">
         
   
   
@@ -2132,7 +2130,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0026-per-turn-extraction-with-context/" class="md-nav__link">
+      <a href="../0026-per-turn-extraction-with-context/" class="md-nav__link">
         
   
   
@@ -2160,7 +2158,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0027-truncation-before-summarisation/" class="md-nav__link">
+      <a href="../0027-truncation-before-summarisation/" class="md-nav__link">
         
   
   
@@ -2188,7 +2186,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0028-turn-block-granularity/" class="md-nav__link">
+      <a href="../0028-turn-block-granularity/" class="md-nav__link">
         
   
   
@@ -2216,7 +2214,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0029-context-budget-advisory/" class="md-nav__link">
+      <a href="../0029-context-budget-advisory/" class="md-nav__link">
         
   
   
@@ -2244,7 +2242,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0030-convention-file-ordering/" class="md-nav__link">
+      <a href="../0030-convention-file-ordering/" class="md-nav__link">
         
   
   
@@ -2272,7 +2270,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0031-trust-prompt-deferred/" class="md-nav__link">
+      <a href="../0031-trust-prompt-deferred/" class="md-nav__link">
         
   
   
@@ -2300,7 +2298,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0032-convention-files-no-cursor-cline/" class="md-nav__link">
+      <a href="../0032-convention-files-no-cursor-cline/" class="md-nav__link">
         
   
   
@@ -2328,7 +2326,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0033-textual-for-ui/" class="md-nav__link">
+      <a href="../0033-textual-for-ui/" class="md-nav__link">
         
   
   
@@ -2356,7 +2354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0034-single-loop-sync-observer/" class="md-nav__link">
+      <a href="../0034-single-loop-sync-observer/" class="md-nav__link">
         
   
   
@@ -2384,7 +2382,7 @@
   
   
     <li class="md-nav__item">
-      <a href="0035-remember-for-session-gating/" class="md-nav__link">
+      <a href="../0035-remember-for-session-gating/" class="md-nav__link">
         
   
   
@@ -2409,10 +2407,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="0036-trust-prompt-three-way-choice/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0036 Trust-prompt three-way choice
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2428,6 +2453,59 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consequences
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2467,10 +2545,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#why-we-keep-these" class="md-nav__link">
+  <a href="#context" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why we keep these
+        Context
       
     </span>
   </a>
@@ -2478,10 +2556,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#what-counts-as-non-obvious" class="md-nav__link">
+  <a href="#decision" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What counts as "non-obvious"
+        Decision
       
     </span>
   </a>
@@ -2489,32 +2567,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#format" class="md-nav__link">
+  <a href="#consequences" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Format
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#numbering-and-status" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Numbering and status
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Index
+        Consequences
       
     </span>
   </a>
@@ -2538,7 +2594,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/README.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/decisions/0036-trust-prompt-three-way-choice.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -2546,253 +2602,92 @@
   
 
 
-<h1 id="architecture-decision-records">Architecture Decision Records<a class="headerlink" href="#architecture-decision-records" title="Permanent link">&para;</a></h1>
-<p>Small, dated records of non-obvious decisions made while building cairn.
-The format is <a href="https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions">Michael Nygard's ADR
-shape</a>:
-<em>Context → Decision → Consequences</em>.</p>
-<h2 id="why-we-keep-these">Why we keep these<a class="headerlink" href="#why-we-keep-these" title="Permanent link">&para;</a></h2>
-<p>Cairn's architecture has a lot of "it could have been X or Y — we chose
-Y because of Z". If Z isn't written down, future contributors (including
-future Wiktor) will re-litigate the decision from first principles, or
-quietly diverge from it. ADRs are the cheapest form of institutional
-memory that survives people.</p>
-<h2 id="what-counts-as-non-obvious">What counts as "non-obvious"<a class="headerlink" href="#what-counts-as-non-obvious" title="Permanent link">&para;</a></h2>
-<p>An ADR is worth writing when:</p>
+<h1 id="0036-trust-prompt-modal-offers-three-outcomes-not-two">0036 — Trust-prompt modal offers three outcomes, not two<a class="headerlink" href="#0036-trust-prompt-modal-offers-three-outcomes-not-two" title="Permanent link">&para;</a></h1>
+<p><strong>Date:</strong> 2026-04-24
+<strong>Status:</strong> accepted</p>
+<h2 id="context">Context<a class="headerlink" href="#context" title="Permanent link">&para;</a></h2>
+<p><code>TextualPromptTrustGate</code> is the UI brick's real implementation
+of <code>trust_policy="prompt"</code> for project convention files,
+replacing <code>DenyingPromptTrustGate</code>. On first encounter with a
+project, it pushes <code>TrustPromptModal</code> to ask the user whether
+to load the discovered files.</p>
+<p>The simplest shape is binary: allow or deny. A more nuanced
+shape splits the allow case into "just this time" vs "trust
+this project forever." Three options considered:</p>
+<ol>
+<li><strong>Binary (allow / deny).</strong> Simplest UX. "Allow" always
+   persists to the allowlist; "Deny" never does. Problem: a
+   user exploring an unfamiliar repo ("let me see what this
+   <code>AGENTS.md</code> asks of the model") has no way to say "yes this
+   time, decide later about forever." They're forced into a
+   permanent decision on first encounter.</li>
+<li><strong>Binary with separate allowlist-management command.</strong>
+   Prompt binary, but provide <code>cairn trust add/remove</code> for
+   after-the-fact curation. Cleaner conceptually; worse UX —
+   you have to <em>remember</em> to curate, and the allowlist grows
+   by accretion until someone audits it.</li>
+<li><strong>Three-way (trust-once / trust-project / deny).</strong> The
+   modal makes the distinction explicit at the moment the user
+   has the context to reason about it. "Trust project"
+   persists; "Trust once" is scoped to this process. "Deny"
+   is also session-scoped — a future process will prompt
+   again (the user didn't say "forever deny", just "not now").</li>
+</ol>
+<h2 id="decision">Decision<a class="headerlink" href="#decision" title="Permanent link">&para;</a></h2>
+<p>Three outcomes in <code>TrustPromptModal</code>:</p>
 <ul>
-<li>A reasonable engineer could have chosen differently.</li>
-<li>The decision has cross-cutting consequences (touches more than one
-  brick).</li>
-<li>The reasoning depends on context that won't be visible in the code
-  (e.g. security requirements, performance measurements, historical
-  incidents, personal preferences).</li>
+<li><code>o</code> / <em>Trust once</em> → <code>TrustPromptResult(decision=ALLOW, persist=False)</code>.
+  Cached in the gate for this process; not written to the
+  <code>AllowlistStore</code>.</li>
+<li><code>p</code> / <em>Trust project</em> → <code>TrustPromptResult(decision=ALLOW, persist=True)</code>.
+  Cached in the gate AND written to the allowlist via
+  <code>AllowlistStore.add(project_root)</code>.</li>
+<li><code>n</code> / <em>Deny</em> (or <code>Esc</code>) → <code>TrustPromptResult(decision=DENY, persist=False)</code>.
+  Cached in the gate for this process; no persistence.</li>
 </ul>
-<p>Settled decisions don't need ADRs. We don't have an ADR for "use
-Python" or "use SQLite" — those are load-bearing but uncontested.</p>
-<h2 id="format">Format<a class="headerlink" href="#format" title="Permanent link">&para;</a></h2>
-<p>Each ADR is a separate file named <code>NNNN-kebab-case-title.md</code>:</p>
-<div class="language-markdown highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh"># NNNN — Title</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gs">**Date:**</span> YYYY-MM-DD
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gs">**Status:**</span> proposed | accepted | superseded by NNNN
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="gu">## Context</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>What is the issue motivating a decision? What constraints apply? What&#39;s
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>been tried or considered?
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="gu">## Decision</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>What did we decide? State it plainly. One or two paragraphs is usually
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>enough.
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="gu">## Consequences</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>What becomes easier? What becomes harder? What have we given up? What
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>ongoing costs does this impose?
-</span></code></pre></div>
-<h2 id="numbering-and-status">Numbering and status<a class="headerlink" href="#numbering-and-status" title="Permanent link">&para;</a></h2>
+<p>The gate's per-process decision cache (<code>dict[Path, TrustDecision]</code>)
+means repeated <code>ConventionLoader.load()</code> calls in the same
+session never re-prompt. The <code>AllowlistStore</code> check is the
+first thing the gate does, so a project pre-approved in a
+previous process bypasses the modal entirely.</p>
+<p>A fourth outcome — "trust this filename everywhere forever" —
+was considered and rejected for 0.10.0 (see ADR 0015 for the
+analogous tool-approval conversation). It widens the policy
+surface and crosses into trust-scope engine territory. Revisit
+if users ask.</p>
+<h2 id="consequences">Consequences<a class="headerlink" href="#consequences" title="Permanent link">&para;</a></h2>
+<p><strong>Easier:</strong></p>
 <ul>
-<li>Numbers are sequential and never reused.</li>
-<li>Dates are when the ADR was <em>recorded</em>, not necessarily when the
-  decision was first made. For retroactive ADRs, the ADR may post-date
-  the implementation.</li>
-<li>Once an ADR is <code>accepted</code>, it is <strong>never edited</strong> except to correct
-  typos or clarify wording. If a decision is reversed, write a new ADR
-  marking the old one <code>superseded</code>.</li>
+<li>First-time encounters don't force a permanent decision. The
+  user can explore a repo once without polluting the
+  allowlist.</li>
+<li>The allowlist stays curated by intent — only entries the
+  user explicitly chose to persist. No "accumulated from
+  permissive defaults" drift.</li>
+<li>The modal's three outcomes map onto three keybindings that
+  correspond to verbs the user can summarise without looking:
+  <em>once</em>, <em>project</em>, <em>no</em>.</li>
 </ul>
-<h2 id="index">Index<a class="headerlink" href="#index" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Title</th>
-<th>Status</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="0001-per-profile-sqlite/">0001</a></td>
-<td>Per-profile SQLite database</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0002-three-tier-config-merge/">0002</a></td>
-<td>Three-tier config merge (user / project / local)</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0003-secret-ref-schemes/">0003</a></td>
-<td><code>SecretRef</code> with four schemes (<code>keyring</code>, <code>env</code>, <code>prompt</code>, <code>literal</code>)</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0004-hand-rolled-migrations/">0004</a></td>
-<td>Hand-rolled SQL migrations over an ORM</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0005-per-provider-adapters/">0005</a></td>
-<td>Per-provider adapters over a unified client</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0006-role-based-model-selection/">0006</a></td>
-<td>Role-based model selection</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0007-memory-space-at-repo-layer/">0007</a></td>
-<td>Memory-space scoping at the repository layer</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0008-tool-call-state-column/">0008</a></td>
-<td>Tool-call state as a column, not an event stream</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0009-protocol-stubs/">0009</a></td>
-<td>Protocol-shaped collaborators with default stubs</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0010-typed-middleware/">0010</a></td>
-<td>Typed middleware over generic lifecycle hooks</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0011-explicit-turn-state-machine/">0011</a></td>
-<td><code>turns</code> table with an explicit state machine</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0012-no-fk-on-turn-id/">0012</a></td>
-<td>No foreign-key constraint on <code>turn_id</code> columns</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0013-tier-taxonomy/">0013</a></td>
-<td>Tier taxonomy for tool risk (0-4 in V1)</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0014-tool-decorator/">0014</a></td>
-<td><code>@tool</code> decorator over a class hierarchy</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0015-session-allowlist-exact-match/">0015</a></td>
-<td>Session approval allowlist uses exact args-signature match</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0016-no-shell-in-v1/">0016</a></td>
-<td>No shell / code-execution tool in V1</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0017-ssrf-ip-pinning-deferred/">0017</a></td>
-<td>SSRF defence: IP pinning deferred in V1</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0018-docs-site-tooling/">0018</a></td>
-<td>Documentation site tooling: MkDocs + Material + mkdocstrings</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0019-docstrings-google-style/">0019</a></td>
-<td>Docstrings follow Google style</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0020-auto-generated-api-reference/">0020</a></td>
-<td>Auto-generated API reference from <code>__all__</code></td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0021-tier-1-memory-first/">0021</a></td>
-<td>Ship tier-1 memory first, defer reflection and curation UI</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0022-memory-dedup-threshold/">0022</a></td>
-<td>Dedup observations via <code>SequenceMatcher.ratio() &gt;= 0.90</code></td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0023-jsonl-log-no-rebuild/">0023</a></td>
-<td>Ship the JSONL observation log without the V1 rebuild path</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0024-memory-md-as-index/">0024</a></td>
-<td><code>MEMORY.md</code> as an index of <code>memories/&lt;slug&gt;.md</code> bodies</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0025-extraction-role-and-local-models/">0025</a></td>
-<td>Dedicated <code>ModelRole.EXTRACTION</code> with a first-class local-model path</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0026-per-turn-extraction-with-context/">0026</a></td>
-<td>Per-turn extraction with N-turn context window and length gate</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0027-truncation-before-summarisation/">0027</a></td>
-<td>Compaction ships truncation first, summarisation in V2</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0028-turn-block-granularity/">0028</a></td>
-<td>Compaction operates on turn blocks</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0029-context-budget-advisory/">0029</a></td>
-<td>Context budget is advisory, not enforced</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0030-convention-file-ordering/">0030</a></td>
-<td>Convention-file ordering: user → ancestor → nested</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0031-trust-prompt-deferred/">0031</a></td>
-<td><code>trust_policy="prompt"</code> deferred to the UI brick</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0032-convention-files-no-cursor-cline/">0032</a></td>
-<td>No Cursor / Cline convention files in V1</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0033-textual-for-ui/">0033</a></td>
-<td>Textual for the interactive UI</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0034-single-loop-sync-observer/">0034</a></td>
-<td>Single-loop invariant: synchronous UI observer</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0035-remember-for-session-gating/">0035</a></td>
-<td>"Remember for this session" gated to tier ≤ 3</td>
-<td>accepted</td>
-</tr>
-<tr>
-<td><a href="0036-trust-prompt-three-way-choice/">0036</a></td>
-<td>Trust-prompt modal offers three outcomes, not two</td>
-<td>accepted</td>
-</tr>
-</tbody>
-</table>
+<p><strong>Harder:</strong></p>
+<ul>
+<li>Three outcomes is more UI real estate than two. Mitigated by
+  a compact button row and three one-letter keybindings.</li>
+<li>Users who want "always ask me" semantics have a distinction
+  to reason about ("once" vs "project") they might not care
+  about. Acceptable — the "once" option is the conservative
+  default and <code>Trust project</code> is the explicit upgrade.</li>
+</ul>
+<p><strong>Ongoing cost:</strong></p>
+<ul>
+<li>The gate's in-memory cache means process restart re-prompts
+  unless the user chose "Trust project" last time. That's the
+  design — a fresh process is a fresh trust boundary. No
+  mitigation needed.</li>
+<li>If a fourth outcome ("trust filename pattern") lands later,
+  it extends this modal without breaking the existing three
+  — the <code>TrustPromptResult</code> shape accommodates new decision
+  types by adding fields to the dataclass.</li>
+</ul>
 
 
 
@@ -2868,10 +2763,10 @@ Python" or "use SQLite" — those are load-bearing but uncontested.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.tracking", "navigation.top", "navigation.indexes", "toc.follow", "content.code.copy", "content.code.annotate", "content.action.edit", "search.suggest", "search.share", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "latest", "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

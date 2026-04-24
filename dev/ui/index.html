@@ -761,6 +761,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#completion-popover" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -803,6 +814,17 @@
     <span class="md-ellipsis">
       
         Crash recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convention-file-trust-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convention-file trust prompt
       
     </span>
   </a>
@@ -1471,6 +1493,8 @@
       
         
           
+        
+      
         
       
         
@@ -2577,6 +2601,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0036-trust-prompt-three-way-choice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0036 Trust-prompt three-way choice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2667,6 +2719,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        /context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#completion-popover" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2709,6 +2772,17 @@
     <span class="md-ellipsis">
       
         Crash recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#convention-file-trust-prompt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convention-file trust prompt
       
     </span>
   </a>
@@ -2772,15 +2846,16 @@ the full collaborator graph (config → persistence → providers →
 memory → tools → orchestrator) on a single asyncio event loop
 before mounting the app.</p>
 <div class="admonition note">
-<p class="admonition-title">V1 scope — tranche 1</p>
-<p>Tranche 1 ships a single-session chat screen with streaming
+<p class="admonition-title">V1 scope</p>
+<p>Ships at 0.10.0: single-session chat screen with streaming
 Markdown, tool-call lifecycle rows, tier-3+ approval modal,
 slash-command dispatch + completion popover, a four-state
-activity indicator, and a live cost meter backed by
-<code>UsageRepo</code>. Session switching, delegation inline cards, and
-the memory-write toast land in tranche 2. The crash-recovery
-banner, <code>/context</code> rendering, and the real prompt-trust gate
-land in tranche 3.</p>
+activity indicator, a live cost meter backed by <code>UsageRepo</code>,
+<code>/context</code> usage rendering, a crash-recovery banner, and the
+real trust-prompt modal for <code>trust_policy="prompt"</code> on
+project convention files. Session switching, delegation
+inline cards, memory-write toast, and the extended slash
+catalogue land as post-0.10.0 polish PRs.</p>
 </div>
 <h2 id="layout">Layout<a class="headerlink" href="#layout" title="Permanent link">&para;</a></h2>
 <p>A session screen composes five widgets top-to-bottom:</p>
@@ -2850,7 +2925,7 @@ middleware on the same event loop. Keybindings: <code>y</code> approves,
 they render as full pretty-printed JSON so the user can see every
 value being approved.</p>
 <h2 id="slash-commands">Slash commands<a class="headerlink" href="#slash-commands" title="Permanent link">&para;</a></h2>
-<p>The command bar accepts a small set of tranche-1 commands:</p>
+<p>The command bar accepts the following commands:</p>
 <table>
 <thead>
 <tr>
@@ -2868,16 +2943,20 @@ value being approved.</p>
 <td>Show current session cost</td>
 </tr>
 <tr>
+<td><code>/context</code></td>
+<td>Show context-budget usage (see below)</td>
+</tr>
+<tr>
 <td><code>/tools</code></td>
 <td>List tools available in this session</td>
 </tr>
 <tr>
 <td><code>/new</code></td>
-<td>Placeholder — session-type picker lands in tranche 2</td>
+<td>Placeholder — session-type picker lands post-0.10.0</td>
 </tr>
 <tr>
 <td><code>/ephemeral &lt;model&gt;</code></td>
-<td>Placeholder — ephemeral spawn lands in tranche 2</td>
+<td>Placeholder — ephemeral spawn lands post-0.10.0</td>
 </tr>
 <tr>
 <td><code>/quit</code></td>
@@ -2885,6 +2964,23 @@ value being approved.</p>
 </tr>
 </tbody>
 </table>
+<h3 id="context"><code>/context</code><a class="headerlink" href="#context" title="Permanent link">&para;</a></h3>
+<p>Shows the current session's context-budget footprint as an inline
+muted banner:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>context: 17,000 / 200,000 tokens (8% used) — model=claude-opus-4-7
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  cached: 10,000 (read) + 2,000 (write)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  fresh:  5,000
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>  output: 800 (this turn)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>  (segment breakdown unavailable in V1)
+</span></code></pre></div>
+<p>Reads the most-recent <code>PRIMARY_TURN</code> usage row from <code>UsageRepo</code>
+and the model's <code>context_window</code> from <code>ModelConfig</code>. The
+per-segment breakdown (<code>identity</code>, <code>user_context</code>,
+<code>project_conventions</code>, <code>memory_index</code>, <code>retrieved_memories</code>)
+needs a <code>ContextReport</code> from the context manager and lands with
+the stacked-bar follow-up. If the session has no usage recorded
+yet (fresh session, first turn still running), the banner shows
+the budget only with a "no primary-turn usage recorded yet" note.</p>
 <h3 id="completion-popover">Completion popover<a class="headerlink" href="#completion-popover" title="Permanent link">&para;</a></h3>
 <p>Type <code>/</code> to open the <code>CompletionMenu</code> above the command bar. It
 filters as you type (prefix match, alphabetical). Key bindings
@@ -2913,16 +3009,16 @@ at keystroke time, not at mount.</p>
 100 ms intervals while non-idle.</p>
 <h2 id="ui-configuration">UI configuration<a class="headerlink" href="#ui-configuration" title="Permanent link">&para;</a></h2>
 <p>All UI knobs live on <code>ProfileConfig.ui</code>:</p>
-<div class="language-toml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[profiles.companion.ui]</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span><span class="w">                           </span><span class="c1"># auto | light | dark</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">show_cost_in_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">max_chat_log_messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">cost_display_precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="w">               </span><span class="c1"># 0..10 decimal places</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">[profiles.companion.ui.session_type_colours]</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">companion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#2aa198&quot;</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">persona</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#cb4b16&quot;</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">ephemeral</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#586e75&quot;</span>
+<div class="language-toml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">[profiles.companion.ui]</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">theme</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span><span class="w">                           </span><span class="c1"># auto | light | dark</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">show_cost_in_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">max_chat_log_messages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">500</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">cost_display_precision</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="w">               </span><span class="c1"># 0..10 decimal places</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">[profiles.companion.ui.session_type_colours]</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">companion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#2aa198&quot;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">persona</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#cb4b16&quot;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">ephemeral</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;#586e75&quot;</span>
 </span></code></pre></div>
 <p>All fields are optional; the defaults match the palette above.
 Session-type colours must be 7-character <code>#RRGGBB</code> hex strings —
@@ -2930,10 +3026,38 @@ invalid values fail validation at config load.</p>
 <h2 id="crash-recovery">Crash recovery<a class="headerlink" href="#crash-recovery" title="Permanent link">&para;</a></h2>
 <p>If the orchestrator was killed mid-turn (SIGKILL, process crash,
 host restart), the <code>turns</code> table will contain non-terminal rows
-on next boot. <code>Orchestrator.resume_aborted_turns()</code> marks them
-aborted with <code>reason='process_crash'</code>. The UI doesn't surface
-this today — a banner announcing "recovered N aborted turns"
-lands in tranche 3.</p>
+on next boot. The bootstrap calls
+<code>Orchestrator.resume_aborted_turns()</code> once before mounting the
+app; any non-zero count surfaces as a muted banner at the top of
+the chat log:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>↺ recovered 2 aborted turns from previous run
+</span></code></pre></div>
+<p>The banner is one-shot — a second screen mount in the same
+process will not duplicate it. There is no interactive
+recovery flow in V1 (the model's partial reply is persisted as
+far as it got and the conversation simply continues).</p>
+<h2 id="convention-file-trust-prompt">Convention-file trust prompt<a class="headerlink" href="#convention-file-trust-prompt" title="Permanent link">&para;</a></h2>
+<p>When <code>trust_policy="prompt"</code> is set on the active profile
+(<code>[profiles.*.convention_files]</code>), the UI presents a
+<code>TrustPromptModal</code> on first encounter with each project's
+convention files. The modal shows the project path, the
+filenames discovered, and a 20-line preview of the first file,
+then offers three outcomes:</p>
+<ul>
+<li><strong>Trust once</strong> (<kbd>o</kbd>) — ALLOW for this process only.</li>
+<li><strong>Trust project</strong> (<kbd>p</kbd>) — ALLOW plus persist to
+  <code>$XDG_CONFIG_HOME/cairn/trusted_projects.toml</code> so future
+  processes default to ALLOW without re-prompting.</li>
+<li><strong>Deny</strong> (<kbd>n</kbd> / <kbd>Esc</kbd>) — skip loading this
+  project's convention files.</li>
+</ul>
+<p>Decisions cache per-process, so repeated checks within the same
+session never re-prompt. Projects already in the allowlist
+bypass the modal entirely. See
+<a href="../decisions/0036-trust-prompt-three-way-choice/">ADR 0036</a> for
+why we offer three outcomes rather than two and
+<a href="../conventions/"><code>docs/conventions.md</code></a> for the underlying
+trust-policy semantics.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <p><strong>HTTPS errors behind a corporate MITM proxy (Netskope, Zscaler).</strong>
 The bootstrap calls <code>cairn.ssl.setup_ssl()</code> which injects the OS
@@ -2966,6 +3090,9 @@ a chain, not the first.</p>
 <li><a href="../decisions/0035-remember-for-session-gating/">ADR 0035</a> —
   why the "remember for this session" checkbox is disabled at
   tier 4+.</li>
+<li><a href="../decisions/0036-trust-prompt-three-way-choice/">ADR 0036</a> —
+  why the trust-prompt modal offers three outcomes (trust-once
+  vs trust-project vs deny) instead of a binary allow/deny.</li>
 </ul>
 
 

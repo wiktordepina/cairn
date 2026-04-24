@@ -1565,6 +1565,8 @@
       
         
       
+        
+      
     
     
     
@@ -2599,6 +2601,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisions/0036-trust-prompt-three-way-choice/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0036 Trust-prompt three-way choice
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2816,13 +2846,15 @@ is.</p>
 you from instructions smuggled in via a freshly cloned repo, and
 how to configure both per profile.</p>
 <div class="admonition note">
-<p class="admonition-title">V1 scope — discovery + loading</p>
-<p>V1 ships: discovery, the trust gate with <code>always</code> /
+<p class="admonition-title">V1 scope</p>
+<p>Shipped at 0.9.0: discovery, the trust gate with <code>always</code> /
 <code>project_allowlist</code>, loading, size-capped paragraph
-truncation, and injection into the system prompt. The
-<code>/conventions</code> slash command and the interactive
-first-encounter prompt (<code>trust_policy="prompt"</code>) land with
-the UI brick.</p>
+truncation, and injection into the system prompt.
+Shipped at 0.10.0: the interactive first-encounter prompt
+for <code>trust_policy="prompt"</code> (<code>TextualPromptTrustGate</code>; see
+<a href="../ui/#convention-file-trust-prompt"><code>docs/ui.md#convention-file-trust-prompt</code></a>).
+The <code>/conventions</code> slash command lands as a post-0.10.0
+polish PR.</p>
 </div>
 <h2 id="what-files-get-loaded">What files get loaded<a class="headerlink" href="#what-files-get-loaded" title="Permanent link">&para;</a></h2>
 <p>The default <code>filenames</code> list is <code>["CAIRN.md", "AGENTS.md",
@@ -2888,13 +2920,23 @@ before loading. User-level files are exempt (see above).</p>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">trust_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;project_allowlist&quot;</span>
 </span></code></pre></div>
 <h3 id="trust_policy-prompt-the-default"><code>trust_policy = "prompt"</code> (the default)<a class="headerlink" href="#trust_policy-prompt-the-default" title="Permanent link">&para;</a></h3>
-<p>On V1, this policy currently <strong>denies</strong> all project files with a
-visible WARNING, because interactive per-project prompting
-requires the UI brick. When the UI lands, the same setting will
-switch to "on first encounter, show you the file and ask" — no
-config change required. See
-<a href="../decisions/0031-trust-prompt-deferred/">ADR 0031</a>.</p>
-<p>Until then, choose one of the explicit policies below.</p>
+<p>On first encounter with each project, cairn shows a modal with
+the project path, the convention-file names it found, and a
+20-line preview of the first file. Three choices:</p>
+<ul>
+<li><strong>Trust once</strong> — allow for this process only.</li>
+<li><strong>Trust project</strong> — persist to
+  <code>$XDG_CONFIG_HOME/cairn/trusted_projects.toml</code> so future
+  processes default to ALLOW without prompting.</li>
+<li><strong>Deny</strong> — skip loading this project's conventions.</li>
+</ul>
+<p>Decisions cache per-process so repeated checks within the same
+session never re-prompt. Projects in the allowlist bypass the
+modal entirely. See
+<a href="../decisions/0031-trust-prompt-deferred/">ADR 0031</a> for the
+policy history and
+<a href="../decisions/0036-trust-prompt-three-way-choice/">ADR 0036</a> for
+the three-way choice rationale.</p>
 <h3 id="trust_policy-always"><code>trust_policy = "always"</code><a class="headerlink" href="#trust_policy-always" title="Permanent link">&para;</a></h3>
 <p>Load every project's convention files unconditionally. Convenient
 if you only ever work in your own repos; risky if you clone and
