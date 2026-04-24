@@ -1,13 +1,14 @@
 """Slash-command registry + dispatcher.
 
-Tranche 1 ships a small set: `/new`, `/ephemeral`, `/quit`,
-`/cost`, `/tools`, `/help`. Later tranches extend the catalogue;
-new commands land in follow-up PRs rather than gating on a tranche
-flag (resolved Q10).
+Current catalogue: `/new`, `/ephemeral`, `/quit`, `/cost`,
+`/tools`, `/context`, `/help`. Later tranches extend the
+catalogue; new commands land in follow-up PRs rather than gating
+on a tranche flag (resolved Q10).
 """
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
@@ -15,6 +16,9 @@ if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable, Sequence
 
     from cairn.ui._app import CairnApp
+
+
+log = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, slots=True)
@@ -152,6 +156,37 @@ async def _handle_tools(app: CairnApp, _tail: str) -> None:
     screen.append_banner(Banner(text=text, kind="muted"))
 
 
+async def _handle_context(app: CairnApp, _tail: str) -> None:
+    """Render the current session's context-budget usage.
+
+    Reads from the screen's bootstrap-supplied `context_source`
+    callback; falls back to a muted "unavailable" banner if no
+    source is wired (test harnesses with mock orchestrators).
+    """
+    from cairn.ui._context_report import format_context_report
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    source = screen.context_source
+    if source is None:
+        screen.append_banner(
+            Banner(
+                text="/context — bootstrap did not wire a context source",
+                kind="muted",
+            )
+        )
+        return
+    try:
+        report = await source()
+    except Exception:  # noqa: BLE001 — /context must never break a session
+        log.exception("/context: source raised; rendering fallback")
+        screen.append_banner(Banner(text="/context — failed to load (see log)", kind="warning"))
+        return
+    screen.append_banner(Banner(text=format_context_report(report), kind="muted"))
+
+
 async def _handle_new(app: CairnApp, _tail: str) -> None:
     """Placeholder for `/new`. Full session-type picker is Tranche 2."""
     from cairn.ui._widgets import Banner
@@ -187,6 +222,13 @@ def build_default_registry() -> CommandRegistry:
     )
     registry.register(
         SlashCommand(name="/tools", summary="list available tools", handler=_handle_tools)
+    )
+    registry.register(
+        SlashCommand(
+            name="/context",
+            summary="show context-budget usage for this session",
+            handler=_handle_context,
+        )
     )
     registry.register(
         SlashCommand(name="/new", summary="new session (Tranche 2)", handler=_handle_new)

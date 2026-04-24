@@ -77,6 +77,7 @@ from cairn.tools.builtin import (
 )
 from cairn.tools.security import WorkspaceSandbox
 from cairn.ui._app import CairnApp
+from cairn.ui._context_report import ContextReportInput
 from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
 from cairn.ui._trust_gate import TextualPromptTrustGate
@@ -223,12 +224,22 @@ async def _run(config: CairnConfig) -> int:
     async def _session_cost() -> float:
         return await usage_repo.total_cost_for_session(session.id)
 
+    primary_model = model_registry.resolve(active.primary_model)
+
+    async def _context_report() -> ContextReportInput:
+        return ContextReportInput(
+            context_window=primary_model.context_window,
+            model=primary_model.id,
+            last_usage=await usage_repo.most_recent_primary_turn(session.id),
+        )
+
     app = CairnApp(
         orchestrator=orchestrator,
         session=session,
         tool_registry=tool_registry,
         ui_config=active.ui,
         cost_source=_session_cost,
+        context_source=_context_report,
         resumed_turn_count=len(resumed),
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]

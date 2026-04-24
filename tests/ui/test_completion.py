@@ -37,8 +37,8 @@ class TestCompletionMenuSync:
 
             assert menu.is_open is True
             names = [cmd.name for cmd in menu.matches]
-            assert names == ["/cost"]
-            assert menu.selected_name == "/cost"
+            assert names == ["/context", "/cost"]
+            assert menu.selected_name == "/context"
             assert menu.has_class("-visible")
 
     @pytest.mark.asyncio
@@ -101,7 +101,15 @@ class TestCompletionMenuSync:
 
             assert menu.is_open is True
             names = [cmd.name for cmd in menu.matches]
-            assert names == ["/cost", "/ephemeral", "/help", "/new", "/quit", "/tools"]
+            assert names == [
+                "/context",
+                "/cost",
+                "/ephemeral",
+                "/help",
+                "/new",
+                "/quit",
+                "/tools",
+            ]
 
 
 # ---------------------------------------------------------------------------
@@ -165,8 +173,12 @@ class TestCommandBarKeyIntegration:
         app = _app_for(companion_session)
         async with app.run_test() as pilot:
             await pilot.pause()
+            # '/co' still matches both /context and /cost; press 's'
+            # to narrow to the single /cost entry.
             await pilot.press("/")
-            await pilot.press("c")  # narrow to '/cost'
+            await pilot.press("c")
+            await pilot.press("o")
+            await pilot.press("s")
             await pilot.pause()
 
             menu = app.query_one(CompletionMenu)

@@ -83,12 +83,20 @@ class TestCommandRegistry:
     def test_match_typeahead(self) -> None:
         registry = build_default_registry()
         matches = registry.match("/co")
-        assert [c.name for c in matches] == ["/cost"]
+        assert [c.name for c in matches] == ["/context", "/cost"]
 
     def test_default_registry_has_tranche_1_set(self) -> None:
         registry = build_default_registry()
         names = {cmd.name for cmd in registry.all()}
-        assert names == {"/help", "/cost", "/tools", "/new", "/ephemeral", "/quit"}
+        assert names == {
+            "/help",
+            "/cost",
+            "/tools",
+            "/context",
+            "/new",
+            "/ephemeral",
+            "/quit",
+        }
 
 
 # ---------------------------------------------------------------------------
