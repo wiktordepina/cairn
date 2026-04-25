@@ -16,6 +16,7 @@ from cairn.config._models import (
     ProfileConfig,
     ProviderConfig,
     SecretRef,
+    ToolsConfig,
     UIConfig,
     WatcherConfig,
 )
@@ -36,6 +37,7 @@ __all__ = [
     "ProfileConfig",
     "ProviderConfig",
     "SecretRef",
+    "ToolsConfig",
     "UIConfig",
     "WatcherConfig",
     # Loading
