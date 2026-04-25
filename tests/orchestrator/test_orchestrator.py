@@ -911,6 +911,108 @@ class TestSessionLifecycleEvents:
 
 
 # ---------------------------------------------------------------------------
+# replace_collaborators (hot reload surgery)
+# ---------------------------------------------------------------------------
+
+
+class TestReplaceCollaborators:
+    @pytest.mark.asyncio
+    async def test_swap_provider_registry(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        del provider  # unused — we only need a baseline orchestrator.
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+
+        new_provider = FakeProvider(name="fake-after-reload")
+        new_config = CairnConfig(
+            schema_version=1,
+            active_profile="test",
+            providers={"fake": ProviderConfig(name="fake")},
+            profiles={},
+        )
+        new_registry = ProviderRegistry(config=new_config, secret_resolver=None)  # type: ignore[arg-type]
+        new_registry.register_adapter("fake", lambda *_: new_provider)
+
+        orch.replace_collaborators(provider_registry=new_registry)
+
+        assert orch._provider_registry is new_registry  # noqa: SLF001
+        # Model registry is untouched when only provider_registry is swapped.
+        assert orch._model_registry is model_registry  # noqa: SLF001
+
+    def test_swap_each_collaborator_independently(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        del provider
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+
+        new_model_registry = ModelRegistry(
+            [
+                ModelConfig(
+                    id="reloaded",
+                    provider="fake",
+                    display_name="Reloaded",
+                    context_window=10_000,
+                    max_output_tokens=512,
+                    supports_tools=False,
+                    input_cost_per_1m=0.5,
+                    output_cost_per_1m=1.0,
+                    roles={ModelRole.PRIMARY},
+                ),
+            ],
+        )
+
+        # Calling with no kwargs is a no-op.
+        orch.replace_collaborators()
+        assert orch._provider_registry is provider_registry  # noqa: SLF001
+        assert orch._model_registry is model_registry  # noqa: SLF001
+
+        # Swap only model_registry.
+        orch.replace_collaborators(model_registry=new_model_registry)
+        assert orch._provider_registry is provider_registry  # noqa: SLF001
+        assert orch._model_registry is new_model_registry  # noqa: SLF001
+
+
+# ---------------------------------------------------------------------------
 # TurnIncomplete emission
 # ---------------------------------------------------------------------------
 

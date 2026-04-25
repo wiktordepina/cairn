@@ -170,6 +170,33 @@ class Orchestrator:
         await self._session_manager.archive(session_id)
         self._fanout(SessionArchived(session_id=session_id))
 
+    # -- Hot reload -----------------------------------------------------
+
+    def replace_collaborators(
+        self,
+        *,
+        provider_registry: ProviderRegistry | None = None,
+        model_registry: ModelRegistry | None = None,
+    ) -> None:
+        """Swap disk-derived collaborators in place.
+
+        Used by `/reload` to apply a re-loaded config without
+        re-bootstrapping the orchestrator. Only collaborators whose
+        construction depends on `CairnConfig` are swappable here —
+        runtime-state collaborators (turn repo, extraction queue,
+        memory service, approval gateway) are preserved so in-flight
+        work isn't disrupted.
+
+        Each kwarg is optional so callers (and tests) can swap one
+        collaborator at a time. The next iteration of any running
+        turn will pick up the new instances; the current iteration
+        continues with whatever was bound when it started.
+        """
+        if provider_registry is not None:
+            self._provider_registry = provider_registry
+        if model_registry is not None:
+            self._model_registry = model_registry
+
     # -- Cancellation ---------------------------------------------------
 
     async def cancel(self, session_id: str) -> None:
