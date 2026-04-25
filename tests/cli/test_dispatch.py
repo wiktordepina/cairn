@@ -10,9 +10,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from cairn.cli import main
+from cairn.cli import app, main
 
 if TYPE_CHECKING:
+    from pathlib import Path
+
     import pytest
 
 
@@ -36,9 +38,19 @@ class TestCLISmoke:
         err = capsys.readouterr().err
         assert "--nonsense" in err or "No such option" in err
 
-    def test_launch_is_invoked(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_launch_is_invoked(
+        self,
+        isolated_home: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
         """`main([])` hands off to `_bootstrap.launch` and returns its
         exit code without spinning up the Textual app."""
+        from typer.testing import CliRunner
+
+        # Seed a valid config so the no-config short-circuit doesn't fire.
+        seed = CliRunner().invoke(app, ["config", "init", "--no-prompt"])
+        assert seed.exit_code == 0, seed.output
+
         import cairn.ui._bootstrap as bootstrap
 
         captured: dict[str, str | None] = {}
@@ -51,7 +63,16 @@ class TestCLISmoke:
         assert main([]) == 42
         assert captured == {"profile_name": None}
 
-    def test_profile_flag_passes_through_to_launch(self, monkeypatch: pytest.MonkeyPatch) -> None:
+    def test_profile_flag_passes_through_to_launch(
+        self,
+        isolated_home: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        from typer.testing import CliRunner
+
+        seed = CliRunner().invoke(app, ["--profile", "work", "config", "init", "--no-prompt"])
+        assert seed.exit_code == 0, seed.output
+
         import cairn.ui._bootstrap as bootstrap
 
         captured: dict[str, str | None] = {}

@@ -67,9 +67,10 @@ app.add_typer(trust_app, name="trust")
 # Late imports keep the dependency direction explicit: subcommand
 # modules pull from `cairn.config` / `cairn.conventions`; this
 # module just registers them.
-from cairn.cli import _config, _secrets, _trust  # noqa: E402
+from cairn.cli import _config, _init, _secrets, _trust  # noqa: E402
 
 _config.register(config_app)
+_init.register(config_app)
 _secrets.register(secret_app)
 _trust.register(trust_app)
 
@@ -113,6 +114,13 @@ def _root(  # pyright: ignore[reportUnusedFunction]  # registered by decorator
     if ctx.invoked_subcommand is not None:
         return None
 
+    if not _has_loadable_config():
+        from cairn.config._loader import user_config_path
+
+        typer.echo("No cairn configuration found.")
+        typer.echo(f"  Run `cairn config init` to create one ({user_config_path()}).")
+        return 0
+
     setup_logging()
     setup_ssl()
 
@@ -122,6 +130,19 @@ def _root(  # pyright: ignore[reportUnusedFunction]  # registered by decorator
     from cairn.ui._bootstrap import launch
 
     return launch(profile_name=profile)
+
+
+def _has_loadable_config() -> bool:
+    """True iff *any* config layer exists for the current cwd / home.
+
+    Used by the default-launch short-circuit: with no user config and
+    no project config, there's nothing to bootstrap, so we redirect
+    the user to `cairn config init` instead of raising `ConfigError`
+    out of the Textual launch path.
+    """
+    from cairn.config._loader import config_paths
+
+    return any(path.is_file() for _, path in config_paths())
 
 
 # ---------------------------------------------------------------------------
