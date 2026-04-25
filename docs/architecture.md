@@ -144,6 +144,7 @@ Cairn is under active development. This table is authoritative; the
 | Observability — tranche 2 (redaction + structured observer) | Shipped (0.12.0) |
 | Prompt caching (all providers) | Shipped (0.13.0) |
 | File watcher + `/reload` | Shipped (0.15.0) |
+| V1 loose ends (per-tool / wall-clock timeouts, delegation events, thinking rendering) | Shipped (0.16.0) |
 | Reflection (tier-2 memory) | V2 |
 | Knowledge graph | V2 |
 | MCP client | V2 |
