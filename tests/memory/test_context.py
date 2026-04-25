@@ -372,3 +372,160 @@ class TestStandardContextManager:
         )
         assert req.system is not None
         assert "<project_conventions" not in req.system
+
+
+class TestCacheAwareSegments:
+    """Cache-aware path returns SystemPromptSegment list + cache flags."""
+
+    @pytest.mark.asyncio
+    async def test_two_segments_when_memories_present(self, tmp_path: Path) -> None:
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import SystemPromptSegment
+
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        (tmp_path / "user_context.md").write_text("USER", encoding="utf-8")
+        (tmp_path / "MEMORY.md").write_text("INDEX", encoding="utf-8")
+        mgr = StandardContextManager(loader=_loader(tmp_path), base_system_prompt="PERSONA")
+
+        history = [Message(role="user", session_id="sess-1")]
+        req = await mgr.build_request(
+            session=_session(),
+            history=history,
+            retrieved_memories=[_entry()],
+            tools=[],
+            cache_aware=True,
+        )
+
+        assert isinstance(req.system, list)
+        assert all(isinstance(s, SystemPromptSegment) for s in req.system)
+        assert len(req.system) == 2
+        seg_profile, seg_session = req.system
+        assert seg_profile.cacheable is True
+        assert seg_session.cacheable is True
+        assert "<identity>" in seg_profile.text
+        assert "<user_context>" in seg_profile.text
+        assert "<memory_index>" in seg_profile.text
+        assert "<retrieved_memories>" in seg_session.text
+        assert "<persona_system_prompt>" in seg_session.text
+
+    @pytest.mark.asyncio
+    async def test_one_segment_when_no_memories_or_persona(self, tmp_path: Path) -> None:
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        mgr = StandardContextManager(loader=_loader(tmp_path))
+
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+            cache_aware=True,
+        )
+
+        assert isinstance(req.system, list)
+        assert len(req.system) == 1
+        assert req.system[0].cacheable is True
+        assert "<identity>" in req.system[0].text
+
+    @pytest.mark.asyncio
+    async def test_persona_only_yields_session_segment(self, tmp_path: Path) -> None:
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        mgr = StandardContextManager(
+            loader=_loader(tmp_path), base_system_prompt="PERSONA"
+        )
+
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+            cache_aware=True,
+        )
+
+        assert isinstance(req.system, list)
+        assert len(req.system) == 2
+        assert "<persona_system_prompt>" in req.system[1].text
+        assert "<retrieved_memories>" not in req.system[1].text
+
+    @pytest.mark.asyncio
+    async def test_cache_flags_set_when_tools_and_history(self, tmp_path: Path) -> None:
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ToolDefinition
+
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        mgr = StandardContextManager(loader=_loader(tmp_path))
+        history = [Message(role="user", session_id="sess-1")]
+        tools = [ToolDefinition(name="x", description="x", input_schema={})]
+
+        req = await mgr.build_request(
+            session=_session(),
+            history=history,
+            retrieved_memories=[],
+            tools=tools,
+            cache_aware=True,
+        )
+
+        assert req.cache_tools is True
+        assert req.cache_last_message is True
+
+    @pytest.mark.asyncio
+    async def test_cache_flags_off_for_empty_tools_and_history(self, tmp_path: Path) -> None:
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        mgr = StandardContextManager(loader=_loader(tmp_path))
+
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+            cache_aware=True,
+        )
+
+        assert req.cache_tools is False
+        assert req.cache_last_message is False
+
+    @pytest.mark.asyncio
+    async def test_legacy_path_unchanged(self, tmp_path: Path) -> None:
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        mgr = StandardContextManager(loader=_loader(tmp_path))
+
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[_entry()],
+            tools=[],
+            cache_aware=False,
+        )
+
+        assert isinstance(req.system, str)
+        assert req.cache_tools is False
+        assert req.cache_last_message is False
+
+    @pytest.mark.asyncio
+    async def test_conventions_in_profile_segment(self, tmp_path: Path) -> None:
+        from cairn.config import ConventionFilesConfig
+        from cairn.conventions import AlwaysTrustGate, ConventionLoader
+
+        (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
+        repo = tmp_path / "repo"
+        repo.mkdir()
+        (repo / ".git").mkdir()
+        (repo / "AGENTS.md").write_text("PROJECT RULES", encoding="utf-8")
+
+        conventions = ConventionLoader(
+            config=ConventionFilesConfig(filenames=["AGENTS.md"]),
+            trust_gate=AlwaysTrustGate(),
+            cwd=repo,
+        )
+        mgr = StandardContextManager(loader=_loader(tmp_path), conventions=conventions)
+
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+            cache_aware=True,
+        )
+
+        assert isinstance(req.system, list)
+        # Conventions live in segment 1 (profile-stable) per design.
+        assert "<project_conventions" in req.system[0].text
