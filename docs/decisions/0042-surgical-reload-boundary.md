@@ -113,6 +113,45 @@ which is a meaningful UX hiccup. The config fields they read
 (`MemoryConfig` knobs) are very rarely changed at runtime. If a
 user does want a memory-config change to take effect, restart.
 
+**Why not rebind the active session's `model` when a role pin
+moves?** A session's `Session.model` is a concrete id (e.g.
+`claude-opus-4-7`), resolved from `role:primary` at session
+creation. If the user edits `roles` to move `primary` to a
+different model, the orchestrator's per-turn
+`model_registry.resolve(session.model)` still resolves the *old*
+id (which still exists; it just no longer carries the primary
+role) — so the active session continues with the old model.
+
+We deliberately do **not** auto-rebind. Mid-session model swaps
+have provider-specific failure modes that are subtle, hard to
+detect from history, and easy to surprise the user with:
+
+- **Tool-call id schemes.** Anthropic mints `toolu_*` ids,
+  OpenAI mints opaque strings. Switching providers mid-session
+  means a previously-issued id appears in history under the new
+  provider's `tool_call_id` field — strict providers reject this
+  with a 400.
+- **Thinking blocks.** Anthropic round-trips `ThinkingBlock`s
+  explicitly. DeepSeek requires `reasoning_content` to be echoed
+  back per its own contract. OpenAI strips thinking entirely.
+  Provider switches drop or reject these inconsistently.
+- **Tool support changes.** History contains tool calls; new
+  model has `supports_tools=False`. Some providers ignore the
+  blocks; some 400.
+- **Prompt-cache namespaces.** Each provider has its own. Mid-
+  session swap throws away the cache; user pays the rebuild
+  silently.
+
+The Reloader detects role-pin drift (active session's model id ≠
+the new resolution of `active.primary_model`) and surfaces a hint
+banner: *"primary role now resolves to X; the active session
+stays on Y. Restart cairn to switch."* The active session stays
+pinned. Future sessions pick up the new role binding.
+
+In-session model switching is a separate feature, gated on a
+future explicit `/model <id>` command with provider-compatibility
+checks and opt-in confirmation.
+
 ## Status
 
 Accepted. Captured in `.plan/file-watcher-brick-design.md` §6 + §7;

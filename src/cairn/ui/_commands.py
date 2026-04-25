@@ -324,6 +324,17 @@ async def _handle_reload(app: CairnApp, _tail: str) -> None:
     kind = "muted" if result.ok else "warning"
     text = result.summary if result.ok else f"reload failed — {result.error}"
     screen.append_banner(Banner(text=text, kind=kind))
+    if result.ok and result.primary_model_drift is not None:
+        active, new = result.primary_model_drift
+        screen.append_banner(
+            Banner(
+                text=(
+                    f"primary role now resolves to {new}; the active session "
+                    f"stays on {active}. Restart cairn to switch."
+                ),
+                kind="muted",
+            ),
+        )
 
 
 async def _handle_conventions(app: CairnApp, _tail: str) -> None:

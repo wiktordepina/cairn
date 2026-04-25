@@ -393,6 +393,18 @@ class SessionScreen(Screen[None]):
             kind = "muted" if result.ok else "warning"
             text = result.summary if result.ok else f"reload failed — {result.error}"
             self._chat_log.append_banner(Banner(text=text, kind=kind))
+            if result.ok and result.primary_model_drift is not None:
+                active, new = result.primary_model_drift
+                self._chat_log.append_banner(
+                    Banner(
+                        text=(
+                            f"primary role now resolves to {new}; the active "
+                            f"session stays on {active}. Restart cairn to "
+                            f"switch."
+                        ),
+                        kind="muted",
+                    ),
+                )
 
         self.run_worker(
             _do_reload(),

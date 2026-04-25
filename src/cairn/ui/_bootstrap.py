@@ -269,12 +269,15 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
             observers=(structured_observer,),
             poll_interval_s=active.watcher.poll_interval_s,
         )
+        # V1 is single-session — capture its model id so the Reloader
+        # can detect role-pin drift against the active session.
         reloader = Reloader(
             profile_name=profile_name,
             orchestrator=orchestrator,
             convention_loader=convention_loader,
             profile_doc_loader=doc_loader,
             file_watcher=file_watcher,
+            active_session_model=lambda: session.model,
         )
 
     app = CairnApp(

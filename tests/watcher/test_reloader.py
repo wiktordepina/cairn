@@ -188,6 +188,131 @@ async def test_reload_validation_failure_does_not_swap(tmp_path: Path) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Primary-model role-pin drift
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_reload_detects_primary_model_drift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """When `role:primary` now resolves to a different model than the
+    active session was created with, the result carries
+    `primary_model_drift=(active_id, new_id)`. The session is not
+    rebound — see ADR 0042."""
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(home / ".config"))
+    monkeypatch.setenv("HOME", str(home))
+
+    cfg_dir = home / ".config" / "cairn"
+    cfg_dir.mkdir(parents=True)
+    (cfg_dir / "config.toml").write_text(
+        """\
+schema_version = 1
+active_profile = "default"
+
+[providers.fake]
+
+[[models]]
+id = "old-primary"
+provider = "fake"
+display_name = "Old"
+context_window = 100000
+max_output_tokens = 4096
+supports_tools = true
+input_cost_per_1m = 1.0
+output_cost_per_1m = 2.0
+roles = ["utility"]
+
+[[models]]
+id = "new-primary"
+provider = "fake"
+display_name = "New"
+context_window = 100000
+max_output_tokens = 4096
+supports_tools = true
+input_cost_per_1m = 1.0
+output_cost_per_1m = 2.0
+roles = ["primary"]
+
+[profiles.default]
+soul_document_path = "/tmp/soul.md"
+user_context_path = "/tmp/user.md"
+memory_md_path = "/tmp/MEMORY.md"
+primary_model = "role:primary"
+utility_model = "role:utility"
+""",
+        encoding="utf-8",
+    )
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / ".git").mkdir()
+
+    loader, docs = _make_loaders(repo)
+    watcher = FileWatcher(
+        watch_set=build_watch_set([]),
+        observers=[],
+        poll_interval_s=0.5,
+    )
+    reloader = Reloader(
+        profile_name=None,
+        orchestrator=_make_orch_stub(),  # type: ignore[arg-type]
+        convention_loader=loader,
+        profile_doc_loader=docs,
+        file_watcher=watcher,
+        project_dir=repo,
+        # Active session was created when the previous role assignment
+        # had primary on "old-primary"; new config moved primary to
+        # "new-primary".
+        active_session_model=lambda: "old-primary",
+    )
+
+    result = await reloader.reload()
+
+    assert result.ok is True
+    assert result.primary_model_drift == ("old-primary", "new-primary")
+
+
+@pytest.mark.asyncio
+async def test_reload_no_drift_when_primary_unchanged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Same primary model id — drift field is None."""
+    home = tmp_path / "home"
+    home.mkdir()
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(home / ".config"))
+    monkeypatch.setenv("HOME", str(home))
+    _write_user_config(home)
+
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    (repo / ".git").mkdir()
+
+    loader, docs = _make_loaders(repo)
+    watcher = FileWatcher(
+        watch_set=build_watch_set([]),
+        observers=[],
+        poll_interval_s=0.5,
+    )
+    reloader = Reloader(
+        profile_name=None,
+        orchestrator=_make_orch_stub(),  # type: ignore[arg-type]
+        convention_loader=loader,
+        profile_doc_loader=docs,
+        file_watcher=watcher,
+        project_dir=repo,
+        active_session_model=lambda: "test-primary",
+    )
+
+    result = await reloader.reload()
+
+    assert result.ok is True
+    assert result.primary_model_drift is None
+
+
+# ---------------------------------------------------------------------------
 # Summary formatting
 # ---------------------------------------------------------------------------
 

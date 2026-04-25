@@ -38,6 +38,15 @@ class _FailingReloader:
         return ReloadResult(ok=False, summary="", error="schema_version missing")
 
 
+class _RolePinDriftReloader:
+    async def reload(self) -> ReloadResult:
+        return ReloadResult(
+            ok=True,
+            summary="Reloaded: 1 config layer.",
+            primary_model_drift=("opus-4-7", "haiku-4-5"),
+        )
+
+
 class TestReloadCommand:
     @pytest.mark.asyncio
     async def test_reload_success_renders_banner(self, companion_session: Session) -> None:
@@ -97,6 +106,25 @@ class TestReloadCommand:
             assert any(
                 "bootstrap did not wire a file watcher" in str(b.renderable) for b in banners
             )
+
+    @pytest.mark.asyncio
+    async def test_reload_role_pin_drift_renders_hint(self, companion_session: Session) -> None:
+        app = _app_with_reloader(companion_session, _RolePinDriftReloader())
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "/reload"
+            await bar.action_submit()
+            await pilot.pause()
+
+            banners = list(screen.query_one(ChatLog).query(Banner))
+            rendered = "\n".join(str(b.renderable) for b in banners)
+            assert "Reloaded: 1 config layer." in rendered
+            assert "primary role now resolves to haiku-4-5" in rendered
+            assert "active session stays on opus-4-7" in rendered
+            assert "Restart cairn to switch" in rendered
 
     @pytest.mark.asyncio
     async def test_reload_mid_turn_queues(self, companion_session: Session) -> None:

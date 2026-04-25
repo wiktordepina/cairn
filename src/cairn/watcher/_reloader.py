@@ -31,7 +31,7 @@ from cairn.providers._registry import ProviderRegistry
 from cairn.watcher._snapshot import build_watch_set, discover_watch_paths
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Callable, Sequence
     from pathlib import Path
 
     from cairn.conventions import ConventionLoader
@@ -51,6 +51,13 @@ class ReloadResult:
     ok: bool
     summary: str
     error: str | None = None
+    primary_model_drift: tuple[str, str] | None = None
+    """When the active session was created with a different model id
+    than the new config's `primary_model` resolves to, this carries
+    `(active_session_model_id, new_resolved_model_id)`. The active
+    session is deliberately *not* rebound — see ADR 0042 — so the UI
+    surfaces a hint banner pointing at `/new` (when implemented) or
+    a restart."""
 
 
 class Reloader:
@@ -65,6 +72,7 @@ class Reloader:
         profile_doc_loader: ProfileDocLoader,
         file_watcher: FileWatcher,
         project_dir: Path | None = None,
+        active_session_model: Callable[[], str | None] | None = None,
     ) -> None:
         self._profile_name = profile_name
         self._orchestrator = orchestrator
@@ -72,6 +80,7 @@ class Reloader:
         self._profile_doc_loader = profile_doc_loader
         self._file_watcher = file_watcher
         self._project_dir = project_dir
+        self._active_session_model = active_session_model
         self._lock = asyncio.Lock()
 
     async def reload(self) -> ReloadResult:
@@ -123,9 +132,50 @@ class Reloader:
             )
             self._file_watcher.resnapshot(build_watch_set(new_paths))
 
+            primary_model_drift = self._detect_primary_model_drift(
+                new_config_active_primary_model=new_config.active.primary_model,
+                new_model_registry=new_model_registry,
+            )
+
             summary = self._summarise(new_paths)
             log.info("reload: succeeded — %s", summary)
-            return ReloadResult(ok=True, summary=summary)
+            return ReloadResult(
+                ok=True,
+                summary=summary,
+                primary_model_drift=primary_model_drift,
+            )
+
+    def _detect_primary_model_drift(
+        self,
+        *,
+        new_config_active_primary_model: str,
+        new_model_registry: ModelRegistry,
+    ) -> tuple[str, str] | None:
+        """Return `(active_id, new_id)` if the active session's model
+        differs from where the profile's `primary_model` ref now
+        resolves; otherwise `None`.
+
+        We deliberately don't rebind the session — see ADR 0042.
+        Cross-provider history (tool-call id schemes, thinking blocks,
+        cache shapes) makes mid-session model swaps a separate
+        feature gated on a future explicit `/model` command.
+        """
+        if self._active_session_model is None:
+            return None
+        active_model = self._active_session_model()
+        if active_model is None:
+            return None
+        try:
+            new_resolved = new_model_registry.resolve(new_config_active_primary_model)
+        except Exception:  # noqa: BLE001 — defensive, ref may be invalid
+            log.exception(
+                "reload: failed to resolve new primary_model %r against new registry",
+                new_config_active_primary_model,
+            )
+            return None
+        if new_resolved.id == active_model:
+            return None
+        return (active_model, new_resolved.id)
 
     @staticmethod
     def _summarise(rows: Sequence[tuple[WatchCategory | str, Path]]) -> str:

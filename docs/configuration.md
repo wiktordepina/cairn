@@ -291,6 +291,34 @@ created afterwards (a freshly-added `.cairn/config.local.toml`,
 a new ancestor `AGENTS.md`) are invisible until `/reload`
 re-snapshots.
 
+#### Role-pin changes don't rebind the active session
+
+Each session is created bound to a concrete model id resolved at
+session creation. If you edit a model's `roles` list — moving
+`primary` from one model to another, say — the new role pin
+applies to **future** sessions, not the active one. The active
+session keeps using its original model.
+
+`/reload` notices this case and surfaces a hint banner alongside
+the success summary:
+
+```
+primary role now resolves to claude-haiku-4-5; the active session
+stays on claude-opus-4-7. Restart cairn to switch.
+```
+
+This is intentional. Mid-session model swaps are risky in a way
+that's specific to a session's *history* — provider-specific
+tool-call id schemes, thinking-block contracts (Anthropic vs
+DeepSeek vs OpenAI), and per-provider prompt-cache namespaces all
+interact badly when the wire-format codec changes mid-conversation.
+A future `/model <id>` command will be the explicit, opt-in path
+for in-session model changes; until then, restart to pick up role
+pins on an active conversation.
+
+See [ADR 0042](decisions/0042-surgical-reload-boundary.md) for the
+full reasoning.
+
 ### Delegation tools
 
 Each delegation tool lets the companion consult a different model as if
