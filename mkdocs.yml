@@ -177,3 +177,4 @@ nav:
       - "0034 Single-loop sync observer": decisions/0034-single-loop-sync-observer.md
       - "0035 Remember-for-session gating": decisions/0035-remember-for-session-gating.md
       - "0036 Trust-prompt three-way choice": decisions/0036-trust-prompt-three-way-choice.md
+      - "0037 Enter executes highlighted command": decisions/0037-enter-executes-highlighted-command.md

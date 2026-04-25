@@ -83,9 +83,9 @@ class TestCommandRegistry:
     def test_match_typeahead(self) -> None:
         registry = build_default_registry()
         matches = registry.match("/co")
-        assert [c.name for c in matches] == ["/context", "/cost"]
+        assert [c.name for c in matches] == ["/context", "/conventions", "/cost"]
 
-    def test_default_registry_has_tranche_1_set(self) -> None:
+    def test_default_registry_has_expected_set(self) -> None:
         registry = build_default_registry()
         names = {cmd.name for cmd in registry.all()}
         assert names == {
@@ -96,6 +96,10 @@ class TestCommandRegistry:
             "/new",
             "/ephemeral",
             "/quit",
+            "/persona",
+            "/profile",
+            "/model",
+            "/conventions",
         }
 
 
@@ -234,6 +238,80 @@ class TestCommandBarDispatch:
             chat_log = screen.query_one(ChatLog)
             assert len(list(chat_log.query(MessageView))) == 0
             assert len(list(chat_log.query(Banner))) == 0
+
+    @pytest.mark.asyncio
+    async def test_persona_prints_session_persona(self, companion_session: Session) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "/persona"
+            await bar.action_submit()
+            await pilot.pause()
+
+            chat_log = screen.query_one(ChatLog)
+            banners = list(chat_log.query(Banner))
+            assert any(
+                "persona" in str(b.renderable) and "companion" in str(b.renderable)
+                for b in banners
+            )
+
+    @pytest.mark.asyncio
+    async def test_profile_placeholder_when_unwired(self, companion_session: Session) -> None:
+        """Without a `ProfileConfig` wired in, /profile emits a muted
+        fallback banner — same shape as `/tools` uses for unwired
+        registries."""
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "/profile"
+            await bar.action_submit()
+            await pilot.pause()
+
+            chat_log = screen.query_one(ChatLog)
+            banners = list(chat_log.query(Banner))
+            assert any("did not wire a profile" in str(b.renderable) for b in banners)
+
+    @pytest.mark.asyncio
+    async def test_model_falls_back_to_session_model(self, companion_session: Session) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "/model"
+            await bar.action_submit()
+            await pilot.pause()
+
+            chat_log = screen.query_one(ChatLog)
+            banners = list(chat_log.query(Banner))
+            # Falls back to session.model when the registry isn't wired.
+            assert any(
+                "claude-opus-4-7" in str(b.renderable) and "registry unwired" in str(b.renderable)
+                for b in banners
+            )
+
+    @pytest.mark.asyncio
+    async def test_conventions_placeholder_when_unwired(self, companion_session: Session) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "/conventions"
+            await bar.action_submit()
+            await pilot.pause()
+
+            chat_log = screen.query_one(ChatLog)
+            banners = list(chat_log.query(Banner))
+            assert any("did not wire convention sources" in str(b.renderable) for b in banners)
 
     @pytest.mark.asyncio
     async def test_quit_exits_app(self, companion_session: Session) -> None:

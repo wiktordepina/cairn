@@ -18,7 +18,8 @@ from cairn.ui._screens import SessionScreen
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Callable
 
-    from cairn.config import UIConfig
+    from cairn.config import ModelRegistry, ProfileConfig, UIConfig
+    from cairn.conventions import AllowlistStore, ConventionLoader
     from cairn.domain import Session
     from cairn.orchestrator import Orchestrator
     from cairn.orchestrator._protocols import ToolRegistry
@@ -50,6 +51,10 @@ class CairnApp(App[None]):
         cost_source: CostSource | None = None,
         context_source: ContextSource | None = None,
         resumed_turn_count: int = 0,
+        profile: ProfileConfig | None = None,
+        model_registry: ModelRegistry | None = None,
+        convention_loader: ConventionLoader | None = None,
+        allowlist_store: AllowlistStore | None = None,
     ) -> None:
         super().__init__()
         self._orchestrator = orchestrator
@@ -60,6 +65,10 @@ class CairnApp(App[None]):
         self._cost_source = cost_source
         self._context_source = context_source
         self._pending_resumed_turn_count = resumed_turn_count
+        self._profile = profile
+        self._model_registry = model_registry
+        self._convention_loader = convention_loader
+        self._allowlist_store = allowlist_store
         from cairn.config import UIConfig as _UIConfig
 
         self._ui_config = ui_config or _UIConfig()
@@ -90,6 +99,30 @@ class CairnApp(App[None]):
     def ui_config(self) -> UIConfig:
         """Active profile's UI block (defaults when unset)."""
         return self._ui_config
+
+    @property
+    def profile(self) -> ProfileConfig | None:
+        """Active `ProfileConfig`, when wired by the bootstrap.
+
+        `None` when the app is minted with mock collaborators (the
+        Pilot test harness pattern).
+        """
+        return self._profile
+
+    @property
+    def model_registry(self) -> ModelRegistry | None:
+        """Shared `ModelRegistry` for read-only UI lookups (e.g. `/model`)."""
+        return self._model_registry
+
+    @property
+    def convention_loader(self) -> ConventionLoader | None:
+        """Shared `ConventionLoader` for `/conventions`."""
+        return self._convention_loader
+
+    @property
+    def allowlist_store(self) -> AllowlistStore | None:
+        """User-level project allowlist for `/conventions` trust state."""
+        return self._allowlist_store
 
     def take_resumed_turn_count(self) -> int:
         """Return the recorded count and clear it.

@@ -241,6 +241,10 @@ async def _run(config: CairnConfig) -> int:
         cost_source=_session_cost,
         context_source=_context_report,
         resumed_turn_count=len(resumed),
+        profile=active,
+        model_registry=model_registry,
+        convention_loader=convention_loader,
+        allowlist_store=allowlist_store,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,

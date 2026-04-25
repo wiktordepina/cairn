@@ -103,3 +103,4 @@ ongoing costs does this impose?
 | [0034](0034-single-loop-sync-observer.md) | Single-loop invariant: synchronous UI observer | accepted |
 | [0035](0035-remember-for-session-gating.md) | "Remember for this session" gated to tier ≤ 3 | accepted |
 | [0036](0036-trust-prompt-three-way-choice.md) | Trust-prompt modal offers three outcomes, not two | accepted |
+| [0037](0037-enter-executes-highlighted-command.md) | Enter on a highlighted completion runs that command | accepted |
