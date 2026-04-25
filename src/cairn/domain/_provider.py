@@ -93,6 +93,19 @@ class TextDelta:
 
 
 @dataclass(frozen=True, slots=True)
+class ThinkingDelta:
+    """Incremental reasoning / chain-of-thought token from the model.
+
+    Emitted by providers that surface reasoning traces alongside the
+    final answer (e.g. DeepSeek's ``reasoning_content`` field). Captured
+    so the trace can be round-tripped back to the API on subsequent
+    turns — DeepSeek's thinking-mode SKUs require it.
+    """
+
+    text: str
+
+
+@dataclass(frozen=True, slots=True)
 class ToolCallStart:
     """A tool call has begun (ID and name known)."""
 
@@ -132,4 +145,12 @@ class MessageStop:
     stop_reason: StopReason
 
 
-ProviderEvent = TextDelta | ToolCallStart | ToolCallDelta | ToolCallEnd | UsageEvent | MessageStop
+ProviderEvent = (
+    TextDelta
+    | ThinkingDelta
+    | ToolCallStart
+    | ToolCallDelta
+    | ToolCallEnd
+    | UsageEvent
+    | MessageStop
+)

@@ -10,6 +10,7 @@ from cairn.persistence._paths import (
     _sanitise,
     data_dir_for_profile,
     db_path_for_profile,
+    prompt_history_path,
 )
 
 if TYPE_CHECKING:
@@ -62,3 +63,29 @@ class TestPathDerivation:
     def test_invalid_profile_rejected(self) -> None:
         with pytest.raises(ValueError):
             data_dir_for_profile("../escape")
+
+    def test_prompt_history_path_is_per_profile_per_project(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+    ) -> None:
+        monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
+        proj_a = tmp_path / "project_a"
+        proj_b = tmp_path / "project_b"
+        proj_a.mkdir()
+        proj_b.mkdir()
+        path_a = prompt_history_path("companion", proj_a)
+        path_b = prompt_history_path("companion", proj_b)
+        assert path_a.parent == tmp_path / "cairn" / "companion" / "history"
+        assert path_a.name.endswith(".jsonl")
+        assert path_a != path_b
+
+    def test_prompt_history_path_is_stable_across_calls(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+    ) -> None:
+        monkeypatch.setenv("XDG_DATA_HOME", str(tmp_path))
+        proj = tmp_path / "stable"
+        proj.mkdir()
+        assert prompt_history_path("p", proj) == prompt_history_path("p", proj)

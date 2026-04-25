@@ -55,12 +55,18 @@ adapter alongside the prompt-caching brick (0.13.0). Marginal cost:
 - Documentation extension to `docs/providers.md` and the per-model
   table in `docs/prompt-caching.md`.
 
-Reasoning content from `deepseek-reasoner` (the `reasoning_content`
-field on streamed deltas) is dropped silently in V1 — we have no
-streaming thinking-event type yet, and the Anthropic adapter takes
-the same posture for thinking deltas. Adding a `ThinkingDelta`
-event would ripple through the orchestrator, observers, and UI
-widgets; out of scope for this brick.
+Reasoning content from DeepSeek's thinking-mode SKUs (the
+`reasoning_content` field on streamed deltas) was originally
+dropped on the floor; this changed in 0.13.x once V4-class
+reasoning models started rejecting multi-turn requests that
+omitted the prior trace (`invalid_request_error`: "the
+`reasoning_content` in the thinking mode must be passed back to
+the API"). The adapter now captures `reasoning_content` deltas
+into a `ThinkingDelta` event, persists them on the assistant
+message as a `ThinkingBlock`, and re-emits them as
+`reasoning_content` on the next turn via a DeepSeek-specific
+`format_messages` wrapper. Surfacing the trace in the transcript
+remains a follow-up — the round-trip is invisible to the UI.
 
 The Google adapter remains V2 — its API shape (Vertex AI / GenAI)
 is genuinely different and warrants its own design pass.

@@ -327,3 +327,145 @@ class TestCommandBarDispatch:
             # Pilot harness completes when app exits; assert the app
             # was asked to exit.
             assert app.return_code is None or app.return_code == 0
+
+
+# ---------------------------------------------------------------------------
+# Unit: prompt history ring
+# ---------------------------------------------------------------------------
+
+
+class TestCommandBarPromptHistory:
+    @pytest.mark.asyncio
+    async def test_up_arrow_walks_history_when_cursor_at_top(
+        self, companion_session: Session
+    ) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.set_prompt_history(["first prompt", "second prompt"])
+            await pilot.pause()
+
+            bar.focus()
+            await pilot.press("up")
+            await pilot.pause()
+            assert bar.value == "second prompt"
+
+            await pilot.press("up")
+            await pilot.pause()
+            assert bar.value == "first prompt"
+
+            await pilot.press("down")
+            await pilot.pause()
+            assert bar.value == "second prompt"
+
+    @pytest.mark.asyncio
+    async def test_down_past_newest_restores_draft(self, companion_session: Session) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.set_prompt_history(["earlier"])
+            bar.value = "in-progress draft"
+            bar.cursor_location = (0, len(bar.value))
+            bar.focus()
+            await pilot.pause()
+
+            await pilot.press("up")
+            await pilot.pause()
+            assert bar.value == "earlier"
+
+            await pilot.press("down")
+            await pilot.pause()
+            assert bar.value == "in-progress draft"
+
+    @pytest.mark.asyncio
+    async def test_submit_appends_to_history(self, companion_session: Session) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "hello world"
+            await bar.action_submit()
+            await pilot.pause()
+            assert bar.prompt_history == ["hello world"]
+
+    def test_push_history_drops_adjacent_duplicates(self) -> None:
+        bar = CommandBar()
+        bar.push_history("a")
+        bar.push_history("a")
+        bar.push_history("b")
+        bar.push_history("a")
+        assert bar.prompt_history == ["a", "b", "a"]
+
+    @pytest.mark.asyncio
+    async def test_rapid_up_walks_past_newest_entry(
+        self, companion_session: Session
+    ) -> None:
+        """Regression: rapid Up presses must reach older entries.
+
+        TextArea posts `Changed` asynchronously, so several queue up
+        before any handler runs. A boolean suppression flag would be
+        consumed by the first message, letting subsequent messages
+        reset the history cursor mid-walk — the user would only ever
+        see the newest entry. The fix is a credit counter, this test
+        guards it.
+        """
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.set_prompt_history(["oldest user prompt", "/cost", "/quit"])
+            bar.focus()
+            await pilot.pause()
+
+            # No pause between presses — messages queue.
+            await pilot.press("up")
+            await pilot.press("up")
+            await pilot.press("up")
+            await pilot.pause()
+            assert bar.value == "oldest user prompt"
+
+
+# ---------------------------------------------------------------------------
+# Unit: multi-line input + newline insertion
+# ---------------------------------------------------------------------------
+
+
+class TestCommandBarMultiline:
+    @pytest.mark.asyncio
+    async def test_action_newline_inserts_a_line_break(self, companion_session: Session) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "first"
+            bar.cursor_location = (0, len(bar.value))
+            bar.focus()
+            bar.action_newline()
+            bar.insert("second")
+            await pilot.pause()
+            assert bar.value == "first\nsecond"
+
+    @pytest.mark.asyncio
+    async def test_submit_clears_multi_line_value(self, companion_session: Session) -> None:
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "line one\nline two"
+            await bar.action_submit()
+            await pilot.pause()
+            assert bar.value == ""

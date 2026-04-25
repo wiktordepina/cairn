@@ -91,35 +91,45 @@ class SessionScreen(Screen[None]):
         yield ChatLog(id="chat")
         completion = CompletionMenu(id="completion")
         yield completion
+        # Sits just above the command bar so the user can see what
+        # the agent is doing without taking their eyes off where they
+        # type. Docking it in the header was too far from the input.
+        yield ActivityIndicator()
         yield CommandBar(completion=completion)
         yield CostMeter(precision=self._cost_precision)
 
     # -- Command bar wiring ---------------------------------------------
 
-    def on_input_changed(self, event: CommandBar.Changed) -> None:
-        """Keep the completion menu in sync with the bar's value."""
-        if not isinstance(event.input, CommandBar):
+    def on_text_area_changed(self, event: object) -> None:
+        """Keep the completion menu in sync with the bar's value.
+
+        Filters TextArea.Changed events to only those originating from
+        the CommandBar — other TextAreas in nested screens shouldn't
+        drive the completion menu.
+        """
+        text_area = getattr(event, "text_area", None)
+        if not isinstance(text_area, CommandBar):
             return
         app = cast("CairnApp", self.app)
-        self._completion.sync(event.value, app.command_registry)
+        self._completion.sync(text_area.text, app.command_registry)
 
-    async def on_input_submitted(self, event: CommandBar.Submitted) -> None:
+    async def on_command_bar_submitted(self, event: CommandBar.Submitted) -> None:
         """Handle Enter in the command bar.
 
         `/command` forms dispatch through the registry; plain text is
         submitted to the orchestrator as a user turn — the observer
         then drives the transcript, cost meter, and tool rows as
-        events arrive.
+        events arrive. The bar has already cleared itself by this
+        point; this handler is purely about routing the value.
         """
-        if not isinstance(event.input, CommandBar):
-            return
         line = event.value
-        event.input.clear()
         # Dismiss the completion menu on any submit — the value has
         # been cleared and the popover would otherwise linger after
         # the command runs.
         self._completion.close()
         if line.startswith("/"):
+            event.input.push_history(line)
+            self._persist_history(event.input)
             app = cast("CairnApp", self.app)
             result = await app.command_registry.dispatch(app, line)
             if result.status == "unknown":
@@ -130,6 +140,8 @@ class SessionScreen(Screen[None]):
         text = line.strip()
         if not text:
             return
+        event.input.push_history(line)
+        self._persist_history(event.input)
         self._dispatch_turn(text)
 
     def _dispatch_turn(self, text: str) -> None:
@@ -359,8 +371,12 @@ class SessionScreen(Screen[None]):
 
     def on_mount(self) -> None:
         self._staged_user = {}
-        self.query_one(CommandBar).focus()
+        bar = self.query_one(CommandBar)
+        bar.focus()
         app = cast("CairnApp", self.app)
+        store = app.prompt_history_store
+        if store is not None:
+            bar.set_prompt_history(store.load())
         resumed = app.take_resumed_turn_count()
         if resumed > 0:
             noun = "turn" if resumed == 1 else "turns"
@@ -370,3 +386,11 @@ class SessionScreen(Screen[None]):
                     kind="muted",
                 )
             )
+
+    def _persist_history(self, bar: CommandBar) -> None:
+        """Write the bar's in-memory history to disk if a store is wired."""
+        app = cast("CairnApp", self.app)
+        store = app.prompt_history_store
+        if store is None:
+            return
+        store.save(bar.prompt_history)

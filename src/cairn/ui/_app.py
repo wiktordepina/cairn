@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from cairn.orchestrator import Orchestrator
     from cairn.orchestrator._protocols import ToolRegistry
     from cairn.ui._context_report import ContextReportInput
+    from cairn.ui._prompt_history import PromptHistoryStore
 
     CostSource = Callable[[], Awaitable[float]]
     ContextSource = Callable[[], Awaitable[ContextReportInput]]
@@ -55,6 +56,7 @@ class CairnApp(App[None]):
         model_registry: ModelRegistry | None = None,
         convention_loader: ConventionLoader | None = None,
         allowlist_store: AllowlistStore | None = None,
+        prompt_history_store: PromptHistoryStore | None = None,
     ) -> None:
         super().__init__()
         self._orchestrator = orchestrator
@@ -69,6 +71,7 @@ class CairnApp(App[None]):
         self._model_registry = model_registry
         self._convention_loader = convention_loader
         self._allowlist_store = allowlist_store
+        self._prompt_history_store = prompt_history_store
         from cairn.config import UIConfig as _UIConfig
 
         self._ui_config = ui_config or _UIConfig()
@@ -123,6 +126,11 @@ class CairnApp(App[None]):
     def allowlist_store(self) -> AllowlistStore | None:
         """User-level project allowlist for `/conventions` trust state."""
         return self._allowlist_store
+
+    @property
+    def prompt_history_store(self) -> PromptHistoryStore | None:
+        """Per-project prompt history persistence; `None` in test harnesses."""
+        return self._prompt_history_store
 
     def take_resumed_turn_count(self) -> int:
         """Return the recorded count and clear it.

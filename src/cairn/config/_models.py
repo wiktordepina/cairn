@@ -326,6 +326,10 @@ class UIConfig(BaseModel):
     """Decimal places rendered by the cost meter. Six is enough to
     show cheap models' per-turn spend; drop to 4 if you prefer a
     calmer header."""
+    prompt_history_size: int = Field(default=200, ge=0, le=10_000)
+    """Maximum number of submitted prompts retained per project for
+    the command bar's Up/Down history walk. Set to 0 to disable
+    history persistence entirely."""
 
     @field_validator("session_type_colours")
     @classmethod

@@ -7,17 +7,22 @@ outcomes: trust once (this process only), trust the project
 The modal is kicked off by `TextualPromptTrustGate.check`; the
 gateway itself owns the decision cache so repeated checks for the
 same project within a process don't re-prompt.
+
+Keyboard: ``o`` / ``p`` / ``n`` / ``escape`` are bound directly.
+``left`` / ``right`` cycle button focus, and ``enter`` activates the
+focused button. Initial focus lands on **Deny** so an accidental
+Enter on a stranger's project never widens trust.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, ClassVar
 
 from textual.containers import Horizontal, Vertical
 from textual.screen import ModalScreen
-from textual.widgets import Button, Label, Static
+from textual.widgets import Button, Label
 
 from cairn.conventions._trust import TrustDecision
 
@@ -25,8 +30,8 @@ if TYPE_CHECKING:
     from textual.app import ComposeResult
 
 
-_PREVIEW_LINES = 20
 _MAX_DISPLAY_PATH_COMPONENTS = 4
+_BUTTON_ORDER: tuple[str, ...] = ("once", "project", "deny")
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,15 +46,18 @@ class TrustPromptResult:
 class TrustPromptModal(ModalScreen[TrustPromptResult]):
     """Blocking modal for the three-way trust decision.
 
-    Keybindings: `o` trust-once, `p` trust-project, `n` / `escape`
-    deny. Buttons mirror the keys so mouse users aren't excluded.
+    Hotkeys: ``o`` trust-once, ``p`` trust-project, ``n`` / ``escape``
+    deny. Buttons mirror the keys for mouse users; arrow keys cycle
+    button focus and Enter activates the focused button.
     """
 
-    BINDINGS = [
+    BINDINGS: ClassVar = [
         ("o", "trust_once", "Trust once"),
         ("p", "trust_project", "Trust project"),
         ("n", "deny", "Deny"),
         ("escape", "deny", "Deny"),
+        ("left", "focus_prev_button", "Previous"),
+        ("right", "focus_next_button", "Next"),
     ]
 
     DEFAULT_CSS = """
@@ -57,8 +65,8 @@ class TrustPromptModal(ModalScreen[TrustPromptResult]):
         align: center middle;
     }
     TrustPromptModal > Vertical {
-        width: 90;
-        max-height: 34;
+        width: 80;
+        height: auto;
         padding: 1 2;
         border: thick $warning;
         background: $panel;
@@ -70,15 +78,14 @@ class TrustPromptModal(ModalScreen[TrustPromptResult]):
     TrustPromptModal .meta {
         color: $text-muted;
     }
-    TrustPromptModal .preview {
+    TrustPromptModal .files {
         padding: 1 0;
-        max-height: 20;
-        overflow-y: auto;
         color: $text;
     }
     TrustPromptModal .buttons {
         padding-top: 1;
         align: center middle;
+        height: auto;
     }
     TrustPromptModal Button {
         margin: 0 1;
@@ -90,28 +97,20 @@ class TrustPromptModal(ModalScreen[TrustPromptResult]):
         *,
         project_root: Path,
         files: list[Path],
-        preview_body: str,
-        preview_truncated: bool,
     ) -> None:
         super().__init__()
         self._project_root = project_root
         self._files = files
-        self._preview_body = preview_body
-        self._preview_truncated = preview_truncated
 
     def compose(self) -> ComposeResult:
         display_path = _format_project_path(self._project_root)
-        filenames = ", ".join(sorted({f.name for f in self._files}))
-        preview = self._preview_body
-        if self._preview_truncated:
-            preview = preview + "\n…"
+        sorted_names = sorted({f.name for f in self._files}) or ["(no files)"]
+        files_block = "\n".join(f"• {name}" for name in sorted_names)
 
         with Vertical():
             yield Label("Trust project convention files?", classes="title")
             yield Label(f"Project: {display_path}", classes="meta")
-            yield Label(f"Files: {filenames}", classes="meta")
-            yield Label("")
-            yield Static(preview, classes="preview", id="preview-body")
+            yield Label(files_block, classes="files", id="files-list")
             yield Label(
                 "Convention files inject instructions into the model. "
                 "Only trust projects you know.",
@@ -121,6 +120,11 @@ class TrustPromptModal(ModalScreen[TrustPromptResult]):
                 yield Button("Trust once (o)", variant="primary", id="once")
                 yield Button("Trust project (p)", variant="success", id="project")
                 yield Button("Deny (n)", variant="error", id="deny")
+
+    def on_mount(self) -> None:
+        # Default focus on Deny: an accidental Enter on a stranger's
+        # project should never widen trust.
+        self.query_one("#deny", Button).focus()
 
     # -- Actions --------------------------------------------------------
 
@@ -132,6 +136,12 @@ class TrustPromptModal(ModalScreen[TrustPromptResult]):
 
     def action_deny(self) -> None:
         self._complete(TrustDecision.DENY, persist=False)
+
+    def action_focus_next_button(self) -> None:
+        self._move_button_focus(1)
+
+    def action_focus_prev_button(self) -> None:
+        self._move_button_focus(-1)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "once":
@@ -146,6 +156,17 @@ class TrustPromptModal(ModalScreen[TrustPromptResult]):
     def _complete(self, decision: TrustDecision, *, persist: bool) -> None:
         self.dismiss(TrustPromptResult(decision=decision, persist=persist))
 
+    def _move_button_focus(self, delta: int) -> None:
+        focused = self.focused
+        current_id = getattr(focused, "id", None) if focused is not None else None
+        try:
+            idx = _BUTTON_ORDER.index(current_id) if current_id else -1
+        except ValueError:
+            idx = -1
+        new_idx = (idx + delta) % len(_BUTTON_ORDER)
+        target = self.query_one(f"#{_BUTTON_ORDER[new_idx]}", Button)
+        target.focus()
+
 
 def _format_project_path(path: Path) -> str:
     """Render an absolute path with only its last few components.
@@ -159,14 +180,3 @@ def _format_project_path(path: Path) -> str:
         return str(path)
     tail = Path(*parts[-_MAX_DISPLAY_PATH_COMPONENTS:])
     return f".../{tail}"
-
-
-def preview_file_lines(text: str, *, max_lines: int = _PREVIEW_LINES) -> tuple[str, bool]:
-    """Return the first *max_lines* of *text* + a truncation flag.
-
-    Exposed for tests + the gateway that assembles the modal input.
-    """
-    lines = text.splitlines()
-    if len(lines) <= max_lines:
-        return "\n".join(lines), False
-    return "\n".join(lines[:max_lines]), True
