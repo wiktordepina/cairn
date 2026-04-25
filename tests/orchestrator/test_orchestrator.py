@@ -747,6 +747,184 @@ class TestBudgetAndCancellation:
 
 
 # ---------------------------------------------------------------------------
+# Wall-clock turn timeout (soft-cancel via deadline watchdog)
+# ---------------------------------------------------------------------------
+
+
+class TestTurnTimeout:
+    @pytest.mark.asyncio
+    async def test_completes_under_deadline_no_cancel(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        collector: EventCollector,
+    ) -> None:
+        provider.scripted = [
+            [
+                TextDelta(text="hi"),
+                UsageEvent(input_tokens=1, output_tokens=1),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+        # Deadline well above the script's 0s wall-clock cost.
+        config = OrchestratorConfig(max_iterations=5, max_turn_duration_s=10.0)
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        events = [ev async for ev in orch.run_turn(session.id, _user("hi"))]
+        assert any(isinstance(e, TurnComplete) for e in events)
+        assert not any(isinstance(e, TurnAborted) for e in events)
+
+    @pytest.mark.asyncio
+    async def test_timeout_emits_turn_aborted_with_reason(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        collector: EventCollector,
+    ) -> None:
+        # Stream sleeps 0.2s before yielding events; deadline is 0.05s.
+        # Watchdog fires during the sleep; cancel observed at iteration
+        # boundary inside the stream loop → TurnAborted(reason=turn_timeout).
+        provider.pre_yield_delay_s = 0.2
+        provider.scripted = [
+            [
+                TextDelta(text="too slow"),
+                UsageEvent(input_tokens=1, output_tokens=1),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+        config = OrchestratorConfig(max_iterations=5, max_turn_duration_s=0.05)
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        events = [ev async for ev in orch.run_turn(session.id, _user("hi"))]
+        aborted = [e for e in events if isinstance(e, TurnAborted)]
+        assert len(aborted) == 1
+        assert aborted[0].reason == "turn_timeout"
+
+    @pytest.mark.asyncio
+    async def test_user_cancel_distinguished_from_timeout(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        collector: EventCollector,
+    ) -> None:
+        # Long deadline, explicit user cancel — must report user_cancel.
+        provider.scripted = [
+            [
+                TextDelta(text="streaming"),
+                UsageEvent(input_tokens=1, output_tokens=1),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+        config = OrchestratorConfig(max_iterations=5, max_turn_duration_s=10.0)
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        events = []
+        async for ev in orch.run_turn(session.id, _user("hi")):
+            events.append(ev)
+            if isinstance(ev, AssistantTextDelta):
+                await orch.cancel(session.id)
+        aborted = [e for e in events if isinstance(e, TurnAborted)]
+        assert aborted
+        assert aborted[0].reason == "user_cancel"
+
+    @pytest.mark.asyncio
+    async def test_watchdog_no_task_leak_under_load(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        collector: EventCollector,
+    ) -> None:
+        # Run 100 short turns back-to-back; assert no watchdog task
+        # leaks. Each turn finishes well under the deadline so the
+        # watchdog must be cancelled in the run_turn finally: block.
+        import asyncio as _asyncio
+
+        provider.scripted = [
+            [
+                TextDelta(text=f"hi-{i}"),
+                UsageEvent(input_tokens=1, output_tokens=1),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+            for i in range(100)
+        ]
+        config = OrchestratorConfig(max_iterations=5, max_turn_duration_s=60.0)
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        for _ in range(100):
+            async for _ev in orch.run_turn(session.id, _user("hi")):
+                pass
+        # After all turns, no watchdog tasks should be hanging around.
+        leaked = [
+            t for t in _asyncio.all_tasks() if t.get_name().startswith("cairn-turn-watchdog-")
+        ]
+        assert leaked == []
+
+
+# ---------------------------------------------------------------------------
 # Memory space threading
 # ---------------------------------------------------------------------------
 

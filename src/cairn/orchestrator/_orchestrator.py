@@ -11,6 +11,7 @@ Design doc: `.plan/orchestrator-design.md`.
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import logging
 import uuid
 from typing import TYPE_CHECKING
@@ -253,12 +254,33 @@ class Orchestrator:
             raise TurnAlreadyRunning(f"Session {session_id!r} already has a turn running")
         cancel_flag = asyncio.Event()
         self._cancel_flags[session_id] = cancel_flag
+        # Mutable single-element flag the deadline watchdog flips before
+        # firing the cancel. The CancelledError handler in _drive_turn
+        # reads it to distinguish "wall-clock deadline" from
+        # "user pressed ESC / Ctrl-C" — both arrive as CancelledError.
+        timeout_marker: list[bool] = [False]
+        watchdog = asyncio.create_task(
+            self._turn_deadline_watchdog(
+                deadline_s=self._config.max_turn_duration_s,
+                cancel_flag=cancel_flag,
+                timeout_marker=timeout_marker,
+            ),
+            name=f"cairn-turn-watchdog-{session_id}",
+        )
 
         try:
-            async for event in self._drive_turn(session, user_msg, cancel_flag):
+            async for event in self._drive_turn(
+                session, user_msg, cancel_flag, timeout_marker=timeout_marker
+            ):
                 self._fanout(event)
                 yield event
         finally:
+            # Always cancel the watchdog — guaranteed cleanup regardless
+            # of how the turn loop exits (normal completion, TurnAborted,
+            # exception). The watchdog itself swallows CancelledError.
+            watchdog.cancel()
+            with contextlib.suppress(asyncio.CancelledError):
+                await watchdog
             self._cancel_flags.pop(session_id, None)
 
     # -- Internal: the state machine -----------------------------------
@@ -268,6 +290,8 @@ class Orchestrator:
         session: Session,
         user_msg: Message,
         cancel_flag: asyncio.Event,
+        *,
+        timeout_marker: list[bool] | None = None,
     ) -> AsyncIterator[UIEvent]:
         turn_id = uuid.uuid4().hex
 
@@ -491,15 +515,21 @@ class Orchestrator:
                 yield TurnComplete(session_id=session.id, turn_id=turn_id, stop_reason=final_stop)
 
         except asyncio.CancelledError:
+            # Distinguish wall-clock deadline from user cancel — both
+            # arrive here as CancelledError because the deadline
+            # watchdog cancels via the same flag the UI uses for ESC.
+            cancel_reason = (
+                "turn_timeout" if (timeout_marker and timeout_marker[0]) else "user_cancel"
+            )
             await self._turn_repo.mark_aborted(
                 turn_id,
-                reason="user_cancel",
+                reason=cancel_reason,
                 completed_at=self._clock.now(),
             )
             yield TurnAborted(
                 session_id=session.id,
                 turn_id=turn_id,
-                reason="user_cancel",
+                reason=cancel_reason,
             )
         except BudgetOverflowDeclined:
             await self._turn_repo.mark_aborted(
@@ -691,6 +721,30 @@ class Orchestrator:
     def _raise_if_cancelled(flag: asyncio.Event) -> None:
         if flag.is_set():
             raise asyncio.CancelledError()
+
+    @staticmethod
+    async def _turn_deadline_watchdog(
+        *,
+        deadline_s: float,
+        cancel_flag: asyncio.Event,
+        timeout_marker: list[bool],
+    ) -> None:
+        """Soft-cancel the turn after `deadline_s` seconds of wall-clock.
+
+        Cancellation is observed at the next iteration boundary inside
+        the orchestrator (between tool calls / between LLM round-trips).
+        Tools already in flight finish — the per-tool `timeout_s`
+        bounds them independently. The marker lets the
+        `CancelledError` handler distinguish "deadline hit" from
+        "user pressed ESC" (both fire `cancel_flag.set()`).
+        """
+        try:
+            await asyncio.sleep(deadline_s)
+        except asyncio.CancelledError:
+            return
+        if not cancel_flag.is_set():
+            timeout_marker[0] = True
+            cancel_flag.set()
 
     @staticmethod
     def _compute_cost(model: ModelConfig, usage: UsageEvent) -> float:
