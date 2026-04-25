@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from datetime import datetime  # noqa: TCH003
+from pathlib import Path  # noqa: TCH003
+from typing import Any, Literal
 
 from cairn.domain._enums import ErrorClass, StopReason, ToolCallStatus  # noqa: TCH001
 
@@ -210,6 +212,28 @@ class BudgetOverflowAdvisory:
 
 
 @dataclass(frozen=True, slots=True)
+class DriftChange:
+    """One file's drift state observed by the file watcher."""
+
+    category: Literal["config", "convention", "profile_doc"]
+    path: Path
+    kind: Literal["modified", "removed"]
+
+
+@dataclass(frozen=True, slots=True)
+class ConfigDriftDetected:
+    """Watched files have changed on disk since the last snapshot.
+
+    Process-level signal — not turn-scoped. Emitted on the rising edge
+    of drift only; the watcher buffers the event during an active turn
+    so the banner doesn't appear above a streaming assistant message.
+    """
+
+    detected_at: datetime
+    changes: tuple[DriftChange, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class SessionCreated:
     """A new session has been created."""
 
@@ -253,4 +277,5 @@ UIEvent = (
     | SessionCreated
     | SessionResumed
     | SessionArchived
+    | ConfigDriftDetected
 )
