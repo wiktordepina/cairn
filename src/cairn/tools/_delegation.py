@@ -18,9 +18,13 @@ Per-call flow (`invoke`):
     6. Archive the sub-session.
     7. Return `ToolResultBlock` with the accumulated text.
 
-`DelegationSpawned` / `DelegationCompleted` UI events are **not**
-emitted here — the orchestrator detects `isinstance(tool, DelegationTool)`
-and emits them around the runner call (design-doc §16.Q2).
+`DelegationSpawned` / `DelegationCompleted` UI events are emitted
+through the optional `ctx.on_delegation_spawned` /
+`ctx.on_delegation_completed` callbacks on `TurnContext` — the
+orchestrator wires those callbacks to its `_fanout`. Spawned fires
+*after* the child session row is created (so subscribers can query
+it); completed fires *before* the archive call (so subscribers see
+the child session in its terminal-but-not-yet-archived state).
 """
 
 from __future__ import annotations
@@ -129,6 +133,8 @@ class DelegationTool:
             model=model_cfg.id,
             parent_session_id=ctx.session.id,
         )
+        if ctx.on_delegation_spawned is not None:
+            ctx.on_delegation_spawned(sub_session.id)
 
         user_msg = Message(role="user", session_id=sub_session.id)
         user_msg.content.append(TextBlock(text=parsed.prompt))
@@ -170,6 +176,8 @@ class DelegationTool:
                         capped = True
                         break
         finally:
+            if ctx.on_delegation_completed is not None:
+                ctx.on_delegation_completed(sub_session.id)
             await self._session_manager.archive(sub_session.id)
 
         if final_usage is not None:

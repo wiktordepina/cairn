@@ -29,6 +29,8 @@ from cairn.domain._events import (
     AssistantMessageComplete,
     AssistantTextDelta,
     BudgetWarning,
+    DelegationCompleted,
+    DelegationSpawned,
     ObservationExtractionRequested,
     SessionArchived,
     SessionCreated,
@@ -365,7 +367,22 @@ class Orchestrator:
             for iteration in range(self._config.max_iterations):
                 self._raise_if_cancelled(cancel_flag)
 
-                tctx = TurnContext(session=session, turn_id=turn_id, iteration=iteration)
+                # Capture turn_id in the closures — the orchestrator
+                # owns _fanout, the DelegationTool owns the child
+                # session id; we stitch them together here.
+                def _on_spawned(child_id: str, turn_id: str = turn_id) -> None:
+                    self._fanout(DelegationSpawned(session_id=child_id, turn_id=turn_id))
+
+                def _on_completed(child_id: str, turn_id: str = turn_id) -> None:
+                    self._fanout(DelegationCompleted(session_id=child_id, turn_id=turn_id))
+
+                tctx = TurnContext(
+                    session=session,
+                    turn_id=turn_id,
+                    iteration=iteration,
+                    on_delegation_spawned=_on_spawned,
+                    on_delegation_completed=_on_completed,
+                )
 
                 # Build request + apply preparer chain
                 history = await self._message_repo.list_for_session(session.id)
