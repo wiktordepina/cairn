@@ -140,7 +140,7 @@ Cairn is under active development. This table is authoritative; the
 | Compaction | Shipped (0.8.0) |
 | Convention files | Shipped (0.9.0) |
 | UI (Textual) | Shipped (0.10.0) |
-| CLI entry point (minimal) | Shipped (0.10.0) |
+| CLI (config / secret / trust subcommands + first-run init) | Shipped (0.14.0) |
 | Observability — tranche 2 (redaction + structured observer) | Shipped (0.12.0) |
 | Prompt caching (all providers) | Shipped (0.13.0) |
 | Reflection (tier-2 memory) | V2 |

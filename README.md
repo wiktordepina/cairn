@@ -62,13 +62,13 @@ full roadmap.
 
 ## Status
 
-Cairn is in active assembly. The orchestrator, providers, persistence,
-config, and tool system (including the runner and `DelegationTool`)
-are all built and tested end-to-end, but there is **no CLI entry
-point yet** — the `cairn = "cairn.cli:main"` script in `pyproject.toml`
-is a placeholder for work that hasn't landed. You can drive the
-library programmatically today; the user-facing terminal app arrives
-with the CLI + UI bricks.
+Cairn is in active assembly. As of 0.14.0 the full V1 stack is
+shipping: orchestrator, providers (Anthropic / OpenAI / OpenRouter
+/ DeepSeek with prompt caching across all four), persistence,
+tier-1 memory, conventions, compaction, the Textual UI, and the
+`cairn` CLI (`config show / paths / validate / migrate / init`,
+`config secret set / list / delete`, `trust add / list / remove`).
+Reflection, MCP, subagents, and vector memory are V2+.
 
 ## Getting started
 
@@ -81,12 +81,19 @@ cd cairn
 uv sync
 uv run pytest
 
+# First-run setup — creates ~/.config/cairn/config.toml and
+# stub identity / context / memory files
+uv run cairn config init
+
+# Launch the companion
+uv run cairn
+
 # Optional: enable the repo-tracked pre-commit hook so every commit
 # runs the same lint / type / test / docs checks CI gates the PR on
 git config core.hooksPath .githooks
 ```
 
-`uv run cairn` will error out until the CLI brick lands.
+See [`docs/cli.md`](docs/cli.md) for the full subcommand surface.
 
 The pre-commit hook lives at `.githooks/pre-commit`. It runs `ruff
 check`, `ruff format --check`, `pyright`, the docs reference
