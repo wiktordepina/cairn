@@ -76,6 +76,7 @@ from cairn.tools.builtin import (
     make_web_fetch,
 )
 from cairn.tools.security import WorkspaceSandbox
+from cairn.logging import StructuredEventObserver, make_event_logger
 from cairn.ui._app import CairnApp
 from cairn.ui._context_report import ContextReportInput
 from cairn.ui._gateway import TextualApprovalGateway
@@ -177,11 +178,13 @@ async def _run(config: CairnConfig) -> int:
         clock=clock,
         memory_config=active.memory,
     )
+    structured_observer = StructuredEventObserver(make_event_logger(profile_key))
     extraction_queue = ObservationExtractionQueue(
         extractor=extractor,
         session_repo=session_repo,
         message_repo=message_repo,
         memory_config=active.memory,
+        observers=(structured_observer,),
     )
 
     tool_registry, tool_runner, session_allowlist, approvers, transformers = _build_tool_stack(
@@ -250,7 +253,10 @@ async def _run(config: CairnConfig) -> int:
         app=app,
         session_allowlist=session_allowlist,
     )
-    orchestrator._observers = (TextualUIEventObserver(app=app),)  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+    orchestrator._observers = (  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        TextualUIEventObserver(app=app),
+        structured_observer,
+    )
 
     if conventions_policy == "prompt":
         convention_loader._trust_gate = TextualPromptTrustGate(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
