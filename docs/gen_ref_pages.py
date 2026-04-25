@@ -50,6 +50,7 @@ REFERENCE_MODULES: list[tuple[str, str]] = [
     ("providers", "Providers"),
     ("ssl", "SSL"),
     ("tools", "Tools"),
+    ("ui", "UI"),
 ]
 
 GENERATED_BANNER = (

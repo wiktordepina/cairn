@@ -23,3 +23,4 @@ regeneration workflow.
 - [Providers](providers.md) — `cairn.providers`
 - [SSL](ssl.md) — `cairn.ssl`
 - [Tools](tools.md) — `cairn.tools`
+- [UI](ui.md) — `cairn.ui`

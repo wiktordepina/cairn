@@ -55,18 +55,44 @@ jobs:
         with:
           fetch-depth: 0
 
+      # When pyproject.toml is bumped on main, two docs.yml runs target
+      # the same git SHA: the push-to-main run (which only updates the
+      # `dev` alias) and the release.yml-dispatched run on the new v-tag
+      # (which deploys the version + `latest`). `actions/deploy-pages@v4`
+      # keys on the SHA, so two deployments for one SHA race in the
+      # Pages backend — non-deterministically the dev artefact can win,
+      # leaving the new version invisible. Skip the push-to-main deploy
+      # when HEAD is tagged `v*`; the release dispatch produces the
+      # canonical artefact for that SHA.
+      - name: Skip if HEAD is also tagged v*
+        id: tagcheck
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          git fetch origin --tags --depth=1 >/dev/null 2>&1 || true
+          if git tag --points-at HEAD | grep -E '^v[0-9]' >/dev/null; then
+            echo "HEAD is tagged — release dispatch will handle this SHA. Skipping."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - uses: astral-sh/setup-uv@v6
+        if: steps.tagcheck.outputs.skip != 'true'
         with:
           enable-cache: true
 
-      - run: uv sync --locked --group docs
+      - if: steps.tagcheck.outputs.skip != 'true'
+        run: uv sync --locked --group docs
 
       - name: Configure git identity for mike
+        if: steps.tagcheck.outputs.skip != 'true'
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Bootstrap gh-pages on first run
+        if: steps.tagcheck.outputs.skip != 'true'
         run: |
           set -euo pipefail
           if ! git ls-remote --exit-code --heads origin gh-pages >/dev/null 2>&1; then
@@ -83,7 +109,7 @@ jobs:
           fi
 
       - name: Deploy explicit version (manual dispatch)
-        if: github.event_name == 'workflow_dispatch' && inputs.deploy_version != ''
+        if: steps.tagcheck.outputs.skip != 'true' && github.event_name == 'workflow_dispatch' && inputs.deploy_version != ''
         env:
           VERSION: ${{ inputs.deploy_version }}
         run: |
@@ -93,6 +119,7 @@ jobs:
 
       - name: Deploy dev alias (push to main)
         if: |
+          steps.tagcheck.outputs.skip != 'true' &&
           (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
           github.ref == 'refs/heads/main' &&
           inputs.deploy_version == ''
@@ -106,10 +133,11 @@ jobs:
       # push paths so the new version's docs actually publish.
       - name: Deploy release (tag push or release.yml dispatch)
         if: |
-          github.event_name == 'release' ||
-          ((github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-           startsWith(github.ref, 'refs/tags/v') &&
-           inputs.deploy_version == '')
+          steps.tagcheck.outputs.skip != 'true' &&
+          (github.event_name == 'release' ||
+           ((github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
+            startsWith(github.ref, 'refs/tags/v') &&
+            inputs.deploy_version == ''))
         run: |
           set -euo pipefail
           VERSION="${GITHUB_REF_NAME#v}"
@@ -117,16 +145,20 @@ jobs:
           uv run mike set-default --push latest
 
       - name: Check out gh-pages for Pages artefact
+        if: steps.tagcheck.outputs.skip != 'true'
         uses: actions/checkout@v4
         with:
           ref: gh-pages
           path: gh-pages-site
 
-      - uses: actions/configure-pages@v5
+      - if: steps.tagcheck.outputs.skip != 'true'
+        uses: actions/configure-pages@v5
 
-      - uses: actions/upload-pages-artifact@v3
+      - if: steps.tagcheck.outputs.skip != 'true'
+        uses: actions/upload-pages-artifact@v3
         with:
           path: gh-pages-site
 
       - id: deployment
+        if: steps.tagcheck.outputs.skip != 'true'
         uses: actions/deploy-pages@v4
