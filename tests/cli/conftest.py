@@ -31,6 +31,21 @@ def _restore_cairn_log_propagation() -> Iterator[None]:
     yield
 
 
+@pytest.fixture(autouse=True)
+def _disable_rich_help_styling(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Force plain (non-ANSI) help output regardless of terminal state.
+
+    Typer / Click decide whether to render help with rich styling
+    based on terminal-capability heuristics. Locally, pytest's
+    output capture means "no TTY" and we get plain text; on GitHub
+    Actions runners those heuristics flip and the help output gets
+    ANSI-styled, splitting strings like `--profile` across escape
+    codes and breaking substring assertions. Setting `NO_COLOR=1`
+    pins the renderer to plain everywhere.
+    """
+    monkeypatch.setenv("NO_COLOR", "1")
+
+
 @pytest.fixture
 def isolated_home(
     tmp_path: Path,
