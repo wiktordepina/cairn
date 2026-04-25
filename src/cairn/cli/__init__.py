@@ -57,12 +57,21 @@ secret_app: typer.Typer = typer.Typer(
 )
 config_app.add_typer(secret_app, name="secret")
 
+trust_app: typer.Typer = typer.Typer(
+    help="Manage the project trust allowlist.",
+    no_args_is_help=True,
+    pretty_exceptions_enable=False,
+)
+app.add_typer(trust_app, name="trust")
+
 # Late imports keep the dependency direction explicit: subcommand
-# modules pull from `cairn.config`, this module just registers them.
-from cairn.cli import _config, _secrets  # noqa: E402
+# modules pull from `cairn.config` / `cairn.conventions`; this
+# module just registers them.
+from cairn.cli import _config, _secrets, _trust  # noqa: E402
 
 _config.register(config_app)
 _secrets.register(secret_app)
+_trust.register(trust_app)
 
 
 def _read_version() -> str:
