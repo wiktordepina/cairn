@@ -10,9 +10,123 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-The CLI brick (`cairn config show / paths / validate / migrate /
-secret …`, `cairn trust …`, first-run companion-name elicitation)
-is the next planned release.
+## [0.14.0] — 2026-04-25
+
+The CLI brick. `cairn` now ships a full operator-facing subcommand
+surface alongside the existing default-launch path. New: first-run
+setup with stub identity / context / memory files, OS-keychain
+secret management, project trust allowlist management, schema
+validation + migration runner, and a missing-config redirect that
+keeps `cairn` from blowing up when no config exists.
+
+### Added
+
+- **`cairn config show`** — round-trips the merged config back to
+  TOML via `tomli_w`, with a comment header naming the layers and
+  per-line annotations on every `SecretRef` value (`→ present in
+  keyring` / `→ MISSING` / `→ set` / `→ unset` / `→ prompts on
+  first use`). Probes are read-only — `keyring.get_password` for
+  keyring refs, `os.environ.get` for env refs, never resolves a
+  `prompt:` reference and never logs the plaintext of a stored
+  secret.
+- **`cairn config paths`** — every potential layer (`user`,
+  `project`, `local`) with a `(loaded)` / `(not present)`
+  annotation, even for layers the loader itself filters out.
+- **`cairn config validate`** — silent on success (exit 0), prints
+  the bubbled `ConfigError` on failure (exit 1). Documented idiom
+  is `cairn config validate && echo OK`.
+- **`cairn config migrate`** — dry-run by default, walks every
+  loaded layer and reports the per-file schema version. With no
+  migrations registered today every file reports
+  `(current — no action)` and the command exits 0 — the documented
+  upgrade path is in place for the day a v2 schema lands. `--write`
+  applies in place, atomic `tmp + rename`, with a
+  `<path>.pre-migrate-<old_version>` backup before rewriting.
+- **`cairn config init`** — first-run setup. Elicits companion name
+  + primary provider (numbered selection from anthropic / openai /
+  openrouter / deepseek) + an optional in-keychain API-key store.
+  Writes a minimal valid `CairnConfig` to the user-level path plus
+  three Markdown stubs (`soul_document.md`, `user_context.md`,
+  `MEMORY.md`) alongside it, so first launch doesn't fall through
+  to `ProfileDocLoader`'s bundled-minimal-identity path. Each stub
+  is created only when the target doesn't already exist; the
+  `config.toml` itself is the loud "already exists; refusing to
+  overwrite" exit-1 path. `--no-prompt` skips elicitation;
+  `--profile NAME` renames the default profile.
+- **`cairn config secret set/list/delete`** — OS-keychain
+  management. `set` accepts only `keyring:<service>:<key>`
+  references and prompts for confirmation before overwriting an
+  existing entry (default no), so a stray run never silently
+  rotates a live API key. `list` walks every `SecretRef` in the
+  loaded config and probes its backing store read-only (resolved
+  values do not leak into stdout). `delete` confirms via `[y/N]`
+  before calling `keyring.delete_password`. All three exit 4 when
+  the keyring backend is unavailable (e.g. `gnome-keyring` daemon
+  down) so scripts can distinguish that recoverable state from
+  generic failures.
+- **`cairn trust add/list/remove`** — non-interactive surface over
+  the existing `AllowlistStore`. `add` and `remove` default `PATH`
+  to `Path.cwd()`. `add` is idempotent on exact match.
+  Documentation calls out that the primary trust UX in everyday
+  use is the in-app `TextualPromptTrustGate` from the UI brick;
+  `cairn trust` is the scripting alternative.
+- **No-config short-circuit on plain `cairn`** — when no
+  configuration layer exists, the default-launch path now prints
+  `No cairn configuration found. Run `cairn config init` to
+  create one (…)` and exits 0 instead of bubbling `ConfigError`
+  out of the Textual launch path.
+- **`docs/cli.md`** — end-user reference page wired into the Guide
+  nav. Walked example for `cairn config init`, secret-reference
+  cheat sheet, exit-code table, cross-links from
+  `docs/configuration.md` (secret-references section now points at
+  `cairn config secret …` as the recommended path) and
+  `docs/conventions.md` (trust allowlist section).
+- **ADR 0041 — Typer for the CLI surface.** Records the argparse →
+  Typer migration: nested subcommands were the actual ergonomic
+  pain point, decorator + annotation model keeps each subcommand
+  module short, `typer.testing.CliRunner` cuts test ceremony.
+- **+63 tests** under `tests/cli/`, bringing the suite total to
+  **1104 passing**.
+
+### Changed
+
+- **`cairn` migrated from argparse to Typer** (per ADR 0041). The
+  `[project.scripts] cairn = "cairn.cli:main"` declaration is
+  unchanged; `main(argv) -> int` keeps the same int contract by
+  wrapping `app(args, standalone_mode=False)` and translating
+  Click control-flow exceptions into deterministic exit codes.
+  Subcommand modules under `src/cairn/cli/` register themselves
+  via a `register(app)` callable.
+- **`cairn` with no config no longer raises `ConfigError`.** The
+  old behaviour was a paper cut; the new redirect-and-exit-0 path
+  is more user-friendly. **Behaviour change for scripts**: any
+  health check that relied on a non-zero exit for "config
+  missing" should switch to `cairn config validate` (still exits
+  1 on validation failure; exits 1 when no user config exists).
+
+### Deferred
+
+- **`cairn config diff`** — arch doc §4.1 V1 lists it; we deferred
+  it to the file-watcher brick (the next brick after this one).
+  The watcher's drift comparison is exactly the same computation;
+  hand-rolling a snapshot mechanism here would be throwaway work.
+- **JSON / `--format=json` output mode** — no consumer yet; defer
+  until a script-y consumer asks. `tomli_w` round-trip preserves
+  enough structure that `tomllib.loads(...)` from the consumer
+  side works today.
+- **`cairn config explain <key>`** — V2 per arch doc.
+- **`cairn config profile add/remove/rename`** — hand-edit TOML
+  for now.
+- **Shell completion** — Typer's `--install-completion` flag is
+  disabled (`add_completion=False`) until the surface stabilises.
+
+### Dependencies
+
+- Added `typer>=0.12,<1` (pulls `click>=8.1` and `shellingham`).
+- Added `tomli-w>=1.0,<2` for round-tripping the merged config
+  back to TOML.
+
+
 
 ## [0.13.1] — 2026-04-25
 

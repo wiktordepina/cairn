@@ -145,9 +145,12 @@ Paths are resolved. Descendants of a trusted path are trusted
 automatically, so adding a repo root trusts any working directory
 inside it.
 
-In V1 you hand-edit this file. A `cairn trust add` / `trust list`
-/ `trust remove` CLI ships with the CLI brick — the
-`AllowlistStore` API it calls is already in place.
+Manage entries via [`cairn trust add` / `list` / `remove`](cli.md#trusting-projects).
+The file format is stable and you can also hand-edit it. The
+primary trust UX in everyday use is the in-app prompt
+(`TextualPromptTrustGate` with `trust_policy = "prompt"`) — see
+[`docs/ui.md#convention-file-trust-prompt`](ui.md#convention-file-trust-prompt);
+`cairn trust` is the non-interactive / scripting alternative.
 
 If the file is missing or malformed, the allowlist is empty; a
 malformed file is backed up to `trusted_projects.toml.broken` on

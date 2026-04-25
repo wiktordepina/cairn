@@ -15,6 +15,8 @@ content is otherwise the same.
 
 - **[Configuration](configuration.md)** — every TOML key, every secret
   reference scheme, profile discovery and merge order.
+- **[CLI](cli.md)** — `cairn config`, `cairn trust`, first-run setup,
+  exit codes.
 - **[Providers](providers.md)** — per-provider notes for Anthropic,
   OpenAI (including OpenAI-compatible local servers), and OpenRouter.
 - **[Memory](memory.md)** — tier-1 extraction, retrieval, MEMORY.md

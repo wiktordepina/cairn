@@ -269,12 +269,23 @@ API keys are never written to config files as plain strings. Every
 
 ### Managing keyring entries
 
-Use the `keyring` CLI that ships with the Python `keyring` package:
+The recommended path is `cairn config secret set` —
+see the [CLI reference](cli.md#secrets):
 
 ```bash
-keyring set cairn anthropic-api-key
-# enter your key when prompted
+cairn config secret set keyring:cairn:anthropic-api-key
+# Value for keyring:cairn:anthropic-api-key (input hidden):
+```
 
+`cairn config secret list` enumerates every secret reference in
+the loaded config and probes its backing store read-only.
+`cairn config secret delete <ref>` removes a keychain entry after
+a y/N confirmation.
+
+The lower-level `keyring` CLI (from the Python `keyring` package)
+remains available for direct inspection:
+
+```bash
 keyring get cairn anthropic-api-key
 ```
 
