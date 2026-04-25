@@ -18,6 +18,8 @@ loop that owns the `Database` connection and the extraction worker.
 from __future__ import annotations
 
 import asyncio
+import contextlib
+import io
 import logging
 import sys
 from pathlib import Path
@@ -327,8 +329,18 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         file_watcher._is_turn_active = _is_turn_active  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         await file_watcher.start()
 
+    # Textual's `log` falls back to bare `print()` when the active-app
+    # context var is unset (see `textual/__init__.py:74-90`). During
+    # the post-exit teardown — widget Prune/Unmount messages dispatch
+    # after `App.run_async()` has cleared `active_app` — those prints
+    # leak to stdout *after* the alt-screen has already been
+    # restored, leaving "Prune() >>> Banner() method=..." debris on
+    # the user's terminal. The driver writes to `sys.__stdout__`
+    # directly, so redirecting `sys.stdout` for the run window
+    # silences the leak without affecting the rendered UI.
     try:
-        await app.run_async()
+        with contextlib.redirect_stdout(io.StringIO()):
+            await app.run_async()
     finally:
         if file_watcher is not None:
             await file_watcher.stop()
