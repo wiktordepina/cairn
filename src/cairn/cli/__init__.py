@@ -50,12 +50,19 @@ config_app: typer.Typer = typer.Typer(
 )
 app.add_typer(config_app, name="config")
 
-# Late imports avoid circular imports at module-load time: the
-# subcommand modules pull from `cairn.config`, which is fine, but
-# this keeps the dependency direction obvious.
-from cairn.cli import _config  # noqa: E402
+secret_app: typer.Typer = typer.Typer(
+    help="Manage secrets in the OS keychain.",
+    no_args_is_help=True,
+    pretty_exceptions_enable=False,
+)
+config_app.add_typer(secret_app, name="secret")
+
+# Late imports keep the dependency direction explicit: subcommand
+# modules pull from `cairn.config`, this module just registers them.
+from cairn.cli import _config, _secrets  # noqa: E402
 
 _config.register(config_app)
+_secrets.register(secret_app)
 
 
 def _read_version() -> str:
