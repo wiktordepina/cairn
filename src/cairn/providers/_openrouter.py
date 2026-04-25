@@ -28,7 +28,7 @@ from cairn.domain._provider import (
     UsageEvent,
 )
 from cairn.providers._openai import (
-    _serialize_tool_input,
+    _serialize_tool_input,  # noqa: PLC2701  # pyright: ignore[reportPrivateUsage]
     flatten_system,
 )
 from cairn.providers._openai import (
@@ -192,15 +192,19 @@ def _count_cache_markers(
     messages: list[dict[str, Any]],
 ) -> int:
     count = 0
-    if system_msg and isinstance(system_msg.get("content"), list):
-        count += sum(1 for part in system_msg["content"] if "cache_control" in part)
+    if system_msg is not None:
+        sys_content = system_msg.get("content")
+        if isinstance(sys_content, list):
+            for part in sys_content:  # pyright: ignore[reportUnknownVariableType]
+                if isinstance(part, dict) and "cache_control" in part:  # pyright: ignore[reportUnknownArgumentType]
+                    count += 1
     count += sum(1 for t in tools if "cache_control" in t)
     for msg in messages:
         content = msg.get("content")
         if isinstance(content, list):
-            count += sum(
-                1 for part in content if isinstance(part, dict) and "cache_control" in part
-            )
+            for part in content:  # pyright: ignore[reportUnknownVariableType]
+                if isinstance(part, dict) and "cache_control" in part:  # pyright: ignore[reportUnknownArgumentType]
+                    count += 1
     return count
 
 
@@ -226,12 +230,14 @@ def _enforce_marker_cap(
         over,
         extra={"provider": provider_name},
     )
-    if system_msg and isinstance(system_msg.get("content"), list):
-        for part in system_msg["content"]:
-            if over <= 0:
-                return
-            if part.pop("cache_control", None) is not None:
-                over -= 1
+    if system_msg is not None:
+        sys_content = system_msg.get("content")
+        if isinstance(sys_content, list):
+            for part in sys_content:  # pyright: ignore[reportUnknownVariableType]
+                if over <= 0:
+                    return
+                if isinstance(part, dict) and part.pop("cache_control", None) is not None:  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
+                    over -= 1
     for t in tools:
         if over <= 0:
             return
@@ -241,10 +247,10 @@ def _enforce_marker_cap(
         content = msg.get("content")
         if not isinstance(content, list):
             continue
-        for part in content:
+        for part in content:  # pyright: ignore[reportUnknownVariableType]
             if over <= 0:
                 return
-            if isinstance(part, dict) and part.pop("cache_control", None) is not None:
+            if isinstance(part, dict) and part.pop("cache_control", None) is not None:  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
                 over -= 1
 
 

@@ -219,10 +219,13 @@ def _enforce_marker_cap(
         if t.pop("cache_control", None) is not None:
             over -= 1
     for msg in messages:
-        for blk in msg.get("content", []):
+        content = msg.get("content", [])
+        if not isinstance(content, list):
+            continue
+        for blk in content:  # pyright: ignore[reportUnknownVariableType]
             if over <= 0:
                 return
-            if isinstance(blk, dict) and blk.pop("cache_control", None) is not None:
+            if isinstance(blk, dict) and blk.pop("cache_control", None) is not None:  # pyright: ignore[reportUnknownMemberType, reportUnknownArgumentType]
                 over -= 1
 
 
