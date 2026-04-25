@@ -119,6 +119,21 @@ class ProfileDocLoader:
         """Drop the in-memory cache; next load re-reads from disk."""
         self._cache.clear()
 
+    @property
+    def soul_path(self) -> Path:
+        """Path to the soul document on disk."""
+        return self._soul_path
+
+    @property
+    def user_context_path(self) -> Path:
+        """Path to the user-context document on disk."""
+        return self._user_context_path
+
+    @property
+    def memory_md_path(self) -> Path:
+        """Path to MEMORY.md on disk."""
+        return self._memory_md_path
+
     # ------------------------------------------------------------------
 
     def _read(self, path: Path) -> str:
