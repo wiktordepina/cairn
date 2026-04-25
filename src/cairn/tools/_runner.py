@@ -41,6 +41,8 @@ from cairn.tools._errors import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
+
     from cairn.domain._content import ToolUseBlock
     from cairn.domain._sessions import Session
     from cairn.orchestrator._clock import Clock
@@ -65,10 +67,12 @@ class DefaultToolRunner:
         tool_call_repo: ToolCallRepo,
         approval_repo: ApprovalDecisionRepo,
         clock: Clock,
+        timeout_overrides: Mapping[str, float] | None = None,
     ) -> None:
         self._tool_call_repo = tool_call_repo
         self._approval_repo = approval_repo
         self._clock = clock
+        self._timeout_overrides: Mapping[str, float] = timeout_overrides or {}
 
     async def run(
         self,
@@ -124,14 +128,15 @@ class DefaultToolRunner:
         )
         await self._tool_call_repo.mark_executing(tool_call.id)
 
+        effective_timeout_s = self._timeout_overrides.get(tool.name, tool.timeout_s)
         try:
-            async with asyncio.timeout(tool.timeout_s):
+            async with asyncio.timeout(effective_timeout_s):
                 result = await tool.invoke(args, ctx)
         except TimeoutError:
             await self._tool_call_repo.mark_timed_out(tool_call.id)
             return ToolResultBlock(
                 tool_use_id=tool_call.id,
-                content=f"Tool {tool.name!r} timed out after {tool.timeout_s}s.",
+                content=f"Tool {tool.name!r} timed out after {effective_timeout_s}s.",
                 is_error=True,
             )
         except (PathEscape, SSRFBlocked, ToolTimeout, ToolError) as exc:

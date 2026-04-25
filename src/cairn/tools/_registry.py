@@ -69,6 +69,14 @@ class DefaultToolRegistry:
     def get(self, name: str) -> Tool | None:
         return self._by_name.get(name)
 
+    def names(self) -> frozenset[str]:
+        """Return all registered tool names (companion + mcp).
+
+        Useful for bootstrap-time validation of configuration that
+        references tool names (e.g. `tools.timeout_s_overrides`).
+        """
+        return frozenset(self._by_name.keys())
+
     # -- Internals -------------------------------------------------------
 
     def _visible_tools(self, session: Session) -> list[Tool]:

@@ -405,6 +405,122 @@ class TestTimeout:
 
 
 # ---------------------------------------------------------------------------
+# Per-tool timeout overrides
+# ---------------------------------------------------------------------------
+
+
+class TestTimeoutOverrides:
+    @pytest.mark.asyncio
+    async def test_falls_back_to_tool_default_when_map_empty(
+        self,
+        runner: DefaultToolRunner,
+        seeded: tuple[str, str, str],
+        companion_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        # Empty override map → tool.timeout_s of 10.0 wins, fast tool succeeds.
+        _, message_id, turn_id = seeded
+        result = await runner.run(
+            tool_call=_tool_call(),
+            tool=FakeTool(timeout_s=10.0, result_text="ok"),
+            session=companion_session.model_copy(update={"id": "sess-r"}),
+            turn_id=turn_id,
+            ctx=turn_ctx,
+            decision=_approve(),
+            message_id=message_id,
+        )
+        assert result.is_error is False
+
+    @pytest.mark.asyncio
+    async def test_override_shortens_timeout(
+        self,
+        db: Database,
+        frozen_clock: FrozenClock,
+        seeded: tuple[str, str, str],
+        companion_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        # Tool says 10s, override says 0.01s → override wins, tool times out.
+        runner_with_override = DefaultToolRunner(
+            tool_call_repo=ToolCallRepo(db),
+            approval_repo=ApprovalDecisionRepo(db),
+            clock=frozen_clock,
+            timeout_overrides={"fake_tool": 0.01},
+        )
+        _, message_id, turn_id = seeded
+        result = await runner_with_override.run(
+            tool_call=_tool_call(),
+            tool=FakeTool(timeout_s=10.0, sleep_seconds=10.0),
+            session=companion_session.model_copy(update={"id": "sess-r"}),
+            turn_id=turn_id,
+            ctx=turn_ctx,
+            decision=_approve(),
+            message_id=message_id,
+        )
+        assert result.is_error is True
+        assert isinstance(result.content, str)
+        assert "timed out" in result.content.lower()
+        # Error message reflects the effective (overridden) value, not 10.0.
+        assert "0.01s" in result.content
+
+    @pytest.mark.asyncio
+    async def test_override_lengthens_timeout(
+        self,
+        db: Database,
+        frozen_clock: FrozenClock,
+        seeded: tuple[str, str, str],
+        companion_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        # Tool says 0.01s, override says 10s → override wins, tool succeeds.
+        runner_with_override = DefaultToolRunner(
+            tool_call_repo=ToolCallRepo(db),
+            approval_repo=ApprovalDecisionRepo(db),
+            clock=frozen_clock,
+            timeout_overrides={"fake_tool": 10.0},
+        )
+        _, message_id, turn_id = seeded
+        result = await runner_with_override.run(
+            tool_call=_tool_call(),
+            tool=FakeTool(timeout_s=0.01, sleep_seconds=0.05, result_text="ok"),
+            session=companion_session.model_copy(update={"id": "sess-r"}),
+            turn_id=turn_id,
+            ctx=turn_ctx,
+            decision=_approve(),
+            message_id=message_id,
+        )
+        assert result.is_error is False
+
+    @pytest.mark.asyncio
+    async def test_override_for_other_tool_does_not_affect_this_one(
+        self,
+        db: Database,
+        frozen_clock: FrozenClock,
+        seeded: tuple[str, str, str],
+        companion_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        # Override targets a different tool name → this tool uses its default.
+        runner_with_override = DefaultToolRunner(
+            tool_call_repo=ToolCallRepo(db),
+            approval_repo=ApprovalDecisionRepo(db),
+            clock=frozen_clock,
+            timeout_overrides={"some_other_tool": 0.01},
+        )
+        _, message_id, turn_id = seeded
+        result = await runner_with_override.run(
+            tool_call=_tool_call(),
+            tool=FakeTool(name="fake_tool", timeout_s=10.0, result_text="ok"),
+            session=companion_session.model_copy(update={"id": "sess-r"}),
+            turn_id=turn_id,
+            ctx=turn_ctx,
+            decision=_approve(),
+            message_id=message_id,
+        )
+        assert result.is_error is False
+
+
+# ---------------------------------------------------------------------------
 # Error classification
 # ---------------------------------------------------------------------------
 

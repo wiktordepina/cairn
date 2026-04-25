@@ -25,7 +25,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
-from cairn.config import ConfigError, ModelRegistry, SecretResolver, load_config
+from cairn.config import ConfigError, ModelRegistry, SecretResolver, ToolsConfig, load_config
 from cairn.conventions import (
     AllowlistStore,
     ConventionLoader,
@@ -202,6 +202,7 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         tool_call_repo=tool_call_repo,
         approval_repo=approval_repo,
         workspace_root=Path.cwd(),
+        tools_config=active.tools,
     )
 
     orchestrator = Orchestrator(
@@ -356,6 +357,7 @@ def _build_tool_stack(
     tool_call_repo: ToolCallRepo,
     approval_repo: ApprovalDecisionRepo,
     workspace_root: Path,
+    tools_config: ToolsConfig,
 ) -> tuple[
     DefaultToolRegistry,
     DefaultToolRunner,
@@ -371,10 +373,20 @@ def _build_tool_stack(
         make_web_fetch(),
     ]
     tool_registry = DefaultToolRegistry(companion_tools=companion_tools)
+    overrides = tools_config.timeout_s_overrides
+    if overrides:
+        known = tool_registry.names()
+        for name in sorted(overrides.keys() - known):
+            log.warning(
+                "tools.timeout_s_overrides references unknown tool %r; ignoring (known tools: %s)",
+                name,
+                sorted(known),
+            )
     tool_runner = DefaultToolRunner(
         tool_call_repo=tool_call_repo,
         approval_repo=approval_repo,
         clock=clock,
+        timeout_overrides=overrides,
     )
     session_allowlist = SessionAllowlist()
     approvers: tuple[ToolApprover, ...] = (
