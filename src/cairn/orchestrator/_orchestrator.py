@@ -28,6 +28,7 @@ from cairn.domain._enums import (
 from cairn.domain._events import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    AssistantThinkingDelta,
     BudgetWarning,
     DelegationCompleted,
     DelegationSpawned,
@@ -417,6 +418,11 @@ class Orchestrator:
                             )
                         case ThinkingDelta(text=t):
                             assistant_msg.append_thinking_delta(t)
+                            yield AssistantThinkingDelta(
+                                message_id=assistant_msg.id,
+                                turn_id=turn_id,
+                                text=t,
+                            )
                         case ToolCallStart(id=tc_id, name=name):
                             assistant_msg.start_tool_use(tc_id, name)
                         case ToolCallDelta(id=tc_id, input_delta=chunk):

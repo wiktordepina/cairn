@@ -43,6 +43,8 @@
 
 ::: cairn.domain.AssistantTextDelta
 
+::: cairn.domain.AssistantThinkingDelta
+
 ::: cairn.domain.BudgetOverflowAdvisory
 
 ::: cairn.domain.BudgetWarning

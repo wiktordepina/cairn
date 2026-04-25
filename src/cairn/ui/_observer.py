@@ -23,6 +23,7 @@ from typing import TYPE_CHECKING
 from cairn.domain import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    AssistantThinkingDelta,
     BudgetOverflowAdvisory,
     BudgetWarning,
     ConfigDriftDetected,
@@ -87,6 +88,8 @@ class TextualUIEventObserver:
                 screen.append_user_message(event)
             case AssistantTextDelta():
                 screen.append_delta(event)
+            case AssistantThinkingDelta():
+                screen.append_thinking_delta(event)
             case AssistantMessageComplete():
                 screen.finalise_assistant_message(event)
             case ToolCallPlanned():

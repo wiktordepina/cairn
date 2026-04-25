@@ -21,6 +21,7 @@ from cairn.ui._widgets import (
     CostMeter,
     MessageView,
     SessionHeader,
+    ThinkingRow,
     ToolRow,
 )
 
@@ -32,6 +33,7 @@ if TYPE_CHECKING:
     from cairn.domain import (
         AssistantMessageComplete,
         AssistantTextDelta,
+        AssistantThinkingDelta,
         BudgetOverflowAdvisory,
         BudgetWarning,
         ConfigDriftDetected,
@@ -194,6 +196,9 @@ class SessionScreen(Screen[None]):
 
     def append_delta(self, event: AssistantTextDelta) -> None:
         """Append text to an assistant message, creating it on first delta."""
+        # Visible text begins → seal any in-flight thinking row so the
+        # elapsed-time counter freezes and the header flips to past tense.
+        self._seal_pending_thinking()
         view = self._chat_log.find_message(event.message_id)
         if view is None:
             view = MessageView(message_id=event.message_id, role="assistant")
@@ -203,11 +208,40 @@ class SessionScreen(Screen[None]):
         if self._activity.state == "thinking":
             self._activity.set_streaming()
 
+    def append_thinking_delta(self, event: AssistantThinkingDelta) -> None:
+        """Append reasoning text to a `ThinkingRow`, mounting one on first delta.
+
+        Cardinality is one row per *contiguous* thinking phase per
+        assistant message — the screen tracks the in-flight row in
+        `_pending_thinking_row` and seals it when a non-thinking
+        event arrives (text delta, tool plan, message complete).
+        """
+        row = self._pending_thinking_row
+        if row is None:
+            row = ThinkingRow()
+            self._pending_thinking_row = row
+            self._chat_log.append_thinking_row(row)
+        row.append_delta(event.text)
+        self._chat_log.follow_tail()
+
     def finalise_assistant_message(self, event: AssistantMessageComplete) -> None:
         """Mark an assistant message as sealed (no more deltas)."""
+        self._seal_pending_thinking()
         view = self._chat_log.find_message(event.message_id)
         if view is not None:
             view.seal()
+
+    def _seal_pending_thinking(self) -> None:
+        """Stop the in-flight thinking row's timer and forget the handle.
+
+        Called by any non-thinking event hook (text delta, tool plan,
+        message complete). Idempotent.
+        """
+        row = self._pending_thinking_row
+        if row is None:
+            return
+        row.seal()
+        self._pending_thinking_row = None
 
     def finalise_turn(self, event: TurnComplete) -> None:
         """Per-turn wrap-up hook — stop the activity indicator and
@@ -254,6 +288,8 @@ class SessionScreen(Screen[None]):
 
     def note_tool_plan(self, event: ToolCallPlanned) -> None:
         """Mount a new `ToolRow` for a freshly-planned tool call."""
+        # A tool plan also ends a thinking phase (model decided to act).
+        self._seal_pending_thinking()
         row = ToolRow(tool_call_id=event.tool_call_id, tool_name=event.tool_name)
         self._chat_log.append_tool_row(row)
 
@@ -476,9 +512,11 @@ class SessionScreen(Screen[None]):
         return self.query_one(CompletionMenu)
 
     _staged_user: dict[str, MessageView]
+    _pending_thinking_row: ThinkingRow | None
 
     def on_mount(self) -> None:
         self._staged_user = {}
+        self._pending_thinking_row = None
         bar = self.query_one(CommandBar)
         bar.focus()
         app = cast("CairnApp", self.app)

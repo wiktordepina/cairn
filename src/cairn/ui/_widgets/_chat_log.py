@@ -11,6 +11,7 @@ from cairn.ui._widgets._tool_row import ToolRow
 
 if TYPE_CHECKING:
     from cairn.ui._widgets._banner import Banner
+    from cairn.ui._widgets._thinking_row import ThinkingRow
 
 
 class ChatLog(VerticalScroll):
@@ -33,6 +34,10 @@ class ChatLog(VerticalScroll):
         self.scroll_end(animate=False)
 
     def append_tool_row(self, row: ToolRow) -> None:
+        self.mount(row)
+        self.scroll_end(animate=False)
+
+    def append_thinking_row(self, row: ThinkingRow) -> None:
         self.mount(row)
         self.scroll_end(animate=False)
 
