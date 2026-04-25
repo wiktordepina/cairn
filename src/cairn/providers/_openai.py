@@ -15,6 +15,7 @@ from cairn.domain._content import ImageBlock, TextBlock, ToolResultBlock, ToolUs
 from cairn.domain._provider import (
     MessageStop,
     ProviderEvent,
+    SystemPromptSegment,
     TextDelta,
     ToolCallDelta,
     ToolCallEnd,
@@ -45,18 +46,45 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 
-def format_messages(messages: list[Message], system: str | None = None) -> list[dict[str, Any]]:
+def flatten_system(
+    system: str | list[SystemPromptSegment] | None,
+) -> str | None:
+    """Collapse a `ProviderRequest.system` value to a flat string.
+
+    OpenAI-shaped APIs (OpenAI itself, DeepSeek, and the
+    OpenAI-compatible local-server path) take the system prompt as a
+    single ``role: "system"`` message. They have no equivalent of
+    Anthropic's per-segment cache markers — caching, where it exists,
+    is automatic on stable prefixes. So we keep the segment text in
+    arrival order and join with a blank line.
+    """
+    if system is None:
+        return None
+    if isinstance(system, str):
+        return system
+    return "\n\n".join(seg.text for seg in system if seg.text)
+
+
+def format_messages(
+    messages: list[Message],
+    system: str | list[SystemPromptSegment] | None = None,
+) -> list[dict[str, Any]]:
     """Convert cairn Messages to OpenAI message format.
 
     Key differences from Anthropic:
     - System prompt is a message with `role: "system"`
     - Tool uses go in a `tool_calls` array on the assistant message
     - Tool results become `role: "tool"` messages (one per result)
+
+    A `SystemPromptSegment` list is flattened to a single string —
+    OpenAI-shaped APIs cache automatically on stable prefixes and have
+    no per-segment marker equivalent.
     """
     result: list[dict[str, Any]] = []
 
-    if system:
-        result.append({"role": "system", "content": system})
+    flat_system = flatten_system(system)
+    if flat_system:
+        result.append({"role": "system", "content": flat_system})
 
     for msg in messages:
         tool_uses = [b for b in msg.content if isinstance(b, ToolUseBlock)]
@@ -146,6 +174,31 @@ def _serialize_tool_input(input_dict: dict[str, Any]) -> str:
     return json.dumps(input_dict)
 
 
+def _usage_from_chunk(usage: Any) -> UsageEvent:
+    """Build a `UsageEvent` from an OpenAI streamed-usage payload.
+
+    OpenAI auto-cache surfaces hits via
+    ``usage.prompt_tokens_details.cached_tokens``. There is no
+    distinct write-tokens field — the API does not separate cache
+    creation from baseline input. We populate ``cache_read_tokens``
+    only and leave ``cache_write_tokens`` at zero.
+
+    Robust against missing or ``None`` attributes (older SDK versions,
+    fixtures, OpenAI-compat local servers that don't echo cache
+    fields).
+    """
+    cached_tokens = 0
+    details = getattr(usage, "prompt_tokens_details", None)
+    if details is not None:
+        cached_tokens = getattr(details, "cached_tokens", 0) or 0
+    return UsageEvent(
+        input_tokens=(getattr(usage, "prompt_tokens", 0) or 0),
+        output_tokens=(getattr(usage, "completion_tokens", 0) or 0),
+        cache_read_tokens=cached_tokens,
+        cache_write_tokens=0,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Provider adapter
 # ---------------------------------------------------------------------------
@@ -230,12 +283,7 @@ class OpenAIProvider:
 
         # Usage info (usually on the final chunk)
         if chunk.usage:
-            results.append(
-                UsageEvent(
-                    input_tokens=chunk.usage.prompt_tokens or 0,
-                    output_tokens=chunk.usage.completion_tokens or 0,
-                )
-            )
+            results.append(_usage_from_chunk(chunk.usage))
 
         if not chunk.choices:
             return results
@@ -280,6 +328,7 @@ class OpenAIProvider:
         Falls back to character-based estimation for models not known
         to tiktoken (common with OpenAI-compatible local servers).
         """
+        flat_system = flatten_system(request.system) or ""
         try:
             import tiktoken
 
@@ -290,7 +339,7 @@ class OpenAIProvider:
                 "tiktoken has no encoding for model %r, using character-based estimate",
                 request.model,
             )
-            text = request.system or ""
+            text = flat_system
             for msg in request.messages:
                 for block in msg.content:
                     if isinstance(block, TextBlock):
@@ -298,8 +347,8 @@ class OpenAIProvider:
             return len(text) // 4
 
         total = 0
-        if request.system:
-            total += len(enc.encode(request.system))
+        if flat_system:
+            total += len(enc.encode(flat_system))
         for msg in request.messages:
             total += 4  # per-message overhead
             for block in msg.content:
