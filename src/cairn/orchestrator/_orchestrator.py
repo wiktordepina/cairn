@@ -183,6 +183,7 @@ class Orchestrator:
         """Scan for turns left non-terminal by a prior crash. Mark them
         aborted. Returns the list of session IDs with dangling turns
         so the UI can surface 'resume from your message?' prompts."""
+        _logger.info("resume_aborted_turns.scan_started")
         dangling = await self._turn_repo.list_non_terminal()
         session_ids: list[str] = []
         now = self._clock.now()
@@ -195,8 +196,13 @@ class Orchestrator:
                     "turn_id": turn.id,
                     "session_id": turn.session_id,
                     "prior_state": turn.state.value,
+                    "reason": "process_crash",
                 },
             )
+        _logger.info(
+            "resume_aborted_turns.scan_complete",
+            extra={"resumed_count": len(dangling)},
+        )
         return session_ids
 
     # -- Turn loop ------------------------------------------------------
