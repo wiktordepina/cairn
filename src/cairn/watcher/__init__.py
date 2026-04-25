@@ -12,6 +12,7 @@ Design: `.plan/file-watcher-brick-design.md`.
 
 from __future__ import annotations
 
+from cairn.watcher._poller import FileWatcher
 from cairn.watcher._snapshot import (
     WatchCategory,
     WatchEntry,
@@ -22,6 +23,7 @@ from cairn.watcher._snapshot import (
 )
 
 __all__ = [
+    "FileWatcher",
     "WatchCategory",
     "WatchEntry",
     "WatchSet",
