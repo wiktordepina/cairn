@@ -179,9 +179,7 @@ class TestDispatch:
     ) -> None:
         # Per-token noise — even DEBUG would flood. Drop on the floor.
         with caplog.at_level(logging.DEBUG, logger="cairn.events"):
-            observer.observe(
-                AssistantTextDelta(message_id="m1", turn_id="t1", text="hello")
-            )
+            observer.observe(AssistantTextDelta(message_id="m1", turn_id="t1", text="hello"))
 
         assert _records(caplog) == []
 
@@ -250,9 +248,7 @@ class TestDispatch:
         observer: StructuredEventObserver,
     ) -> None:
         with caplog.at_level(logging.INFO, logger="cairn.events"):
-            observer.observe(
-                ObservationExtractionRequested(session_id="s1", turn_id="t1")
-            )
+            observer.observe(ObservationExtractionRequested(session_id="s1", turn_id="t1"))
             observer.observe(
                 ObservationExtractionCompleted(
                     session_id="s1",

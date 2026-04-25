@@ -32,14 +32,18 @@ import os
 from dataclasses import asdict, fields, is_dataclass
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from platformdirs import user_log_path
 
 from cairn._redaction_patterns import redact_text
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping, MutableMapping
+
     from cairn.domain import UIEvent
+
+    EventLogger = logging.Logger | logging.LoggerAdapter[logging.Logger]
 
 __all__ = [
     "RedactingFilter",
@@ -75,14 +79,19 @@ class RedactingFilter(logging.Filter):
         if isinstance(record.msg, str):
             record.msg = redact_text(record.msg)
         if record.args:
-            record.args = _redact_args(record.args)
+            # `record.args` is typed as `tuple | Mapping[str, object] | None`;
+            # `_redact_args` preserves the shape, so the cast back is safe.
+            record.args = cast(
+                "tuple[object, ...] | Mapping[str, object]",
+                _redact_args(record.args),
+            )
         for key, value in list(record.__dict__.items()):
             if key in _RECORD_RESERVED:
                 continue
             if isinstance(value, str):
                 record.__dict__[key] = redact_text(value)
             elif isinstance(value, dict):
-                record.__dict__[key] = _redact_mapping(value)
+                record.__dict__[key] = _redact_mapping(cast("dict[object, object]", value))
         return True
 
 
@@ -119,9 +128,9 @@ _RECORD_RESERVED = frozenset(
 
 def _redact_args(args: object) -> object:
     if isinstance(args, tuple):
-        return tuple(_redact_value(a) for a in args)
+        return tuple(_redact_value(a) for a in cast("tuple[object, ...]", args))
     if isinstance(args, dict):
-        return _redact_mapping(args)
+        return _redact_mapping(cast("dict[object, object]", args))
     return args
 
 
@@ -133,9 +142,10 @@ def _redact_value(value: object) -> object:
     if isinstance(value, str):
         return redact_text(value)
     if isinstance(value, dict):
-        return _redact_mapping(value)
+        return _redact_mapping(cast("dict[object, object]", value))
     if isinstance(value, (list, tuple)):
-        redacted = [_redact_value(v) for v in value]
+        items = cast("list[object] | tuple[object, ...]", value)
+        redacted = [_redact_value(v) for v in items]
         return tuple(redacted) if isinstance(value, tuple) else redacted
     return value
 
@@ -225,7 +235,7 @@ def _resolve_redact(override: bool | None) -> bool:
 _EVENTS_LOGGER_NAME = "cairn.events"
 
 
-def make_event_logger(profile: str | None) -> logging.LoggerAdapter:
+def make_event_logger(profile: str | None) -> logging.LoggerAdapter[logging.Logger]:
     """Return a `LoggerAdapter` over `cairn.events` that injects
     `profile` into every record's `extra` payload.
 
@@ -241,18 +251,18 @@ def make_event_logger(profile: str | None) -> logging.LoggerAdapter:
     )
 
 
-class _ProfileLoggerAdapter(logging.LoggerAdapter):
+class _ProfileLoggerAdapter(logging.LoggerAdapter[logging.Logger]):
     """Adapter that merges its bound `extra` with each call's `extra`
     dict, so the per-call `extra` (event-specific fields) is preserved
     alongside the bound `profile`."""
 
     def process(
-        self, msg: object, kwargs: dict[str, Any]
-    ) -> tuple[object, dict[str, Any]]:
+        self, msg: Any, kwargs: MutableMapping[str, Any]
+    ) -> tuple[Any, MutableMapping[str, Any]]:
         merged: dict[str, Any] = dict(self.extra or {})
         existing = kwargs.get("extra")
-        if existing:
-            merged.update(existing)
+        if isinstance(existing, dict):
+            merged.update(cast("dict[str, Any]", existing))
         kwargs["extra"] = merged
         return msg, kwargs
 
@@ -281,9 +291,11 @@ class StructuredEventObserver:
 
     def __init__(
         self,
-        logger: logging.Logger | logging.LoggerAdapter | None = None,
+        logger: EventLogger | None = None,
     ) -> None:
-        self._log = logger if logger is not None else logging.getLogger(_EVENTS_LOGGER_NAME)
+        self._log: EventLogger = (
+            logger if logger is not None else logging.getLogger(_EVENTS_LOGGER_NAME)
+        )
 
     def observe(self, event: UIEvent) -> None:
         try:
@@ -541,7 +553,10 @@ def _event_extra(
     """
 
     out: dict[str, Any] = {"event_type": type(event).__name__}
-    if not is_dataclass(event):
+    # `is_dataclass` narrows to "instance OR class"; `asdict` only takes
+    # an instance. UIEvent variants are always instances, but make that
+    # explicit for the type checker.
+    if not is_dataclass(event) or isinstance(event, type):
         return out
 
     omitted = omit or frozenset()

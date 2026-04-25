@@ -988,9 +988,7 @@ class TestResumeAbortedTurns:
 
         from cairn.orchestrator._records import TurnRecord
 
-        session = await session_manager.create(
-            type=SessionType.COMPANION, persona="companion"
-        )
+        session = await session_manager.create(type=SessionType.COMPANION, persona="companion")
         msg = Message(role="user", session_id=session.id)
         msg.content.append(TextBlock(text="hi"))
         await message_repo.append(msg)
@@ -1237,9 +1235,7 @@ class TestStructuredEventLoggingIntegration:
         )
 
         with caplog.at_level(_logging.INFO, logger="cairn.events"):
-            session = await orch.start_session(
-                type=SessionType.COMPANION, persona="companion"
-            )
+            session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
             async for _ in orch.run_turn(session.id, _user("hi")):
                 pass
 
@@ -1253,9 +1249,7 @@ class TestStructuredEventLoggingIntegration:
         assert "UserMessagePersisted" in types
         assert "AssistantMessageComplete" in types
         assert "TurnComplete" in types
-        assert types.index("UserMessagePersisted") < types.index(
-            "AssistantMessageComplete"
-        )
+        assert types.index("UserMessagePersisted") < types.index("AssistantMessageComplete")
         assert types.index("AssistantMessageComplete") < types.index("TurnComplete")
 
         # Streaming text deltas are dropped, never logged.

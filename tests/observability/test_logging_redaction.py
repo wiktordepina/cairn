@@ -129,9 +129,7 @@ class TestSetupLoggingRedactionWiring:
         text = log_file.read_text()
         assert "abc123def456ghi789jkl012" in text
 
-    def test_env_disables_redaction(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_env_disables_redaction(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setenv("CAIRN_LOG_REDACT", "0")
         log_file = tmp_path / "cairn.log"
         setup_logging(log_file=log_file)
