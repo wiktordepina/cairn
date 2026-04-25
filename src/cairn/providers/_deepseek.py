@@ -1,0 +1,233 @@
+"""DeepSeek provider adapter.
+
+DeepSeek ships an OpenAI-compatible API at ``https://api.deepseek.com/v1``,
+with two relevant V1 models:
+
+- ``deepseek-chat`` — V3 general-purpose model, tool-use capable.
+- ``deepseek-reasoner`` — R1-class reasoning model that streams
+  reasoning traces alongside the final answer. The ``reasoning_content``
+  field on streamed deltas is dropped on the floor in V1, matching the
+  Anthropic adapter's posture for thinking deltas (no streaming
+  thinking-event type yet); the final answer text is still surfaced
+  via :class:`TextDelta`.
+
+Caching is automatic and disk-based — no markers, no opt-in. Cache
+hits are billed at roughly 10 % of the input rate. Usage echoes back
+``prompt_cache_hit_tokens`` / ``prompt_cache_miss_tokens`` (note the
+``_hit`` / ``_miss`` suffix, distinct from OpenAI's ``cached_tokens``);
+we surface the hit count via :attr:`UsageEvent.cache_read_tokens`.
+``cache_write_tokens`` stays at zero — DeepSeek does not separate
+cache-creation from baseline input tokens.
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING, Any
+
+import openai
+
+from cairn.domain._content import TextBlock
+from cairn.domain._provider import (
+    MessageStop,
+    ProviderEvent,
+    TextDelta,
+    ToolCallDelta,
+    ToolCallEnd,
+    ToolCallStart,
+    UsageEvent,
+)
+from cairn.providers._openai import (
+    flatten_system,
+    format_messages,
+    format_tools,
+)
+from cairn.providers._protocol import (
+    AuthenticationError,
+    ModelNotAvailableError,
+    ProviderOverloadedError,
+    RateLimitError,
+)
+from cairn.providers._translate import map_openai_stop_reason
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
+    from cairn.config._models import ProviderConfig
+    from cairn.config._secrets import SecretResolver
+    from cairn.domain._provider import ProviderRequest
+
+logger = logging.getLogger(__name__)
+
+_DEFAULT_BASE_URL = "https://api.deepseek.com/v1"
+
+
+def _usage_from_chunk(usage: Any) -> UsageEvent:
+    """Build a :class:`UsageEvent` from a DeepSeek usage payload.
+
+    DeepSeek splits the prompt-tokens count into
+    ``prompt_cache_hit_tokens`` (cached) + ``prompt_cache_miss_tokens``
+    (fresh). Their sum equals ``prompt_tokens``. We surface the hit
+    count as ``cache_read_tokens``; the miss count is informational
+    and not stored separately. ``cache_write_tokens`` is always zero.
+
+    Robust against missing or ``None`` attributes — fixtures and older
+    SDK releases may omit cache fields.
+    """
+    return UsageEvent(
+        input_tokens=(getattr(usage, "prompt_tokens", 0) or 0),
+        output_tokens=(getattr(usage, "completion_tokens", 0) or 0),
+        cache_read_tokens=(getattr(usage, "prompt_cache_hit_tokens", 0) or 0),
+        cache_write_tokens=0,
+    )
+
+
+class DeepSeekProvider:
+    """DeepSeek API adapter implementing the Provider protocol.
+
+    Reuses the OpenAI SDK (DeepSeek is OpenAI-compatible) pointed at
+    ``https://api.deepseek.com/v1``. Auto-cache only — cache flags on
+    :class:`ProviderRequest` are no-ops here, mirroring OpenAI's
+    posture.
+    """
+
+    def __init__(self, config: ProviderConfig, secret_resolver: SecretResolver) -> None:
+        self._config = config
+        self._secret_resolver = secret_resolver
+        self._client: openai.AsyncOpenAI | None = None
+
+    @property
+    def name(self) -> str:
+        return self._config.name
+
+    async def _get_client(self) -> openai.AsyncOpenAI:
+        if self._client is None:
+            api_key = (
+                self._secret_resolver.resolve(self._config.api_key)
+                if self._config.api_key
+                else None
+            )
+            base_url = self._config.base_url or _DEFAULT_BASE_URL
+            self._client = openai.AsyncOpenAI(
+                api_key=api_key or "",
+                base_url=base_url,
+                default_headers=self._config.extra_headers or None,
+            )
+        return self._client
+
+    async def stream(self, request: ProviderRequest) -> AsyncIterator[ProviderEvent]:
+        """Stream a completion from the DeepSeek API."""
+        client = await self._get_client()
+        messages = format_messages(request.messages, system=request.system)
+        tools = format_tools(request.tools)
+
+        kwargs: dict[str, Any] = {
+            "model": request.model,
+            "messages": messages,
+            "max_tokens": request.max_tokens,
+            "stream": True,
+            "stream_options": {"include_usage": True},
+        }
+        if tools:
+            kwargs["tools"] = tools
+        if request.temperature is not None:
+            kwargs["temperature"] = request.temperature
+        if request.stop_sequences:
+            kwargs["stop"] = request.stop_sequences
+
+        tool_ids_by_index: dict[int, str] = {}
+
+        try:
+            response = await client.chat.completions.create(**kwargs)  # pyright: ignore[reportUnknownVariableType]
+            async for chunk in response:  # type: ignore[union-attr]
+                for pe in self._map_chunk(chunk, tool_ids_by_index):
+                    yield pe
+        except openai.AuthenticationError as exc:
+            raise AuthenticationError(str(exc), provider=self.name) from exc
+        except openai.RateLimitError as exc:
+            raise RateLimitError(str(exc), provider=self.name) from exc
+        except openai.NotFoundError as exc:
+            raise ModelNotAvailableError(str(exc), provider=self.name) from exc
+        except openai.APIStatusError as exc:
+            if exc.status_code in (503, 529):
+                raise ProviderOverloadedError(str(exc), provider=self.name) from exc
+            raise
+
+    def _map_chunk(
+        self,
+        chunk: Any,
+        tool_ids_by_index: dict[int, str],
+    ) -> list[ProviderEvent]:
+        """Map a DeepSeek ChatCompletionChunk to ProviderEvents.
+
+        Identical to OpenAI mapping plus DeepSeek-specific shapes:
+
+        - ``reasoning_content`` on the delta is dropped silently in V1
+          (no streaming thinking-event type — same posture as the
+          Anthropic adapter).
+        - DeepSeek's ``prompt_cache_hit_tokens`` → ``cache_read_tokens``.
+        """
+        results: list[ProviderEvent] = []
+
+        if chunk.usage:
+            results.append(_usage_from_chunk(chunk.usage))
+
+        if not chunk.choices:
+            return results
+
+        choice = chunk.choices[0]
+        delta = choice.delta
+
+        # Reasoning content (deepseek-reasoner) — dropped in V1.
+
+        if delta and delta.content:
+            results.append(TextDelta(text=delta.content))
+
+        if delta and delta.tool_calls:
+            for tc in delta.tool_calls:
+                idx = tc.index
+                if tc.id:
+                    tool_ids_by_index[idx] = tc.id
+                    fn_name = tc.function.name if tc.function else ""
+                    results.append(ToolCallStart(id=tc.id, name=fn_name or ""))
+                if tc.function and tc.function.arguments:
+                    tool_id = tool_ids_by_index.get(idx, "")
+                    results.append(ToolCallDelta(id=tool_id, input_delta=tc.function.arguments))
+
+        if choice.finish_reason:
+            if choice.finish_reason == "tool_calls":
+                for tool_id in tool_ids_by_index.values():
+                    results.append(ToolCallEnd(id=tool_id))
+                tool_ids_by_index.clear()
+            results.append(MessageStop(stop_reason=map_openai_stop_reason(choice.finish_reason)))
+
+        return results
+
+    async def count_tokens(self, request: ProviderRequest) -> int:
+        """Estimate token count using tiktoken with character-fallback.
+
+        DeepSeek does not publish a tokenizer compatible with tiktoken;
+        we fall back to the character-based estimate for unknown models.
+        """
+        flat_system = flatten_system(request.system) or ""
+        try:
+            import tiktoken
+
+            enc = tiktoken.encoding_for_model(request.model)
+        except (KeyError, ValueError):
+            text = flat_system
+            for msg in request.messages:
+                for block in msg.content:
+                    if isinstance(block, TextBlock):
+                        text += block.text
+            return len(text) // 4
+
+        total = 0
+        if flat_system:
+            total += len(enc.encode(flat_system))
+        for msg in request.messages:
+            total += 4
+            for block in msg.content:
+                if isinstance(block, TextBlock):
+                    total += len(enc.encode(block.text))
+        return total

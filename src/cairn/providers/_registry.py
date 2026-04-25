@@ -65,11 +65,13 @@ def _default_factories() -> dict[str, type[Any]]:
     Imports are deferred to avoid loading SDKs until actually needed.
     """
     from cairn.providers._anthropic import AnthropicProvider
+    from cairn.providers._deepseek import DeepSeekProvider
     from cairn.providers._openai import OpenAIProvider
     from cairn.providers._openrouter import OpenRouterProvider
 
     return {
         "anthropic": AnthropicProvider,
+        "deepseek": DeepSeekProvider,
         "openai": OpenAIProvider,
         "openrouter": OpenRouterProvider,
     }
