@@ -31,6 +31,8 @@
 
 ::: cairn.config.UIConfig
 
+::: cairn.config.WatcherConfig
+
 ## Loading
 
 ::: cairn.config.ConfigError

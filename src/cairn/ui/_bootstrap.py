@@ -84,6 +84,12 @@ from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
 from cairn.ui._prompt_history import PromptHistoryStore
 from cairn.ui._trust_gate import TextualPromptTrustGate
+from cairn.watcher import (
+    FileWatcher,
+    Reloader,
+    build_watch_set,
+    discover_watch_paths,
+)
 
 if TYPE_CHECKING:
     from cairn.config._models import CairnConfig
@@ -106,12 +112,12 @@ def launch(*, profile_name: str | None) -> int:
         return 2
 
     try:
-        return asyncio.run(_run(config))
+        return asyncio.run(_run(config, profile_name=profile_name))
     except KeyboardInterrupt:
         return 130
 
 
-async def _run(config: CairnConfig) -> int:
+async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
     active = config.active
     profile_key = active.name or config.active_profile
 
@@ -243,6 +249,34 @@ async def _run(config: CairnConfig) -> int:
         max_size=active.ui.prompt_history_size,
     )
 
+    # File watcher + /reload Reloader. Both are optional — disabled
+    # profiles get None on the app, and the /reload handler renders a
+    # placeholder banner.
+    file_watcher: FileWatcher | None = None
+    reloader: Reloader | None = None
+    if active.watcher.enabled:
+        watch_rows = discover_watch_paths(
+            convention_files_config=active.convention_files,
+            convention_loader=convention_loader,
+            profile_doc_loader=doc_loader,
+        )
+        watch_set = build_watch_set(watch_rows)
+        # The watcher's `is_turn_active` getter consults the active
+        # session screen; it's lazily-bound below since the app doesn't
+        # exist yet at this point.
+        file_watcher = FileWatcher(
+            watch_set=watch_set,
+            observers=(structured_observer,),
+            poll_interval_s=active.watcher.poll_interval_s,
+        )
+        reloader = Reloader(
+            profile_name=profile_name,
+            orchestrator=orchestrator,
+            convention_loader=convention_loader,
+            profile_doc_loader=doc_loader,
+            file_watcher=file_watcher,
+        )
+
     app = CairnApp(
         orchestrator=orchestrator,
         session=session,
@@ -256,6 +290,7 @@ async def _run(config: CairnConfig) -> int:
         convention_loader=convention_loader,
         allowlist_store=allowlist_store,
         prompt_history_store=prompt_history_store,
+        reloader=reloader,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,
@@ -272,9 +307,22 @@ async def _run(config: CairnConfig) -> int:
             store=allowlist_store,
         )
 
+    if file_watcher is not None:
+        # Bind the watcher's turn-active gate to the live session
+        # screen. Drift detected during a turn is buffered until the
+        # next tick after the turn completes.
+        def _is_turn_active() -> bool:
+            screen = app.current_session_screen
+            return screen is not None and screen.is_turn_active()
+
+        file_watcher._is_turn_active = _is_turn_active  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        await file_watcher.start()
+
     try:
         await app.run_async()
     finally:
+        if file_watcher is not None:
+            await file_watcher.stop()
         await extraction_queue.stop()
         await database.close()
 

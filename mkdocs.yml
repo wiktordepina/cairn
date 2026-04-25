@@ -141,6 +141,7 @@ nav:
       - SSL: reference/ssl.md
       - Tools: reference/tools.md
       - UI: reference/ui.md
+      - Watcher: reference/watcher.md
   - Decisions:
       - Index: decisions/README.md
       - "0001 Per-profile SQLite": decisions/0001-per-profile-sqlite.md
