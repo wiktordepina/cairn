@@ -32,7 +32,12 @@ from pydantic import BaseModel
 from cairn.domain._content import TextBlock, ToolResultBlock
 from cairn.domain._enums import SessionType, UsageOperation
 from cairn.domain._messages import Message
-from cairn.domain._provider import ProviderRequest, TextDelta, UsageEvent
+from cairn.domain._provider import (
+    ProviderRequest,
+    SystemPromptSegment,
+    TextDelta,
+    UsageEvent,
+)
 
 if TYPE_CHECKING:
     from cairn.config._models import DelegationToolConfig, ModelConfig
@@ -128,11 +133,27 @@ class DelegationTool:
         user_msg = Message(role="user", session_id=sub_session.id)
         user_msg.content.append(TextBlock(text=parsed.prompt))
 
+        # When the target model supports prompt caching, wrap the
+        # sub-session system prompt in a cacheable segment so its
+        # tokens hit the cache on subsequent delegation calls within
+        # the 5-minute TTL window — and mark the last user message so
+        # the next sub-call enjoys a free hit on this prompt too.
+        sub_system: str | list[SystemPromptSegment] | None
+        if model_cfg.supports_prompt_cache and self._config.sub_system_prompt:
+            sub_system = [
+                SystemPromptSegment(
+                    text=self._config.sub_system_prompt, cacheable=True
+                )
+            ]
+        else:
+            sub_system = self._config.sub_system_prompt
+
         request = ProviderRequest(
             model=model_cfg.id,
             messages=[user_msg],
-            system=self._config.sub_system_prompt,
+            system=sub_system,
             max_tokens=model_cfg.max_output_tokens,
+            cache_last_message=model_cfg.supports_prompt_cache,
         )
 
         accumulated_text: list[str] = []
