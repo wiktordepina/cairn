@@ -495,6 +495,83 @@ class TestProviderRequest:
         user_text = req.messages[0].get_text()
         assert user_text == "ahoy"
 
+    @pytest.mark.asyncio
+    async def test_cache_off_when_model_does_not_support_cache(
+        self,
+        provider: FakeProvider,
+        session_manager: SessionManager,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        parent_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        _script(provider, text="x", input_tokens=1, output_tokens=1)
+        # Default `target_model` has supports_prompt_cache=False.
+        tool = _make_tool(
+            config=_config(sub_system_prompt="prompt"),
+            session_manager=session_manager,
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            cost_tracker=cost_tracker,
+            clock=frozen_clock,
+        )
+        await tool.invoke({"prompt": "x"}, _ctx_with_session(turn_ctx, parent_session))
+        req = provider.requests[0]
+        assert req.cache_last_message is False
+        assert isinstance(req.system, str)
+
+    @pytest.mark.asyncio
+    async def test_cache_on_wraps_system_prompt_as_segment(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        parent_session: Session,
+        turn_ctx: TurnContext,
+        db,  # noqa: ANN001
+    ) -> None:
+        from cairn.domain._provider import SystemPromptSegment
+        from cairn.persistence._sessions_repo import SessionRepo
+
+        cache_target = ModelConfig(
+            id="delegation-target",
+            provider="fake",
+            display_name="Cache Target",
+            context_window=50_000,
+            max_output_tokens=2_048,
+            supports_tools=False,
+            supports_prompt_cache=True,
+            input_cost_per_1m=1.0,
+            output_cost_per_1m=2.0,
+            roles={ModelRole.PRIMARY, ModelRole.UTILITY},
+        )
+        local_registry = ModelRegistry([cache_target])
+        local_sm = SessionManager(
+            session_repo=SessionRepo(db),
+            model_registry=local_registry,
+            clock=frozen_clock,
+        )
+        _script(provider, text="x", input_tokens=1, output_tokens=1)
+        tool = _make_tool(
+            config=_config(sub_system_prompt="be terse"),
+            session_manager=local_sm,
+            provider_registry=provider_registry,
+            model_registry=local_registry,
+            cost_tracker=cost_tracker,
+            clock=frozen_clock,
+        )
+        await tool.invoke({"prompt": "go"}, _ctx_with_session(turn_ctx, parent_session))
+        req = provider.requests[0]
+        assert req.cache_last_message is True
+        assert isinstance(req.system, list)
+        assert len(req.system) == 1
+        assert isinstance(req.system[0], SystemPromptSegment)
+        assert req.system[0].cacheable is True
+        assert req.system[0].text == "be terse"
+
 
 # ---------------------------------------------------------------------------
 # Helpers

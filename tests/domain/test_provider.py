@@ -12,6 +12,7 @@ from cairn.domain._messages import Message
 from cairn.domain._provider import (
     MessageStop,
     ProviderRequest,
+    SystemPromptSegment,
     TextDelta,
     ToolCallDelta,
     ToolCallEnd,
@@ -48,6 +49,58 @@ class TestProviderRequest:
         req = ProviderRequest(model="x", messages=[])
         with pytest.raises(dataclasses.FrozenInstanceError):
             req.model = "y"  # type: ignore[misc]
+
+    def test_cache_flags_default_off(self) -> None:
+        req = ProviderRequest(model="x", messages=[])
+        assert req.cache_tools is False
+        assert req.cache_last_message is False
+
+    def test_cache_flags_settable(self) -> None:
+        req = ProviderRequest(
+            model="x",
+            messages=[],
+            cache_tools=True,
+            cache_last_message=True,
+        )
+        assert req.cache_tools is True
+        assert req.cache_last_message is True
+
+    def test_system_as_string_back_compat(self) -> None:
+        req = ProviderRequest(model="x", messages=[], system="hello")
+        assert isinstance(req.system, str)
+        assert req.system == "hello"
+
+    def test_system_as_segment_list(self) -> None:
+        segments = [
+            SystemPromptSegment(text="identity", cacheable=True),
+            SystemPromptSegment(text="memory", cacheable=True),
+        ]
+        req = ProviderRequest(model="x", messages=[], system=segments)
+        assert isinstance(req.system, list)
+        assert len(req.system) == 2
+        assert all(isinstance(s, SystemPromptSegment) for s in req.system)
+
+
+class TestSystemPromptSegment:
+    def test_default_not_cacheable(self) -> None:
+        seg = SystemPromptSegment(text="hello")
+        assert seg.cacheable is False
+
+    def test_cacheable_settable(self) -> None:
+        seg = SystemPromptSegment(text="hello", cacheable=True)
+        assert seg.cacheable is True
+
+    def test_frozen(self) -> None:
+        seg = SystemPromptSegment(text="hello")
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            seg.text = "world"  # type: ignore[misc]
+
+    def test_equality(self) -> None:
+        a = SystemPromptSegment(text="x", cacheable=True)
+        b = SystemPromptSegment(text="x", cacheable=True)
+        assert a == b
+        c = SystemPromptSegment(text="x", cacheable=False)
+        assert a != c
 
 
 class TestProviderEvents:

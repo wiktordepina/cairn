@@ -11,6 +11,8 @@
 
 ::: cairn.providers.AnthropicProvider
 
+::: cairn.providers.DeepSeekProvider
+
 ::: cairn.providers.OpenAIProvider
 
 ::: cairn.providers.OpenRouterProvider

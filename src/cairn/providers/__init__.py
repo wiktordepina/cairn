@@ -1,6 +1,7 @@
 """Cairn provider layer — vendor-agnostic LLM provider abstraction."""
 
 from cairn.providers._anthropic import AnthropicProvider
+from cairn.providers._deepseek import DeepSeekProvider
 from cairn.providers._openai import OpenAIProvider
 from cairn.providers._openrouter import OpenRouterProvider
 from cairn.providers._protocol import (
@@ -18,6 +19,7 @@ __all__ = [
     "Provider",
     # Adapters
     "AnthropicProvider",
+    "DeepSeekProvider",
     "OpenAIProvider",
     "OpenRouterProvider",
     # Registry

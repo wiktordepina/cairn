@@ -101,6 +101,8 @@
 
 ::: cairn.domain.ProviderRequest
 
+::: cairn.domain.SystemPromptSegment
+
 ::: cairn.domain.TextDelta
 
 ::: cairn.domain.ToolCallDelta

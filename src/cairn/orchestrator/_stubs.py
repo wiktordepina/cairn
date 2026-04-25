@@ -121,10 +121,13 @@ class MinimalContextManager:
         history: list[Message],
         retrieved_memories: list[MemoryEntry],  # noqa: ARG002
         tools: list[ToolDefinition],
+        cache_aware: bool = False,
     ) -> ProviderRequest:
         return ProviderRequest(
             model=session.model,
             messages=list(history),
             system=self._system_prompt or None,
             tools=tools,
+            cache_tools=cache_aware and bool(tools),
+            cache_last_message=cache_aware and bool(history),
         )

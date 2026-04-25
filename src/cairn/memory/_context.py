@@ -26,7 +26,7 @@ import logging
 from typing import TYPE_CHECKING
 
 from cairn.conventions import ConventionFile, render_conventions
-from cairn.domain._provider import ProviderRequest
+from cairn.domain._provider import ProviderRequest, SystemPromptSegment
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -206,8 +206,35 @@ class StandardContextManager:
         history: list[Message],
         retrieved_memories: list[MemoryEntry],
         tools: list[ToolDefinition],
+        cache_aware: bool = False,
     ) -> ProviderRequest:
+        """Assemble a `ProviderRequest` from this turn's inputs.
+
+        Args:
+            session: The active session — supplies ``model``.
+            history: Messages to send (oldest → newest).
+            retrieved_memories: Per-turn memory hits.
+            tools: Tool catalogue this session can see.
+            cache_aware: When True, the system prompt is returned as a
+                list of `SystemPromptSegment`s and ``cache_tools`` /
+                ``cache_last_message`` are set so cache-supporting
+                providers can place breakpoints. When False, the system
+                prompt is returned as a flat string and no cache flags
+                are set — the legacy path used by models with
+                ``supports_prompt_cache=False`` (e.g. local
+                OpenAI-compatible servers).
+        """
         convention_files = await self._conventions.load() if self._conventions is not None else []
+        if cache_aware:
+            segments = self._assemble_system_prompt_segments(retrieved_memories, convention_files)
+            return ProviderRequest(
+                model=session.model,
+                messages=list(history),
+                system=segments or None,
+                tools=tools,
+                cache_tools=bool(tools),
+                cache_last_message=bool(history),
+            )
         system = self._assemble_system_prompt(retrieved_memories, convention_files)
         return ProviderRequest(
             model=session.model,
@@ -235,3 +262,48 @@ class StandardContextManager:
             _wrap_section("persona_system_prompt", self._base_prompt),
         ]
         return "\n\n".join(s for s in sections if s)
+
+    def _assemble_system_prompt_segments(
+        self,
+        retrieved_memories: list[MemoryEntry],
+        convention_files: list[ConventionFile],
+    ) -> list[SystemPromptSegment]:
+        """Build the system prompt as cache-aware segments.
+
+        Two segments at most:
+
+        - **Profile-stable** (``cacheable=True``): identity +
+          user_context + project_conventions + memory_index. These
+          spans only change when soul doc / user-context / convention
+          files / MEMORY.md change — rare, user-driven.
+        - **Session-stable** (``cacheable=True``): retrieved memories
+          + persona system prompt. Skipped entirely when both sources
+          are empty so we don't waste a cache breakpoint on whitespace.
+
+        Identity is never empty (the bundled fallback fires when the
+        configured soul doc is missing), so segment 1 always exists
+        when ``cache_aware=True``.
+        """
+        profile_sections = [
+            _wrap_section("identity", self._loader.load_soul_document()),
+            _wrap_section("user_context", self._loader.load_user_context()),
+            render_conventions(convention_files),
+            _wrap_section("memory_index", self._loader.load_memory_index()),
+        ]
+        profile_text = "\n\n".join(s for s in profile_sections if s)
+
+        session_sections = [
+            _wrap_section(
+                "retrieved_memories",
+                _render_retrieved_memories(retrieved_memories),
+            ),
+            _wrap_section("persona_system_prompt", self._base_prompt),
+        ]
+        session_text = "\n\n".join(s for s in session_sections if s)
+
+        segments: list[SystemPromptSegment] = []
+        if profile_text:
+            segments.append(SystemPromptSegment(text=profile_text, cacheable=True))
+        if session_text:
+            segments.append(SystemPromptSegment(text=session_text, cacheable=True))
+        return segments

@@ -14,6 +14,67 @@ The CLI brick (`cairn config show / paths / validate / migrate /
 secret …`, `cairn trust …`, first-run companion-name elicitation)
 is the next planned release.
 
+## [0.13.0] — 2026-04-25
+
+Prompt caching across all four providers, plus DeepSeek as a new
+provider. Closes the last V1-non-negotiable from the architecture
+roadmap. Steady-state turns now read most of their input from
+provider caches: an order-of-magnitude reduction in input-token
+cost on back-to-back conversations.
+
+### Added
+
+- **`SystemPromptSegment`** + `cache_tools` / `cache_last_message`
+  flags on `ProviderRequest`. The system field now accepts
+  `str | list[SystemPromptSegment] | None`; existing callers are
+  unaffected.
+- **`StandardContextManager.build_request(cache_aware=...)`**
+  returns the system prompt as cacheable segments (profile-stable
+  + session-stable) and sets the cache flags when supported.
+- **Anthropic** emits `cache_control: ephemeral` markers on the
+  four-position breakpoint scheme (profile system, session
+  system, last tool, last message). Reads
+  `cache_creation_input_tokens` / `cache_read_input_tokens` from
+  streamed usage.
+- **OpenAI** populates `UsageEvent.cache_read_tokens` from
+  `prompt_tokens_details.cached_tokens`. Auto-cache only — no
+  marker emission.
+- **OpenRouter** mirrors Anthropic marker placement; parses
+  Anthropic-shaped usage first, falls back to OpenAI-shaped.
+- **DeepSeek** — new provider adapter at
+  `cairn.providers.DeepSeekProvider`. OpenAI-compatible API at
+  `https://api.deepseek.com/v1`, with `deepseek-chat` and
+  `deepseek-reasoner` as the relevant V1 models. Reads
+  `usage.prompt_cache_hit_tokens` (a third distinct cache shape).
+- **`docs/prompt-caching.md`** — user guide with the four-marker
+  diagram, per-provider table, worked cost example, and
+  troubleshooting.
+- **ADR 0038** four cache breakpoints, fixed positions; **ADR
+  0039** symmetric provider treatment; **ADR 0040** DeepSeek as
+  the fourth V1 provider.
+
+### Changed
+
+- Orchestrator passes `cache_aware=model_cfg.supports_prompt_cache`
+  through to the context manager; the legacy flat-string path
+  remains for models flagged `supports_prompt_cache=False` (e.g.
+  local OpenAI-compatible servers).
+- `DelegationTool` inherits the cache flags so back-to-back
+  delegation calls within the 5-minute Anthropic TTL get cache
+  hits on the configured sub-system prompt.
+- `docs/observability.md` documents the cache columns in
+  `model_usage`; `docs/configuration.md` clarifies
+  `cache_read_cost_per_1m` / `cache_write_cost_per_1m`;
+  `docs/architecture.md` flips the providers + caching rows;
+  `docs/providers.md` gains a DeepSeek section; `docs/ui.md`
+  notes that `/context` now shows real cache numbers.
+
+### Tests
+
++60 net (1030 total). Domain (8), context manager (7), Anthropic
+(14), OpenAI (11), OpenRouter (19), DeepSeek (11), orchestrator
+(3), delegation (2).
+
 ## [0.12.0] — 2026-04-25
 
 Observability tranche 2 — the cairn log file becomes a viable

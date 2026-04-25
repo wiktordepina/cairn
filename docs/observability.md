@@ -186,6 +186,30 @@ mount (see `docs/ui.md`).
 
 See [Logging](reference/logging.md) for the generated API reference.
 
+## Cache usage in `model_usage`
+
+Every persisted `model_usage` row carries `cache_read_tokens` and
+`cache_write_tokens` populated from the streamed `UsageEvent`. The
+two fields make prompt-cache effectiveness queryable directly:
+
+```sql
+SELECT operation,
+       input_tokens,
+       output_tokens,
+       cache_read_tokens,
+       cache_write_tokens,
+       cost_usd
+FROM model_usage
+WHERE session_id = ?
+ORDER BY recorded_at;
+```
+
+`cache_write_tokens` is always zero for OpenAI and DeepSeek — those
+APIs do not separate cache creation from baseline input. Only
+Anthropic (and OpenRouter on Anthropic-backed routes) reports both.
+See [Prompt caching](prompt-caching.md) for the full provider
+breakdown.
+
 ## TLS trust
 
 `cairn.ssl.setup_ssl()` injects the operating system's trust store

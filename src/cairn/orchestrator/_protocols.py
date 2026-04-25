@@ -170,6 +170,7 @@ class ContextManager(Protocol):
         history: list[Message],
         retrieved_memories: list[MemoryEntry],
         tools: list[ToolDefinition],
+        cache_aware: bool = False,
     ) -> ProviderRequest: ...
 
 

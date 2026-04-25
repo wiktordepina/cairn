@@ -130,6 +130,7 @@ Cairn is under active development. This table is authoritative; the
 | Configuration | Shipped (0.1.0) |
 | Domain types | Shipped (0.2.0) |
 | Providers (Anthropic, OpenAI, OpenRouter) | Shipped (0.2.0) |
+| Provider — DeepSeek | Shipped (0.13.0) |
 | Persistence (sessions, messages, tool calls, usage) | Shipped (0.3.0) |
 | Orchestrator | Shipped (0.4.0) |
 | Tool system — foundation + built-in tools | Shipped (0.5.0) |
@@ -141,6 +142,7 @@ Cairn is under active development. This table is authoritative; the
 | UI (Textual) | Shipped (0.10.0) |
 | CLI entry point (minimal) | Shipped (0.10.0) |
 | Observability — tranche 2 (redaction + structured observer) | Shipped (0.12.0) |
+| Prompt caching (all providers) | Shipped (0.13.0) |
 | Reflection (tier-2 memory) | V2 |
 | Knowledge graph | V2 |
 | MCP client | V2 |
