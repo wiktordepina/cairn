@@ -3,4 +3,10 @@
 
 # Logging — API reference
 
+::: cairn.logging.RedactingFilter
+
+::: cairn.logging.StructuredEventObserver
+
+::: cairn.logging.make_event_logger
+
 ::: cairn.logging.setup_logging

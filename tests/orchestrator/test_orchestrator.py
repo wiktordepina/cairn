@@ -970,6 +970,75 @@ class TestResumeAbortedTurns:
         assert turn.state is TurnState.ABORTED
         assert turn.aborted_reason == "process_crash"
 
+    @pytest.mark.asyncio
+    async def test_emits_structured_scan_logs(
+        self,
+        caplog: pytest.LogCaptureFixture,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        import logging as _logging
+
+        from cairn.orchestrator._records import TurnRecord
+
+        session = await session_manager.create(type=SessionType.COMPANION, persona="companion")
+        msg = Message(role="user", session_id=session.id)
+        msg.content.append(TextBlock(text="hi"))
+        await message_repo.append(msg)
+
+        await turn_repo.insert(
+            TurnRecord(
+                id="t-crashed-log",
+                session_id=session.id,
+                user_message_id=msg.id,
+                state=TurnState.PROVIDER_STREAMING,
+                iteration_count=0,
+                model=session.model,
+                started_at=frozen_clock.now(),
+                completed_at=None,
+                aborted_reason=None,
+                stop_reason=None,
+            )
+        )
+
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+
+        with caplog.at_level(_logging.INFO, logger="cairn.orchestrator"):
+            await orch.resume_aborted_turns()
+
+        records = [r for r in caplog.records if r.name.startswith("cairn.orchestrator")]
+        messages = [r.getMessage() for r in records]
+        assert "resume_aborted_turns.scan_started" in messages
+        assert "resume_aborted_turns.scan_complete" in messages
+
+        per_turn = [r for r in records if r.getMessage() == "turn.resumed_as_aborted"]
+        assert len(per_turn) == 1
+        assert per_turn[0].turn_id == "t-crashed-log"  # type: ignore[attr-defined]
+        assert per_turn[0].reason == "process_crash"  # type: ignore[attr-defined]
+        assert per_turn[0].prior_state == "provider_streaming"  # type: ignore[attr-defined]
+
+        complete = next(
+            r for r in records if r.getMessage() == "resume_aborted_turns.scan_complete"
+        )
+        assert complete.resumed_count == 1  # type: ignore[attr-defined]
+
 
 # ---------------------------------------------------------------------------
 # Compaction integration — overflow terminate path
@@ -1110,3 +1179,85 @@ class TestCompactionOverflow:
         # Turn completed normally.
         assert any(isinstance(e, TurnComplete) for e in events)
         assert not any(isinstance(e, TurnAborted) for e in events)
+
+
+# ---------------------------------------------------------------------------
+# Structured logging integration — full turn lifecycle through the
+# `cairn.events` logger.
+# ---------------------------------------------------------------------------
+
+
+class TestStructuredEventLoggingIntegration:
+    @pytest.mark.asyncio
+    async def test_full_turn_lifecycle_logged_in_order(
+        self,
+        caplog: pytest.LogCaptureFixture,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        import logging as _logging
+
+        from cairn.logging import StructuredEventObserver, make_event_logger
+
+        provider.scripted = [
+            [
+                TextDelta(text="hi"),
+                UsageEvent(input_tokens=4, output_tokens=2),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+
+        structured = StructuredEventObserver(make_event_logger("test"))
+        orch = Orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            context_manager=MinimalContextManager(system_prompt="you are cairn"),
+            tool_registry=DictToolRegistry(),
+            tool_runner=RaisingToolRunner(),
+            memory_service=NullMemoryService(),
+            extraction_queue=NullExtractionQueue(),
+            approval_gateway=AutoApproveGateway(),
+            cost_tracker=cost_tracker,
+            turn_repo=turn_repo,
+            message_repo=message_repo,
+            clock=frozen_clock,
+            config=orchestrator_config,
+            observers=[collector, structured],
+        )
+
+        with caplog.at_level(_logging.INFO, logger="cairn.events"):
+            session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+            async for _ in orch.run_turn(session.id, _user("hi")):
+                pass
+
+        records = [r for r in caplog.records if r.name == "cairn.events"]
+        types = [r.event_type for r in records]  # type: ignore[attr-defined]
+
+        # Session creation precedes the turn.
+        assert types[0] == "SessionCreated"
+
+        # Required lifecycle events present and in expected order.
+        assert "UserMessagePersisted" in types
+        assert "AssistantMessageComplete" in types
+        assert "TurnComplete" in types
+        assert types.index("UserMessagePersisted") < types.index("AssistantMessageComplete")
+        assert types.index("AssistantMessageComplete") < types.index("TurnComplete")
+
+        # Streaming text deltas are dropped, never logged.
+        assert "AssistantTextDelta" not in types
+
+        # Every record carries the bound profile.
+        assert all(r.profile == "test" for r in records)  # type: ignore[attr-defined]
+
+        # The TurnComplete record carries the stop reason.
+        complete = next(r for r in records if r.event_type == "TurnComplete")  # type: ignore[attr-defined]
+        assert complete.event["stop_reason"] == "end_turn"  # type: ignore[attr-defined]

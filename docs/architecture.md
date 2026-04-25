@@ -140,7 +140,7 @@ Cairn is under active development. This table is authoritative; the
 | Convention files | Shipped (0.9.0) |
 | UI (Textual) | Shipped (0.10.0) |
 | CLI entry point (minimal) | Shipped (0.10.0) |
-| Observability — tranche 2 (structured observer) | Planned |
+| Observability — tranche 2 (redaction + structured observer) | Shipped (0.12.0) |
 | Reflection (tier-2 memory) | V2 |
 | Knowledge graph | V2 |
 | MCP client | V2 |
