@@ -114,6 +114,7 @@ nav:
   - Home: README.md
   - Guide:
       - Configuration: configuration.md
+      - CLI: cli.md
       - Providers: providers.md
       - Memory: memory.md
       - Conventions: conventions.md
@@ -182,3 +183,4 @@ nav:
       - "0038 Four cache breakpoints": decisions/0038-four-cache-breakpoints.md
       - "0039 Symmetric cache treatment": decisions/0039-symmetric-cache-treatment.md
       - "0040 DeepSeek as fourth V1 provider": decisions/0040-deepseek-fourth-v1-provider.md
+      - "0041 Typer for the CLI surface": decisions/0041-typer-for-cli-surface.md
