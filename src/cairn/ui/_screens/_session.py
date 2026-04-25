@@ -213,6 +213,7 @@ class SessionScreen(Screen[None]):
         del event
         self._activity.set_idle()
         self._refresh_cost_from_source()
+        self._flush_pending_reload()
 
     def _refresh_cost_from_source(self) -> None:
         """Spawn a worker that reads the authoritative session cost
@@ -289,12 +290,14 @@ class SessionScreen(Screen[None]):
         detail = event.message or event.reason
         self._chat_log.append_banner(Banner(text=f"✗ turn aborted — {detail}", kind="error"))
         self._activity.set_idle()
+        self._flush_pending_reload()
 
     def show_blocked(self, event: TurnBlocked) -> None:
         self._chat_log.append_banner(
             Banner(text=f"◷ turn blocked — {event.message}", kind="warning")
         )
         self._activity.set_idle()
+        self._flush_pending_reload()
 
     def show_incomplete(self, event: TurnIncomplete) -> None:
         del event
@@ -302,6 +305,7 @@ class SessionScreen(Screen[None]):
             Banner(text="… stopped at max_tokens with a partial tool call", kind="muted")
         )
         self._activity.set_idle()
+        self._flush_pending_reload()
 
     def show_compaction(self, event: HistoryCompacted) -> None:
         text = (
@@ -331,6 +335,42 @@ class SessionScreen(Screen[None]):
     def current_cost_usd(self) -> float:
         """Current cost reading on the cost meter."""
         return self._cost_meter.cost_usd
+
+    def is_turn_active(self) -> bool:
+        """True while a turn is mid-flight on this screen.
+
+        The activity indicator is the canonical signal: anything other
+        than "idle" means the orchestrator is still working
+        (thinking / streaming / tool execution).
+        """
+        return self._activity.state != "idle"
+
+    def queue_reload(self) -> None:
+        """Defer a `/reload` until the current turn finishes."""
+        self._pending_reload = True
+
+    def _flush_pending_reload(self) -> None:
+        """If `/reload` was deferred during a turn, run it now."""
+        if not getattr(self, "_pending_reload", False):
+            return
+        self._pending_reload = False
+        app = cast("CairnApp", self.app)
+        reloader = app.reloader
+        if reloader is None:
+            return
+
+        async def _do_reload() -> None:
+            result = await reloader.reload()
+            kind = "muted" if result.ok else "warning"
+            text = result.summary if result.ok else f"reload failed — {result.error}"
+            self._chat_log.append_banner(Banner(text=text, kind=kind))
+
+        self.run_worker(
+            _do_reload(),
+            name="deferred-reload",
+            exclusive=False,
+            exit_on_error=False,
+        )
 
     # -- Helpers for the pilot harness ----------------------------------
 

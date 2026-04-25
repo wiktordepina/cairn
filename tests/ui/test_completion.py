@@ -112,6 +112,7 @@ class TestCompletionMenuSync:
                 "/persona",
                 "/profile",
                 "/quit",
+                "/reload",
                 "/tools",
             ]
 
