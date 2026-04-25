@@ -197,9 +197,7 @@ class TestCommandBarKeyIntegration:
             assert menu.is_open is False
 
     @pytest.mark.asyncio
-    async def test_enter_executes_highlighted_command(
-        self, companion_session: Session
-    ) -> None:
+    async def test_enter_executes_highlighted_command(self, companion_session: Session) -> None:
         """Enter while the menu is open swaps the typed prefix for the
         highlighted command and submits — one keystroke runs it.
         """
@@ -237,9 +235,7 @@ class TestCommandBarKeyIntegration:
             assert menu.is_open is False
 
     @pytest.mark.asyncio
-    async def test_enter_without_selection_falls_through(
-        self, companion_session: Session
-    ) -> None:
+    async def test_enter_without_selection_falls_through(self, companion_session: Session) -> None:
         """If the menu has no highlighted row, Enter falls through to
         Input's default submit path (operating on the typed value).
         """

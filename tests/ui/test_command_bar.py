@@ -293,15 +293,12 @@ class TestCommandBarDispatch:
             banners = list(chat_log.query(Banner))
             # Falls back to session.model when the registry isn't wired.
             assert any(
-                "claude-opus-4-7" in str(b.renderable)
-                and "registry unwired" in str(b.renderable)
+                "claude-opus-4-7" in str(b.renderable) and "registry unwired" in str(b.renderable)
                 for b in banners
             )
 
     @pytest.mark.asyncio
-    async def test_conventions_placeholder_when_unwired(
-        self, companion_session: Session
-    ) -> None:
+    async def test_conventions_placeholder_when_unwired(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         async with app.run_test() as pilot:
             await pilot.pause()
@@ -314,9 +311,7 @@ class TestCommandBarDispatch:
 
             chat_log = screen.query_one(ChatLog)
             banners = list(chat_log.query(Banner))
-            assert any(
-                "did not wire convention sources" in str(b.renderable) for b in banners
-            )
+            assert any("did not wire convention sources" in str(b.renderable) for b in banners)
 
     @pytest.mark.asyncio
     async def test_quit_exits_app(self, companion_session: Session) -> None:
