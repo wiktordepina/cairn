@@ -1057,6 +1057,8 @@
       
         
       
+        
+      
     
     
     
@@ -1406,6 +1408,34 @@
     
   
     Tools
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI
   
 
     
@@ -2746,6 +2776,14 @@ content is otherwise the same.</p>
   reference scheme, profile discovery and merge order.</li>
 <li><strong><a href="providers/">Providers</a></strong> — per-provider notes for Anthropic,
   OpenAI (including OpenAI-compatible local servers), and OpenRouter.</li>
+<li><strong><a href="memory/">Memory</a></strong> — tier-1 extraction, retrieval, MEMORY.md
+  loading, and the observation log.</li>
+<li><strong><a href="conventions/">Conventions</a></strong> — convention-file discovery, merge
+  ordering (user → ancestor → nested), and what's surfaced to the model.</li>
+<li><strong><a href="compaction/">Compaction</a></strong> — turn-block truncation, advisory
+  context budget, and what's deferred to V2.</li>
+<li><strong><a href="ui/">UI</a></strong> — the Textual interface: keybindings, approval modal,
+  trust prompt, and the single-loop observer.</li>
 <li><strong><a href="observability/">Observability</a></strong> — <code>setup_logging()</code> and
   <code>setup_ssl()</code> bootstraps; resolution order; when to call.</li>
 </ul>
@@ -2764,8 +2802,9 @@ content is otherwise the same.</p>
 <h3 id="reference">Reference<a class="headerlink" href="#reference" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong><a href="reference/">API reference</a></strong> — auto-generated from each
-  module's <code>__all__</code>. Covers <code>config</code>, <code>domain</code>, <code>logging</code>,
-  <code>orchestrator</code>, <code>persistence</code>, <code>providers</code>, <code>ssl</code>, and <code>tools</code>.</li>
+  module's <code>__all__</code>. Covers <code>compaction</code>, <code>config</code>, <code>conventions</code>,
+  <code>domain</code>, <code>logging</code>, <code>memory</code>, <code>orchestrator</code>, <code>persistence</code>,
+  <code>providers</code>, <code>ssl</code>, <code>tools</code>, and <code>ui</code>.</li>
 </ul>
 <p>The reference pages are best read on the published site, where
 <code>mkdocstrings</code> resolves the <code>:::</code> directives into rendered docstrings

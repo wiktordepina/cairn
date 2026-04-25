@@ -12,13 +12,13 @@
         <meta name="author" content="Wiktor de Pina">
       
       
-        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/reference/providers/">
+        <link rel="canonical" href="https://wiktordepina.github.io/cairn/dev/reference/ui/">
       
       
-        <link rel="prev" href="../persistence/">
+        <link rel="prev" href="../tools/">
       
       
-        <link rel="next" href="../ssl/">
+        <link rel="next" href="../../decisions/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Providers - Cairn</title>
+        <title>UI - Cairn</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#providers-api-reference" class="md-skip">
+        <a href="#ui-api-reference" class="md-skip">
           Skip to content
         </a>
       
@@ -122,7 +122,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Providers
+              UI
             
           </span>
         </div>
@@ -1201,37 +1201,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Providers
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../providers/" class="md-nav__link">
         
   
   
@@ -1247,353 +1220,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#protocol" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.Provider" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Provider
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" Provider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.Provider.name" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;name
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.Provider.stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.Provider.count_tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#adapters" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Adapters
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.AnthropicProvider" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AnthropicProvider
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" AnthropicProvider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.AnthropicProvider.stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.AnthropicProvider.count_tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.OpenAIProvider" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OpenAIProvider
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" OpenAIProvider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.OpenAIProvider.stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.OpenAIProvider.count_tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.OpenRouterProvider" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OpenRouterProvider
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" OpenRouterProvider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.OpenRouterProvider.stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.OpenRouterProvider.count_tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#registry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Registry
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderNotConfiguredError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderNotConfiguredError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderRegistry
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" ProviderRegistry">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry.for_model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;for_model
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry.by_name" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;by_name
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry.register_adapter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;register_adapter
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.AuthenticationError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AuthenticationError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ModelNotAvailableError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ModelNotAvailableError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderOverloadedError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderOverloadedError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.RateLimitError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RateLimitError
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1659,10 +1285,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../ui/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1678,6 +1331,341 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#app" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.CairnApp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;CairnApp
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" CairnApp">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.CairnApp.current_session_screen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;current_session_screen
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.CairnApp.tool_registry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;tool_registry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.CairnApp.ui_config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ui_config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.CairnApp.take_resumed_turn_count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;take_resumed_turn_count
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.TextualApprovalGateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextualApprovalGateway
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#observer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.TextualUIEventObserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextualUIEventObserver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" TextualUIEventObserver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.TextualUIEventObserver.observe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;observe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#screens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Screens
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.ApprovalModal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalModal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionScreen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" SessionScreen">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.context_source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;context_source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.current_cost_usd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;current_cost_usd
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.on_input_changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;on_input_changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.on_input_submitted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;on_input_submitted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.append_user_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_user_message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.append_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.finalise_assistant_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalise_assistant_message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.finalise_turn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalise_turn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.set_cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.show_budget_warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;show_budget_warning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.note_tool_plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;note_tool_plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.append_banner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_banner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.stage_user_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stage_user_message
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2871,10 +2859,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#protocol" class="md-nav__link">
+  <a href="#app" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Protocol
+        App
       
     </span>
   </a>
@@ -2882,22 +2870,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.providers.Provider" class="md-nav__link">
+  <a href="#cairn.ui.CairnApp" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;Provider
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;CairnApp
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" Provider">
+    <nav class="md-nav" aria-label=" CairnApp">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.providers.Provider.name" class="md-nav__link">
+  <a href="#cairn.ui.CairnApp.current_session_screen" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;name
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;current_session_screen
       
     </span>
   </a>
@@ -2905,10 +2893,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.providers.Provider.stream" class="md-nav__link">
+  <a href="#cairn.ui.CairnApp.tool_registry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;tool_registry
       
     </span>
   </a>
@@ -2916,10 +2904,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.providers.Provider.count_tokens" class="md-nav__link">
+  <a href="#cairn.ui.CairnApp.ui_config" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;ui_config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.CairnApp.take_resumed_turn_count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;take_resumed_turn_count
       
     </span>
   </a>
@@ -2932,10 +2931,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#adapters" class="md-nav__link">
+  <a href="#gateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Adapters
+        Gateway
       
     </span>
   </a>
@@ -2943,33 +2942,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.providers.AnthropicProvider" class="md-nav__link">
+  <a href="#cairn.ui.TextualApprovalGateway" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AnthropicProvider
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" AnthropicProvider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.AnthropicProvider.stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextualApprovalGateway
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.AnthropicProvider.count_tokens" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#observer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
+        Observer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.TextualUIEventObserver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;TextualUIEventObserver
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" TextualUIEventObserver">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.TextualUIEventObserver.observe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;observe
       
     </span>
   </a>
@@ -2982,22 +2992,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cairn.providers.OpenAIProvider" class="md-nav__link">
+  <a href="#screens" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OpenAIProvider
+        Screens
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label=" OpenAIProvider">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.ApprovalModal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ApprovalModal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;SessionScreen
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label=" SessionScreen">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#cairn.providers.OpenAIProvider.stream" class="md-nav__link">
+  <a href="#cairn.ui.SessionScreen.context_source" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;context_source
       
     </span>
   </a>
@@ -3005,10 +3037,131 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cairn.providers.OpenAIProvider.count_tokens" class="md-nav__link">
+  <a href="#cairn.ui.SessionScreen.current_cost_usd" class="md-nav__link">
     <span class="md-ellipsis">
       
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
+        <code class="doc-symbol doc-symbol-toc doc-symbol-attribute"></code>&nbsp;current_cost_usd
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.on_input_changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;on_input_changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.on_input_submitted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;on_input_submitted
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.append_user_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_user_message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.append_delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.finalise_assistant_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalise_assistant_message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.finalise_turn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;finalise_turn
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.set_cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;set_cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.show_budget_warning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;show_budget_warning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.note_tool_plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;note_tool_plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.append_banner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;append_banner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cairn.ui.SessionScreen.stage_user_message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stage_user_message
       
     </span>
   </a>
@@ -3017,183 +3170,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.OpenRouterProvider" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;OpenRouterProvider
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" OpenRouterProvider">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.OpenRouterProvider.stream" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;stream
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.OpenRouterProvider.count_tokens" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;count_tokens
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#registry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Registry
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderNotConfiguredError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderNotConfiguredError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderRegistry
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label=" ProviderRegistry">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry.for_model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;for_model
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry.by_name" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;by_name
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderRegistry.register_adapter" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-method"></code>&nbsp;register_adapter
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#errors" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Errors
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.AuthenticationError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;AuthenticationError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ModelNotAvailableError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ModelNotAvailableError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.ProviderOverloadedError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;ProviderOverloadedError
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cairn.providers.RateLimitError" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        <code class="doc-symbol doc-symbol-toc doc-symbol-class"></code>&nbsp;RateLimitError
-      
-    </span>
-  </a>
   
 </li>
       
@@ -3214,7 +3190,7 @@
 
 
   
-    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/reference/providers.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/wiktordepina/cairn/edit/main/docs/reference/ui.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -3225,34 +3201,43 @@
 <!-- Generated by docs/gen_ref_pages.py from src/cairn/<module>/__init__.py.
      Do not edit by hand — re-run the generator instead. -->
 
-<h1 id="providers-api-reference">Providers — API reference<a class="headerlink" href="#providers-api-reference" title="Permanent link">&para;</a></h1>
-<h2 id="protocol">Protocol<a class="headerlink" href="#protocol" title="Permanent link">&para;</a></h2>
+<h1 id="ui-api-reference">UI — API reference<a class="headerlink" href="#ui-api-reference" title="Permanent link">&para;</a></h1>
+<h2 id="app">App<a class="headerlink" href="#app" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.providers.Provider" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">Provider</span>
+<h2 id="cairn.ui.CairnApp" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">CairnApp</span>
 
 
-<a href="#cairn.providers.Provider" class="headerlink" title="Permanent link">&para;</a></h2>
-
+<a href="#cairn.ui.CairnApp" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">CairnApp</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">orchestrator</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Orchestrator (cairn.orchestrator.Orchestrator)" href="../orchestrator/#cairn.orchestrator.Orchestrator">Orchestrator</a></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">session</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain.Session)" href="../domain/#cairn.domain.Session">Session</a></span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">command_registry</span><span class="p">:</span> <span class="n"><span title="cairn.ui._commands.CommandRegistry">CommandRegistry</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">tool_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolRegistry (cairn.orchestrator._protocols.ToolRegistry)" href="../orchestrator/#cairn.orchestrator.ToolRegistry">ToolRegistry</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">ui_config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            UIConfig (cairn.config.UIConfig)" href="../config/#cairn.config.UIConfig">UIConfig</a></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">cost_source</span><span class="p">:</span> <span class="n"><span title="cairn.ui._app.CostSource">CostSource</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">context_source</span><span class="p">:</span> <span class="n"><span title="cairn.ui._app.ContextSource">ContextSource</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="n">resumed_turn_count</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+</span></code></pre></div>
 
     <div class="doc doc-contents first">
             <p class="doc doc-class-bases">
-              Bases: <code><span title="typing.Protocol">Protocol</span></code></p>
+              Bases: <code><span title="textual.app.App">App</span>[None]</code></p>
 
 
 
-        <p>Vendor-agnostic interface for LLM providers.</p>
-<p>Implementations translate between cairn's domain types and
-provider-specific SDK formats. The protocol has two methods:</p>
-<ul>
-<li><code>stream()</code> — the primary path; async generator yielding events</li>
-<li><code>count_tokens()</code> — token estimation for budget tracking</li>
-</ul>
+        <p>Cairn's Textual application.</p>
+<p>The app is constructed with an already-wired orchestrator and an
+initial session. Bootstrap (logger, SSL, orchestrator assembly)
+lives outside the app — see <code>cairn.ui._bootstrap</code> in a follow-up
+commit.</p>
 
 
 
@@ -3276,21 +3261,71 @@ provider-specific SDK formats. The protocol has two methods:</p>
 
 
 
-<h3 id="cairn.providers.Provider.name" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">name</span>
+<h3 id="cairn.ui.CairnApp.current_session_screen" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">current_session_screen</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-property"><code>property</code></small>
   </span>
 
-<a href="#cairn.providers.Provider.name" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span>
+<a href="#cairn.ui.CairnApp.current_session_screen" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">current_session_screen</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionScreen (cairn.ui._screens.SessionScreen)" href="#cairn.ui.SessionScreen">SessionScreen</a></span> <span class="o">|</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Provider name (matches ProviderConfig key, e.g. <code>'anthropic'</code>).</p>
+        <p>Return the currently-mounted session screen, or None.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="cairn.ui.CairnApp.tool_registry" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">tool_registry</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#cairn.ui.CairnApp.tool_registry" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">tool_registry</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolRegistry (cairn.orchestrator._protocols.ToolRegistry)" href="../orchestrator/#cairn.orchestrator.ToolRegistry">ToolRegistry</a></span> <span class="o">|</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Shared <code>ToolRegistry</code> for read-only UI lookups (e.g. <code>/tools</code>).</p>
+<p>Set by the bootstrap layer when it constructs the orchestrator;
+<code>None</code> when the app is minted with a mock orchestrator.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="cairn.ui.CairnApp.ui_config" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">ui_config</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#cairn.ui.CairnApp.ui_config" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">ui_config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            UIConfig (cairn.config.UIConfig)" href="../config/#cairn.config.UIConfig">UIConfig</a></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Active profile's UI block (defaults when unset).</p>
 
     </div>
 
@@ -3302,64 +3337,157 @@ provider-specific SDK formats. The protocol has two methods:</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.Provider.stream" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">stream</span>
+<h3 id="cairn.ui.CairnApp.take_resumed_turn_count" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">take_resumed_turn_count</span>
 
 
-<a href="#cairn.providers.Provider.stream" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stream</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
+<a href="#cairn.ui.CairnApp.take_resumed_turn_count" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">take_resumed_turn_count</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="int">int</span></span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Return the recorded count and clear it.</p>
+<p>Screens read this on mount to surface a one-time crash-recovery
+banner; subsequent screens see zero, which is what we want —
+the count refers to the boot-time sweep, not ongoing state.</p>
 
 
-  
-      dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.AsyncIterator">AsyncIterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ProviderEvent
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="gateway">Gateway<a class="headerlink" href="#gateway" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.ui.TextualApprovalGateway" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TextualApprovalGateway</span>
+
+
+<a href="#cairn.ui.TextualApprovalGateway" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TextualApprovalGateway</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span> <span class="n">app</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            CairnApp (cairn.ui._app.CairnApp)" href="#cairn.ui.CairnApp">CairnApp</a></span><span class="p">,</span> <span class="n">session_allowlist</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SessionAllowlist (cairn.tools._approvers.SessionAllowlist)" href="../tools/#cairn.tools.SessionAllowlist">SessionAllowlist</a></span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p><code>ApprovalGateway</code> implementation backed by <code>ApprovalModal</code>.</p>
+<p>Presents the modal, awaits the result, honours the "remember for
+this session" checkbox by calling
+<code>SessionAllowlist.remember_user_approval</code>.</p>
+<p>The gateway is constructed with a reference to the running
+<code>CairnApp</code> so it can <code>push_screen_wait</code> from whichever coroutine
+the orchestrator's approval chain runs on.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="observer">Observer<a class="headerlink" href="#observer" title="Permanent link">&para;</a></h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.ui.TextualUIEventObserver" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">TextualUIEventObserver</span>
+
+
+<a href="#cairn.ui.TextualUIEventObserver" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">TextualUIEventObserver</span><span class="p">(</span><span class="n">app</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            CairnApp (cairn.ui._app.CairnApp)" href="#cairn.ui.CairnApp">CairnApp</a></span><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+
+
+
+        <p><code>UIEventObserver</code> that posts widget updates to <code>CairnApp</code>.</p>
+<p>The observer itself holds no mutable state. It resolves the
+current session screen lazily from the app so it works across
+session switches (Tranche 2+); in Tranche 1 there's only ever
+one screen.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.ui.TextualUIEventObserver.observe" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">observe</span>
+
+
+<a href="#cairn.ui.TextualUIEventObserver.observe" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">observe</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            UIEvent
 
 
   
       module-attribute
-   (cairn.domain._provider.ProviderEvent)" href="../domain/#cairn.domain.ProviderEvent">ProviderEvent</a></span><span class="p">]</span>
+   (cairn.domain.UIEvent)" href="../domain/#cairn.domain.UIEvent">UIEvent</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Stream a completion, yielding domain events.</p>
-<p>Declared as a plain <code>def</code> rather than <code>async def</code> because the
-returned <code>AsyncIterator</code> is iterated directly with <code>async for</code>;
-no <code>await</code> is needed before iteration. Implementations are
-typically written as <code>async def ... yield ...</code> — Python treats
-those as async-generator functions whose call returns an
-AsyncIterator, matching this signature.</p>
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.providers.Provider.count_tokens" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">count_tokens</span>
-
-
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.providers.Provider.count_tokens" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">count_tokens</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
-
-
-  
-      dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="int">int</span></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Estimate token count for a request.</p>
+        <p>Dispatch <em>event</em> to the appropriate screen method.</p>
+<p>Dispatch is synchronous from the orchestrator's perspective;
+the screen method is marshalled onto the UI thread via
+<code>call_from_thread</code>. Individual branches catch and log their
+own errors so one malformed event doesn't break the observer.</p>
 
 
     </div>
@@ -3372,46 +3500,169 @@ AsyncIterator, matching this signature.</p>
 
     </div>
 
-</div><h2 id="adapters">Adapters<a class="headerlink" href="#adapters" title="Permanent link">&para;</a></h2>
+</div><h2 id="screens">Screens<a class="headerlink" href="#screens" title="Permanent link">&para;</a></h2>
 
 
 <div class="doc doc-object doc-class">
 
 
 
-<h2 id="cairn.providers.AnthropicProvider" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AnthropicProvider</span>
+<h2 id="cairn.ui.ApprovalModal" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ApprovalModal</span>
 
 
-<a href="#cairn.providers.AnthropicProvider" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">AnthropicProvider</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderConfig (cairn.config._models.ProviderConfig)" href="../config/#cairn.config.ProviderConfig">ProviderConfig</a></span><span class="p">,</span> <span class="n">secret_resolver</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SecretResolver (cairn.config._secrets.SecretResolver)" href="../config/#cairn.config.SecretResolver">SecretResolver</a></span>
+<a href="#cairn.ui.ApprovalModal" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ApprovalModal</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ApprovalRequest
+
+
+  
+      dataclass
+   (cairn.orchestrator._middleware.ApprovalRequest)" href="../orchestrator/#cairn.orchestrator.ApprovalRequest">ApprovalRequest</a></span><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="textual.screen.ModalScreen">ModalScreen</span>[<span title="cairn.ui._screens._approval.ApprovalModalResult">ApprovalModalResult</span>]</code></p>
+
+
+
+        <p>Blocking modal for tool-call approval.</p>
+<p>Shows the tool name, risk tier, side-effects label, and rendered
+args. Approving returns <code>outcome=APPROVE</code>; rejecting returns
+<code>outcome=REJECT</code> with <code>reason="user_rejected"</code>; dismissing via
+escape returns <code>REJECT</code> with <code>reason="user_dismissed"</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="cairn.ui.SessionScreen" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">SessionScreen</span>
+
+
+<a href="#cairn.ui.SessionScreen" class="headerlink" title="Permanent link">&para;</a></h2>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">SessionScreen</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="o">*</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">session</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            Session (cairn.domain.Session)" href="../domain/#cairn.domain.Session">Session</a></span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">cost_precision</span><span class="p">:</span> <span class="n"><span title="int">int</span></span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">cost_source</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[],</span> <span class="n"><span title="collections.abc.Awaitable">Awaitable</span></span><span class="p">[</span><span class="n"><span title="float">float</span></span><span class="p">]]</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">context_source</span><span class="p">:</span> <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="p">[],</span> <span class="n"><span title="collections.abc.Awaitable">Awaitable</span></span><span class="p">[</span><span class="n"><span title="cairn.ui._context_report.ContextReportInput">ContextReportInput</span></span><span class="p">]</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="p">]</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="p">)</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents first">
+            <p class="doc doc-class-bases">
+              Bases: <code><span title="textual.screen.Screen">Screen</span>[None]</code></p>
+
+
+
+        <p>Screen holding one session's transcript.</p>
+<p>Widget surface is intentionally small for Tranche 1. The
+observer drives updates; the screen owns layout and the message
+lookup cache.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+<div class="doc doc-object doc-attribute">
+
+
+
+<h3 id="cairn.ui.SessionScreen.context_source" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">context_source</span>
+
+
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#cairn.ui.SessionScreen.context_source" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">context_source</span><span class="p">:</span> <span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n"><span title="collections.abc.Callable">Callable</span></span><span class="p">[[],</span> <span class="n"><span title="collections.abc.Awaitable">Awaitable</span></span><span class="p">[</span><span class="n"><span title="cairn.ui._context_report.ContextReportInput">ContextReportInput</span></span><span class="p">]]</span> <span class="o">|</span> <span class="kc">None</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
 </span></code></pre></div>
 
-    <div class="doc doc-contents first">
+    <div class="doc doc-contents ">
+
+        <p>Optional async callback surfacing <code>(context_window, model, last_usage)</code>
+for the <code>/context</code> slash command. None in tests with mock
+orchestrators; bootstrap-supplied in production.</p>
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-attribute">
 
 
 
-        <p>Anthropic API adapter implementing the Provider protocol.</p>
+<h3 id="cairn.ui.SessionScreen.current_cost_usd" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-attribute"></code>            <span class="doc doc-object-name doc-attribute-name">current_cost_usd</span>
 
 
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
 
+<a href="#cairn.ui.SessionScreen.current_cost_usd" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">current_cost_usd</span><span class="p">:</span> <span class="n"><span title="float">float</span></span>
+</span></code></pre></div>
 
+    <div class="doc doc-contents ">
 
+        <p>Current cost reading on the cost meter.</p>
 
+    </div>
 
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
+</div>
 
 
 
@@ -3419,33 +3670,77 @@ AsyncIterator, matching this signature.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.AnthropicProvider.stream" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">stream</span>
+<h3 id="cairn.ui.SessionScreen.on_input_changed" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">on_input_changed</span>
+
+
+<a href="#cairn.ui.SessionScreen.on_input_changed" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">on_input_changed</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><span title="cairn.ui._widgets.CommandBar.Changed">Changed</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Keep the completion menu in sync with the bar's value.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.ui.SessionScreen.on_input_submitted" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">on_input_submitted</span>
 
 
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
 
-<a href="#cairn.providers.AnthropicProvider.stream" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stream</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
+<a href="#cairn.ui.SessionScreen.on_input_submitted" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">on_input_submitted</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><span title="cairn.ui._widgets.CommandBar.Submitted">Submitted</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Handle Enter in the command bar.</p>
+<p><code>/command</code> forms dispatch through the registry; plain text is
+submitted to the orchestrator as a user turn — the observer
+then drives the transcript, cost meter, and tool rows as
+events arrive.</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.ui.SessionScreen.append_user_message" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">append_user_message</span>
+
+
+<a href="#cairn.ui.SessionScreen.append_user_message" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">append_user_message</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            UserMessagePersisted
 
 
   
       dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.AsyncIterator">AsyncIterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ProviderEvent
-
-
-  
-      module-attribute
-   (cairn.domain._provider.ProviderEvent)" href="../domain/#cairn.domain.ProviderEvent">ProviderEvent</a></span><span class="p">]</span>
+   (cairn.domain.UserMessagePersisted)" href="../domain/#cairn.domain.UserMessagePersisted">UserMessagePersisted</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Stream a completion from the Anthropic API.</p>
+        <p>Mount a new <code>MessageView</code> for a just-persisted user message.</p>
+<p>The persisted row is the source of truth for content, but the
+orchestrator doesn't carry the text in the event — the
+currently-submitted user message is held on the screen while
+the turn runs (future work) or the screen re-reads from
+persistence. Tranche 1's test harness passes the text
+explicitly via <code>stage_user_message</code> below, so this method
+only sets up the <code>MessageView</code> slot for the id.</p>
 
 
     </div>
@@ -3455,113 +3750,49 @@ AsyncIterator, matching this signature.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.AnthropicProvider.count_tokens" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">count_tokens</span>
+<h3 id="cairn.ui.SessionScreen.append_delta" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">append_delta</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.providers.AnthropicProvider.count_tokens" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">count_tokens</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
+<a href="#cairn.ui.SessionScreen.append_delta" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">append_delta</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            AssistantTextDelta
 
 
   
       dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="int">int</span></span>
+   (cairn.domain.AssistantTextDelta)" href="../domain/#cairn.domain.AssistantTextDelta">AssistantTextDelta</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Count tokens using the Anthropic SDK's native endpoint.</p>
+        <p>Append text to an assistant message, creating it on first delta.</p>
 
 
     </div>
 
 </div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.OpenAIProvider" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">OpenAIProvider</span>
-
-
-<a href="#cairn.providers.OpenAIProvider" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">OpenAIProvider</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderConfig (cairn.config._models.ProviderConfig)" href="../config/#cairn.config.ProviderConfig">ProviderConfig</a></span><span class="p">,</span> <span class="n">secret_resolver</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SecretResolver (cairn.config._secrets.SecretResolver)" href="../config/#cairn.config.SecretResolver">SecretResolver</a></span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>OpenAI API adapter implementing the Provider protocol.</p>
-<p>Also works for any OpenAI-compatible server (llama.cpp, vLLM, LM Studio)
-via <code>base_url</code> in the provider config.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
 
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.OpenAIProvider.stream" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">stream</span>
+<h3 id="cairn.ui.SessionScreen.finalise_assistant_message" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">finalise_assistant_message</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.providers.OpenAIProvider.stream" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stream</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
+<a href="#cairn.ui.SessionScreen.finalise_assistant_message" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">finalise_assistant_message</span><span class="p">(</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">event</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            AssistantMessageComplete
 
 
   
       dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.AsyncIterator">AsyncIterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ProviderEvent
-
-
-  
-      module-attribute
-   (cairn.domain._provider.ProviderEvent)" href="../domain/#cairn.domain.ProviderEvent">ProviderEvent</a></span><span class="p">]</span>
+   (cairn.domain.AssistantMessageComplete)" href="../domain/#cairn.domain.AssistantMessageComplete">AssistantMessageComplete</a></span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Stream a completion from the OpenAI API.</p>
+        <p>Mark an assistant message as sealed (no more deltas).</p>
 
 
     </div>
@@ -3571,115 +3802,71 @@ via <code>base_url</code> in the provider config.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.OpenAIProvider.count_tokens" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">count_tokens</span>
+<h3 id="cairn.ui.SessionScreen.finalise_turn" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">finalise_turn</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.providers.OpenAIProvider.count_tokens" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">count_tokens</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
+<a href="#cairn.ui.SessionScreen.finalise_turn" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">finalise_turn</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            TurnComplete
 
 
   
       dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="int">int</span></span>
+   (cairn.domain.TurnComplete)" href="../domain/#cairn.domain.TurnComplete">TurnComplete</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Estimate token count using tiktoken.</p>
-<p>Falls back to character-based estimation for models not known
-to tiktoken (common with OpenAI-compatible local servers).</p>
+        <p>Per-turn wrap-up hook — stop the activity indicator and
+refresh the cost meter from the injected <code>cost_source</code> (when
+bootstrap supplied one).</p>
 
 
     </div>
 
 </div>
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.OpenRouterProvider" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">OpenRouterProvider</span>
-
-
-<a href="#cairn.providers.OpenRouterProvider" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">OpenRouterProvider</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderConfig (cairn.config._models.ProviderConfig)" href="../config/#cairn.config.ProviderConfig">ProviderConfig</a></span><span class="p">,</span> <span class="n">secret_resolver</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SecretResolver (cairn.config._secrets.SecretResolver)" href="../config/#cairn.config.SecretResolver">SecretResolver</a></span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>OpenRouter API adapter implementing the Provider protocol.</p>
-<p>Uses the OpenAI SDK under the hood (OpenRouter is OpenAI-compatible)
-with OpenRouter-specific headers and error handling.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
 
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.OpenRouterProvider.stream" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">stream</span>
+<h3 id="cairn.ui.SessionScreen.set_cost" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">set_cost</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
+<a href="#cairn.ui.SessionScreen.set_cost" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_cost</span><span class="p">(</span><span class="n">cost_usd</span><span class="p">:</span> <span class="n"><span title="float">float</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">warn</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</span></code></pre></div>
 
-<a href="#cairn.providers.OpenRouterProvider.stream" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stream</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
+    <div class="doc doc-contents ">
+
+        <p>Update the cost meter. Called by the bootstrap layer on
+<code>TurnComplete</code> (authoritative) and by the observer on
+<code>BudgetWarning</code> (warn=True).</p>
+
+
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h3 id="cairn.ui.SessionScreen.show_budget_warning" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">show_budget_warning</span>
+
+
+<a href="#cairn.ui.SessionScreen.show_budget_warning" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">show_budget_warning</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            BudgetWarning
 
 
   
       dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="collections.abc.AsyncIterator">AsyncIterator</span></span><span class="p">[</span><span class="n"><a class="autorefs autorefs-internal" title="            ProviderEvent
-
-
-  
-      module-attribute
-   (cairn.domain._provider.ProviderEvent)" href="../domain/#cairn.domain.ProviderEvent">ProviderEvent</a></span><span class="p">]</span>
+   (cairn.domain.BudgetWarning)" href="../domain/#cairn.domain.BudgetWarning">BudgetWarning</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Stream a completion from OpenRouter.</p>
+        <p>Render the budget-warning state in the cost meter.</p>
 
 
     </div>
@@ -3689,129 +3876,22 @@ with OpenRouter-specific headers and error handling.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.OpenRouterProvider.count_tokens" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">count_tokens</span>
+<h3 id="cairn.ui.SessionScreen.note_tool_plan" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">note_tool_plan</span>
 
 
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-async"><code>async</code></small>
-  </span>
-
-<a href="#cairn.providers.OpenRouterProvider.count_tokens" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">count_tokens</span><span class="p">(</span><span class="n">request</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ProviderRequest
+<a href="#cairn.ui.SessionScreen.note_tool_plan" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">note_tool_plan</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ToolCallPlanned
 
 
   
       dataclass
-   (cairn.domain._provider.ProviderRequest)" href="../domain/#cairn.domain.ProviderRequest">ProviderRequest</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="int">int</span></span>
+   (cairn.domain.ToolCallPlanned)" href="../domain/#cairn.domain.ToolCallPlanned">ToolCallPlanned</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Estimate token count — same strategy as OpenAI adapter.</p>
-
-
-    </div>
-
-</div>
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="registry">Registry<a class="headerlink" href="#registry" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.ProviderNotConfiguredError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ProviderNotConfiguredError</span>
-
-
-<a href="#cairn.providers.ProviderNotConfiguredError" class="headerlink" title="Permanent link">&para;</a></h2>
-
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="Exception">Exception</span></code></p>
-
-
-
-        <p>Raised when a provider name has no matching config or adapter.</p>
-
-
-
-
-
-
-
-
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.ProviderRegistry" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ProviderRegistry</span>
-
-
-<a href="#cairn.providers.ProviderRegistry" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ProviderRegistry</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            CairnConfig (cairn.config._models.CairnConfig)" href="../config/#cairn.config.CairnConfig">CairnConfig</a></span><span class="p">,</span> <span class="n">secret_resolver</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            SecretResolver (cairn.config._secrets.SecretResolver)" href="../config/#cairn.config.SecretResolver">SecretResolver</a></span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-
-
-
-        <p>Creates and caches Provider instances from config.</p>
-<p>The registry maps provider names (from TOML config keys) to adapter
-classes, creates instances lazily, and caches them for reuse.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-<h3 id="cairn.providers.ProviderRegistry.for_model" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">for_model</span>
-
-
-<a href="#cairn.providers.ProviderRegistry.for_model" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">for_model</span><span class="p">(</span><span class="n">model_config</span><span class="p">:</span> <span class="n"><a class="autorefs autorefs-internal" title="            ModelConfig (cairn.config._models.ModelConfig)" href="../config/#cairn.config.ModelConfig">ModelConfig</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Provider (cairn.providers._protocol.Provider)" href="#cairn.providers.Provider">Provider</a></span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents ">
-
-        <p>Get the provider for a model (by its <code>provider</code> field).</p>
+        <p>Mount a new <code>ToolRow</code> for a freshly-planned tool call.</p>
 
 
     </div>
@@ -3821,17 +3901,17 @@ classes, creates instances lazily, and caches them for reuse.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.ProviderRegistry.by_name" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">by_name</span>
+<h3 id="cairn.ui.SessionScreen.append_banner" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">append_banner</span>
 
 
-<a href="#cairn.providers.ProviderRegistry.by_name" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">by_name</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="            Provider (cairn.providers._protocol.Provider)" href="#cairn.providers.Provider">Provider</a></span>
+<a href="#cairn.ui.SessionScreen.append_banner" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">append_banner</span><span class="p">(</span><span class="n">banner</span><span class="p">:</span> <span class="n"><span title="cairn.ui._widgets.Banner">Banner</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Get (or create) a provider by its config name.</p>
+        <p>Mount an ad-hoc banner in the chat log.</p>
 
 
     </div>
@@ -3841,275 +3921,27 @@ classes, creates instances lazily, and caches them for reuse.</p>
 <div class="doc doc-object doc-function">
 
 
-<h3 id="cairn.providers.ProviderRegistry.register_adapter" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">register_adapter</span>
+<h3 id="cairn.ui.SessionScreen.stage_user_message" class="doc doc-heading">
+<code class="doc-symbol doc-symbol-heading doc-symbol-method"></code>            <span class="doc doc-object-name doc-function-name">stage_user_message</span>
 
 
-<a href="#cairn.providers.ProviderRegistry.register_adapter" class="headerlink" title="Permanent link">&para;</a></h3>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">register_adapter</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">factory</span><span class="p">:</span> <span class="n"><span title="type">type</span></span><span class="p">[</span><span class="n"><span title="typing.Any">Any</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<a href="#cairn.ui.SessionScreen.stage_user_message" class="headerlink" title="Permanent link">&para;</a></h3>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">stage_user_message</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">message_id</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
     <div class="doc doc-contents ">
 
-        <p>Register a custom provider adapter class.</p>
+        <p>Pre-register the text for an upcoming <code>UserMessagePersisted</code>.</p>
+<p>The orchestrator's <code>UserMessagePersisted</code> event carries only
+the message id + turn id — not the text — because the text
+was supplied by the caller who persisted it. The app layer
+stages the text here so the observer can mount a widget with
+the right body when the event arrives.</p>
 
 
     </div>
 
 </div>
-
-
-
-  </div>
-
-    </div>
-
-</div><h2 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h2>
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.AuthenticationError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">AuthenticationError</span>
-
-
-<a href="#cairn.providers.AuthenticationError" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">AuthenticationError</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            ProviderError (cairn.providers._protocol.ProviderError)" href="#cairn.providers.ProviderError">ProviderError</a></code></p>
-
-
-
-        <p>API key invalid or missing.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.ModelNotAvailableError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ModelNotAvailableError</span>
-
-
-<a href="#cairn.providers.ModelNotAvailableError" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ModelNotAvailableError</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            ProviderError (cairn.providers._protocol.ProviderError)" href="#cairn.providers.ProviderError">ProviderError</a></code></p>
-
-
-
-        <p>Requested model doesn't exist or isn't accessible.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.ProviderError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ProviderError</span>
-
-
-<a href="#cairn.providers.ProviderError" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ProviderError</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="n">retryable</span><span class="p">:</span> <span class="n"><span title="bool">bool</span></span> <span class="o">=</span> <span class="kc">False</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><span title="Exception">Exception</span></code></p>
-
-
-
-        <p>Base for all provider errors.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.ProviderOverloadedError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">ProviderOverloadedError</span>
-
-
-<a href="#cairn.providers.ProviderOverloadedError" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">ProviderOverloadedError</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            ProviderError (cairn.providers._protocol.ProviderError)" href="#cairn.providers.ProviderError">ProviderError</a></code></p>
-
-
-
-        <p>Provider is overloaded (529/503).</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-
-
-  </div>
-
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="cairn.providers.RateLimitError" class="doc doc-heading">
-<code class="doc-symbol doc-symbol-heading doc-symbol-class"></code>            <span class="doc doc-object-name doc-class-name">RateLimitError</span>
-
-
-<a href="#cairn.providers.RateLimitError" class="headerlink" title="Permanent link">&para;</a></h2>
-<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">RateLimitError</span><span class="p">(</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">message</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="o">*</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">provider</span><span class="p">:</span> <span class="n"><span title="str">str</span></span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">retry_after</span><span class="p">:</span> <span class="n"><span title="float">float</span></span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
-</span></code></pre></div>
-
-    <div class="doc doc-contents first">
-            <p class="doc doc-class-bases">
-              Bases: <code><a class="autorefs autorefs-internal" title="            ProviderError (cairn.providers._protocol.ProviderError)" href="#cairn.providers.ProviderError">ProviderError</a></code></p>
-
-
-
-        <p>Rate-limited by the provider.</p>
-
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-children">
-
-
-
-
-
-
-
-
-
 
 
 
