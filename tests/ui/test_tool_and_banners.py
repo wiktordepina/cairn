@@ -169,6 +169,37 @@ class TestTurnBanners:
             assert "API down" in str(banners[0].renderable)
 
     @pytest.mark.asyncio
+    async def test_turn_aborted_with_timeout_reason_renders_warning_banner(
+        self, companion_session: Session
+    ) -> None:
+        # turn_timeout is a soft-cancel: tools in flight finished, model
+        # just didn't get to wrap up. Banner is warning-tinted (not
+        # error) and explains that tool side-effects are intact.
+        app = _app_for(companion_session)
+        observer = TextualUIEventObserver(app)
+
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            observer.observe(
+                TurnAborted(
+                    session_id=companion_session.id,
+                    turn_id="t-1",
+                    reason="turn_timeout",
+                )
+            )
+            await pilot.pause()
+
+            screen = app.current_session_screen
+            assert screen is not None
+            chat_log = screen.query_one(ChatLog)
+            banners = list(chat_log.query(Banner))
+            assert len(banners) == 1
+            assert banners[0].kind == "warning"
+            text = str(banners[0].renderable)
+            assert "deadline" in text
+            assert "Tools in flight finished normally" in text
+
+    @pytest.mark.asyncio
     async def test_turn_blocked_renders_warning_banner(self, companion_session: Session) -> None:
         app = _app_for(companion_session)
         observer = TextualUIEventObserver(app)

@@ -288,8 +288,17 @@ class SessionScreen(Screen[None]):
     # -- Turn-state observer callbacks ----------------------------------
 
     def show_aborted(self, event: TurnAborted) -> None:
-        detail = event.message or event.reason
-        self._chat_log.append_banner(Banner(text=f"✗ turn aborted — {detail}", kind="error"))
+        if event.reason == "turn_timeout":
+            # Soft-cancel from the wall-clock watchdog. Tools in flight
+            # finished cleanly; the model just didn't get to wrap up.
+            text = (
+                "◷ turn exceeded the wall-clock deadline and was cancelled. "
+                "Tools in flight finished normally."
+            )
+            self._chat_log.append_banner(Banner(text=text, kind="warning"))
+        else:
+            detail = event.message or event.reason
+            self._chat_log.append_banner(Banner(text=f"✗ turn aborted — {detail}", kind="error"))
         self._activity.set_idle()
         self._flush_pending_reload()
 
