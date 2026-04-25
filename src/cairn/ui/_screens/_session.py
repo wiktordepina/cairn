@@ -34,6 +34,7 @@ if TYPE_CHECKING:
         AssistantTextDelta,
         BudgetOverflowAdvisory,
         BudgetWarning,
+        ConfigDriftDetected,
         HistoryCompacted,
         Session,
         ToolCallApproved,
@@ -324,6 +325,34 @@ class SessionScreen(Screen[None]):
             f"(+{event.overflow_tokens})"
         )
         self._chat_log.append_banner(Banner(text=text, kind="warning"))
+
+    def show_drift(self, event: ConfigDriftDetected) -> None:
+        """Surface watched-file drift with a muted info banner.
+
+        Run `/reload` to apply the changes.
+        """
+        counts: dict[str, int] = {}
+        for change in event.changes:
+            counts[change.category] = counts.get(change.category, 0) + 1
+        labels = {
+            "config": ("config layer", "config layers"),
+            "convention": ("convention file", "convention files"),
+            "profile_doc": ("profile doc", "profile docs"),
+        }
+        parts: list[str] = []
+        for category in ("config", "convention", "profile_doc"):
+            n = counts.get(category, 0)
+            if n == 0:
+                continue
+            singular, plural = labels[category]
+            parts.append(f"{n} {singular if n == 1 else plural}")
+        summary = ", ".join(parts) if parts else f"{len(event.changes)} files"
+        self._chat_log.append_banner(
+            Banner(
+                text=f"↻ on-disk changes detected ({summary}) — run /reload to apply",
+                kind="muted",
+            ),
+        )
 
     # -- Public helpers (for command handlers + bootstrap) --------------
 

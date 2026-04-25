@@ -25,6 +25,7 @@ from cairn.domain import (
     AssistantTextDelta,
     BudgetOverflowAdvisory,
     BudgetWarning,
+    ConfigDriftDetected,
     HistoryCompacted,
     ToolCallApproved,
     ToolCallCompleted,
@@ -110,6 +111,8 @@ class TextualUIEventObserver:
                 screen.show_compaction(event)
             case BudgetOverflowAdvisory():
                 screen.show_overflow_advisory(event)
+            case ConfigDriftDetected():
+                screen.show_drift(event)
             case _:
                 # Session-lifecycle, delegation, and observation-
                 # extraction events are Tranche 2 work. Silent no-op

@@ -86,6 +86,15 @@ class FileWatcher:
         """True if any drift has been detected since last resnapshot."""
         return bool(self._dirty)
 
+    def add_observer(self, observer: UIEventObserver) -> None:
+        """Append an observer to the dispatch chain.
+
+        Lets the bootstrap attach the `TextualUIEventObserver` after
+        the app exists (the watcher is constructed first so the
+        Reloader can take a reference to it).
+        """
+        self._observers = (*self._observers, observer)
+
     async def start(self) -> None:
         """Launch the background polling task. Idempotent."""
         if self._task is not None and not self._task.done():

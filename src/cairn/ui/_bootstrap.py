@@ -296,10 +296,16 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         app=app,
         session_allowlist=session_allowlist,
     )
+    textual_observer = TextualUIEventObserver(app=app)
     orchestrator._observers = (  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
-        TextualUIEventObserver(app=app),
+        textual_observer,
         structured_observer,
     )
+    if file_watcher is not None:
+        # Drift events also need to reach the UI so the user sees a
+        # banner — the watcher was constructed before the textual
+        # observer existed, so attach it here.
+        file_watcher.add_observer(textual_observer)
 
     if conventions_policy == "prompt":
         convention_loader._trust_gate = TextualPromptTrustGate(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
