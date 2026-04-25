@@ -8,6 +8,7 @@ in the per-cluster modules (`test_config.py`, etc.).
 
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING
 
 from cairn.cli import app, main
@@ -18,24 +19,35 @@ if TYPE_CHECKING:
     import pytest
 
 
+_ANSI_RE = re.compile(r"\x1b\[[0-9;?]*[a-zA-Z]")
+
+
+def _plain(text: str) -> str:
+    """Strip ANSI escape sequences so substring assertions survive
+    Click 8.2's rich-help rendering on terminals that advertise
+    capability (some CI runners do; pytest's local capture doesn't).
+    Box-drawing characters stay — they don't fragment substrings."""
+    return _ANSI_RE.sub("", text)
+
+
 class TestCLISmoke:
     def test_help_prints_and_exits_cleanly(self, capsys: pytest.CaptureFixture[str]) -> None:
         rc = main(["--help"])
         assert rc == 0
-        out = capsys.readouterr().out
+        out = _plain(capsys.readouterr().out)
         assert "Cairn companion CLI." in out
         assert "--profile" in out
 
     def test_version_prints_and_exits_cleanly(self, capsys: pytest.CaptureFixture[str]) -> None:
         rc = main(["--version"])
         assert rc == 0
-        out = capsys.readouterr().out
+        out = _plain(capsys.readouterr().out)
         assert out.startswith("cairn ")
 
     def test_invalid_flag_exits_with_usage_error(self, capsys: pytest.CaptureFixture[str]) -> None:
         rc = main(["--nonsense"])
         assert rc == 2
-        err = capsys.readouterr().err
+        err = _plain(capsys.readouterr().err)
         assert "--nonsense" in err or "No such option" in err
 
     def test_launch_is_invoked(
