@@ -6,8 +6,11 @@ message is caught by the session screen, which routes to the
 command registry or the orchestrator depending on the prefix.
 
 Optionally owns a reference to a `CompletionMenu` sibling; when set,
-the bar intercepts navigation keys (up / down / tab / esc) and
-drives the menu instead of falling through to default behaviour.
+the bar intercepts navigation keys (up / down / tab / enter / esc)
+and drives the menu instead of falling through to default behaviour.
+Enter on a highlighted match swaps the input value for the selected
+command name and lets the default submit path dispatch it — a single
+keystroke runs the command, no Tab-then-Enter dance.
 """
 
 from __future__ import annotations
@@ -61,6 +64,16 @@ class CommandBar(Input):
                 # so the user can start typing args immediately.
                 self.value = name + " "
                 self.cursor_position = len(self.value)
+        elif event.key == "enter":
+            name = menu.selected_name
+            if name is None:
+                return  # fall through to Input's default submit
+            # Replace the typed prefix with the highlighted command and
+            # let Input's default Enter handler fire `Input.Submitted`,
+            # which the session screen routes through the registry.
+            self.value = name
+            self.cursor_position = len(self.value)
+            return
         elif event.key == "escape":
             menu.close()
         else:

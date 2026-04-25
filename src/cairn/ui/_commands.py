@@ -1,9 +1,10 @@
 """Slash-command registry + dispatcher.
 
 Current catalogue: `/new`, `/ephemeral`, `/quit`, `/cost`,
-`/tools`, `/context`, `/help`. Later tranches extend the
-catalogue; new commands land in follow-up PRs rather than gating
-on a tranche flag (resolved Q10).
+`/tools`, `/context`, `/help`, `/persona`, `/profile`, `/model`,
+`/conventions`. Later tranches extend the catalogue; new commands
+land in follow-up PRs rather than gating on a tranche flag
+(resolved Q10).
 """
 
 from __future__ import annotations
@@ -213,6 +214,128 @@ async def _handle_ephemeral(app: CairnApp, tail: str) -> None:
         )
 
 
+async def _handle_persona(app: CairnApp, _tail: str) -> None:
+    """Show the active session's persona name."""
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    persona = screen.session.persona
+    screen.append_banner(Banner(text=f"persona: {persona}", kind="muted"))
+
+
+async def _handle_profile(app: CairnApp, _tail: str) -> None:
+    """Show the active profile's name and key fields.
+
+    Falls back to a muted banner when the bootstrap hasn't wired a
+    `ProfileConfig` (e.g. Pilot tests with mock orchestrators).
+    """
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    profile = app.profile
+    if profile is None:
+        screen.append_banner(
+            Banner(
+                text="/profile — bootstrap did not wire a profile",
+                kind="muted",
+            )
+        )
+        return
+    name = profile.name or "(unnamed)"
+    lines = [
+        f"profile: {name}",
+        f"  memory space: {profile.memory_space}",
+        f"  primary model: {profile.primary_model}",
+        f"  utility model: {profile.utility_model}",
+    ]
+    screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
+
+
+async def _handle_model(app: CairnApp, _tail: str) -> None:
+    """Show the resolved primary / utility model ids for this session.
+
+    Reads from `app.profile` + `app.model_registry`; falls back to the
+    raw session model when the registry isn't wired.
+    """
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    profile = app.profile
+    registry = app.model_registry
+    if profile is None or registry is None:
+        text = f"model: {screen.session.model} (registry unwired)"
+        screen.append_banner(Banner(text=text, kind="muted"))
+        return
+    primary = registry.resolve(profile.primary_model)
+    utility = registry.resolve(profile.utility_model)
+    lines = [
+        f"primary: {primary.id}  ({primary.display_name})",
+        f"utility: {utility.id}  ({utility.display_name})",
+        f"session: {screen.session.model}",
+    ]
+    screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
+
+
+async def _handle_conventions(app: CairnApp, _tail: str) -> None:
+    """List discovered convention files and the project's trust state.
+
+    Discovery is run directly (no trust prompt, no I/O of file
+    contents) so the user can see what *would* be loaded even when
+    the project isn't trusted. Project-level files inherit the
+    project root's trust state from the user-level allowlist;
+    user-level files are always trusted.
+    """
+    from cairn.conventions import discover_project_files, discover_user_files, find_git_root
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    profile = app.profile
+    loader = app.convention_loader
+    allowlist = app.allowlist_store
+    if profile is None or loader is None or allowlist is None:
+        screen.append_banner(
+            Banner(
+                text="/conventions — bootstrap did not wire convention sources",
+                kind="muted",
+            )
+        )
+        return
+    config = profile.convention_files
+    if not config.enabled:
+        screen.append_banner(
+            Banner(text="/conventions — disabled in profile config", kind="muted")
+        )
+        return
+
+    cwd = loader.cwd
+    project_files = discover_project_files(cwd, config)
+    user_files = discover_user_files(config.user_level_paths)
+    project_root = find_git_root(cwd) or cwd
+    project_trusted = allowlist.contains(project_root)
+
+    lines: list[str] = []
+    if project_files:
+        trust_label = "trusted" if project_trusted else "untrusted"
+        lines.append(f"project: {project_root}  ({trust_label})")
+        for path, filename, _source in project_files:
+            lines.append(f"  {filename}  {path}")
+    else:
+        lines.append(f"project: {project_root}  (no convention files)")
+    if user_files:
+        lines.append("user:")
+        for path, filename, _source in user_files:
+            lines.append(f"  {filename}  {path}")
+    screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
+
+
 def build_default_registry() -> CommandRegistry:
     """Return a `CommandRegistry` populated with the Tranche 1 set."""
     registry = CommandRegistry()
@@ -241,4 +364,28 @@ def build_default_registry() -> CommandRegistry:
         )
     )
     registry.register(SlashCommand(name="/quit", summary="exit the app", handler=_handle_quit))
+    registry.register(
+        SlashCommand(name="/persona", summary="show active persona", handler=_handle_persona)
+    )
+    registry.register(
+        SlashCommand(
+            name="/profile",
+            summary="show active profile and key fields",
+            handler=_handle_profile,
+        )
+    )
+    registry.register(
+        SlashCommand(
+            name="/model",
+            summary="show resolved models for this session",
+            handler=_handle_model,
+        )
+    )
+    registry.register(
+        SlashCommand(
+            name="/conventions",
+            summary="list discovered convention files and trust state",
+            handler=_handle_conventions,
+        )
+    )
     return registry

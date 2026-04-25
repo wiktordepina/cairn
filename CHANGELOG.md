@@ -13,6 +13,46 @@ don't change the public surface. Everything is still in flux.
 Observability tranche 2 (log redaction, structured
 `UIEventObserver`) remains the next planned release.
 
+## [0.11.0] — 2026-04-25
+
+Slash & completion UX polish — the first wave of post-0.10.0
+follow-ups. The completion popover now launches highlighted
+commands in a single keystroke, and the catalogue grows with
+four read-only display commands.
+
+### Added
+
+- **One-keystroke command launch.** Pressing <kbd>Enter</kbd>
+  while the completion menu is open now runs the highlighted
+  command directly. Previously the user had to press <kbd>Tab</kbd>
+  to insert the name and then <kbd>Enter</kbd> to submit. Tab is
+  unchanged — it still inserts with a trailing space for users
+  who want to type arguments first. See
+  [ADR 0037](docs/decisions/0037-enter-executes-highlighted-command.md).
+- **`/persona`.** Prints the active session's persona name.
+- **`/profile`.** Prints the active profile name plus its memory
+  space and primary / utility model references.
+- **`/model`.** Prints the resolved primary and utility models
+  for this session (model id + display name) alongside the
+  session's own model.
+- **`/conventions`.** Lists every discovered convention file
+  (project + user-level) with the project root's trust state.
+  Reads discovery without going through the trust gate, so it
+  shows what *would* be loaded even when the project isn't
+  trusted.
+
+### Changed
+
+- `CairnApp` now accepts `profile`, `model_registry`,
+  `convention_loader`, and `allowlist_store` as optional
+  collaborators. The bootstrap threads them in; Pilot tests with
+  mock orchestrators leave them `None` and the new handlers
+  emit muted fallback banners (same shape as `/tools` /
+  `/context` already use).
+- `ConventionLoader` exposes `cwd` and `config` as public
+  read-only properties so the `/conventions` handler can run
+  discovery without reaching into private state.
+
 ## [0.10.0] — 2026-04-24
 
 Ships the interactive Textual UI — the first release where

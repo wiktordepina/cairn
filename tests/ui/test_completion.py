@@ -37,7 +37,7 @@ class TestCompletionMenuSync:
 
             assert menu.is_open is True
             names = [cmd.name for cmd in menu.matches]
-            assert names == ["/context", "/cost"]
+            assert names == ["/context", "/conventions", "/cost"]
             assert menu.selected_name == "/context"
             assert menu.has_class("-visible")
 
@@ -103,10 +103,14 @@ class TestCompletionMenuSync:
             names = [cmd.name for cmd in menu.matches]
             assert names == [
                 "/context",
+                "/conventions",
                 "/cost",
                 "/ephemeral",
                 "/help",
+                "/model",
                 "/new",
+                "/persona",
+                "/profile",
                 "/quit",
                 "/tools",
             ]
@@ -191,6 +195,75 @@ class TestCommandBarKeyIntegration:
             assert bar.value == "/cost "
             # Completion closes — a trailing space implies arguments.
             assert menu.is_open is False
+
+    @pytest.mark.asyncio
+    async def test_enter_executes_highlighted_command(
+        self, companion_session: Session
+    ) -> None:
+        """Enter while the menu is open swaps the typed prefix for the
+        highlighted command and submits — one keystroke runs it.
+        """
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            # Type '/co' — both /context and /cost match; /context is
+            # highlighted (alphabetical).
+            await pilot.press("/")
+            await pilot.press("c")
+            await pilot.press("o")
+            await pilot.pause()
+
+            menu = app.query_one(CompletionMenu)
+            assert menu.is_open is True
+            assert menu.selected_name == "/context"
+
+            await pilot.press("enter")
+            await pilot.pause()
+
+            # The session screen ran /context, which (without a
+            # context_source wired) emits a muted banner. Verify the
+            # banner appeared, the input cleared, and the menu closed.
+            from cairn.ui._widgets import Banner, ChatLog
+
+            chat_log = screen.query_one(ChatLog)
+            banners = list(chat_log.query(Banner))
+            assert len(banners) == 1
+            assert "/context" in str(banners[0].renderable)
+
+            bar = app.query_one(CommandBar)
+            assert bar.value == ""
+            assert menu.is_open is False
+
+    @pytest.mark.asyncio
+    async def test_enter_without_selection_falls_through(
+        self, companion_session: Session
+    ) -> None:
+        """If the menu has no highlighted row, Enter falls through to
+        Input's default submit path (operating on the typed value).
+        """
+        app = _app_for(companion_session)
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            bar = app.query_one(CommandBar)
+            bar.value = "/c"
+            await pilot.pause()
+            menu = app.query_one(CompletionMenu)
+            menu.highlighted = None  # force the no-selection state
+
+            await pilot.press("enter")
+            await pilot.pause()
+
+            # '/c' is unknown — we expect the unknown-command error
+            # banner from the default submit path.
+            from cairn.ui._widgets import Banner, ChatLog
+
+            screen = app.current_session_screen
+            assert screen is not None
+            chat_log = screen.query_one(ChatLog)
+            banners = list(chat_log.query(Banner))
+            assert any(b.kind == "error" for b in banners)
 
     @pytest.mark.asyncio
     async def test_escape_closes_menu(self, companion_session: Session) -> None:

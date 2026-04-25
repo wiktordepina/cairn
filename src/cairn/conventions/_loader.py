@@ -60,6 +60,14 @@ class ConventionLoader:
         self._cwd = cwd
         self._cache: list[ConventionFile] | None = None
 
+    @property
+    def cwd(self) -> Path:
+        return self._cwd
+
+    @property
+    def config(self) -> ConventionFilesConfig:
+        return self._config
+
     async def load(self) -> list[ConventionFile]:
         """Return the convention files for this session, caching.
 

@@ -16,9 +16,12 @@ before mounting the app.
     activity indicator, a live cost meter backed by `UsageRepo`,
     `/context` usage rendering, a crash-recovery banner, and the
     real trust-prompt modal for `trust_policy="prompt"` on
-    project convention files. Session switching, delegation
-    inline cards, memory-write toast, and the extended slash
-    catalogue land as post-0.10.0 polish PRs.
+    project convention files. 0.11.0 adds the display-only slash
+    commands (`/persona`, `/profile`, `/model`, `/conventions`)
+    and one-keystroke command launching from the completion
+    popover. Session switching, delegation inline cards,
+    memory-write toast, and the rest of the extended slash
+    catalogue land as further polish PRs.
 
 ## Layout
 
@@ -105,6 +108,10 @@ The command bar accepts the following commands:
 | `/cost` | Show current session cost |
 | `/context` | Show context-budget usage (see below) |
 | `/tools` | List tools available in this session |
+| `/persona` | Show the active session's persona |
+| `/profile` | Show active profile name + key fields |
+| `/model` | Show resolved primary / utility models for this session |
+| `/conventions` | List discovered convention files and the project's trust state |
 | `/new` | Placeholder — session-type picker lands post-0.10.0 |
 | `/ephemeral <model>` | Placeholder — ephemeral spawn lands post-0.10.0 |
 | `/quit` | Exit the app |
@@ -140,9 +147,14 @@ while the menu is open:
 - <kbd>↑</kbd> / <kbd>↓</kbd> — move the highlight.
 - <kbd>Tab</kbd> — complete the highlighted command into the
   input (with a trailing space so the menu closes — a space
-  implies arguments are next).
+  implies arguments are next). Use this when you want to type
+  arguments before submitting.
+- <kbd>Enter</kbd> — runs the highlighted command directly. The
+  typed prefix is replaced with the highlight's full name and
+  submitted in one keystroke. If the menu is closed (or has no
+  highlight), Enter submits the input value as typed. See
+  [ADR 0037](decisions/0037-enter-executes-highlighted-command.md).
 - <kbd>Esc</kbd> — dismiss the menu without clearing the input.
-- <kbd>Enter</kbd> — submits the current input value (always).
 
 Custom slash commands registered via `CommandRegistry.register`
 appear in the popover automatically — the menu reads the registry
