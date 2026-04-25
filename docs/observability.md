@@ -5,12 +5,11 @@ and (optionally) uses the operating system's trust store for HTTPS
 instead of Python's bundled CA list. Both are wired in via small
 bootstrap modules that callers invoke once at process start.
 
-!!! note "Tranche 1 — bootstrap only"
-    This page describes what has shipped today: the `setup_logging()`
-    and `setup_ssl()` entry points. A later tranche will add log
-    redaction, tool-call lifecycle logging, and a structured
-    `UIEventObserver` implementation — that work lands alongside the
-    UI brick.
+!!! note "Tranches 1 + 2 — shipped"
+    Tranche 1 (`setup_logging` / `setup_ssl`) shipped at 0.7.0.
+    Tranche 2 (log redaction, structured event observer, structured
+    crash-recovery logs) shipped at 0.12.0 and is described in the
+    sections below.
 
 ## Logging
 
@@ -50,6 +49,138 @@ The parent directory is created with mode `0o700` if missing.
 Calling `setup_logging()` a second time removes any handlers installed
 by the first call and replaces them. Tests can reconfigure freely; a
 future `/reload` command can re-point the log file without restart.
+
+### Log redaction
+
+`setup_logging()` installs a `RedactingFilter` on the rotating handler
+by default. The filter rewrites any string that matches an API-key
+pattern from `cairn._redaction_patterns` — the same set used by the
+tool-output `SecretRedactor` middleware — replacing the secret with
+`[REDACTED]` (preserving structural context like a `Bearer ` prefix).
+
+Patterns covered today:
+
+- `Bearer <token>` (Authorization headers, ≥ 20-char token)
+- OpenAI-shaped `sk-…`
+- Anthropic-shaped `sk-ant-…`
+- Google API `AIza…`
+- AWS access key `AKIA…`
+
+The filter walks `record.msg`, every element of `record.args`, and
+every string value in the record's `extra` payload (recursing into
+nested dicts and lists). Reserved `LogRecord` attributes (`name`,
+`pathname`, `levelname`, …) are left alone so formatters keep working.
+
+Redaction is **best-effort** — it cannot know about secrets that don't
+match the pattern set, and it is not a substitute for not-logging-
+secrets in the first place. Treat the cairn log file as sensitive.
+
+The filter is attached to the **handler**, not the namespace logger.
+This matters because logger-level filters are only consulted on the
+originating logger; handler-level filters run on every record reaching
+the handler, including those propagated up from descendant loggers
+(`cairn.events`, `cairn.orchestrator`, …).
+
+#### Opt-out
+
+Resolution order (highest priority first):
+
+1. `setup_logging(redact=False)` keyword argument.
+2. `CAIRN_LOG_REDACT` environment variable. Set to `0`, `false`,
+   `no`, or `off` to disable. Anything else (or unset) keeps redaction
+   on.
+3. Default: enabled.
+
+Disable only if you're debugging the filter itself or running in an
+environment where false positives from the patterns are causing real
+log loss. The shape of an API key is rarely a false positive.
+
+## Structured event log
+
+`cairn.logging.StructuredEventObserver` implements the orchestrator's
+`UIEventObserver` protocol and emits one `INFO` record per
+`UIEvent` lifecycle event on the `cairn.events` logger. The bootstrap
+attaches it alongside `TextualUIEventObserver`, so every turn produces
+both the on-screen widget updates and a tail-able structured log.
+
+Use it for bug reports — the most recent N lines of `cairn.log` are
+usually enough to reconstruct what happened during a misbehaving turn,
+and the `event_type`, `turn_id`, `session_id`, `tool_call_id`, and
+`message_id` fields are promoted to the top of each record's `extra`
+payload for easy filtering.
+
+Sample log lines (formatter elided):
+
+```
+INFO cairn.events session_created: session=01h…
+INFO cairn.events user_message_persisted: turn=01h… msg=01h…
+INFO cairn.events tool_call_planned: turn=01h… tool=file_read id=tc_…
+INFO cairn.events tool_call_approved: turn=01h… id=tc_… by=auto
+INFO cairn.events tool_call_started: turn=01h… tool=file_read id=tc_…
+INFO cairn.events tool_call_completed: turn=01h… id=tc_… status=completed is_error=False duration_ms=12
+INFO cairn.events assistant_message_complete: turn=01h… msg=01h…
+INFO cairn.events turn_complete: turn=01h… session=01h… stop=end_turn
+```
+
+The full event payload (every dataclass field) lands under the
+`event` key in `extra`, so a JSON formatter can pick it up later
+without parsing the message line.
+
+### What is and isn't logged
+
+Logged at `INFO`:
+
+- Every variant in the `UIEvent` union except `AssistantTextDelta`.
+- Approval decisions (`ToolCallApproved`, `ToolCallRejected`) carry
+  the `decided_by` field — `auto` for middleware decisions, `user` for
+  modal decisions — so the log is a viable audit trail alongside the
+  persisted `approval_decisions` table.
+- Tool-call lifecycle records carry `tool_name`, `tool_call_id`,
+  `status`, `is_error`, and `duration_ms` — but **never tool input or
+  output**.
+
+Not logged:
+
+- `AssistantTextDelta` is dropped entirely. Per-token noise dwarfs
+  every other category, and the assembled message is logged on
+  `AssistantMessageComplete`.
+- Tool-call arguments (`args` on `ToolCallPlanned`) and tool result
+  bodies. The argument set or output may contain secrets, file
+  contents, or PII; routing them to the log file is a regression even
+  with the redaction filter on.
+
+### Multi-profile triage
+
+`make_event_logger(profile_name)` returns a `LoggerAdapter` over
+`cairn.events` that injects `profile` into every record's `extra`
+payload. The bootstrap binds the active profile name; multi-profile
+log triage becomes a `grep profile=<name> cairn.log`. Records logged
+without a bound profile (tests, plumbing called before profile
+resolution) carry `profile=<unbound>`.
+
+### Error handling
+
+If routing an event raises (e.g. an unexpected `LogRecord` `extra`
+collision), the observer falls back to a `WARNING` on the namespace
+`cairn` logger and continues. It never re-raises — the
+`UIEventObserver` contract is fire-and-forget.
+
+## Crash-recovery logs
+
+`Orchestrator.resume_aborted_turns()` is called once at boot to mark
+turns left non-terminal by a prior process crash. It emits three
+record kinds on `cairn.orchestrator`:
+
+- `resume_aborted_turns.scan_started` — entry, no fields.
+- `turn.resumed_as_aborted` — one record per dangling turn, with
+  `turn_id`, `session_id`, `prior_state` (the state the turn was
+  stuck in), and the canonical `reason="process_crash"`.
+- `resume_aborted_turns.scan_complete` — exit, with
+  `resumed_count` so a single tail of `cairn.log` shows the sweep
+  result.
+
+The UI also surfaces the count via a muted info banner on first
+mount (see `docs/ui.md`).
 
 ### API
 
