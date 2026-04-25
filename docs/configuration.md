@@ -127,11 +127,11 @@ roles = ["primary"]
 | `supports_tools` | bool | — (required) | Whether the model can call tools. |
 | `supports_vision` | bool | `false` | Whether the model accepts images. |
 | `supports_thinking` | bool | `false` | Whether the model has extended-thinking mode. |
-| `supports_prompt_cache` | bool | `false` | Whether cairn should emit cache markers. |
+| `supports_prompt_cache` | bool | `false` | When true, cairn emits cache markers (Anthropic, OpenRouter) or relies on the provider's automatic cache (OpenAI, DeepSeek). See [Prompt caching](prompt-caching.md). |
 | `input_cost_per_1m` | float | — (required) | USD per 1M input tokens. |
 | `output_cost_per_1m` | float | — (required) | USD per 1M output tokens. |
-| `cache_read_cost_per_1m` | float | `null` | USD per 1M tokens read from cache. |
-| `cache_write_cost_per_1m` | float | `null` | USD per 1M tokens written to cache. |
+| `cache_read_cost_per_1m` | float | `null` | USD per 1M tokens read from cache. Required when `supports_prompt_cache=true` for accurate cost reporting. |
+| `cache_write_cost_per_1m` | float | `null` | USD per 1M tokens written to cache. Set on Anthropic-backed models; leave `null` for OpenAI / DeepSeek where writes are not separately billed. |
 | `roles` | list of [role](#model-roles) | `[]` | Roles this model fulfils. |
 
 ### Model roles

@@ -103,6 +103,33 @@ for; the estimate is coarse but monotonic.
 - **Per-provider cost reporting** — OpenRouter returns provider-specific
   cost info in response headers. Not yet surfaced.
 
+## DeepSeek
+
+[DeepSeek](https://platform.deepseek.com) ships an OpenAI-compatible
+API at `https://api.deepseek.com/v1`. Two relevant V1 models:
+
+- `deepseek-chat` — V3 general-purpose model, tool-use capable.
+- `deepseek-reasoner` — R1-class reasoning model that streams
+  reasoning traces alongside the final answer. Reasoning content is
+  silently dropped in V1 (no streaming thinking-event type yet);
+  the final answer text still surfaces normally.
+
+**Config:**
+
+```toml
+[providers.deepseek]
+api_key = "env:DEEPSEEK_API_KEY"
+```
+
+**Caching** is automatic and disk-backed — no markers, no opt-in.
+DeepSeek surfaces hits via `usage.prompt_cache_hit_tokens` (a third
+distinct shape compared to Anthropic and OpenAI); cairn maps it onto
+`UsageEvent.cache_read_tokens`. Cache hits are billed at roughly 10 %
+of the input rate, so caching pays back on the very first re-use.
+
+**Token counting** falls back to character-based estimation —
+DeepSeek does not publish a tiktoken-compatible tokenizer.
+
 ## Adding a model
 
 Ship cairn with a `[[models]]` entry for every model you want to use.

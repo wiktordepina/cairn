@@ -104,3 +104,6 @@ ongoing costs does this impose?
 | [0035](0035-remember-for-session-gating.md) | "Remember for this session" gated to tier ≤ 3 | accepted |
 | [0036](0036-trust-prompt-three-way-choice.md) | Trust-prompt modal offers three outcomes, not two | accepted |
 | [0037](0037-enter-executes-highlighted-command.md) | Enter on a highlighted completion runs that command | accepted |
+| [0038](0038-four-cache-breakpoints.md) | Four cache breakpoints, fixed positions | accepted |
+| [0039](0039-symmetric-cache-treatment.md) | Symmetric cache treatment despite asymmetric provider APIs | accepted |
+| [0040](0040-deepseek-fourth-v1-provider.md) | DeepSeek as the fourth V1 provider | accepted |

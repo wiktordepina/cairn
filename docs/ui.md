@@ -130,13 +130,16 @@ context: 17,000 / 200,000 tokens (8% used) — model=claude-opus-4-7
 ```
 
 Reads the most-recent `PRIMARY_TURN` usage row from `UsageRepo`
-and the model's `context_window` from `ModelConfig`. The
-per-segment breakdown (`identity`, `user_context`,
-`project_conventions`, `memory_index`, `retrieved_memories`)
-needs a `ContextReport` from the context manager and lands with
-the stacked-bar follow-up. If the session has no usage recorded
-yet (fresh session, first turn still running), the banner shows
-the budget only with a "no primary-turn usage recorded yet" note.
+and the model's `context_window` from `ModelConfig`. The cache
+columns reflect real provider usage as of 0.13.0 — see
+[Prompt caching](prompt-caching.md) for the per-provider shape
+of `cached: read` and `cached: write`. The per-segment breakdown
+(`identity`, `user_context`, `project_conventions`,
+`memory_index`, `retrieved_memories`) needs a `ContextReport`
+from the context manager and lands with the stacked-bar
+follow-up. If the session has no usage recorded yet (fresh
+session, first turn still running), the banner shows the budget
+only with a "no primary-turn usage recorded yet" note.
 
 ### Completion popover
 
