@@ -80,9 +80,20 @@ cd cairn
 # Install dependencies (and run the test suite)
 uv sync
 uv run pytest
+
+# Optional: enable the repo-tracked pre-commit hook so every commit
+# runs the same lint / type / test / docs checks CI gates the PR on
+git config core.hooksPath .githooks
 ```
 
 `uv run cairn` will error out until the CLI brick lands.
+
+The pre-commit hook lives at `.githooks/pre-commit`. It runs `ruff
+check`, `ruff format --check`, `pyright`, the docs reference
+generator's `--check`, and `pytest`. Skip individual steps while
+iterating with `CAIRN_PRECOMMIT_SKIP=tests,docs git commit -m …`
+(tokens: `ruff`, `pyright`, `tests`, `docs`), or bypass entirely
+with `git commit --no-verify` when you need to.
 
 ## Configuration
 

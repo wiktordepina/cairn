@@ -405,9 +405,7 @@ class TestCommandBarPromptHistory:
         assert bar.prompt_history == ["a", "b", "a"]
 
     @pytest.mark.asyncio
-    async def test_rapid_up_walks_past_newest_entry(
-        self, companion_session: Session
-    ) -> None:
+    async def test_rapid_up_walks_past_newest_entry(self, companion_session: Session) -> None:
         """Regression: rapid Up presses must reach older entries.
 
         TextArea posts `Changed` asynchronously, so several queue up
