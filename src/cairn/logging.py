@@ -462,7 +462,8 @@ class StructuredEventObserver:
                 )
             case HistoryCompacted():
                 self._info(
-                    "history_compacted: turn=%s session=%s blocks=%s msgs=%s tokens=%s→%s reason=%s",
+                    "history_compacted: turn=%s session=%s blocks=%s msgs=%s "
+                    "tokens=%s→%s reason=%s",
                     event.turn_id,
                     event.session_id,
                     event.blocks_dropped,

@@ -31,6 +31,7 @@ from cairn.conventions import (
     trust_gate_for_policy,
 )
 from cairn.domain._enums import SessionType
+from cairn.logging import StructuredEventObserver, make_event_logger
 from cairn.memory import (
     Extractor,
     ObservationExtractionQueue,
@@ -76,7 +77,6 @@ from cairn.tools.builtin import (
     make_web_fetch,
 )
 from cairn.tools.security import WorkspaceSandbox
-from cairn.logging import StructuredEventObserver, make_event_logger
 from cairn.ui._app import CairnApp
 from cairn.ui._context_report import ContextReportInput
 from cairn.ui._gateway import TextualApprovalGateway
