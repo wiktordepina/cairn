@@ -35,6 +35,8 @@ if TYPE_CHECKING:
         BudgetOverflowAdvisory,
         BudgetWarning,
         ConfigDriftDetected,
+        DelegationCompleted,
+        DelegationSpawned,
         HistoryCompacted,
         Session,
         ToolCallApproved,
@@ -334,6 +336,22 @@ class SessionScreen(Screen[None]):
             f"(+{event.overflow_tokens})"
         )
         self._chat_log.append_banner(Banner(text=text, kind="warning"))
+
+    def show_delegation_spawned(self, event: DelegationSpawned) -> None:
+        """Inline muted line: parent turn just spawned a sub-session."""
+        # Short-id surface so the transcript stays scannable; the full
+        # session id is one query away in the structured logs.
+        short = event.session_id[:8]
+        self._chat_log.append_banner(
+            Banner(text=f"⤷ delegated to ephemeral session {short}…", kind="muted"),
+        )
+
+    def show_delegation_completed(self, event: DelegationCompleted) -> None:
+        """Inline muted line: the child session just returned."""
+        short = event.session_id[:8]
+        self._chat_log.append_banner(
+            Banner(text=f"⤴ delegation {short}… returned", kind="muted"),
+        )
 
     def show_drift(self, event: ConfigDriftDetected) -> None:
         """Surface watched-file drift with a muted info banner.
