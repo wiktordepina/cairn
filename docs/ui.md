@@ -121,6 +121,7 @@ The command bar accepts the following commands:
 | `/profile` | Show active profile name + key fields |
 | `/model` | Show resolved primary / utility models for this session |
 | `/conventions` | List discovered convention files and the project's trust state |
+| `/reload` | Reload config + conventions + profile docs (see below) |
 | `/new` | Placeholder — session-type picker lands post-0.10.0 |
 | `/ephemeral <model>` | Placeholder — ephemeral spawn lands post-0.10.0 |
 | `/quit` | Exit the app |
@@ -149,6 +150,29 @@ from the context manager and lands with the stacked-bar
 follow-up. If the session has no usage recorded yet (fresh
 session, first turn still running), the banner shows the budget
 only with a "no primary-turn usage recorded yet" note.
+
+### `/reload`
+
+Re-reads the merged config, convention files, and profile docs
+from disk and applies the changes surgically — without
+restarting the session, the extraction worker, or the Textual
+UI. The success banner names the categories that were re-snapped
+(*"Reloaded: 2 config layers, 1 convention file."*); a failed
+reload (validation error) renders a warning banner with the
+error message and leaves the previously-good config in place.
+
+When invoked mid-turn, `/reload` queues until the current turn
+completes — the in-flight provider call finishes against the
+bound registries, and the swap takes effect on the next turn.
+The user sees a *"reload queued — applies after current turn"*
+banner immediately, then the result banner once the deferred
+reload runs.
+
+What `/reload` does and doesn't swap is documented in
+[ADR 0042](decisions/0042-surgical-reload-boundary.md). The
+short version: provider registry, model registry, and secret
+resolver are rebuilt; the orchestrator instance, active session,
+persistence, and extraction queue are preserved.
 
 ### Completion popover
 

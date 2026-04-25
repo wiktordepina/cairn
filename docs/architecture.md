@@ -143,6 +143,7 @@ Cairn is under active development. This table is authoritative; the
 | CLI (config / secret / trust subcommands + first-run init) | Shipped (0.14.0) |
 | Observability — tranche 2 (redaction + structured observer) | Shipped (0.12.0) |
 | Prompt caching (all providers) | Shipped (0.13.0) |
+| File watcher + `/reload` | Shipped (0.15.0) |
 | Reflection (tier-2 memory) | V2 |
 | Knowledge graph | V2 |
 | MCP client | V2 |

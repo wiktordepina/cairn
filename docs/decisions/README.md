@@ -108,3 +108,4 @@ ongoing costs does this impose?
 | [0039](0039-symmetric-cache-treatment.md) | Symmetric cache treatment despite asymmetric provider APIs | accepted |
 | [0040](0040-deepseek-fourth-v1-provider.md) | DeepSeek as the fourth V1 provider | accepted |
 | [0041](0041-typer-for-cli-surface.md) | Typer for the CLI surface | accepted |
+| [0042](0042-surgical-reload-boundary.md) | Surgical reload boundary for `/reload` | accepted |

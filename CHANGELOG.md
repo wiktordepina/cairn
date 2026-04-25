@@ -10,6 +10,72 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
+## [0.15.0] — 2026-04-25
+
+The file-watcher brick. Cairn now notices when its config layers,
+convention files, or profile docs change on disk and surfaces a
+muted info banner. A new `/reload` slash command applies the
+changes surgically — without restarting the active session, the
+extraction worker, or the Textual UI.
+
+### Added
+
+- **`cairn.watcher` package** with `FileWatcher`, `Reloader`,
+  `WatchSet`, `build_watch_set`, `discover_watch_paths`. The
+  watcher snapshots a fixed set of paths on boot
+  (config layers + convention files + profile docs), polls them
+  on a configurable interval (default 3 s), and emits
+  `ConfigDriftDetected` once per drift transition. Drift
+  detected during a turn is buffered until the next tick after
+  the turn completes — no banner above a streaming assistant
+  message.
+- **`/reload` slash command** — calls the new `Reloader` to
+  rebuild `SecretResolver`, `ModelRegistry`, and
+  `ProviderRegistry` from a freshly-loaded `CairnConfig`,
+  invalidate the convention + profile-doc loader caches, and
+  re-snapshot the watcher. Mid-turn invocations queue and run on
+  turn completion.
+- **`Orchestrator.replace_collaborators(...)`** narrow setter
+  used by `Reloader` to swap the disk-derived collaborators in
+  place; runtime-state collaborators (turn repo, extraction
+  queue, memory service, approval gateway) are preserved.
+- **`ConfigDriftDetected` + `DriftChange`** UI events on the
+  `UIEvent` union. Process-level (no `turn_id`) — same shape as
+  `SessionCreated` / `SessionResumed`.
+- **`WatcherConfig`** on `ProfileConfig.watcher` with two
+  knobs: `enabled` (default true) and `poll_interval_s`
+  (default 3.0, range 0.5–60).
+- **ADR 0042 — Surgical reload boundary.** Records what
+  `/reload` swaps, what it leaves alone, and why we don't
+  re-bootstrap on reload.
+
+### Changed
+
+- **`TurnIncomplete` is now emitted** when a turn stops at
+  `max_tokens` with a partial tool call (model emitted
+  `ToolCallStart` + input deltas but no `ToolCallEnd` before
+  `MessageStop`). Previously this path silently emitted
+  `TurnComplete`. UI surfaces it as a muted "stopped at
+  max_tokens with a partial tool call" banner. The persistence
+  path is unchanged — `turns.state` still goes to `COMPLETED`,
+  only the UI event differs.
+- **`ProfileDocLoader`** exposes `soul_path`, `user_context_path`,
+  `memory_md_path` as read-only properties so the file watcher
+  can snapshot them without reaching into private state.
+- **`Message.has_pending_tool_input()`** new helper exposing
+  whether any tool call started streaming but never finalized.
+  Used by the orchestrator to detect the partial-tool-call exit
+  case.
+
+### Dependencies
+
+- **Removed `watchfiles`.** The polling + mtime-then-hash
+  detection model in `cairn.watcher._poller` doesn't need an
+  inotify-style event source. Removing the dep also avoids
+  inotify's silent-degrade behaviour on NFS / overlayfs /
+  containers, where event-driven watchers stop working without
+  reporting an error.
+
 ## [0.14.0] — 2026-04-25
 
 The CLI brick. `cairn` now ships a full operator-facing subcommand
