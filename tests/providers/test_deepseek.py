@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
-from typing import TYPE_CHECKING
 
 from cairn.config._models import CairnConfig, ProviderConfig, SecretRef
 from cairn.config._secrets import SecretResolver
@@ -17,9 +16,6 @@ from cairn.domain._provider import (
 from cairn.providers._deepseek import DeepSeekProvider, _usage_from_chunk
 from cairn.providers._registry import ProviderRegistry
 
-if TYPE_CHECKING:
-    pass
-
 
 def _provider() -> DeepSeekProvider:
     config = ProviderConfig(name="deepseek", api_key=SecretRef.parse("literal:t"))
@@ -32,9 +28,7 @@ class TestRegistration:
             schema_version=1,
             active_profile="default",
             providers={
-                "deepseek": ProviderConfig(
-                    name="deepseek", api_key=SecretRef.parse("literal:t")
-                ),
+                "deepseek": ProviderConfig(name="deepseek", api_key=SecretRef.parse("literal:t")),
             },
         )
         registry = ProviderRegistry(cfg, SecretResolver())
@@ -46,7 +40,6 @@ class TestRegistration:
 
 class TestBaseUrl:
     def test_default_base_url(self) -> None:
-        provider = _provider()
         # The base URL is set lazily on first client construction. We
         # can verify the constant directly without spinning the SDK.
         from cairn.providers import _deepseek
@@ -90,9 +83,11 @@ class TestFormatHelpersShared:
         msg.content = [TextBlock(text="hi")]
         segs = [SystemPromptSegment(text="x", cacheable=True)]
         msg_result = format_messages([msg], system=segs)
-        tools_result = format_tools([
-            ToolDefinition(name="t", description="t", input_schema={}),
-        ])
+        tools_result = format_tools(
+            [
+                ToolDefinition(name="t", description="t", input_schema={}),
+            ]
+        )
         for m in msg_result:
             assert "cache_control" not in m
         for t in tools_result:

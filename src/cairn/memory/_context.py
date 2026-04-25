@@ -226,9 +226,7 @@ class StandardContextManager:
         """
         convention_files = await self._conventions.load() if self._conventions is not None else []
         if cache_aware:
-            segments = self._assemble_system_prompt_segments(
-                retrieved_memories, convention_files
-            )
+            segments = self._assemble_system_prompt_segments(retrieved_memories, convention_files)
             return ProviderRequest(
                 model=session.model,
                 messages=list(history),

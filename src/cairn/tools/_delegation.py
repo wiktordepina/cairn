@@ -140,11 +140,7 @@ class DelegationTool:
         # the next sub-call enjoys a free hit on this prompt too.
         sub_system: str | list[SystemPromptSegment] | None
         if model_cfg.supports_prompt_cache and self._config.sub_system_prompt:
-            sub_system = [
-                SystemPromptSegment(
-                    text=self._config.sub_system_prompt, cacheable=True
-                )
-            ]
+            sub_system = [SystemPromptSegment(text=self._config.sub_system_prompt, cacheable=True)]
         else:
             sub_system = self._config.sub_system_prompt
 

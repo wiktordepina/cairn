@@ -1416,6 +1416,4 @@ class TestPromptCachingFlags:
             pass
 
         rows = await usage_repo.list_recent(limit=10)
-        assert any(
-            r.cache_read_tokens == 80 and r.cache_write_tokens == 10 for r in rows
-        )
+        assert any(r.cache_read_tokens == 80 and r.cache_write_tokens == 10 for r in rows)

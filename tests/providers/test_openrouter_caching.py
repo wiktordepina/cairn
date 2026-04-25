@@ -73,10 +73,8 @@ class TestFormatSystemWithCache:
         assert msg is not None
         assert msg["role"] == "system"
         assert msg["content"] == [
-            {"type": "text", "text": "profile",
-             "cache_control": {"type": "ephemeral"}},
-            {"type": "text", "text": "session",
-             "cache_control": {"type": "ephemeral"}},
+            {"type": "text", "text": "profile", "cache_control": {"type": "ephemeral"}},
+            {"type": "text", "text": "session", "cache_control": {"type": "ephemeral"}},
         ]
 
     def test_none_returns_none(self) -> None:
@@ -87,9 +85,7 @@ class TestFormatSystemWithCache:
 
     def test_empty_segments_returns_none(self) -> None:
         assert _format_system_with_cache([]) is None
-        assert _format_system_with_cache(
-            [SystemPromptSegment(text="", cacheable=True)]
-        ) is None
+        assert _format_system_with_cache([SystemPromptSegment(text="", cacheable=True)]) is None
 
 
 class TestFormatToolsWithCache:
@@ -164,9 +160,7 @@ class TestUsageDualShape:
 
 
 class TestMarkerCap:
-    def test_drops_oldest_first_warns(
-        self, caplog: logging.LogCaptureFixture
-    ) -> None:
+    def test_drops_oldest_first_warns(self, caplog: logging.LogCaptureFixture) -> None:
         system_msg = {
             "role": "system",
             "content": [
@@ -175,14 +169,16 @@ class TestMarkerCap:
             ],
         }
         tools = [
-            {"type": "function", "function": {},
-             "cache_control": {"type": "ephemeral"}},
+            {"type": "function", "function": {}, "cache_control": {"type": "ephemeral"}},
         ]
         messages = [
-            {"role": "user", "content": [
-                {"type": "text", "text": "x", "cache_control": {"type": "ephemeral"}},
-                {"type": "text", "text": "y", "cache_control": {"type": "ephemeral"}},
-            ]},
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "x", "cache_control": {"type": "ephemeral"}},
+                    {"type": "text", "text": "y", "cache_control": {"type": "ephemeral"}},
+                ],
+            },
         ]
         with caplog.at_level(logging.WARNING, logger="cairn.providers._openrouter"):
             _enforce_marker_cap(

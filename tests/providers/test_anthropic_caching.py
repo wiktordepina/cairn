@@ -127,9 +127,7 @@ class TestUsageWithCache:
         provider = self._make_provider()
         event = SimpleNamespace(
             type="message_start",
-            message=SimpleNamespace(
-                usage=SimpleNamespace(input_tokens=42, output_tokens=0)
-            ),
+            message=SimpleNamespace(usage=SimpleNamespace(input_tokens=42, output_tokens=0)),
         )
         results = provider._map_event(event, {})
         ev = results[0]
@@ -164,13 +162,20 @@ class TestMarkerCapEnforcement:
             {"type": "text", "text": "a", "cache_control": {"type": "ephemeral"}},
         ]
         tools = [
-            {"name": "t", "description": "t", "input_schema": {},
-             "cache_control": {"type": "ephemeral"}},
+            {
+                "name": "t",
+                "description": "t",
+                "input_schema": {},
+                "cache_control": {"type": "ephemeral"},
+            },
         ]
         messages = [
-            {"role": "user", "content": [
-                {"type": "text", "text": "x", "cache_control": {"type": "ephemeral"}},
-            ]},
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "x", "cache_control": {"type": "ephemeral"}},
+                ],
+            },
         ]
         _enforce_marker_cap(
             system=system, tools=tools, messages=messages, provider_name="anthropic"
@@ -180,26 +185,33 @@ class TestMarkerCapEnforcement:
         assert "cache_control" in tools[0]
         assert "cache_control" in messages[0]["content"][0]
 
-    def test_over_cap_drops_oldest_first_warns(
-        self, caplog: logging.LogCaptureFixture
-    ) -> None:
+    def test_over_cap_drops_oldest_first_warns(self, caplog: logging.LogCaptureFixture) -> None:
         system = [
             {"type": "text", "text": "a", "cache_control": {"type": "ephemeral"}},
             {"type": "text", "text": "b", "cache_control": {"type": "ephemeral"}},
         ]
         tools = [
-            {"name": "t", "description": "t", "input_schema": {},
-             "cache_control": {"type": "ephemeral"}},
+            {
+                "name": "t",
+                "description": "t",
+                "input_schema": {},
+                "cache_control": {"type": "ephemeral"},
+            },
         ]
         messages = [
-            {"role": "user", "content": [
-                {"type": "text", "text": "x", "cache_control": {"type": "ephemeral"}},
-                {"type": "text", "text": "y", "cache_control": {"type": "ephemeral"}},
-            ]},
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "x", "cache_control": {"type": "ephemeral"}},
+                    {"type": "text", "text": "y", "cache_control": {"type": "ephemeral"}},
+                ],
+            },
         ]
         with caplog.at_level(logging.WARNING, logger="cairn.providers._anthropic"):
             _enforce_marker_cap(
-                system=system, tools=tools, messages=messages,
+                system=system,
+                tools=tools,
+                messages=messages,
                 provider_name="anthropic",
             )
 

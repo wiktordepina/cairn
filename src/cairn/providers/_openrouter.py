@@ -30,7 +30,11 @@ from cairn.domain._provider import (
 from cairn.providers._openai import (
     _serialize_tool_input,
     flatten_system,
+)
+from cairn.providers._openai import (
     format_messages as _openai_format_messages,
+)
+from cairn.providers._openai import (
     format_tools as _openai_format_tools,
 )
 from cairn.providers._protocol import (
@@ -63,11 +67,7 @@ def _request_uses_cache(request: ProviderRequest) -> bool:
     """True iff the request asks for any cache marker placement."""
     if request.cache_tools or request.cache_last_message:
         return True
-    if isinstance(request.system, list) and any(
-        seg.cacheable for seg in request.system
-    ):
-        return True
-    return False
+    return isinstance(request.system, list) and any(seg.cacheable for seg in request.system)
 
 
 def _format_system_with_cache(
@@ -145,12 +145,8 @@ def _format_messages_with_cache(
                 case TextBlock():
                     content_parts.append({"type": "text", "text": block.text})
                 case ImageBlock():
-                    data_url = (
-                        f"data:{block.source.media_type};base64,{block.source.data}"
-                    )
-                    content_parts.append(
-                        {"type": "image_url", "image_url": {"url": data_url}}
-                    )
+                    data_url = f"data:{block.source.media_type};base64,{block.source.data}"
+                    content_parts.append({"type": "image_url", "image_url": {"url": data_url}})
                 case ToolUseBlock() | ToolResultBlock():
                     pass
                 case _:
@@ -197,17 +193,13 @@ def _count_cache_markers(
 ) -> int:
     count = 0
     if system_msg and isinstance(system_msg.get("content"), list):
-        count += sum(
-            1 for part in system_msg["content"] if "cache_control" in part
-        )
+        count += sum(1 for part in system_msg["content"] if "cache_control" in part)
     count += sum(1 for t in tools if "cache_control" in t)
     for msg in messages:
         content = msg.get("content")
         if isinstance(content, list):
             count += sum(
-                1
-                for part in content
-                if isinstance(part, dict) and "cache_control" in part
+                1 for part in content if isinstance(part, dict) and "cache_control" in part
             )
     return count
 
@@ -331,9 +323,7 @@ class OpenRouterProvider:
             messages = _format_messages_with_cache(
                 request.messages, cache_last=request.cache_last_message
             )
-            tools = _format_tools_with_cache(
-                request.tools, cache_last=request.cache_tools
-            )
+            tools = _format_tools_with_cache(request.tools, cache_last=request.cache_tools)
             system_msg = _format_system_with_cache(request.system)
             _enforce_marker_cap(
                 system_msg=system_msg,

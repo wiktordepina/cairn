@@ -263,9 +263,7 @@ class AnthropicProvider:
         messages = format_messages(request.messages, cache_last=request.cache_last_message)
         tools = format_tools(request.tools, cache_last=request.cache_tools)
         system = format_system(request.system)
-        _enforce_marker_cap(
-            system=system, tools=tools, messages=messages, provider_name=self.name
-        )
+        _enforce_marker_cap(system=system, tools=tools, messages=messages, provider_name=self.name)
 
         kwargs: dict[str, Any] = {
             "model": request.model,
@@ -323,8 +321,7 @@ class AnthropicProvider:
                         input_tokens=usage.input_tokens,
                         output_tokens=usage.output_tokens,
                         cache_read_tokens=getattr(usage, "cache_read_input_tokens", 0) or 0,
-                        cache_write_tokens=getattr(usage, "cache_creation_input_tokens", 0)
-                        or 0,
+                        cache_write_tokens=getattr(usage, "cache_creation_input_tokens", 0) or 0,
                     )
                 )
 

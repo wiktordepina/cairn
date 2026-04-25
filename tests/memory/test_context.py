@@ -429,9 +429,7 @@ class TestCacheAwareSegments:
     @pytest.mark.asyncio
     async def test_persona_only_yields_session_segment(self, tmp_path: Path) -> None:
         (tmp_path / "soul_document.md").write_text("SOUL", encoding="utf-8")
-        mgr = StandardContextManager(
-            loader=_loader(tmp_path), base_system_prompt="PERSONA"
-        )
+        mgr = StandardContextManager(loader=_loader(tmp_path), base_system_prompt="PERSONA")
 
         req = await mgr.build_request(
             session=_session(),
