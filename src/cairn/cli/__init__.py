@@ -43,6 +43,20 @@ app: typer.Typer = typer.Typer(
     add_completion=False,
 )
 
+config_app: typer.Typer = typer.Typer(
+    help="Inspect and manage cairn configuration.",
+    no_args_is_help=True,
+    pretty_exceptions_enable=False,
+)
+app.add_typer(config_app, name="config")
+
+# Late imports avoid circular imports at module-load time: the
+# subcommand modules pull from `cairn.config`, which is fine, but
+# this keeps the dependency direction obvious.
+from cairn.cli import _config  # noqa: E402
+
+_config.register(config_app)
+
 
 def _read_version() -> str:
     try:
