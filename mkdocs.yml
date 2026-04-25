@@ -138,6 +138,7 @@ nav:
       - Providers: reference/providers.md
       - SSL: reference/ssl.md
       - Tools: reference/tools.md
+      - UI: reference/ui.md
   - Decisions:
       - Index: decisions/README.md
       - "0001 Per-profile SQLite": decisions/0001-per-profile-sqlite.md

@@ -17,6 +17,14 @@ content is otherwise the same.
   reference scheme, profile discovery and merge order.
 - **[Providers](providers.md)** — per-provider notes for Anthropic,
   OpenAI (including OpenAI-compatible local servers), and OpenRouter.
+- **[Memory](memory.md)** — tier-1 extraction, retrieval, MEMORY.md
+  loading, and the observation log.
+- **[Conventions](conventions.md)** — convention-file discovery, merge
+  ordering (user → ancestor → nested), and what's surfaced to the model.
+- **[Compaction](compaction.md)** — turn-block truncation, advisory
+  context budget, and what's deferred to V2.
+- **[UI](ui.md)** — the Textual interface: keybindings, approval modal,
+  trust prompt, and the single-loop observer.
 - **[Observability](observability.md)** — `setup_logging()` and
   `setup_ssl()` bootstraps; resolution order; when to call.
 
@@ -35,8 +43,9 @@ content is otherwise the same.
 ### Reference
 
 - **[API reference](reference/index.md)** — auto-generated from each
-  module's `__all__`. Covers `config`, `domain`, `logging`,
-  `orchestrator`, `persistence`, `providers`, `ssl`, and `tools`.
+  module's `__all__`. Covers `compaction`, `config`, `conventions`,
+  `domain`, `logging`, `memory`, `orchestrator`, `persistence`,
+  `providers`, `ssl`, `tools`, and `ui`.
 
 The reference pages are best read on the published site, where
 `mkdocstrings` resolves the `:::` directives into rendered docstrings

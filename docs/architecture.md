@@ -155,4 +155,6 @@ Cairn is under active development. This table is authoritative; the
 - [Orchestrator](orchestrator.md) — the turn loop.
 - [Tools](tools.md) — tool system, built-in catalogue, security primitives.
 - [Memory](memory.md) — tier-1 extraction, retrieval, MEMORY.md loading.
+- [Compaction](compaction.md) — turn-block truncation, context budget.
+- [UI](ui.md) — Textual brick, single-loop observer, approval gateway.
 - [ADRs](decisions/README.md) — the *why* behind non-obvious decisions.
