@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Pre-commit hook mirroring CI's lint / type / test / docs checks.
+#
+# Activate once per clone:
+#
+#     git config core.hooksPath .githooks
+#
+# Bypass for an emergency commit (don't make a habit of it):
+#
+#     git commit --no-verify
+#
+# Skip the slow steps when iterating quickly:
+#
+#     CAIRN_PRECOMMIT_SKIP=tests,docs git commit -m "..."
+#
+# Recognised skip tokens: ruff, pyright, tests, docs.
+
+set -euo pipefail
+
+if ! command -v uv >/dev/null 2>&1; then
+    echo "pre-commit: uv not found on PATH — install uv or unset core.hooksPath" >&2
+    exit 1
+fi
+
+skip="${CAIRN_PRECOMMIT_SKIP:-}"
+should_skip() { [[ ",${skip}," == *",$1,"* ]]; }
+
+run_step() {
+    local label="$1"
+    shift
+    printf '\n→ %s\n' "$label"
+    if ! "$@"; then
+        printf '\n✗ %s failed — fix and re-stage. Use --no-verify to bypass.\n' "$label" >&2
+        exit 1
+    fi
+}
+
+if ! should_skip ruff; then
+    run_step "ruff check"        uv run --frozen ruff check .
+    run_step "ruff format check" uv run --frozen ruff format --check .
+fi
+
+if ! should_skip pyright; then
+    run_step "pyright"           uv run --frozen pyright
+fi
+
+if ! should_skip docs; then
+    run_step "docs reference"    uv run --frozen python docs/gen_ref_pages.py --check
+fi
+
+if ! should_skip tests; then
+    run_step "pytest"            uv run --frozen pytest -q
+fi
+
+printf '\n✓ pre-commit checks passed\n'

@@ -16,6 +16,7 @@ from cairn.persistence._paths import (
     db_path_for_config,
     db_path_for_profile,
     memory_dir_for_profile,
+    prompt_history_path,
 )
 from cairn.persistence._records import MemoryHit, ToolCallRecord, UsageRecord
 from cairn.persistence._sessions_repo import SessionRepo
@@ -41,6 +42,7 @@ __all__ = [
     "db_path_for_config",
     "db_path_for_profile",
     "memory_dir_for_profile",
+    "prompt_history_path",
     # Records
     "MemoryHit",
     "ToolCallRecord",

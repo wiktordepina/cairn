@@ -12,7 +12,12 @@ import uuid
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Literal
 
-from cairn.domain._content import TextBlock, ToolUseBlock, content_list_adapter
+from cairn.domain._content import (
+    TextBlock,
+    ThinkingBlock,
+    ToolUseBlock,
+    content_list_adapter,
+)
 
 if TYPE_CHECKING:
     from cairn.domain._content import ContentBlock
@@ -66,6 +71,21 @@ class Message:
             self.content[-1] = TextBlock(text=existing.text + text)
         else:
             self.content.append(TextBlock(text=text))
+
+    # -- Thinking streaming -----------------------------------------------
+
+    def append_thinking_delta(self, text: str) -> None:
+        """Append reasoning text to the leading ThinkingBlock, or create one.
+
+        Reasoning content arrives before the final answer, so the
+        ThinkingBlock sits at index 0 of the content list. ThinkingBlock
+        is frozen, so we replace it on each delta.
+        """
+        if self.content and isinstance(self.content[0], ThinkingBlock):
+            existing = self.content[0]
+            self.content[0] = ThinkingBlock(thinking=existing.thinking + text)
+        else:
+            self.content.insert(0, ThinkingBlock(thinking=text))
 
     # -- Tool use streaming ------------------------------------------------
 

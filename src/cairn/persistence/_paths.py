@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -43,6 +44,21 @@ def memory_dir_for_profile(profile_name: str) -> Path:
     and any future on-disk artefacts the memory brick owns.
     """
     return data_dir_for_profile(profile_name) / "memory"
+
+
+def prompt_history_path(profile_name: str, project_root: Path) -> Path:
+    """Return the prompt-history file for a profile + project pair.
+
+    The path is `$XDG_DATA_HOME/cairn/<profile>/history/<slug>.jsonl`,
+    where ``<slug>`` is a short, stable hash of the absolute project
+    root. Paths are kept short and ASCII-safe (real project roots can
+    contain unicode, spaces, or be very long), and the hash protects
+    against collisions across same-named directories on different
+    filesystems.
+    """
+    abs_root = str(project_root.resolve())
+    digest = hashlib.sha256(abs_root.encode("utf-8")).hexdigest()[:16]
+    return data_dir_for_profile(profile_name) / "history" / f"{digest}.jsonl"
 
 
 def db_path_for_config(config: CairnConfig) -> Path:

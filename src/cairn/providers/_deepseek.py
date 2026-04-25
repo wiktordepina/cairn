@@ -1,15 +1,17 @@
 """DeepSeek provider adapter.
 
 DeepSeek ships an OpenAI-compatible API at ``https://api.deepseek.com/v1``,
-with two relevant V1 models:
+with reasoning- and chat-class models:
 
-- ``deepseek-chat`` — V3 general-purpose model, tool-use capable.
-- ``deepseek-reasoner`` — R1-class reasoning model that streams
-  reasoning traces alongside the final answer. The ``reasoning_content``
-  field on streamed deltas is dropped on the floor in V1, matching the
-  Anthropic adapter's posture for thinking deltas (no streaming
-  thinking-event type yet); the final answer text is still surfaced
-  via :class:`TextDelta`.
+- ``deepseek-chat`` — general-purpose model, tool-use capable.
+- ``deepseek-reasoner`` (and the V4-class thinking SKUs) — stream
+  reasoning traces alongside the final answer. ``reasoning_content``
+  on streamed deltas is captured into a :class:`ThinkingBlock` on the
+  assistant message and re-emitted on the next turn under the
+  ``reasoning_content`` field — DeepSeek's thinking-mode SKUs reject
+  multi-turn requests that drop it (HTTP 400 ``invalid_request_error``).
+  The trace is round-tripped invisibly; surfacing it in the transcript
+  is a follow-up.
 
 Caching is automatic and disk-based — no markers, no opt-in. Cache
 hits are billed at roughly 10 % of the input rate. Usage echoes back
@@ -27,11 +29,12 @@ from typing import TYPE_CHECKING, Any
 
 import openai
 
-from cairn.domain._content import TextBlock
+from cairn.domain._content import TextBlock, ThinkingBlock
 from cairn.domain._provider import (
     MessageStop,
     ProviderEvent,
     TextDelta,
+    ThinkingDelta,
     ToolCallDelta,
     ToolCallEnd,
     ToolCallStart,
@@ -39,8 +42,10 @@ from cairn.domain._provider import (
 )
 from cairn.providers._openai import (
     flatten_system,
-    format_messages,
     format_tools,
+)
+from cairn.providers._openai import (
+    format_messages as _openai_format_messages,
 )
 from cairn.providers._protocol import (
     AuthenticationError,
@@ -55,11 +60,38 @@ if TYPE_CHECKING:
 
     from cairn.config._models import ProviderConfig
     from cairn.config._secrets import SecretResolver
-    from cairn.domain._provider import ProviderRequest
+    from cairn.domain._messages import Message
+    from cairn.domain._provider import ProviderRequest, SystemPromptSegment
 
 logger = logging.getLogger(__name__)
 
 _DEFAULT_BASE_URL = "https://api.deepseek.com/v1"
+
+
+def format_messages(
+    messages: list[Message],
+    system: str | list[SystemPromptSegment] | None = None,
+) -> list[dict[str, Any]]:
+    """OpenAI-shaped formatter with DeepSeek ``reasoning_content``.
+
+    Identical to :func:`cairn.providers._openai.format_messages` plus a
+    per-assistant-message ``reasoning_content`` field re-emitted from
+    the message's leading :class:`ThinkingBlock`. Thinking-mode SKUs
+    (e.g. deepseek-reasoner, V4 reasoning models) reject multi-turn
+    requests that omit prior reasoning with
+    ``invalid_request_error``; round-tripping it keeps the conversation
+    valid across iterations.
+    """
+    formatted = _openai_format_messages(messages, system=system)
+    cairn_assistants = [m for m in messages if m.role == "assistant"]
+    formatted_assistants = [r for r in formatted if r.get("role") == "assistant"]
+    for cairn_msg, row in zip(cairn_assistants, formatted_assistants, strict=False):
+        if not cairn_msg.content:
+            continue
+        head = cairn_msg.content[0]
+        if isinstance(head, ThinkingBlock) and head.thinking:
+            row["reasoning_content"] = head.thinking
+    return formatted
 
 
 def _usage_from_chunk(usage: Any) -> UsageEvent:
@@ -162,9 +194,9 @@ class DeepSeekProvider:
 
         Identical to OpenAI mapping plus DeepSeek-specific shapes:
 
-        - ``reasoning_content`` on the delta is dropped silently in V1
-          (no streaming thinking-event type — same posture as the
-          Anthropic adapter).
+        - ``reasoning_content`` on the delta is captured into a
+          :class:`ThinkingDelta` so the orchestrator can persist it on
+          the assistant message and round-trip it on the next turn.
         - DeepSeek's ``prompt_cache_hit_tokens`` → ``cache_read_tokens``.
         """
         results: list[ProviderEvent] = []
@@ -178,7 +210,10 @@ class DeepSeekProvider:
         choice = chunk.choices[0]
         delta = choice.delta
 
-        # Reasoning content (deepseek-reasoner) — dropped in V1.
+        if delta:
+            reasoning = getattr(delta, "reasoning_content", None)
+            if reasoning:
+                results.append(ThinkingDelta(text=reasoning))
 
         if delta and delta.content:
             results.append(TextDelta(text=delta.content))

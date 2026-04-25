@@ -30,9 +30,11 @@ class ActivityIndicator(Label):
 
     DEFAULT_CSS = """
     ActivityIndicator {
-        padding: 0 1;
+        height: 1;
+        padding: 0 2;
+        margin: 0 1;
         color: $accent;
-        min-width: 16;
+        text-style: italic;
     }
     ActivityIndicator.-idle {
         color: $text-muted;

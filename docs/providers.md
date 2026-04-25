@@ -108,11 +108,14 @@ for; the estimate is coarse but monotonic.
 [DeepSeek](https://platform.deepseek.com) ships an OpenAI-compatible
 API at `https://api.deepseek.com/v1`. Two relevant V1 models:
 
-- `deepseek-chat` — V3 general-purpose model, tool-use capable.
-- `deepseek-reasoner` — R1-class reasoning model that streams
-  reasoning traces alongside the final answer. Reasoning content is
-  silently dropped in V1 (no streaming thinking-event type yet);
-  the final answer text still surfaces normally.
+- `deepseek-chat` — general-purpose model, tool-use capable.
+- `deepseek-reasoner` (and the V4-class thinking SKUs) — stream
+  reasoning traces alongside the final answer. Reasoning content
+  is captured into a `ThinkingBlock` on the assistant message and
+  re-emitted on the next turn as `reasoning_content` —
+  thinking-mode SKUs reject multi-turn requests that drop the
+  trace. The trace is round-tripped invisibly; surfacing it in the
+  transcript is a follow-up.
 
 **Config:**
 

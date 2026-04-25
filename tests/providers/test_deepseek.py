@@ -11,9 +11,10 @@ from cairn.domain._messages import Message
 from cairn.domain._provider import (
     SystemPromptSegment,
     TextDelta,
+    ThinkingDelta,
     UsageEvent,
 )
-from cairn.providers._deepseek import DeepSeekProvider, _usage_from_chunk
+from cairn.providers._deepseek import DeepSeekProvider, _usage_from_chunk, format_messages
 from cairn.providers._registry import ProviderRegistry
 
 
@@ -126,11 +127,13 @@ class TestUsageWithCache:
         assert ev.cache_read_tokens == 0
 
 
-class TestReasoningContentDropped:
-    """deepseek-reasoner emits ``reasoning_content`` deltas. V1 drops
-    them (matches Anthropic's posture for thinking-block deltas)."""
+class TestReasoningContentRoundTrip:
+    """``reasoning_content`` deltas surface as :class:`ThinkingDelta` so
+    the orchestrator can persist them on the assistant message and
+    re-emit them on the next turn — DeepSeek's thinking-mode SKUs reject
+    multi-turn requests that drop the trace."""
 
-    def test_reasoning_only_chunk_emits_no_event(self) -> None:
+    def test_reasoning_only_chunk_emits_thinking_delta(self) -> None:
         provider = _provider()
         chunk = SimpleNamespace(
             usage=None,
@@ -146,9 +149,11 @@ class TestReasoningContentDropped:
             ],
         )
         results = provider._map_chunk(chunk, {})
-        assert results == []
+        assert len(results) == 1
+        assert isinstance(results[0], ThinkingDelta)
+        assert results[0].text == "thinking out loud..."
 
-    def test_reasoning_plus_text_emits_only_text(self) -> None:
+    def test_reasoning_plus_text_emits_both(self) -> None:
         provider = _provider()
         chunk = SimpleNamespace(
             usage=None,
@@ -164,9 +169,31 @@ class TestReasoningContentDropped:
             ],
         )
         results = provider._map_chunk(chunk, {})
-        assert len(results) == 1
-        assert isinstance(results[0], TextDelta)
-        assert results[0].text == "answer"
+        assert results == [ThinkingDelta(text="thought"), TextDelta(text="answer")]
+
+    def test_format_messages_injects_reasoning_content_on_assistant(self) -> None:
+        from cairn.domain._content import ThinkingBlock as _TB
+
+        user_msg = Message(role="user")
+        user_msg.content.append(TextBlock(text="hi"))
+        assistant_msg = Message(role="assistant")
+        assistant_msg.content.append(_TB(thinking="step-by-step"))
+        assistant_msg.content.append(TextBlock(text="hello!"))
+
+        formatted = format_messages([user_msg, assistant_msg])
+        assistant_row = next(r for r in formatted if r["role"] == "assistant")
+        assert assistant_row["reasoning_content"] == "step-by-step"
+        assert assistant_row["content"] == "hello!"
+
+    def test_format_messages_omits_reasoning_when_no_thinking_block(self) -> None:
+        user_msg = Message(role="user")
+        user_msg.content.append(TextBlock(text="hi"))
+        assistant_msg = Message(role="assistant")
+        assistant_msg.content.append(TextBlock(text="hello"))
+
+        formatted = format_messages([user_msg, assistant_msg])
+        assistant_row = next(r for r in formatted if r["role"] == "assistant")
+        assert "reasoning_content" not in assistant_row
 
 
 class TestUsageFlowsThroughMapChunk:

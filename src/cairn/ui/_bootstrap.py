@@ -58,6 +58,7 @@ from cairn.persistence import (
     UsageRepo,
     db_path_for_config,
     memory_dir_for_profile,
+    prompt_history_path,
 )
 from cairn.providers import ProviderRegistry
 from cairn.tools import (
@@ -81,6 +82,7 @@ from cairn.ui._app import CairnApp
 from cairn.ui._context_report import ContextReportInput
 from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
+from cairn.ui._prompt_history import PromptHistoryStore
 from cairn.ui._trust_gate import TextualPromptTrustGate
 
 if TYPE_CHECKING:
@@ -236,6 +238,11 @@ async def _run(config: CairnConfig) -> int:
             last_usage=await usage_repo.most_recent_primary_turn(session.id),
         )
 
+    prompt_history_store = PromptHistoryStore(
+        path=prompt_history_path(profile_key, Path.cwd()),
+        max_size=active.ui.prompt_history_size,
+    )
+
     app = CairnApp(
         orchestrator=orchestrator,
         session=session,
@@ -248,6 +255,7 @@ async def _run(config: CairnConfig) -> int:
         model_registry=model_registry,
         convention_loader=convention_loader,
         allowlist_store=allowlist_store,
+        prompt_history_store=prompt_history_store,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,

@@ -25,12 +25,12 @@ before mounting the app.
 
 ## Layout
 
-A session screen composes five widgets top-to-bottom:
+A session screen composes six widgets top-to-bottom:
 
 1. **`SessionHeader`** — session-type badge (companion / persona /
    ephemeral, colour-keyed per
-   [`UIConfig.session_type_colours`](#ui-configuration)), session
-   title, and the docked `ActivityIndicator`.
+   [`UIConfig.session_type_colours`](#ui-configuration)) and session
+   title.
 2. **`ChatLog`** — scrolling container of `MessageView`,
    `ToolRow`, and `Banner` widgets. Auto-scrolls to the tail when
    the user is already near the bottom; respects manual scroll-up
@@ -38,9 +38,18 @@ A session screen composes five widgets top-to-bottom:
 3. **`CompletionMenu`** — hidden by default; opens into a
    selectable list of slash-command matches when the command bar
    starts with `/`.
-4. **`CommandBar`** — single-line input. Plain text submits a
-   user turn; `/command` dispatches through the registry.
-5. **`CostMeter`** — running session spend, precision controlled
+4. **`ActivityIndicator`** — italic single-row spinner + label
+   sitting just above the command bar so the current
+   thinking / streaming / tool state stays in the user's eye-line.
+5. **`CommandBar`** — multi-line auto-grow input (1 row → 10 rows
+   then scrolls). Plain text submits a user turn; `/command`
+   dispatches through the registry. Enter submits;
+   <kbd>Shift</kbd>+<kbd>Enter</kbd> /
+   <kbd>Alt</kbd>+<kbd>Enter</kbd> / <kbd>Ctrl</kbd>+<kbd>J</kbd>
+   insert a newline. <kbd>↑</kbd> / <kbd>↓</kbd> walk the
+   per-project prompt history when the cursor is at the
+   first / last line and the completion menu is closed.
+6. **`CostMeter`** — running session spend, precision controlled
    by `UIConfig.cost_display_precision` (default 6 decimal
    places). Refreshed from `UsageRepo` on every `TurnComplete`.
 
@@ -72,8 +81,8 @@ state machine:
 - **completed** — spinner replaced by a status glyph (`✓` success,
   `✗` failure, `⏱` timeout), duration rendered in ms.
 
-While any tool is running, the header `ActivityIndicator` flips
-to `tool:<name>`. Between streaming and tool calls it settles to
+While any tool is running, the `ActivityIndicator` flips to
+`tool:<name>`. Between streaming and tool calls it settles to
 `thinking`; idle after the turn completes.
 
 ## Approval modal
@@ -165,7 +174,7 @@ at keystroke time, not at mount.
 
 ## Activity indicator
 
-Docked to the right of the header. Four states:
+Sits in its own row just above the command bar. Four states:
 
 - **idle** — empty, muted colour.
 - **thinking** — the model is composing (between request and
@@ -174,7 +183,10 @@ Docked to the right of the header. Four states:
 - **tool:&lt;name&gt;** — a tool call is executing.
 
 States are driven by observer callbacks; the spinner frames at
-100 ms intervals while non-idle.
+100 ms intervals while non-idle. The header used to host this
+widget; it was moved next to the input so the user can see what
+the agent is doing without taking their eyes off where they
+type.
 
 ## UI configuration
 
@@ -186,6 +198,7 @@ theme = "auto"                           # auto | light | dark
 show_cost_in_header = true
 max_chat_log_messages = 500
 cost_display_precision = 6               # 0..10 decimal places
+prompt_history_size = 200                # 0..10000 prompts retained per project
 
 [profiles.companion.ui.session_type_colours]
 companion = "#2aa198"
@@ -195,7 +208,10 @@ ephemeral = "#586e75"
 
 All fields are optional; the defaults match the palette above.
 Session-type colours must be 7-character `#RRGGBB` hex strings —
-invalid values fail validation at config load.
+invalid values fail validation at config load. Prompt history
+persists per project at
+`$XDG_DATA_HOME/cairn/<profile>/history/<project-hash>.jsonl`;
+set `prompt_history_size = 0` to disable it.
 
 ## Crash recovery
 
@@ -220,9 +236,8 @@ far as it got and the conversation simply continues).
 When `trust_policy="prompt"` is set on the active profile
 (`[profiles.*.convention_files]`), the UI presents a
 `TrustPromptModal` on first encounter with each project's
-convention files. The modal shows the project path, the
-filenames discovered, and a 20-line preview of the first file,
-then offers three outcomes:
+convention files. The modal shows the project path and the list of
+filenames discovered, then offers three outcomes:
 
 - **Trust once** (<kbd>o</kbd>) — ALLOW for this process only.
 - **Trust project** (<kbd>p</kbd>) — ALLOW plus persist to
@@ -231,9 +246,12 @@ then offers three outcomes:
 - **Deny** (<kbd>n</kbd> / <kbd>Esc</kbd>) — skip loading this
   project's convention files.
 
-Decisions cache per-process, so repeated checks within the same
-session never re-prompt. Projects already in the allowlist
-bypass the modal entirely. See
+<kbd>←</kbd> / <kbd>→</kbd> cycle button focus and <kbd>Enter</kbd>
+activates the focused button; default focus is on **Deny** so a
+stray Enter on a stranger's project never widens trust. Decisions
+cache per-process, so repeated checks within the same session
+never re-prompt. Projects already in the allowlist bypass the
+modal entirely. See
 [ADR 0036](decisions/0036-trust-prompt-three-way-choice.md) for
 why we offer three outcomes rather than two and
 [`docs/conventions.md`](conventions.md) for the underlying

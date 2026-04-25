@@ -14,6 +14,50 @@ The CLI brick (`cairn config show / paths / validate / migrate /
 secret …`, `cairn trust …`, first-run companion-name elicitation)
 is the next planned release.
 
+## [0.13.1] — 2026-04-25
+
+UI polish + a DeepSeek thinking-mode bug fix.
+
+### Fixed
+
+- **DeepSeek thinking-mode multi-turn 400.** `reasoning_content`
+  deltas are now captured into a `ThinkingBlock` on the assistant
+  message and re-emitted under `reasoning_content` on subsequent
+  turns. The V4-class reasoning SKUs reject requests that drop the
+  prior trace (`invalid_request_error`: "the `reasoning_content` in
+  the thinking mode must be passed back to the API"); previously
+  cairn dropped it on the floor and the second turn always
+  failed. The trace is round-tripped invisibly — surfacing it in
+  the transcript stays a follow-up.
+
+### Added
+
+- **Multi-line `CommandBar`.** Replaces the single-line `Input`
+  with an auto-growing `TextArea` (1 row → 10 then scrolls).
+  `Enter` submits; `Shift+Enter` / `Alt+Enter` / `Ctrl+J` insert a
+  newline (triple-bound for terminals that don't decode
+  shift+enter).
+- **Per-project prompt history.** `↑` / `↓` walk previously-
+  submitted prompts when the cursor is at the first / last line and
+  the completion menu is closed. Stored at
+  `$XDG_DATA_HOME/cairn/<profile>/history/<project-hash>.jsonl`,
+  capped by `ui.prompt_history_size` (default 200, set 0 to
+  disable). History walk takes priority over completion-menu
+  arrow nav when a walk is active so slash-command entries don't
+  trap the user on the newest item.
+
+### Changed
+
+- **Activity indicator moved.** Out of the header into its own row
+  just above the command bar. Closer to where the user is looking.
+- **Trust modal: drop file preview, add arrow-key button focus.**
+  The modal now lists filenames only — the 20-line content
+  preview risked pasting inflammatory or sensitive snippets into
+  the trust flow without adding signal to the "do I know this
+  project?" decision. `←` / `→` cycle button focus, `Enter`
+  activates the focused button; default focus is `Deny` so a stray
+  Enter never widens trust.
+
 ## [0.13.0] — 2026-04-25
 
 Prompt caching across all four providers, plus DeepSeek as a new

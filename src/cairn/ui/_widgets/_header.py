@@ -14,7 +14,6 @@ from textual.containers import Horizontal
 from textual.widgets import Label
 
 from cairn.ui._theme import colour_for
-from cairn.ui._widgets._activity import ActivityIndicator
 
 if TYPE_CHECKING:
     from textual.app import ComposeResult
@@ -59,9 +58,9 @@ class SessionTypeBadge(Label):
 class SessionHeader(Horizontal):
     """Top-of-screen header showing session identity + context.
 
-    Layout: `[BADGE] persona · model · title`. The cost meter is a
-    separate widget composed by `SessionScreen` so it can live in
-    its own slot on the right.
+    Layout: `[BADGE] persona · model · title`. The cost meter and the
+    activity indicator are separate widgets composed by `SessionScreen`
+    so each can live in its own slot.
     """
 
     DEFAULT_CSS = """
@@ -75,11 +74,6 @@ class SessionHeader(Horizontal):
     }
     SessionHeader > .-title {
         width: 1fr;
-    }
-    SessionHeader > ActivityIndicator {
-        dock: right;
-        margin: 0;
-        width: 18;
     }
     """
 
@@ -102,4 +96,3 @@ class SessionHeader(Horizontal):
         title_label = Label(f"{self._session.persona} · {self._session.model} · {title}")
         title_label.add_class("-title")
         yield title_label
-        yield ActivityIndicator()

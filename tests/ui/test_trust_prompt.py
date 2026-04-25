@@ -13,7 +13,6 @@ from cairn.ui._app import CairnApp
 from cairn.ui._screens._trust_prompt import (
     TrustPromptModal,
     TrustPromptResult,
-    preview_file_lines,
 )
 from cairn.ui._trust_gate import TextualPromptTrustGate
 
@@ -26,37 +25,6 @@ if TYPE_CHECKING:
 
 def _app_for(session: Session) -> CairnApp:
     return CairnApp(orchestrator=cast("Orchestrator", Mock()), session=session)
-
-
-# ---------------------------------------------------------------------------
-# Unit: preview_file_lines
-# ---------------------------------------------------------------------------
-
-
-class TestPreviewFileLines:
-    def test_short_file_not_truncated(self) -> None:
-        body, truncated = preview_file_lines("line1\nline2\nline3")
-        assert body == "line1\nline2\nline3"
-        assert truncated is False
-
-    def test_long_file_truncated_at_20_lines(self) -> None:
-        text = "\n".join(f"line{i}" for i in range(1, 31))
-        body, truncated = preview_file_lines(text)
-        assert truncated is True
-        # First 20 lines only.
-        assert body.splitlines() == [f"line{i}" for i in range(1, 21)]
-
-    def test_exact_boundary_not_truncated(self) -> None:
-        text = "\n".join(f"line{i}" for i in range(1, 21))
-        body, truncated = preview_file_lines(text)
-        assert truncated is False
-        assert body.splitlines() == [f"line{i}" for i in range(1, 21)]
-
-    def test_custom_max_lines(self) -> None:
-        text = "a\nb\nc\nd"
-        body, truncated = preview_file_lines(text, max_lines=2)
-        assert truncated is True
-        assert body == "a\nb"
 
 
 # ---------------------------------------------------------------------------
@@ -80,8 +48,6 @@ class TestTrustPromptModal:
                     TrustPromptModal(
                         project_root=tmp_path,
                         files=[tmp_path / "AGENTS.md"],
-                        preview_body="hello",
-                        preview_truncated=False,
                     )
                 )
                 result_holder.append(result)
@@ -111,8 +77,6 @@ class TestTrustPromptModal:
                     TrustPromptModal(
                         project_root=tmp_path,
                         files=[tmp_path / "AGENTS.md"],
-                        preview_body="hello",
-                        preview_truncated=False,
                     )
                 )
                 result_holder.append(result)
@@ -139,8 +103,6 @@ class TestTrustPromptModal:
                     TrustPromptModal(
                         project_root=tmp_path,
                         files=[tmp_path / "AGENTS.md"],
-                        preview_body="hello",
-                        preview_truncated=False,
                     )
                 )
                 result_holder.append(result)
@@ -155,6 +117,85 @@ class TestTrustPromptModal:
         assert result_holder[0].persist is False
 
     @pytest.mark.asyncio
+    async def test_default_focus_is_deny_button(
+        self, companion_session: Session, tmp_path: Path
+    ) -> None:
+        """Initial focus on Deny so a stray Enter never widens trust."""
+        app = _app_for(companion_session)
+
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            modal = TrustPromptModal(
+                project_root=tmp_path,
+                files=[tmp_path / "AGENTS.md"],
+            )
+            app.push_screen(modal)
+            await pilot.pause()
+
+            focused = app.focused
+            assert focused is not None
+            assert getattr(focused, "id", None) == "deny"
+
+    @pytest.mark.asyncio
+    async def test_left_right_cycle_button_focus(
+        self, companion_session: Session, tmp_path: Path
+    ) -> None:
+        """Left / Right walk between the three buttons."""
+        app = _app_for(companion_session)
+
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            modal = TrustPromptModal(
+                project_root=tmp_path,
+                files=[tmp_path / "AGENTS.md"],
+            )
+            app.push_screen(modal)
+            await pilot.pause()
+
+            assert getattr(app.focused, "id", None) == "deny"
+            await pilot.press("right")
+            await pilot.pause()
+            assert getattr(app.focused, "id", None) == "once"
+            await pilot.press("right")
+            await pilot.pause()
+            assert getattr(app.focused, "id", None) == "project"
+            await pilot.press("left")
+            await pilot.pause()
+            assert getattr(app.focused, "id", None) == "once"
+
+    @pytest.mark.asyncio
+    async def test_enter_activates_focused_button(
+        self, companion_session: Session, tmp_path: Path
+    ) -> None:
+        """Arrow-walk to a button and press Enter to activate it."""
+        app = _app_for(companion_session)
+        result_holder: list[TrustPromptResult] = []
+
+        async with app.run_test() as pilot:
+            await pilot.pause()
+
+            async def _show() -> None:
+                result = await app.push_screen_wait(
+                    TrustPromptModal(
+                        project_root=tmp_path,
+                        files=[tmp_path / "AGENTS.md"],
+                    )
+                )
+                result_holder.append(result)
+
+            app.run_worker(_show(), exclusive=False, exit_on_error=False)
+            await pilot.pause()
+            # Deny → Once → Project, then Enter.
+            await pilot.press("right")
+            await pilot.press("right")
+            await pilot.press("enter")
+            await pilot.pause()
+            await pilot.pause()
+
+        assert result_holder[0].decision is TrustDecision.ALLOW
+        assert result_holder[0].persist is True
+
+    @pytest.mark.asyncio
     async def test_escape_is_deny(self, companion_session: Session, tmp_path: Path) -> None:
         app = _app_for(companion_session)
         result_holder: list[TrustPromptResult] = []
@@ -167,8 +208,6 @@ class TestTrustPromptModal:
                     TrustPromptModal(
                         project_root=tmp_path,
                         files=[tmp_path / "AGENTS.md"],
-                        preview_body="hello",
-                        preview_truncated=False,
                     )
                 )
                 result_holder.append(result)

@@ -106,8 +106,8 @@ trust_policy = "project_allowlist"
 ### `trust_policy = "prompt"` (the default)
 
 On first encounter with each project, cairn shows a modal with
-the project path, the convention-file names it found, and a
-20-line preview of the first file. Three choices:
+the project path and the list of convention-file names it found.
+Three choices:
 
 - **Trust once** — allow for this process only.
 - **Trust project** — persist to

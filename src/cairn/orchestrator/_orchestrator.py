@@ -46,6 +46,7 @@ from cairn.domain._messages import Message
 from cairn.domain._provider import (
     MessageStop,
     TextDelta,
+    ThinkingDelta,
     ToolCallDelta,
     ToolCallEnd,
     ToolCallStart,
@@ -344,6 +345,8 @@ class Orchestrator:
                                 turn_id=turn_id,
                                 text=t,
                             )
+                        case ThinkingDelta(text=t):
+                            assistant_msg.append_thinking_delta(t)
                         case ToolCallStart(id=tc_id, name=name):
                             assistant_msg.start_tool_use(tc_id, name)
                         case ToolCallDelta(id=tc_id, input_delta=chunk):

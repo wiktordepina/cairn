@@ -105,6 +105,8 @@
 
 ::: cairn.domain.TextDelta
 
+::: cairn.domain.ThinkingDelta
+
 ::: cairn.domain.ToolCallDelta
 
 ::: cairn.domain.ToolCallEnd

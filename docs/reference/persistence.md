@@ -37,6 +37,8 @@
 
 ::: cairn.persistence.memory_dir_for_profile
 
+::: cairn.persistence.prompt_history_path
+
 ## Records
 
 ::: cairn.persistence.MemoryHit
