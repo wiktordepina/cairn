@@ -1261,3 +1261,161 @@ class TestStructuredEventLoggingIntegration:
         # The TurnComplete record carries the stop reason.
         complete = next(r for r in records if r.event_type == "TurnComplete")  # type: ignore[attr-defined]
         assert complete.event["stop_reason"] == "end_turn"  # type: ignore[attr-defined]
+
+
+class TestPromptCachingFlags:
+    """Cache flags on the ProviderRequest are gated by
+    `ModelConfig.supports_prompt_cache`."""
+
+    @pytest.mark.asyncio
+    async def test_cache_aware_when_model_supports_cache(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        # Local registry — model_cfg.supports_prompt_cache=True.
+        registry = ModelRegistry(
+            [
+                ModelConfig(
+                    id="cache-on",
+                    provider="fake",
+                    display_name="Cache-On",
+                    context_window=100_000,
+                    max_output_tokens=4_096,
+                    supports_tools=True,
+                    supports_prompt_cache=True,
+                    input_cost_per_1m=1.0,
+                    output_cost_per_1m=2.0,
+                    roles={ModelRole.PRIMARY},
+                )
+            ]
+        )
+        # Re-build session_manager so it sees the new registry.
+        local_sm = SessionManager(
+            session_repo=session_manager._repo,  # type: ignore[attr-defined]
+            model_registry=registry,
+            clock=frozen_clock,
+        )
+        provider.scripted = [
+            [
+                TextDelta(text="hi"),
+                UsageEvent(input_tokens=10, output_tokens=2),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=registry,
+            session_manager=local_sm,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        async for _ in orch.run_turn(session.id, _user("Hi")):
+            pass
+
+        sent = provider.requests[-1]
+        # cache_last_message follows from history being non-empty
+        # (the user message was persisted before the request was built).
+        assert sent.cache_last_message is True
+        # cache_tools is False because the test session has no tools.
+        assert sent.cache_tools is False
+
+    @pytest.mark.asyncio
+    async def test_cache_off_when_model_does_not_support_cache(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        # Default fixture model has supports_prompt_cache=False.
+        provider.scripted = [
+            [
+                TextDelta(text="hi"),
+                UsageEvent(input_tokens=10, output_tokens=2),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        async for _ in orch.run_turn(session.id, _user("Hi")):
+            pass
+
+        sent = provider.requests[-1]
+        assert sent.cache_tools is False
+        assert sent.cache_last_message is False
+
+    @pytest.mark.asyncio
+    async def test_cache_usage_persisted_to_usage_repo(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        usage_repo: UsageRepo,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        provider.scripted = [
+            [
+                TextDelta(text="ok"),
+                UsageEvent(
+                    input_tokens=100,
+                    output_tokens=20,
+                    cache_read_tokens=80,
+                    cache_write_tokens=10,
+                ),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ]
+        ]
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        async for _ in orch.run_turn(session.id, _user("Hi")):
+            pass
+
+        rows = await usage_repo.list_recent(limit=10)
+        assert any(
+            r.cache_read_tokens == 80 and r.cache_write_tokens == 10 for r in rows
+        )

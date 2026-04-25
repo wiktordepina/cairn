@@ -321,6 +321,7 @@ class Orchestrator:
                     history=history,
                     retrieved_memories=retrieved,
                     tools=tools,
+                    cache_aware=model_cfg.supports_prompt_cache,
                 )
                 for preparer in self._preparers:
                     request = await preparer.prepare(request, tctx)
