@@ -40,6 +40,7 @@ from cairn.domain._events import (
     TurnAborted,
     TurnBlocked,
     TurnComplete,
+    TurnIncomplete,
     UserMessagePersisted,
 )
 from cairn.domain._messages import Message
@@ -168,6 +169,33 @@ class Orchestrator:
     async def archive_session(self, session_id: str) -> None:
         await self._session_manager.archive(session_id)
         self._fanout(SessionArchived(session_id=session_id))
+
+    # -- Hot reload -----------------------------------------------------
+
+    def replace_collaborators(
+        self,
+        *,
+        provider_registry: ProviderRegistry | None = None,
+        model_registry: ModelRegistry | None = None,
+    ) -> None:
+        """Swap disk-derived collaborators in place.
+
+        Used by `/reload` to apply a re-loaded config without
+        re-bootstrapping the orchestrator. Only collaborators whose
+        construction depends on `CairnConfig` are swappable here —
+        runtime-state collaborators (turn repo, extraction queue,
+        memory service, approval gateway) are preserved so in-flight
+        work isn't disrupted.
+
+        Each kwarg is optional so callers (and tests) can swap one
+        collaborator at a time. The next iteration of any running
+        turn will pick up the new instances; the current iteration
+        continues with whatever was bound when it started.
+        """
+        if provider_registry is not None:
+            self._provider_registry = provider_registry
+        if model_registry is not None:
+            self._model_registry = model_registry
 
     # -- Cancellation ---------------------------------------------------
 
@@ -308,6 +336,7 @@ class Orchestrator:
 
             stop_reason: StopReason | None = None
             model_cfg = self._model_registry.resolve(session.model)
+            had_partial_tool_input = False
 
             for iteration in range(self._config.max_iterations):
                 self._raise_if_cancelled(cancel_flag)
@@ -384,6 +413,7 @@ class Orchestrator:
                 yield AssistantMessageComplete(message_id=assistant_msg.id, turn_id=turn_id)
 
                 stop_reason = current_stop
+                had_partial_tool_input = assistant_msg.has_pending_tool_input()
 
                 if not pending_tool_calls:
                     break
@@ -455,7 +485,10 @@ class Orchestrator:
                 stop_reason=final_stop,
                 completed_at=self._clock.now(),
             )
-            yield TurnComplete(session_id=session.id, turn_id=turn_id, stop_reason=final_stop)
+            if final_stop is StopReason.MAX_TOKENS and had_partial_tool_input:
+                yield TurnIncomplete(session_id=session.id, turn_id=turn_id)
+            else:
+                yield TurnComplete(session_id=session.id, turn_id=turn_id, stop_reason=final_stop)
 
         except asyncio.CancelledError:
             await self._turn_repo.mark_aborted(

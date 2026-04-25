@@ -349,6 +349,26 @@ class UIConfig(BaseModel):
         return value
 
 
+class WatcherConfig(BaseModel):
+    """File-watcher knobs per profile.
+
+    The watcher snapshots a fixed set of paths (config layers,
+    convention files, profile docs) at boot and polls them for
+    drift. Two knobs are enough — the design's hash-chunk size is
+    hard-coded at 64 KiB inside the snapshot helper.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    enabled: bool = True
+    """Set to False to skip the boot-time watcher launch entirely.
+    Useful in tests, in CI, and for users who edit configs frequently
+    and find drift banners noisy."""
+    poll_interval_s: float = Field(default=3.0, ge=0.5, le=60.0)
+    """Seconds between watcher poll cycles. Each tick walks every
+    watched path's `os.stat`; hashing only fires when mtime drifts."""
+
+
 class ProfileConfig(BaseModel):
     """Configuration for a named profile (companion, work, etc.)."""
 
@@ -367,6 +387,7 @@ class ProfileConfig(BaseModel):
     memory: MemoryConfig = MemoryConfig()
     compaction: CompactionConfig = CompactionConfig()
     ui: UIConfig = UIConfig()
+    watcher: WatcherConfig = WatcherConfig()
 
 
 class CairnConfig(BaseModel):

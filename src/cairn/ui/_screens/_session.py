@@ -34,6 +34,7 @@ if TYPE_CHECKING:
         AssistantTextDelta,
         BudgetOverflowAdvisory,
         BudgetWarning,
+        ConfigDriftDetected,
         HistoryCompacted,
         Session,
         ToolCallApproved,
@@ -213,6 +214,7 @@ class SessionScreen(Screen[None]):
         del event
         self._activity.set_idle()
         self._refresh_cost_from_source()
+        self._flush_pending_reload()
 
     def _refresh_cost_from_source(self) -> None:
         """Spawn a worker that reads the authoritative session cost
@@ -289,12 +291,14 @@ class SessionScreen(Screen[None]):
         detail = event.message or event.reason
         self._chat_log.append_banner(Banner(text=f"✗ turn aborted — {detail}", kind="error"))
         self._activity.set_idle()
+        self._flush_pending_reload()
 
     def show_blocked(self, event: TurnBlocked) -> None:
         self._chat_log.append_banner(
             Banner(text=f"◷ turn blocked — {event.message}", kind="warning")
         )
         self._activity.set_idle()
+        self._flush_pending_reload()
 
     def show_incomplete(self, event: TurnIncomplete) -> None:
         del event
@@ -302,6 +306,7 @@ class SessionScreen(Screen[None]):
             Banner(text="… stopped at max_tokens with a partial tool call", kind="muted")
         )
         self._activity.set_idle()
+        self._flush_pending_reload()
 
     def show_compaction(self, event: HistoryCompacted) -> None:
         text = (
@@ -321,6 +326,34 @@ class SessionScreen(Screen[None]):
         )
         self._chat_log.append_banner(Banner(text=text, kind="warning"))
 
+    def show_drift(self, event: ConfigDriftDetected) -> None:
+        """Surface watched-file drift with a muted info banner.
+
+        Run `/reload` to apply the changes.
+        """
+        counts: dict[str, int] = {}
+        for change in event.changes:
+            counts[change.category] = counts.get(change.category, 0) + 1
+        labels = {
+            "config": ("config layer", "config layers"),
+            "convention": ("convention file", "convention files"),
+            "profile_doc": ("profile doc", "profile docs"),
+        }
+        parts: list[str] = []
+        for category in ("config", "convention", "profile_doc"):
+            n = counts.get(category, 0)
+            if n == 0:
+                continue
+            singular, plural = labels[category]
+            parts.append(f"{n} {singular if n == 1 else plural}")
+        summary = ", ".join(parts) if parts else f"{len(event.changes)} files"
+        self._chat_log.append_banner(
+            Banner(
+                text=f"↻ on-disk changes detected ({summary}) — run /reload to apply",
+                kind="muted",
+            ),
+        )
+
     # -- Public helpers (for command handlers + bootstrap) --------------
 
     def append_banner(self, banner: Banner) -> None:
@@ -331,6 +364,54 @@ class SessionScreen(Screen[None]):
     def current_cost_usd(self) -> float:
         """Current cost reading on the cost meter."""
         return self._cost_meter.cost_usd
+
+    def is_turn_active(self) -> bool:
+        """True while a turn is mid-flight on this screen.
+
+        The activity indicator is the canonical signal: anything other
+        than "idle" means the orchestrator is still working
+        (thinking / streaming / tool execution).
+        """
+        return self._activity.state != "idle"
+
+    def queue_reload(self) -> None:
+        """Defer a `/reload` until the current turn finishes."""
+        self._pending_reload = True
+
+    def _flush_pending_reload(self) -> None:
+        """If `/reload` was deferred during a turn, run it now."""
+        if not getattr(self, "_pending_reload", False):
+            return
+        self._pending_reload = False
+        app = cast("CairnApp", self.app)
+        reloader = app.reloader
+        if reloader is None:
+            return
+
+        async def _do_reload() -> None:
+            result = await reloader.reload()
+            kind = "muted" if result.ok else "warning"
+            text = result.summary if result.ok else f"reload failed — {result.error}"
+            self._chat_log.append_banner(Banner(text=text, kind=kind))
+            if result.ok and result.primary_model_drift is not None:
+                active, new = result.primary_model_drift
+                self._chat_log.append_banner(
+                    Banner(
+                        text=(
+                            f"primary role now resolves to {new}; the active "
+                            f"session stays on {active}. Restart cairn to "
+                            f"switch."
+                        ),
+                        kind="muted",
+                    ),
+                )
+
+        self.run_worker(
+            _do_reload(),
+            name="deferred-reload",
+            exclusive=False,
+            exit_on_error=False,
+        )
 
     # -- Helpers for the pilot harness ----------------------------------
 

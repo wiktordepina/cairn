@@ -100,6 +100,7 @@ class TestCommandRegistry:
             "/profile",
             "/model",
             "/conventions",
+            "/reload",
         }
 
 

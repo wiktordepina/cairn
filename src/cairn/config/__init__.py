@@ -17,6 +17,7 @@ from cairn.config._models import (
     ProviderConfig,
     SecretRef,
     UIConfig,
+    WatcherConfig,
 )
 from cairn.config._registry import AmbiguousRoleError, ModelNotFoundError, ModelRegistry
 from cairn.config._secrets import MissingSecretError, SecretResolver
@@ -36,6 +37,7 @@ __all__ = [
     "ProviderConfig",
     "SecretRef",
     "UIConfig",
+    "WatcherConfig",
     # Loading
     "ConfigError",
     "config_paths",

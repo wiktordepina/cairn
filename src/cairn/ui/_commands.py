@@ -282,6 +282,61 @@ async def _handle_model(app: CairnApp, _tail: str) -> None:
     screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
 
 
+async def _handle_reload(app: CairnApp, _tail: str) -> None:
+    """Re-load config + conventions + profile docs.
+
+    Surgical reload: rebuilds the disk-derived collaborators on the
+    running orchestrator (provider registry, model registry, secret
+    resolver), invalidates the convention and profile-doc loader
+    caches, and re-snapshots the file watcher's baseline. The active
+    session, persistence, and the extraction worker are preserved.
+
+    Mid-turn invocations queue: the reload runs after the current
+    turn completes so the in-flight provider call finishes against
+    the bound config.
+    """
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    reloader = app.reloader
+    if reloader is None:
+        screen.append_banner(
+            Banner(
+                text="/reload — bootstrap did not wire a file watcher",
+                kind="muted",
+            ),
+        )
+        return
+
+    if screen.is_turn_active():
+        screen.queue_reload()
+        screen.append_banner(
+            Banner(
+                text="reload queued — applies after current turn",
+                kind="muted",
+            ),
+        )
+        return
+
+    result = await reloader.reload()
+    kind = "muted" if result.ok else "warning"
+    text = result.summary if result.ok else f"reload failed — {result.error}"
+    screen.append_banner(Banner(text=text, kind=kind))
+    if result.ok and result.primary_model_drift is not None:
+        active, new = result.primary_model_drift
+        screen.append_banner(
+            Banner(
+                text=(
+                    f"primary role now resolves to {new}; the active session "
+                    f"stays on {active}. Restart cairn to switch."
+                ),
+                kind="muted",
+            ),
+        )
+
+
 async def _handle_conventions(app: CairnApp, _tail: str) -> None:
     """List discovered convention files and the project's trust state.
 
@@ -386,6 +441,13 @@ def build_default_registry() -> CommandRegistry:
             name="/conventions",
             summary="list discovered convention files and trust state",
             handler=_handle_conventions,
+        )
+    )
+    registry.register(
+        SlashCommand(
+            name="/reload",
+            summary="reload config + conventions + profile docs",
+            handler=_handle_reload,
         )
     )
     return registry

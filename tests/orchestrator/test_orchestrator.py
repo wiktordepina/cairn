@@ -24,11 +24,13 @@ from cairn.domain._events import (
     TurnAborted,
     TurnBlocked,
     TurnComplete,
+    TurnIncomplete,
 )
 from cairn.domain._messages import Message
 from cairn.domain._provider import (
     MessageStop,
     TextDelta,
+    ToolCallDelta,
     ToolCallEnd,
     ToolCallStart,
     UsageEvent,
@@ -906,6 +908,206 @@ class TestSessionLifecycleEvents:
         assert any(
             isinstance(e, SessionCreated) and e.session_id == session.id for e in collector.events
         )
+
+
+# ---------------------------------------------------------------------------
+# replace_collaborators (hot reload surgery)
+# ---------------------------------------------------------------------------
+
+
+class TestReplaceCollaborators:
+    @pytest.mark.asyncio
+    async def test_swap_provider_registry(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        del provider  # unused — we only need a baseline orchestrator.
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+
+        new_provider = FakeProvider(name="fake-after-reload")
+        new_config = CairnConfig(
+            schema_version=1,
+            active_profile="test",
+            providers={"fake": ProviderConfig(name="fake")},
+            profiles={},
+        )
+        new_registry = ProviderRegistry(config=new_config, secret_resolver=None)  # type: ignore[arg-type]
+        new_registry.register_adapter("fake", lambda *_: new_provider)
+
+        orch.replace_collaborators(provider_registry=new_registry)
+
+        assert orch._provider_registry is new_registry  # noqa: SLF001
+        # Model registry is untouched when only provider_registry is swapped.
+        assert orch._model_registry is model_registry  # noqa: SLF001
+
+    def test_swap_each_collaborator_independently(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        del provider
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+
+        new_model_registry = ModelRegistry(
+            [
+                ModelConfig(
+                    id="reloaded",
+                    provider="fake",
+                    display_name="Reloaded",
+                    context_window=10_000,
+                    max_output_tokens=512,
+                    supports_tools=False,
+                    input_cost_per_1m=0.5,
+                    output_cost_per_1m=1.0,
+                    roles={ModelRole.PRIMARY},
+                ),
+            ],
+        )
+
+        # Calling with no kwargs is a no-op.
+        orch.replace_collaborators()
+        assert orch._provider_registry is provider_registry  # noqa: SLF001
+        assert orch._model_registry is model_registry  # noqa: SLF001
+
+        # Swap only model_registry.
+        orch.replace_collaborators(model_registry=new_model_registry)
+        assert orch._provider_registry is provider_registry  # noqa: SLF001
+        assert orch._model_registry is new_model_registry  # noqa: SLF001
+
+
+# ---------------------------------------------------------------------------
+# TurnIncomplete emission
+# ---------------------------------------------------------------------------
+
+
+class TestTurnIncompleteEmission:
+    @pytest.mark.asyncio
+    async def test_max_tokens_with_partial_tool_emits_turn_incomplete(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        # Stream a tool call that started but never finalised: ToolCallStart +
+        # partial input deltas, then MessageStop(MAX_TOKENS) before any
+        # ToolCallEnd. The model also emitted no text, so the iteration
+        # loop exits at `if not pending_tool_calls: break`.
+        provider.scripted = [
+            [
+                ToolCallStart(id="tc-partial", name="writer"),
+                ToolCallDelta(id="tc-partial", input_delta='{"path": "fo'),
+                UsageEvent(input_tokens=5, output_tokens=10),
+                MessageStop(stop_reason=StopReason.MAX_TOKENS),
+            ],
+        ]
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        events = []
+        async for ev in orch.run_turn(session.id, _user("write a file")):
+            events.append(ev)
+
+        incomplete = [e for e in events if isinstance(e, TurnIncomplete)]
+        complete = [e for e in events if isinstance(e, TurnComplete)]
+        assert len(incomplete) == 1
+        assert incomplete[0].session_id == session.id
+        assert complete == []
+
+    @pytest.mark.asyncio
+    async def test_max_tokens_with_text_only_still_emits_turn_complete(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        # MAX_TOKENS with no pending tool input is a normal completion —
+        # the assistant just hit the cap mid-text. We still emit
+        # TurnComplete so the UI doesn't paint an "interrupted" badge.
+        provider.scripted = [
+            [
+                TextDelta(text="A long answer that ran out of"),
+                UsageEvent(input_tokens=5, output_tokens=10),
+                MessageStop(stop_reason=StopReason.MAX_TOKENS),
+            ],
+        ]
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        events = []
+        async for ev in orch.run_turn(session.id, _user("hi")):
+            events.append(ev)
+
+        assert any(isinstance(e, TurnComplete) for e in events)
+        assert not any(isinstance(e, TurnIncomplete) for e in events)
 
 
 # ---------------------------------------------------------------------------

@@ -25,6 +25,7 @@ if TYPE_CHECKING:
     from cairn.orchestrator._protocols import ToolRegistry
     from cairn.ui._context_report import ContextReportInput
     from cairn.ui._prompt_history import PromptHistoryStore
+    from cairn.watcher import Reloader
 
     CostSource = Callable[[], Awaitable[float]]
     ContextSource = Callable[[], Awaitable[ContextReportInput]]
@@ -57,6 +58,7 @@ class CairnApp(App[None]):
         convention_loader: ConventionLoader | None = None,
         allowlist_store: AllowlistStore | None = None,
         prompt_history_store: PromptHistoryStore | None = None,
+        reloader: Reloader | None = None,
     ) -> None:
         super().__init__()
         self._orchestrator = orchestrator
@@ -72,6 +74,7 @@ class CairnApp(App[None]):
         self._convention_loader = convention_loader
         self._allowlist_store = allowlist_store
         self._prompt_history_store = prompt_history_store
+        self._reloader = reloader
         from cairn.config import UIConfig as _UIConfig
 
         self._ui_config = ui_config or _UIConfig()
@@ -131,6 +134,12 @@ class CairnApp(App[None]):
     def prompt_history_store(self) -> PromptHistoryStore | None:
         """Per-project prompt history persistence; `None` in test harnesses."""
         return self._prompt_history_store
+
+    @property
+    def reloader(self) -> Reloader | None:
+        """Reloader for `/reload`. `None` when the bootstrap omitted
+        the file watcher (test harnesses)."""
+        return self._reloader
 
     def take_resumed_turn_count(self) -> int:
         """Return the recorded count and clear it.

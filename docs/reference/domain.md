@@ -47,9 +47,13 @@
 
 ::: cairn.domain.BudgetWarning
 
+::: cairn.domain.ConfigDriftDetected
+
 ::: cairn.domain.DelegationCompleted
 
 ::: cairn.domain.DelegationSpawned
+
+::: cairn.domain.DriftChange
 
 ::: cairn.domain.HistoryCompacted
 

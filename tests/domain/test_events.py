@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import dataclasses
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import get_args
 
 import pytest
 
@@ -11,8 +14,10 @@ from cairn.domain._events import (
     AssistantMessageComplete,
     AssistantTextDelta,
     BudgetWarning,
+    ConfigDriftDetected,
     DelegationCompleted,
     DelegationSpawned,
+    DriftChange,
     ObservationExtractionCompleted,
     ObservationExtractionRequested,
     SessionArchived,
@@ -27,6 +32,7 @@ from cairn.domain._events import (
     TurnBlocked,
     TurnComplete,
     TurnIncomplete,
+    UIEvent,
     UserMessagePersisted,
 )
 
@@ -159,6 +165,52 @@ class TestUIEvents:
         assert created.session_id == "sess-001"
         assert resumed.session_id == "sess-001"
         assert archived.session_id == "sess-001"
+
+    def test_drift_change(self) -> None:
+        change = DriftChange(
+            category="config",
+            path=Path("/tmp/cairn/config.toml"),
+            kind="modified",
+        )
+        assert change.category == "config"
+        assert change.kind == "modified"
+
+    def test_config_drift_detected(self) -> None:
+        ts = datetime(2026, 4, 25, 21, 30, tzinfo=UTC)
+        ev = ConfigDriftDetected(
+            detected_at=ts,
+            changes=(
+                DriftChange(
+                    category="config",
+                    path=Path("/tmp/cairn/config.toml"),
+                    kind="modified",
+                ),
+                DriftChange(
+                    category="convention",
+                    path=Path("/repo/AGENTS.md"),
+                    kind="removed",
+                ),
+            ),
+        )
+        assert ev.detected_at == ts
+        assert len(ev.changes) == 2
+        assert ev.changes[0].category == "config"
+        assert ev.changes[1].kind == "removed"
+
+    def test_config_drift_detected_in_uievent_union(self) -> None:
+        # ConfigDriftDetected must be reachable as a UIEvent.
+        members = set(get_args(UIEvent))
+        assert ConfigDriftDetected in members
+
+    def test_drift_change_frozen(self) -> None:
+        change = DriftChange(category="config", path=Path("/x"), kind="modified")
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            change.kind = "removed"  # type: ignore[misc]
+
+    def test_config_drift_detected_frozen(self) -> None:
+        ev = ConfigDriftDetected(detected_at=datetime.now(UTC), changes=())
+        with pytest.raises(dataclasses.FrozenInstanceError):
+            ev.changes = ()  # type: ignore[misc]
 
     def test_all_frozen(self) -> None:
         # Representative spot-check of frozen-ness.

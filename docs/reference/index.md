@@ -24,3 +24,4 @@ regeneration workflow.
 - [SSL](ssl.md) — `cairn.ssl`
 - [Tools](tools.md) — `cairn.tools`
 - [UI](ui.md) — `cairn.ui`
+- [Watcher](watcher.md) — `cairn.watcher`

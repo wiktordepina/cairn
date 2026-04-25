@@ -18,6 +18,8 @@ loop that owns the `Database` connection and the extraction worker.
 from __future__ import annotations
 
 import asyncio
+import contextlib
+import io
 import logging
 import sys
 from pathlib import Path
@@ -84,6 +86,12 @@ from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
 from cairn.ui._prompt_history import PromptHistoryStore
 from cairn.ui._trust_gate import TextualPromptTrustGate
+from cairn.watcher import (
+    FileWatcher,
+    Reloader,
+    build_watch_set,
+    discover_watch_paths,
+)
 
 if TYPE_CHECKING:
     from cairn.config._models import CairnConfig
@@ -106,12 +114,12 @@ def launch(*, profile_name: str | None) -> int:
         return 2
 
     try:
-        return asyncio.run(_run(config))
+        return asyncio.run(_run(config, profile_name=profile_name))
     except KeyboardInterrupt:
         return 130
 
 
-async def _run(config: CairnConfig) -> int:
+async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
     active = config.active
     profile_key = active.name or config.active_profile
 
@@ -243,6 +251,37 @@ async def _run(config: CairnConfig) -> int:
         max_size=active.ui.prompt_history_size,
     )
 
+    # File watcher + /reload Reloader. Both are optional — disabled
+    # profiles get None on the app, and the /reload handler renders a
+    # placeholder banner.
+    file_watcher: FileWatcher | None = None
+    reloader: Reloader | None = None
+    if active.watcher.enabled:
+        watch_rows = discover_watch_paths(
+            convention_files_config=active.convention_files,
+            convention_loader=convention_loader,
+            profile_doc_loader=doc_loader,
+        )
+        watch_set = build_watch_set(watch_rows)
+        # The watcher's `is_turn_active` getter consults the active
+        # session screen; it's lazily-bound below since the app doesn't
+        # exist yet at this point.
+        file_watcher = FileWatcher(
+            watch_set=watch_set,
+            observers=(structured_observer,),
+            poll_interval_s=active.watcher.poll_interval_s,
+        )
+        # V1 is single-session — capture its model id so the Reloader
+        # can detect role-pin drift against the active session.
+        reloader = Reloader(
+            profile_name=profile_name,
+            orchestrator=orchestrator,
+            convention_loader=convention_loader,
+            profile_doc_loader=doc_loader,
+            file_watcher=file_watcher,
+            active_session_model=lambda: session.model,
+        )
+
     app = CairnApp(
         orchestrator=orchestrator,
         session=session,
@@ -256,15 +295,22 @@ async def _run(config: CairnConfig) -> int:
         convention_loader=convention_loader,
         allowlist_store=allowlist_store,
         prompt_history_store=prompt_history_store,
+        reloader=reloader,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,
         session_allowlist=session_allowlist,
     )
+    textual_observer = TextualUIEventObserver(app=app)
     orchestrator._observers = (  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
-        TextualUIEventObserver(app=app),
+        textual_observer,
         structured_observer,
     )
+    if file_watcher is not None:
+        # Drift events also need to reach the UI so the user sees a
+        # banner — the watcher was constructed before the textual
+        # observer existed, so attach it here.
+        file_watcher.add_observer(textual_observer)
 
     if conventions_policy == "prompt":
         convention_loader._trust_gate = TextualPromptTrustGate(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
@@ -272,9 +318,32 @@ async def _run(config: CairnConfig) -> int:
             store=allowlist_store,
         )
 
+    if file_watcher is not None:
+        # Bind the watcher's turn-active gate to the live session
+        # screen. Drift detected during a turn is buffered until the
+        # next tick after the turn completes.
+        def _is_turn_active() -> bool:
+            screen = app.current_session_screen
+            return screen is not None and screen.is_turn_active()
+
+        file_watcher._is_turn_active = _is_turn_active  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
+        await file_watcher.start()
+
+    # Textual's `log` falls back to bare `print()` when the active-app
+    # context var is unset (see `textual/__init__.py:74-90`). During
+    # the post-exit teardown — widget Prune/Unmount messages dispatch
+    # after `App.run_async()` has cleared `active_app` — those prints
+    # leak to stdout *after* the alt-screen has already been
+    # restored, leaving "Prune() >>> Banner() method=..." debris on
+    # the user's terminal. The driver writes to `sys.__stdout__`
+    # directly, so redirecting `sys.stdout` for the run window
+    # silences the leak without affecting the rendered UI.
     try:
-        await app.run_async()
+        with contextlib.redirect_stdout(io.StringIO()):
+            await app.run_async()
     finally:
+        if file_watcher is not None:
+            await file_watcher.stop()
         await extraction_queue.stop()
         await database.close()
 

@@ -123,6 +123,16 @@ class Message:
         """Concatenate all TextBlock content into a single string."""
         return "".join(block.text for block in self.content if isinstance(block, TextBlock))
 
+    def has_pending_tool_input(self) -> bool:
+        """True if any tool call started streaming but never finalized.
+
+        Indicates that the model emitted ``ToolCallStart`` (and possibly
+        ``ToolCallDelta`` chunks) but the stream ended before
+        ``ToolCallEnd`` arrived — typically because the provider hit
+        ``max_tokens`` mid-tool-call.
+        """
+        return bool(self._pending_tool_inputs)
+
     # -- Serialization -----------------------------------------------------
 
     def content_json(self) -> bytes:

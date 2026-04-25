@@ -126,6 +126,21 @@ The full event payload (every dataclass field) lands under the
 `event` key in `extra`, so a JSON formatter can pick it up later
 without parsing the message line.
 
+### Drift events
+
+The file watcher (0.15.0) emits `ConfigDriftDetected` once per
+drift transition. The structured observer turns each into an
+`INFO` record on `cairn.events`:
+
+```
+INFO cairn.events config_drift_detected: count=2 categories=config,convention
+```
+
+Per-path detail (the full `changes` tuple) lands under the
+`event` key in `extra` for filtering. Use this to confirm
+which file Cairn noticed change without having to scrape the UI
+banner.
+
 ### What is and isn't logged
 
 Logged at `INFO`:

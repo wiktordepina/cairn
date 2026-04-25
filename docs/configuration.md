@@ -239,6 +239,86 @@ See [Compaction](compaction.md) for the full guide.
 | `safety_margin_tokens` | int | `2048` | Held back from `context_window` on top of reserved output tokens. |
 | `min_history_tokens` | int | `1024` | If effective budget falls below this, log ERROR and pass the request through unchanged. |
 
+### `watcher`
+
+Controls the file watcher introduced in 0.15.0. The watcher
+snapshots a fixed set of paths on boot — every existing config
+layer, every discovered convention file, and the three profile
+docs (soul / user-context / MEMORY.md) — and polls them for
+content changes.
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `enabled` | bool | `true` | Turn off to skip the boot-time watcher launch entirely. |
+| `poll_interval_s` | float | `3.0` | Seconds between polls. Range 0.5–60. Each tick walks every watched path's `os.stat`; SHA-256 only fires when mtime drifted. |
+
+### Hot reload
+
+When the watcher detects content changes (mtime + hash both
+differ), Cairn surfaces a muted info banner. Drift is
+*announce-only*: the running session continues with the
+previously-loaded config until the user invokes `/reload`. The
+watcher buffers events emitted during an active turn and emits
+them on the next tick after the turn completes, so the banner
+never appears above a streaming assistant message.
+
+`/reload` performs a **surgical reload**, not a re-bootstrap:
+
+- `SecretResolver`, `ModelRegistry`, and `ProviderRegistry` are
+  rebuilt from the freshly-loaded `CairnConfig` and swapped onto
+  the running orchestrator.
+- The convention loader and profile-doc loader caches are
+  invalidated so the next turn re-reads from disk.
+- The file watcher's baseline is re-snapshotted, clearing the
+  drift banner.
+- The active session, persisted history, in-flight extraction
+  worker, and Textual UI are all preserved.
+
+`/reload` invoked mid-turn is queued and runs after the current
+turn completes — the in-flight provider call finishes against
+the bound registries, and the swap takes effect on the next turn.
+
+If the new config fails validation (`load_config` raises
+`ConfigError`), nothing is swapped: the user keeps the
+previously-good config and the watcher's drift banner stays up
+until they fix the file and reload again. See
+[ADR 0042](decisions/0042-surgical-reload-boundary.md) for the
+full rationale and the list of collaborators that are
+deliberately *not* swapped on reload.
+
+The watcher only watches paths that exist on boot — files
+created afterwards (a freshly-added `.cairn/config.local.toml`,
+a new ancestor `AGENTS.md`) are invisible until `/reload`
+re-snapshots.
+
+#### Role-pin changes don't rebind the active session
+
+Each session is created bound to a concrete model id resolved at
+session creation. If you edit a model's `roles` list — moving
+`primary` from one model to another, say — the new role pin
+applies to **future** sessions, not the active one. The active
+session keeps using its original model.
+
+`/reload` notices this case and surfaces a hint banner alongside
+the success summary:
+
+```
+primary role now resolves to claude-haiku-4-5; the active session
+stays on claude-opus-4-7. Restart cairn to switch.
+```
+
+This is intentional. Mid-session model swaps are risky in a way
+that's specific to a session's *history* — provider-specific
+tool-call id schemes, thinking-block contracts (Anthropic vs
+DeepSeek vs OpenAI), and per-provider prompt-cache namespaces all
+interact badly when the wire-format codec changes mid-conversation.
+A future `/model <id>` command will be the explicit, opt-in path
+for in-session model changes; until then, restart to pick up role
+pins on an active conversation.
+
+See [ADR 0042](decisions/0042-surgical-reload-boundary.md) for the
+full reasoning.
+
 ### Delegation tools
 
 Each delegation tool lets the companion consult a different model as if
