@@ -40,6 +40,7 @@ from cairn.domain._events import (
     TurnAborted,
     TurnBlocked,
     TurnComplete,
+    TurnIncomplete,
     UserMessagePersisted,
 )
 from cairn.domain._messages import Message
@@ -308,6 +309,7 @@ class Orchestrator:
 
             stop_reason: StopReason | None = None
             model_cfg = self._model_registry.resolve(session.model)
+            had_partial_tool_input = False
 
             for iteration in range(self._config.max_iterations):
                 self._raise_if_cancelled(cancel_flag)
@@ -384,6 +386,7 @@ class Orchestrator:
                 yield AssistantMessageComplete(message_id=assistant_msg.id, turn_id=turn_id)
 
                 stop_reason = current_stop
+                had_partial_tool_input = assistant_msg.has_pending_tool_input()
 
                 if not pending_tool_calls:
                     break
@@ -455,7 +458,10 @@ class Orchestrator:
                 stop_reason=final_stop,
                 completed_at=self._clock.now(),
             )
-            yield TurnComplete(session_id=session.id, turn_id=turn_id, stop_reason=final_stop)
+            if final_stop is StopReason.MAX_TOKENS and had_partial_tool_input:
+                yield TurnIncomplete(session_id=session.id, turn_id=turn_id)
+            else:
+                yield TurnComplete(session_id=session.id, turn_id=turn_id, stop_reason=final_stop)
 
         except asyncio.CancelledError:
             await self._turn_repo.mark_aborted(
