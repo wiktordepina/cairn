@@ -10,8 +10,69 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
-Observability tranche 2 (log redaction, structured
-`UIEventObserver`) remains the next planned release.
+The CLI brick (`cairn config show / paths / validate / migrate /
+secret …`, `cairn trust …`, first-run companion-name elicitation)
+is the next planned release.
+
+## [0.12.0] — 2026-04-25
+
+Observability tranche 2 — the cairn log file becomes a viable
+audit trail. Every API-key-shaped string is scrubbed before it
+reaches disk; every `UIEvent` lifecycle event lands as a
+structured `INFO` record on `cairn.events` alongside the
+existing Textual UI fan-out. Streaming text deltas are dropped
+entirely — the assembled message is logged on
+`AssistantMessageComplete`.
+
+### Added
+
+- **`cairn.logging.RedactingFilter`.** Attached to the rotating
+  file handler by `setup_logging()` so it catches both records
+  originating on the `cairn` logger and those propagated up
+  from descendant loggers (`cairn.events`,
+  `cairn.orchestrator`, …). Walks `record.msg`,
+  every element of `record.args`, and every string value in
+  `record.__dict__` (recursing into nested dicts and lists).
+  Reserved `LogRecord` attributes are left alone so formatters
+  keep working. Opt-out via `setup_logging(redact=False)` or
+  `CAIRN_LOG_REDACT=0`. Patterns shared with
+  `cairn.tools.SecretRedactor` via the new
+  `cairn._redaction_patterns` module so the two scrubbers
+  cannot drift.
+- **`cairn.logging.StructuredEventObserver`.** Implements the
+  orchestrator's `UIEventObserver` protocol; emits one `INFO`
+  record per lifecycle event on `cairn.events`. Tool-call
+  records carry `tool_name`, `tool_call_id`, `status`,
+  `duration_ms`, and `decided_by` (auto/user) — but never tool
+  inputs or outputs. Approval decisions are deliberately INFO
+  so a tail of `cairn.log` is a viable audit trail alongside
+  the persisted `approval_decisions` table.
+  `AssistantTextDelta` is dropped on the floor.
+- **`cairn.logging.make_event_logger(profile)`.** Returns a
+  `LoggerAdapter` over `cairn.events` that injects `profile`
+  into every record's `extra` payload. Multi-profile triage
+  becomes `grep profile=<name> cairn.log`. Records without a
+  bound profile carry `profile=<unbound>`.
+- **Bootstrap wiring.** `cairn.ui._bootstrap` constructs one
+  `StructuredEventObserver` and routes it through both the
+  orchestrator's observer chain and the
+  `ObservationExtractionQueue`'s own observer list — the
+  queue's observers had been empty, so observation-extraction
+  lifecycle events reached no observer at all.
+- **Structured `resume_aborted_turns` logging.** Bookends the
+  existing per-turn `turn.resumed_as_aborted` INFO with
+  `resume_aborted_turns.scan_started` and
+  `resume_aborted_turns.scan_complete` records (the latter
+  carries `resumed_count`). Per-turn record now also records
+  the canonical `reason="process_crash"`.
+
+### Changed
+
+- `cairn.tools.redact_secrets` is now a thin alias over
+  `cairn._redaction_patterns.redact_text`; behaviour unchanged.
+- `docs/observability.md` extended with redaction, structured
+  event log, and crash-recovery sections. Architecture status
+  table flips the tranche-2 row to ✅ Shipped (0.12.0).
 
 ## [0.11.0] — 2026-04-25
 
