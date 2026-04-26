@@ -11,7 +11,7 @@ import aiosqlite
 from cairn.persistence._migrations import apply_pending
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncGenerator
     from pathlib import Path
 
 
@@ -66,7 +66,7 @@ class Database:
                 self._conn = None
 
     @asynccontextmanager
-    async def transaction(self) -> AsyncIterator[aiosqlite.Connection]:
+    async def transaction(self) -> AsyncGenerator[aiosqlite.Connection]:
         """Run a block inside `BEGIN IMMEDIATE` / `COMMIT` / `ROLLBACK`."""
         conn = await self.connect()
         await conn.execute("BEGIN IMMEDIATE")

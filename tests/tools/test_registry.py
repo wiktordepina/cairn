@@ -100,3 +100,15 @@ class TestDuplicateRejection:
         b = _make_tool("dup")
         with pytest.raises(ValueError, match="Duplicate tool name"):
             DefaultToolRegistry(companion_tools=[a], mcp_tools=[b])
+
+
+class TestNames:
+    def test_empty_registry_has_no_names(self) -> None:
+        assert DefaultToolRegistry().names() == frozenset()
+
+    def test_collects_companion_and_mcp_names(self) -> None:
+        a = _make_tool("a")
+        b = _make_tool("b")
+        m = _make_tool("m")
+        reg = DefaultToolRegistry(companion_tools=[a, b], mcp_tools=[m])
+        assert reg.names() == frozenset({"a", "b", "m"})

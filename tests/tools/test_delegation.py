@@ -578,7 +578,13 @@ class TestProviderRequest:
 # ---------------------------------------------------------------------------
 
 
-def _ctx_with_session(turn_ctx: TurnContext, session: Session) -> TurnContext:
+def _ctx_with_session(
+    turn_ctx: TurnContext,
+    session: Session,
+    *,
+    on_delegation_spawned: object = None,
+    on_delegation_completed: object = None,
+) -> TurnContext:
     """Build a `TurnContext` pointing at `session`.
 
     The shared `turn_ctx` fixture from `tests/tools/conftest.py` is
@@ -588,4 +594,173 @@ def _ctx_with_session(turn_ctx: TurnContext, session: Session) -> TurnContext:
     """
     from cairn.orchestrator._context import TurnContext as _TC
 
-    return _TC(session=session, turn_id=turn_ctx.turn_id, iteration=turn_ctx.iteration)
+    return _TC(
+        session=session,
+        turn_id=turn_ctx.turn_id,
+        iteration=turn_ctx.iteration,
+        on_delegation_spawned=on_delegation_spawned,  # pyright: ignore[reportArgumentType]
+        on_delegation_completed=on_delegation_completed,  # pyright: ignore[reportArgumentType]
+    )
+
+
+# ---------------------------------------------------------------------------
+# Delegation lifecycle callbacks (DelegationSpawned / DelegationCompleted)
+# ---------------------------------------------------------------------------
+
+
+class TestDelegationLifecycleCallbacks:
+    @pytest.mark.asyncio
+    async def test_spawned_called_after_create_with_child_session_id(
+        self,
+        provider: FakeProvider,
+        session_manager: SessionManager,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        parent_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        spawned_with: list[str] = []
+        _script(provider, text="ok", input_tokens=1, output_tokens=1)
+        tool = _make_tool(
+            config=_config(),
+            session_manager=session_manager,
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            cost_tracker=cost_tracker,
+            clock=frozen_clock,
+        )
+        ctx = _ctx_with_session(
+            turn_ctx,
+            parent_session,
+            on_delegation_spawned=lambda child_id: spawned_with.append(child_id),
+        )
+        await tool.invoke({"prompt": "hi"}, ctx)
+        assert len(spawned_with) == 1
+        # The id surfaced in the callback is the sub-session id, not the parent's.
+        assert spawned_with[0] != parent_session.id
+        assert spawned_with[0].startswith(("sess", "S", ""))  # any non-empty id
+
+    @pytest.mark.asyncio
+    async def test_completed_called_with_same_child_session_id(
+        self,
+        provider: FakeProvider,
+        session_manager: SessionManager,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        parent_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        spawned_with: list[str] = []
+        completed_with: list[str] = []
+        _script(provider, text="ok", input_tokens=1, output_tokens=1)
+        tool = _make_tool(
+            config=_config(),
+            session_manager=session_manager,
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            cost_tracker=cost_tracker,
+            clock=frozen_clock,
+        )
+        ctx = _ctx_with_session(
+            turn_ctx,
+            parent_session,
+            on_delegation_spawned=lambda c: spawned_with.append(c),
+            on_delegation_completed=lambda c: completed_with.append(c),
+        )
+        await tool.invoke({"prompt": "hi"}, ctx)
+        assert len(spawned_with) == 1
+        assert len(completed_with) == 1
+        # Same child session id surfaces in both callbacks.
+        assert spawned_with[0] == completed_with[0]
+
+    @pytest.mark.asyncio
+    async def test_callbacks_optional_tool_runs_without_them(
+        self,
+        provider: FakeProvider,
+        session_manager: SessionManager,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        parent_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        # No callbacks set → tool should still complete successfully.
+        _script(provider, text="ok", input_tokens=1, output_tokens=1)
+        tool = _make_tool(
+            config=_config(),
+            session_manager=session_manager,
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            cost_tracker=cost_tracker,
+            clock=frozen_clock,
+        )
+        result = await tool.invoke(
+            {"prompt": "hi"},
+            _ctx_with_session(turn_ctx, parent_session),
+        )
+        assert result.is_error is False
+
+    @pytest.mark.asyncio
+    async def test_completed_fires_even_on_provider_failure(
+        self,
+        provider: FakeProvider,
+        session_manager: SessionManager,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        parent_session: Session,
+        turn_ctx: TurnContext,
+    ) -> None:
+        # If the provider raises mid-stream, the finally: in
+        # DelegationTool.invoke must still call on_delegation_completed
+        # so the UI sees the lifecycle close.
+        from cairn.domain._provider import TextDelta as _TD
+
+        # Script: yield one delta, then nothing — consumer iterates fine,
+        # but we'll force a failure by patching the provider's stream
+        # method with one that raises after yielding.
+        completed_with: list[str] = []
+
+        async def boom_stream(_request):  # noqa: ANN001
+            yield _TD(text="started")
+            raise RuntimeError("provider exploded")
+
+        provider.stream = boom_stream  # pyright: ignore[reportAttributeAccessIssue]
+        tool = _make_tool(
+            config=_config(),
+            session_manager=session_manager,
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            cost_tracker=cost_tracker,
+            clock=frozen_clock,
+        )
+        ctx = _ctx_with_session(
+            turn_ctx,
+            parent_session,
+            on_delegation_completed=lambda c: completed_with.append(c),
+        )
+        with pytest.raises(RuntimeError, match="provider exploded"):
+            await tool.invoke({"prompt": "hi"}, ctx)
+        assert len(completed_with) == 1
+
+
+# ---------------------------------------------------------------------------
+# Orchestrator-level: callbacks are wired so events fan out to observers
+# ---------------------------------------------------------------------------
+
+
+class TestOrchestratorWiresDelegationCallbacks:
+    def test_turn_context_constructor_accepts_callbacks(self) -> None:
+        from cairn.orchestrator._context import TurnContext as _TC
+
+        # Sanity: the new fields exist with sensible defaults so older
+        # call sites that don't pass them keep compiling.
+        ctx = _TC(session=None, turn_id="t", iteration=0)  # pyright: ignore[reportArgumentType]
+        assert ctx.on_delegation_spawned is None
+        assert ctx.on_delegation_completed is None

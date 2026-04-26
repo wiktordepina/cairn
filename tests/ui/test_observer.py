@@ -16,8 +16,11 @@ import pytest
 from cairn.domain import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    AssistantThinkingDelta,
     BudgetOverflowAdvisory,
     BudgetWarning,
+    DelegationCompleted,
+    DelegationSpawned,
     HistoryCompacted,
     StopReason,
     ToolCallApproved,
@@ -57,6 +60,9 @@ class _FakeScreen:
     show_incomplete_calls: list[TurnIncomplete] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     show_compaction_calls: list[HistoryCompacted] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     show_overflow_calls: list[BudgetOverflowAdvisory] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_delegation_spawned_calls: list[DelegationSpawned] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    show_delegation_completed_calls: list[DelegationCompleted] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
+    append_thinking_delta_calls: list[AssistantThinkingDelta] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
 
     def append_user_message(self, event: UserMessagePersisted) -> None:
         self.append_user_message_calls.append(event)
@@ -102,6 +108,15 @@ class _FakeScreen:
 
     def show_overflow_advisory(self, event: BudgetOverflowAdvisory) -> None:
         self.show_overflow_calls.append(event)
+
+    def show_delegation_spawned(self, event: DelegationSpawned) -> None:
+        self.show_delegation_spawned_calls.append(event)
+
+    def show_delegation_completed(self, event: DelegationCompleted) -> None:
+        self.show_delegation_completed_calls.append(event)
+
+    def append_thinking_delta(self, event: AssistantThinkingDelta) -> None:
+        self.append_thinking_delta_calls.append(event)
 
 
 @pytest.fixture
@@ -259,6 +274,30 @@ class TestObserverRouting:
         )
         observer.observe(event)
         assert fake_screen.show_overflow_calls == [event]
+
+    def test_assistant_thinking_delta_routes_to_append_thinking_delta(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = AssistantThinkingDelta(message_id="msg-1", turn_id="t-1", text="hmm")
+        observer.observe(event)
+        assert fake_screen.append_thinking_delta_calls == [event]
+
+    def test_delegation_spawned_routes_to_show_delegation_spawned(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = DelegationSpawned(session_id="sess-child", turn_id="t-1")
+        observer.observe(event)
+        assert fake_screen.show_delegation_spawned_calls == [event]
+
+    def test_delegation_completed_routes_to_show_delegation_completed(
+        self, recording_app: Any, fake_screen: _FakeScreen
+    ) -> None:
+        observer = _observer(recording_app)
+        event = DelegationCompleted(session_id="sess-child", turn_id="t-1")
+        observer.observe(event)
+        assert fake_screen.show_delegation_completed_calls == [event]
 
 
 class TestObserverRobustness:

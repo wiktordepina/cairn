@@ -23,9 +23,12 @@ from typing import TYPE_CHECKING
 from cairn.domain import (
     AssistantMessageComplete,
     AssistantTextDelta,
+    AssistantThinkingDelta,
     BudgetOverflowAdvisory,
     BudgetWarning,
     ConfigDriftDetected,
+    DelegationCompleted,
+    DelegationSpawned,
     HistoryCompacted,
     ToolCallApproved,
     ToolCallCompleted,
@@ -85,6 +88,8 @@ class TextualUIEventObserver:
                 screen.append_user_message(event)
             case AssistantTextDelta():
                 screen.append_delta(event)
+            case AssistantThinkingDelta():
+                screen.append_thinking_delta(event)
             case AssistantMessageComplete():
                 screen.finalise_assistant_message(event)
             case ToolCallPlanned():
@@ -113,8 +118,12 @@ class TextualUIEventObserver:
                 screen.show_overflow_advisory(event)
             case ConfigDriftDetected():
                 screen.show_drift(event)
+            case DelegationSpawned():
+                screen.show_delegation_spawned(event)
+            case DelegationCompleted():
+                screen.show_delegation_completed(event)
             case _:
-                # Session-lifecycle, delegation, and observation-
-                # extraction events are Tranche 2 work. Silent no-op
-                # keeps forward compat for the event stream.
+                # Session-lifecycle and observation-extraction events
+                # are Tranche 2 work. Silent no-op keeps forward
+                # compat for the event stream.
                 pass

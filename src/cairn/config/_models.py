@@ -369,6 +369,43 @@ class WatcherConfig(BaseModel):
     watched path's `os.stat`; hashing only fires when mtime drifts."""
 
 
+class ToolsConfig(BaseModel):
+    """Per-profile tool-runner knobs.
+
+    Today only carries `timeout_s_overrides` — a per-tool-name map
+    that overrides the `Tool.timeout_s` declared on the tool itself
+    (e.g. `make_web_fetch`'s 35.0s, `DelegationTool`'s 120.0s). The
+    runner consults this map on every dispatch; an absent key falls
+    back to the tool's declared default.
+
+    No global `default_timeout_s` knob: the per-tool decorator
+    defaults are deliberately tuned (read=fast, grep=medium,
+    web_fetch=slow, delegation=very slow) and a single global value
+    would either be too short for delegation or too long for
+    file_read.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    timeout_s_overrides: dict[str, float] = Field(default_factory=dict)
+    """Tool-name → seconds. Bounds: 1.0–3600.0 per entry. Unknown
+    tool names are warned about at runner construction (the registry
+    is the only place that knows what tool names exist), never fail
+    config load — useful for forward-compat across versions where a
+    tool may be renamed or removed."""
+
+    @field_validator("timeout_s_overrides")
+    @classmethod
+    def _validate_override_bounds(cls, value: dict[str, float]) -> dict[str, float]:
+        for tool_name, seconds in value.items():
+            if not (1.0 <= seconds <= 3600.0):
+                raise ValueError(
+                    f"tools.timeout_s_overrides[{tool_name!r}] must be between "
+                    f"1.0 and 3600.0 seconds, got {seconds!r}"
+                )
+        return value
+
+
 class ProfileConfig(BaseModel):
     """Configuration for a named profile (companion, work, etc.)."""
 
@@ -388,6 +425,7 @@ class ProfileConfig(BaseModel):
     compaction: CompactionConfig = CompactionConfig()
     ui: UIConfig = UIConfig()
     watcher: WatcherConfig = WatcherConfig()
+    tools: ToolsConfig = ToolsConfig()
 
 
 class CairnConfig(BaseModel):

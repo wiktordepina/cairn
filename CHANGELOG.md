@@ -10,6 +10,72 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
+## [0.16.0] — 2026-04-25
+
+The V1 loose-ends brick. Four small TODOs from earlier bricks
+land together: per-tool timeout overrides, wall-clock turn
+timeout enforcement, delegation lifecycle UI events, and
+collapsible thinking-block rendering. No new architectural
+surface — every item closes a known gap.
+
+### Added
+
+- **`ToolsConfig` on `ProfileConfig.tools`** carrying
+  `timeout_s_overrides: dict[str, float]` — a per-tool-name map
+  that overrides the `Tool.timeout_s` declared on each tool.
+  Bounds 1.0–3600.0 seconds; unknown tool names log a warning at
+  bootstrap and load cleanly (forward-compat across renames or
+  removed tools). Applied by `DefaultToolRunner` at the
+  `asyncio.timeout()` site; the timeout error message reflects
+  the effective value the call actually hit. No global
+  `default_timeout_s` knob — per-tool defaults are deliberately
+  tuned and a single global value would either break delegation
+  (too short) or let `file_read` hang (too long).
+- **Per-turn wall-clock timeout enforcement.** `max_turn_duration_s`
+  on `OrchestratorConfig` (default 600.0 s) is now honoured by a
+  background `_turn_deadline_watchdog` task spawned from
+  `run_turn`. When wall-clock hits the deadline, the watchdog
+  flips a `timeout_marker` and sets the existing cancel flag —
+  observed at the next iteration boundary inside the orchestrator
+  (between tool calls / between LLM round-trips). Tools already
+  in flight finish; the per-tool `timeout_s` bounds them
+  independently. Surfaces as `TurnAborted(reason="turn_timeout")`,
+  rendered by the UI as a warning-tinted banner explaining that
+  tool side-effects are intact. Soft-cancel only — never
+  hard-cancels mid-tool-call. Watchdog cleanup happens in the
+  `run_turn` finally: block, covered by a 100-turn stress test
+  asserting no `cairn-turn-watchdog-*` tasks leak.
+- **`DelegationSpawned` / `DelegationCompleted` UI events** are
+  now emitted (the dataclasses already existed in `_events.py`
+  from the original tool-system brick — only the wiring was
+  missing). `TurnContext` grows two `Optional[Callable]`
+  callback slots; the orchestrator wires them per iteration to
+  `self._fanout(...)`; `DelegationTool.invoke()` calls them
+  after the child session row is created and inside the
+  `finally:` before archive. Rendered as inline muted banners
+  (`⤷ delegated to ephemeral session abcdef12…` and
+  `⤴ delegation abcdef12… returned`).
+- **`ThinkingRow` widget** for collapsible reasoning text.
+  `AssistantThinkingDelta` UIEvent variant added to the union;
+  yielded by the orchestrator's stream loop; routed by the
+  observer to a new `SessionScreen.append_thinking_delta`
+  method. Default-collapsed muted block; header carries a live
+  elapsed-time counter while streaming, freezes to "thought
+  (Xs)" on seal. One row per contiguous thinking phase per
+  assistant message — sealed when a non-thinking event arrives
+  (text delta, tool plan, message complete). Replay of historical
+  thinking on `/resume` remains out of scope.
+
+### Changed
+
+- `TurnContext` is no longer a 3-field dataclass — the two
+  optional `on_delegation_*` callback slots are added with
+  default `None`. Existing call sites that don't pass them keep
+  compiling unchanged.
+- `TurnAborted.reason` documentation now includes
+  `"turn_timeout"` alongside `"user_cancel"`,
+  `"user_declined_overflow"`, `"error"`, and `"process_crash"`.
+
 ## [0.15.0] — 2026-04-25
 
 The file-watcher brick. Cairn now notices when its config layers,

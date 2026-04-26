@@ -45,6 +45,10 @@ class FakeProvider:
     requests: list[ProviderRequest] = field(default_factory=list)  # pyright: ignore[reportUnknownVariableType]
     _cursor: int = 0
     token_count: int = 42
+    # Optional sleep before yielding each scripted batch — used by
+    # tests that need wall-clock to elapse during the stream (turn
+    # timeout watchdog, slow-stream behaviours).
+    pre_yield_delay_s: float = 0.0
 
     def stream(self, request: ProviderRequest) -> AsyncIterator[ProviderEvent]:
         self.requests.append(request)
@@ -54,13 +58,19 @@ class FakeProvider:
             )
         events = self.scripted[self._cursor]
         self._cursor += 1
-        return _gen(events)
+        return _gen(events, delay_s=self.pre_yield_delay_s)
 
     async def count_tokens(self, request: ProviderRequest) -> int:  # noqa: ARG002
         return self.token_count
 
 
-async def _gen(events: list[ProviderEvent]) -> AsyncIterator[ProviderEvent]:
+async def _gen(
+    events: list[ProviderEvent], *, delay_s: float = 0.0
+) -> AsyncIterator[ProviderEvent]:
+    if delay_s > 0:
+        import asyncio  # noqa: PLC0415 — local to avoid widening the fake's import surface
+
+        await asyncio.sleep(delay_s)
     for ev in events:
         yield ev
 

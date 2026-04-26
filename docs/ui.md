@@ -69,6 +69,45 @@ observer). The observer is a single-loop synchronous fan-out
 from the orchestrator — see
 [ADR 0034](decisions/0034-single-loop-sync-observer.md).
 
+### Thinking blocks
+
+Models with reasoning support (Anthropic thinking, DeepSeek
+`reasoning_content`) stream their reasoning as
+`AssistantThinkingDelta` events alongside the main text stream.
+Each contiguous thinking phase mounts a `ThinkingRow` widget in
+the chat log: a muted, **default-collapsed** block with a
+header carrying a live elapsed-time counter while streaming
+("thinking… (3.2s)"), which freezes to past tense ("thought
+(3.2s)") when the next non-thinking event arrives (text delta,
+tool call, message complete).
+
+Press space when a `ThinkingRow` is focused to expand or
+collapse it. Default-collapsed because thinking is long and
+low-signal; the header makes the *fact* that thinking happened
+visible without dominating the transcript.
+
+A "thinking → text → more thinking" sequence mounts two
+separate `ThinkingRow` widgets — one per phase. Replay of
+historical thinking on `/resume` is not yet implemented;
+thinking content is persisted (round-trips through `MessageRepo`
+in the message's `content_json`) but only renders live as the
+deltas arrive.
+
+### Delegation events
+
+When a delegation tool spawns a child session, the parent
+transcript shows two muted inline banners:
+
+- `⤷ delegated to ephemeral session abcdef12…` — fired after
+  the child session row is created in the database.
+- `⤴ delegation abcdef12… returned` — fired before the child
+  session is archived, so subscribers see the lifecycle close
+  even if the provider stream fails mid-flight.
+
+The full child-session transcript stays in its own session row
+(reachable via the session list); these banners are just a
+hint that delegation happened in the parent's turn flow.
+
 ## Tool-call rows
 
 Each planned tool call mounts a `ToolRow` in the chat log with a

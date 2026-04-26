@@ -29,6 +29,8 @@
 
 ::: cairn.config.SecretRef
 
+::: cairn.config.ToolsConfig
+
 ::: cairn.config.UIConfig
 
 ::: cairn.config.WatcherConfig

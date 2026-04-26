@@ -28,6 +28,22 @@ class AssistantTextDelta:
 
 
 @dataclass(frozen=True, slots=True)
+class AssistantThinkingDelta:
+    """Incremental reasoning text from the assistant.
+
+    Surfaced separately from `AssistantTextDelta` so the UI can
+    render thinking in a distinct (collapsible, muted) widget.
+    The leading `ThinkingBlock` on the assistant message holds
+    the full accumulated reasoning; this event is the streaming
+    counterpart of `provider.ThinkingDelta`.
+    """
+
+    message_id: str
+    turn_id: str
+    text: str
+
+
+@dataclass(frozen=True, slots=True)
 class AssistantMessageComplete:
     """Assistant message is fully generated."""
 
@@ -257,6 +273,7 @@ class SessionArchived:
 UIEvent = (
     UserMessagePersisted
     | AssistantTextDelta
+    | AssistantThinkingDelta
     | AssistantMessageComplete
     | ToolCallPlanned
     | ToolCallApproved

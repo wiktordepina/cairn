@@ -252,6 +252,47 @@ content changes.
 | `enabled` | bool | `true` | Turn off to skip the boot-time watcher launch entirely. |
 | `poll_interval_s` | float | `3.0` | Seconds between polls. Range 0.5–60. Each tick walks every watched path's `os.stat`; SHA-256 only fires when mtime drifted. |
 
+### `tools`
+
+Per-profile tool-runner knobs. Today only carries
+`timeout_s_overrides` — a per-tool-name map that overrides the
+`Tool.timeout_s` declared on each tool. The runner consults
+this map on every dispatch; an absent key falls back to the
+tool's declared default.
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `timeout_s_overrides` | `dict[str, float]` | `{}` | Tool name → seconds. Each value bounded 1.0–3600.0. Unknown tool names log a warning at bootstrap and load cleanly (forward-compat across renames or removals). |
+
+```toml
+[profiles.default.tools.timeout_s_overrides]
+web_fetch = 90.0
+delegation = 300.0
+```
+
+There is no global `default_timeout_s` — the per-tool defaults
+(read=10s, grep=30s, web_fetch=35s, delegation=120s) are
+deliberately tuned and a single global value would either be
+too short for delegation or too long for `file_read`. If you
+keep hitting timeouts on one specific tool, override that
+tool only.
+
+### Wall-clock turn timeout
+
+`OrchestratorConfig.max_turn_duration_s` (default **600.0** s)
+is the wall-clock deadline for a single turn. Wired in 0.16.0:
+a background watchdog task fires at the deadline and
+soft-cancels the turn at the next iteration boundary inside
+the orchestrator (between tool calls / between LLM
+round-trips). Tools already in flight finish — the per-tool
+`timeout_s` (above) bounds them independently, so the turn may
+overshoot the wall-clock deadline by up to one
+slow-tool-execution. The aborted turn surfaces as
+`TurnAborted(reason="turn_timeout")` and the UI shows a
+warning-tinted banner explaining that tool side-effects are
+intact. Soft-cancel only — the watchdog never hard-cancels a
+tool mid-call.
+
 ### Hot reload
 
 When the watcher detects content changes (mtime + hash both
