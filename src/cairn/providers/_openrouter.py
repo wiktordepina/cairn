@@ -18,6 +18,7 @@ import openai
 
 from cairn.domain._content import ImageBlock, TextBlock, ToolResultBlock, ToolUseBlock
 from cairn.domain._provider import (
+    BalanceInfo,
     MessageStop,
     ProviderEvent,
     SystemPromptSegment,
@@ -445,3 +446,7 @@ class OpenRouterProvider:
                 if isinstance(block, TextBlock):
                     total += len(enc.encode(block.text))
         return total
+
+    async def balance(self) -> BalanceInfo | None:
+        """Stub — real implementation lands in phase 5 (`/api/v1/credits`)."""
+        return None

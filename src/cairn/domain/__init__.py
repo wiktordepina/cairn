@@ -4,6 +4,7 @@ from cairn.domain._content import (
     ContentBlock,
     ImageBlock,
     ImageSource,
+    RedactedThinkingBlock,
     TextBlock,
     ThinkingBlock,
     ToolResultBlock,
@@ -50,6 +51,8 @@ from cairn.domain._events import (
 from cairn.domain._memory import MemoryEntry
 from cairn.domain._messages import Message
 from cairn.domain._provider import (
+    BalanceInfo,
+    GenerationId,
     MessageStop,
     ProviderEvent,
     ProviderRequest,
@@ -69,6 +72,7 @@ __all__ = [
     "ContentBlock",
     "ImageBlock",
     "ImageSource",
+    "RedactedThinkingBlock",
     "TextBlock",
     "ThinkingBlock",
     "ToolResultBlock",
@@ -114,6 +118,8 @@ __all__ = [
     # Messages
     "Message",
     # Provider
+    "BalanceInfo",
+    "GenerationId",
     "MessageStop",
     "ProviderEvent",
     "ProviderRequest",

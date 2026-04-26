@@ -11,6 +11,7 @@ from cairn.domain._content import (
     ContentBlock,
     ImageBlock,
     ImageSource,
+    RedactedThinkingBlock,
     TextBlock,
     ThinkingBlock,
     ToolResultBlock,
@@ -70,11 +71,50 @@ class TestImageBlock:
         assert block.type == "image"
         assert block.source.media_type == "image/png"
 
+    def test_image_source_detail_default_auto(self) -> None:
+        source = ImageSource(media_type="image/png", data="x")
+        assert source.detail == "auto"
+
+    def test_image_source_detail_settable(self) -> None:
+        source = ImageSource(media_type="image/png", data="x", detail="high")
+        assert source.detail == "high"
+
+    def test_image_source_detail_rejects_invalid(self) -> None:
+        with pytest.raises(ValidationError):
+            ImageSource(media_type="image/png", data="x", detail="ultra")  # type: ignore[arg-type]
+
 
 class TestThinkingBlock:
     def test_construction(self) -> None:
         block = ThinkingBlock(thinking="Let me think about this...")
         assert block.type == "thinking"
+
+    def test_signature_defaults_to_empty(self) -> None:
+        block = ThinkingBlock(thinking="hmm")
+        assert block.signature == ""
+
+    def test_signature_round_trip_through_adapter(self) -> None:
+        blocks: list[ContentBlock] = [
+            ThinkingBlock(thinking="reasoning trace", signature="sig-abc-123")
+        ]
+        data = content_list_adapter.dump_json(blocks)
+        restored = content_list_adapter.validate_json(data)
+        assert isinstance(restored[0], ThinkingBlock)
+        assert restored[0].signature == "sig-abc-123"
+
+
+class TestRedactedThinkingBlock:
+    def test_construction(self) -> None:
+        block = RedactedThinkingBlock(data="opaque-server-blob")
+        assert block.type == "redacted_thinking"
+        assert block.data == "opaque-server-blob"
+
+    def test_round_trip_through_adapter(self) -> None:
+        blocks: list[ContentBlock] = [RedactedThinkingBlock(data="opaque")]
+        data = content_list_adapter.dump_json(blocks)
+        restored = content_list_adapter.validate_json(data)
+        assert isinstance(restored[0], RedactedThinkingBlock)
+        assert restored[0].data == "opaque"
 
 
 class TestContentListAdapter:

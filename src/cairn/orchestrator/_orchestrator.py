@@ -49,6 +49,7 @@ from cairn.domain._events import (
 )
 from cairn.domain._messages import Message
 from cairn.domain._provider import (
+    GenerationId,
     MessageStop,
     TextDelta,
     ThinkingDelta,
@@ -435,6 +436,10 @@ class Orchestrator:
                             # message_id requires the assistant row to exist
                             # first. Recorded below, after persist.
                             pending_usage.append(u)
+                        case GenerationId():
+                            # Phase-4 will persist on the assistant message
+                            # for post-hoc cost reconciliation; ignored for now.
+                            pass
                         case MessageStop(stop_reason=sr):
                             current_stop = sr
 

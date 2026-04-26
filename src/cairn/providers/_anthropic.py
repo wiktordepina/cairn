@@ -16,6 +16,7 @@ from cairn.domain._content import (
     ToolUseBlock,
 )
 from cairn.domain._provider import (
+    BalanceInfo,
     MessageStop,
     ProviderEvent,
     SystemPromptSegment,
@@ -383,3 +384,11 @@ class AnthropicProvider:
 
         result = await client.messages.count_tokens(**kwargs)
         return result.input_tokens
+
+    async def balance(self) -> BalanceInfo | None:
+        """Anthropic exposes no public balance endpoint reachable with the
+        Messages-API key — the Admin Cost Report API requires a separate
+        admin key. Returns ``None``; the ``cairn balance`` CLI surfaces
+        this as a "no public API" stub row.
+        """
+        return None

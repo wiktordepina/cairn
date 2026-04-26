@@ -13,6 +13,7 @@ import openai
 
 from cairn.domain._content import ImageBlock, TextBlock, ToolResultBlock, ToolUseBlock
 from cairn.domain._provider import (
+    BalanceInfo,
     MessageStop,
     ProviderEvent,
     SystemPromptSegment,
@@ -355,3 +356,13 @@ class OpenAIProvider:
                 if isinstance(block, TextBlock):
                     total += len(enc.encode(block.text))
         return total
+
+    async def balance(self) -> BalanceInfo | None:
+        """OpenAI's billing endpoints (`/v1/organization/usage/*`,
+        `/v1/organization/costs`) require a separate ``sk-admin-...`` key,
+        not the chat-completions key carried in ``ProviderConfig.api_key``.
+        Returns ``None``; the ``cairn balance`` CLI surfaces this as a
+        "no public API" stub row. A future ADR may add an
+        ``admin_api_key`` field to ``ProviderConfig`` to enable this.
+        """
+        return None
