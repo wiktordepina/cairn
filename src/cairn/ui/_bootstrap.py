@@ -78,6 +78,7 @@ from cairn.tools.builtin import (
     make_file_read,
     make_file_write,
     make_grep,
+    make_now,
     make_web_fetch,
 )
 from cairn.tools.security import WorkspaceSandbox
@@ -173,7 +174,12 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         trust_gate=initial_trust_gate,
         cwd=Path.cwd(),
     )
-    context_manager = StandardContextManager(loader=doc_loader, conventions=convention_loader)
+    context_manager = StandardContextManager(
+        loader=doc_loader,
+        conventions=convention_loader,
+        clock=clock,
+        timezone_name=active.locale.timezone,
+    )
 
     memory_service = MemoryService(
         memory_repo=memory_repo,
@@ -205,6 +211,7 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         approval_repo=approval_repo,
         workspace_root=Path.cwd(),
         tools_config=active.tools,
+        timezone_name=active.locale.timezone,
     )
 
     # Auto-compactor: trims the outgoing provider request when history
@@ -377,6 +384,7 @@ def _build_tool_stack(
     approval_repo: ApprovalDecisionRepo,
     workspace_root: Path,
     tools_config: ToolsConfig,
+    timezone_name: str | None = None,
 ) -> tuple[
     DefaultToolRegistry,
     DefaultToolRunner,
@@ -389,6 +397,7 @@ def _build_tool_stack(
         make_file_read(sandbox),
         make_file_write(sandbox),
         make_grep(sandbox),
+        make_now(clock, timezone_name=timezone_name),
         make_web_fetch(),
     ]
     tool_registry = DefaultToolRegistry(companion_tools=companion_tools)

@@ -415,6 +415,20 @@ class ToolsConfig(BaseModel):
         return value
 
 
+class LocaleConfig(BaseModel):
+    """Per-profile locale settings.
+
+    ``timezone`` is an IANA name (e.g. ``"Europe/London"``). When ``None``,
+    cairn reads the host's local timezone via ``datetime.now().astimezone().tzinfo``.
+    Used by the date-in-system-prompt segment and ``/cost`` window
+    boundaries — both want a stable per-user "today" rather than UTC.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    timezone: str | None = None
+
+
 class ProfileConfig(BaseModel):
     """Configuration for a named profile (companion, work, etc.)."""
 
@@ -432,6 +446,7 @@ class ProfileConfig(BaseModel):
     convention_files: ConventionFilesConfig = ConventionFilesConfig()
     memory: MemoryConfig = MemoryConfig()
     compaction: CompactionConfig = CompactionConfig()
+    locale: LocaleConfig = LocaleConfig()
     ui: UIConfig = UIConfig()
     watcher: WatcherConfig = WatcherConfig()
     tools: ToolsConfig = ToolsConfig()

@@ -258,6 +258,66 @@ class TestStandardContextManager:
         assert "You are the Alex persona." in req.system
 
     @pytest.mark.asyncio
+    async def test_today_segment_present_when_clock_wired(self, tmp_path: Path) -> None:
+        from cairn.orchestrator import FrozenClock
+
+        loader = _loader(tmp_path)
+        clock = FrozenClock(now=datetime(2026, 4, 26, 14, 30, tzinfo=UTC))
+        mgr = StandardContextManager(
+            loader=loader,
+            clock=clock,
+            timezone_name="Europe/London",
+        )
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+        )
+        assert req.system is not None
+        assert "<today>" in req.system
+        # 14:30 UTC on 2026-04-26 is 15:30 BST → still 2026-04-26.
+        assert "Today is 2026-04-26 (Europe/London)." in req.system
+        # Section ordering: identity → today → user_context.
+        identity_pos = req.system.index("<identity>")
+        today_pos = req.system.index("<today>")
+        assert identity_pos < today_pos
+
+    @pytest.mark.asyncio
+    async def test_today_segment_absent_when_clock_unwired(self, tmp_path: Path) -> None:
+        loader = _loader(tmp_path)
+        mgr = StandardContextManager(loader=loader)
+        req = await mgr.build_request(
+            session=_session(),
+            history=[],
+            retrieved_memories=[],
+            tools=[],
+        )
+        assert req.system is not None
+        assert "<today>" not in req.system
+
+    @pytest.mark.asyncio
+    async def test_today_stable_within_calendar_day(self, tmp_path: Path) -> None:
+        from cairn.orchestrator import FrozenClock
+
+        loader = _loader(tmp_path)
+        clock = FrozenClock(now=datetime(2026, 4, 26, 0, 1, tzinfo=UTC))
+        mgr = StandardContextManager(
+            loader=loader,
+            clock=clock,
+            timezone_name="Europe/London",
+        )
+        req1 = await mgr.build_request(
+            session=_session(), history=[], retrieved_memories=[], tools=[]
+        )
+        # Advance several hours but stay inside the same UK calendar day.
+        clock.advance(22 * 3600 + 58 * 60)
+        req2 = await mgr.build_request(
+            session=_session(), history=[], retrieved_memories=[], tools=[]
+        )
+        assert req1.system == req2.system
+
+    @pytest.mark.asyncio
     async def test_no_sources_falls_back_to_builtin_soul_only(self, tmp_path: Path) -> None:
         """With every file missing and no base prompt, the builtin soul
         document is still emitted — we never ship a totally empty

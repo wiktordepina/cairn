@@ -217,7 +217,9 @@ class TestConfigShow:
         assert result.exit_code == 0, result.output
         assert "user" in result.output
         assert "project" in result.output
-        assert "local" not in result.output
+        # Local layer absent — narrow the substring check so the new
+        # `[profiles.personal.locale]` block doesn't false-positive.
+        assert ".local.toml" not in result.output
 
     def test_validation_failure_exits_one_with_hint(self, isolated_home: Path) -> None:
         _write_user_config(
