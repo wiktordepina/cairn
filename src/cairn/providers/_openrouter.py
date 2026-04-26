@@ -19,6 +19,7 @@ import openai
 from cairn.domain._content import ImageBlock, TextBlock, ToolResultBlock, ToolUseBlock
 from cairn.domain._provider import (
     BalanceInfo,
+    GenerationId,
     MessageStop,
     ProviderEvent,
     SystemPromptSegment,
@@ -263,6 +264,11 @@ def _usage_from_chunk(usage: Any) -> UsageEvent:
     OR OpenAI-shape (``prompt_tokens_details.cached_tokens``)
     depending on the routed backend. Anthropic-shape wins when both
     are present (defensive).
+
+    OpenRouter additionally surfaces a uniform ``cache_discount`` field
+    (USD discount already applied for cache hits) regardless of
+    upstream — captured into ``UsageEvent.cache_discount_usd`` so
+    ``/cost`` can show "saved $X" without a per-provider rate table.
     """
     cache_read = 0
     cache_write = 0
@@ -275,11 +281,13 @@ def _usage_from_chunk(usage: Any) -> UsageEvent:
         details = getattr(usage, "prompt_tokens_details", None)
         if details is not None:
             cache_read = getattr(details, "cached_tokens", 0) or 0
+    cache_discount = float(getattr(usage, "cache_discount", 0) or 0)
     return UsageEvent(
         input_tokens=(getattr(usage, "prompt_tokens", 0) or 0),
         output_tokens=(getattr(usage, "completion_tokens", 0) or 0),
         cache_read_tokens=cache_read,
         cache_write_tokens=cache_write,
+        cache_discount_usd=cache_discount,
     )
 
 
@@ -302,10 +310,17 @@ class OpenRouterProvider:
         return self._config.name
 
     def _build_headers(self) -> dict[str, str]:
-        """Build headers including OpenRouter-specific identification."""
+        """Build headers including OpenRouter-specific identification.
+
+        ``X-OpenRouter-Title`` is the current canonical header per OR's
+        API reference; the legacy ``X-Title`` is still honoured by the
+        gateway. We send both for belt-and-braces during the migration
+        window. ``HTTP-Referer`` is unchanged.
+        """
         headers = dict(self._config.extra_headers) if self._config.extra_headers else {}
         headers.setdefault("HTTP-Referer", _DEFAULT_REFERER)
         headers.setdefault("X-Title", _DEFAULT_TITLE)
+        headers.setdefault("X-OpenRouter-Title", _DEFAULT_TITLE)
         return headers
 
     async def _get_client(self) -> openai.AsyncOpenAI:
@@ -323,10 +338,22 @@ class OpenRouterProvider:
             )
         return self._client
 
-    async def stream(self, request: ProviderRequest) -> AsyncIterator[ProviderEvent]:
-        """Stream a completion from OpenRouter."""
-        client = await self._get_client()
-        if _request_uses_cache(request):
+    def _build_kwargs(self, request: ProviderRequest) -> dict[str, Any]:
+        """Translate a ``ProviderRequest`` into OpenRouter ``create()`` kwargs.
+
+        Extracted from ``stream`` so the per-field gating
+        (``ProviderConfig.extra_body`` precedence, middle-out plugin
+        disable when caching, cache-shape selection) is testable
+        without a live SDK client. Mirrors the pattern in the OpenAI
+        adapter.
+
+        ``ProviderConfig.extra_body`` is merged FIRST, then adapter-set
+        kwargs overlay it — so user-supplied values fill gaps but
+        cannot clobber request invariants like ``stream=True``,
+        ``model``, ``messages``. See brick design §3.3 / ADR 0044.
+        """
+        cache_active = _request_uses_cache(request)
+        if cache_active:
             messages = _format_messages_with_cache(
                 request.messages, cache_last=request.cache_last_message
             )
@@ -345,25 +372,66 @@ class OpenRouterProvider:
             messages = _openai_format_messages(request.messages, system=request.system)
             tools = _openai_format_tools(request.tools)
 
-        kwargs: dict[str, Any] = {
-            "model": request.model,
-            "messages": messages,
-            "max_tokens": request.max_tokens,
-            "stream": True,
-            "stream_options": {"include_usage": True},
-        }
+        kwargs: dict[str, Any] = dict(self._config.extra_body or {})
+        kwargs.update(
+            {
+                "model": request.model,
+                "messages": messages,
+                "max_tokens": request.max_tokens,
+                "stream": True,
+                "stream_options": {"include_usage": True},
+            }
+        )
         if tools:
             kwargs["tools"] = tools
         if request.temperature is not None:
             kwargs["temperature"] = request.temperature
         if request.stop_sequences:
             kwargs["stop"] = request.stop_sequences
+        # When any cache marker is present, explicitly disable
+        # OpenRouter's middle-out context-compression plugin.
+        # OR auto-enables it for endpoints with <= 8192-token context;
+        # cairn already runs its own compaction (ADR 0027/0029) so
+        # double-compacting silently mangles the cache layout / tail
+        # marker (ADR 0038 #4). Idempotent: if the user has already
+        # listed the plugin in extra_body we leave their entry alone.
+        if cache_active:
+            raw_plugins: Any = kwargs.get("plugins")
+            existing_plugins: list[Any] = (
+                list(raw_plugins)  # pyright: ignore[reportUnknownArgumentType]
+                if isinstance(raw_plugins, list)
+                else []
+            )
+            disable_marker: dict[str, Any] = {"id": "context-compression", "enabled": False}
+            already_present = False
+            for p in existing_plugins:
+                if isinstance(p, dict) and p.get("id") == "context-compression":  # pyright: ignore[reportUnknownMemberType]
+                    already_present = True
+                    break
+            if not already_present:
+                kwargs["plugins"] = [*existing_plugins, disable_marker]
+        return kwargs
+
+    async def stream(self, request: ProviderRequest) -> AsyncIterator[ProviderEvent]:
+        """Stream a completion from OpenRouter."""
+        client = await self._get_client()
+        kwargs = self._build_kwargs(request)
 
         tool_ids_by_index: dict[int, str] = {}
+        emitted_generation_id = False
 
         try:
             response = await client.chat.completions.create(**kwargs)  # pyright: ignore[reportUnknownVariableType]
             async for chunk in response:  # type: ignore[union-attr]
+                # Capture the OpenRouter generation id once per stream.
+                # Used by /cost (and a future post-hoc accounting pass)
+                # to call GET /api/v1/generation?id=<id> for the
+                # authoritative cost number — OR's streamed usage is
+                # approximate, especially across fallback providers.
+                chunk_id: Any = getattr(chunk, "id", None)  # pyright: ignore[reportUnknownArgumentType]
+                if isinstance(chunk_id, str) and chunk_id and not emitted_generation_id:
+                    yield GenerationId(id=chunk_id)
+                    emitted_generation_id = True
                 for pe in self._map_chunk(chunk, tool_ids_by_index):
                     yield pe
         except openai.AuthenticationError as exc:
