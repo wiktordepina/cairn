@@ -10,6 +10,7 @@ import anthropic
 
 from cairn.domain._content import (
     ImageBlock,
+    RedactedThinkingBlock,
     TextBlock,
     ThinkingBlock,
     ToolResultBlock,
@@ -21,6 +22,7 @@ from cairn.domain._provider import (
     ProviderEvent,
     SystemPromptSegment,
     TextDelta,
+    ThinkingDelta,
     ToolCallDelta,
     ToolCallEnd,
     ToolCallStart,
@@ -47,9 +49,23 @@ logger = logging.getLogger(__name__)
 
 # Anthropic caps cache_control markers at 4 per request. We enforce
 # this defensively in the adapter so a misconfigured upstream caller
-# never propagates a 400 to the model layer.
+# never propagates a 400 to the model layer. Verified 2026-04 against
+# Anthropic's prompt-caching docs.
 _MAX_CACHE_MARKERS = 4
 _CACHE_CONTROL_EPHEMERAL: dict[str, Any] = {"type": "ephemeral"}
+
+# Anthropic's documented minimum for thinking.budget_tokens.
+_MIN_THINKING_BUDGET = 1024
+
+# Proportional mapping of unified reasoning_effort to fraction of
+# request.max_tokens (ADR 0043). ``none`` and ``minimal`` skip
+# thinking entirely and are absent from this map.
+_EFFORT_BUDGET_FRACTION: dict[str, float] = {
+    "low": 0.25,
+    "medium": 0.50,
+    "high": 0.75,
+    "xhigh": 0.90,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -91,7 +107,15 @@ def _format_content_block(block: Any) -> dict[str, Any]:
                 },
             }
         case ThinkingBlock():
-            return {"type": "thinking", "thinking": block.thinking}
+            # ``signature`` MUST be sent back when the prior turn included
+            # tool_use; the server decrypts it to reconstruct the original
+            # reasoning. Empty string would 400; omit the field instead.
+            payload: dict[str, Any] = {"type": "thinking", "thinking": block.thinking}
+            if block.signature:
+                payload["signature"] = block.signature
+            return payload
+        case RedactedThinkingBlock():
+            return {"type": "redacted_thinking", "data": block.data}
         case _:
             return {"type": "text", "text": str(block)}
 
@@ -182,6 +206,78 @@ def _count_cache_markers(
     return count
 
 
+def _format_tool_choice(
+    tool_choice: str | tuple[str, str] | None,
+    *,
+    disable_parallel: bool,
+    thinking_on: bool,
+    provider_name: str,
+) -> dict[str, Any] | None:
+    """Translate the unified ``tool_choice`` shape to Anthropic's payload.
+
+    Anthropic accepts ``{"type": "auto" | "any" | "none" | "tool", "name": ...}``
+    plus an optional ``disable_parallel_tool_use`` on ``auto`` / ``any`` /
+    ``tool``. When extended thinking is on, only ``auto`` and ``none``
+    are supported — ``any`` and ``tool`` would 400. We downgrade with a
+    WARNING rather than blowing up the request.
+    """
+    if tool_choice is None and not disable_parallel:
+        return None
+    if tool_choice is None:
+        # parallel-disable only — needs a type: "auto" wrapper to attach to.
+        choice_type = "auto"
+        name: str | None = None
+    elif isinstance(tool_choice, tuple):
+        choice_type, name = tool_choice
+    else:
+        choice_type = tool_choice
+        name = None
+
+    if thinking_on and choice_type in ("any", "tool"):
+        logger.warning(
+            "tool_choice=%r incompatible with extended thinking; downgrading to 'auto'",
+            choice_type,
+            extra={"provider": provider_name},
+        )
+        choice_type = "auto"
+        name = None
+
+    payload: dict[str, Any] = {"type": choice_type}
+    if choice_type == "tool" and name:
+        payload["name"] = name
+    if disable_parallel and choice_type in ("auto", "any", "tool"):
+        payload["disable_parallel_tool_use"] = True
+    return payload
+
+
+def _resolve_thinking_budget(
+    effort: str | None,
+    *,
+    max_tokens: int,
+) -> int | None:
+    """Map unified ``reasoning_effort`` → Anthropic ``thinking.budget_tokens``.
+
+    Returns ``None`` for ``None`` / ``"none"`` / ``"minimal"`` (no
+    thinking block). Otherwise scales proportionally to ``max_tokens``,
+    floored at ``_MIN_THINKING_BUDGET`` and ceilinged at
+    ``max_tokens - 1`` (the server requires
+    ``budget_tokens < max_tokens``). See ADR 0043.
+    """
+    if effort is None or effort in ("none", "minimal"):
+        return None
+    fraction = _EFFORT_BUDGET_FRACTION.get(effort)
+    if fraction is None:
+        logger.warning("unknown reasoning_effort %r; ignoring", effort)
+        return None
+    budget = int(max_tokens * fraction)
+    budget = max(budget, _MIN_THINKING_BUDGET)
+    budget = min(budget, max_tokens - 1)
+    if budget < _MIN_THINKING_BUDGET:
+        # max_tokens itself was below the floor — no thinking possible.
+        return None
+    return budget
+
+
 def _enforce_marker_cap(
     *,
     system: str | list[dict[str, Any]] | None,
@@ -269,6 +365,11 @@ class AnthropicProvider:
         system = format_system(request.system)
         _enforce_marker_cap(system=system, tools=tools, messages=messages, provider_name=self.name)
 
+        thinking_budget = _resolve_thinking_budget(
+            request.reasoning_effort, max_tokens=request.max_tokens
+        )
+        thinking_on = thinking_budget is not None
+
         kwargs: dict[str, Any] = {
             "model": request.model,
             "messages": messages,
@@ -282,14 +383,38 @@ class AnthropicProvider:
             kwargs["temperature"] = request.temperature
         if request.stop_sequences:
             kwargs["stop_sequences"] = request.stop_sequences
+        if thinking_budget is not None:
+            kwargs["thinking"] = {"type": "enabled", "budget_tokens": thinking_budget}
+        tool_choice = _format_tool_choice(
+            request.tool_choice,
+            disable_parallel=request.disable_parallel_tool_use,
+            thinking_on=thinking_on,
+            provider_name=self.name,
+        )
+        if tool_choice is not None:
+            kwargs["tool_choice"] = tool_choice
 
-        # Track which content block index maps to which tool_use id
+        # Track which content block index maps to which tool_use id and
+        # which is a thinking block (so we can route deltas correctly).
         block_id_by_index: dict[int, str] = {}
+        thinking_indices: set[int] = set()
+        # Single-emit usage accumulator (Anthropic streams partial usage
+        # at message_start and the final running total at message_delta;
+        # we collapse to one UsageEvent at message_stop to match
+        # OpenAI / DeepSeek and avoid double-counting downstream).
+        usage_acc: dict[str, int] = {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_read_tokens": 0,
+            "cache_write_tokens": 0,
+        }
 
         try:
             async with client.messages.stream(**kwargs) as stream:
                 async for event in stream:
-                    for pe in self._map_event(event, block_id_by_index):
+                    for pe in self._map_event(
+                        event, block_id_by_index, thinking_indices, usage_acc
+                    ):
                         yield pe
         except anthropic.AuthenticationError as exc:
             raise AuthenticationError(str(exc), provider=self.name) from exc
@@ -312,21 +437,40 @@ class AnthropicProvider:
         self,
         event: Any,
         block_id_by_index: dict[int, str],
+        thinking_indices: set[int],
+        usage_acc: dict[str, int],
     ) -> list[ProviderEvent]:
-        """Map an Anthropic SDK event to zero or more ProviderEvents."""
+        """Map an Anthropic SDK event to zero or more ProviderEvents.
+
+        Usage handling: ``message_start`` carries a partial usage
+        breakdown (input + cache + a small initial output). The
+        single ``message_delta`` event carries the *cumulative* final
+        ``output_tokens``. Emitting both as separate ``UsageEvent``s
+        previously caused the orchestrator to write two model_usage
+        rows that got SUMmed downstream, over-counting ``output_tokens``
+        by the message_start baseline. We now accumulate in
+        ``usage_acc`` and emit one ``UsageEvent`` at ``message_stop``,
+        matching the OpenAI and DeepSeek single-emit pattern.
+
+        Thinking handling: ``content_block_start`` with type
+        ``thinking`` opens a thinking block; subsequent
+        ``content_block_delta`` events carry either ``thinking_delta``
+        (display text) or ``signature_delta`` (the encrypted handle
+        required for multi-turn tool-use round-trip). Type
+        ``redacted_thinking`` arrives complete in a single
+        ``content_block_start`` and is logged-and-skipped for V1.
+        """
         results: list[ProviderEvent] = []
         event_type = getattr(event, "type", None)
 
         match event_type:
             case "message_start":
                 usage = event.message.usage
-                results.append(
-                    UsageEvent(
-                        input_tokens=usage.input_tokens,
-                        output_tokens=usage.output_tokens,
-                        cache_read_tokens=getattr(usage, "cache_read_input_tokens", 0) or 0,
-                        cache_write_tokens=getattr(usage, "cache_creation_input_tokens", 0) or 0,
-                    )
+                usage_acc["input_tokens"] = usage.input_tokens or 0
+                usage_acc["output_tokens"] = usage.output_tokens or 0
+                usage_acc["cache_read_tokens"] = getattr(usage, "cache_read_input_tokens", 0) or 0
+                usage_acc["cache_write_tokens"] = (
+                    getattr(usage, "cache_creation_input_tokens", 0) or 0
                 )
 
             case "content_block_start":
@@ -334,6 +478,20 @@ class AnthropicProvider:
                 if block.type == "tool_use":
                     block_id_by_index[event.index] = block.id
                     results.append(ToolCallStart(id=block.id, name=block.name))
+                elif block.type == "thinking":
+                    thinking_indices.add(event.index)
+                    # Some SDKs include the signature on the start event
+                    # (single-shot non-streamed thinking). Forward it.
+                    initial_sig = getattr(block, "signature", "") or ""
+                    initial_text = getattr(block, "thinking", "") or ""
+                    if initial_text or initial_sig:
+                        results.append(ThinkingDelta(text=initial_text, signature=initial_sig))
+                elif block.type == "redacted_thinking":
+                    logger.warning(
+                        "anthropic returned a redacted_thinking block; dropping "
+                        "(persistence deferred — see RedactedThinkingBlock)",
+                        extra={"provider": self.name},
+                    )
 
             case "content_block_delta":
                 delta = event.delta
@@ -342,23 +500,36 @@ class AnthropicProvider:
                 elif delta.type == "input_json_delta":
                     block_id = block_id_by_index.get(event.index, "")
                     results.append(ToolCallDelta(id=block_id, input_delta=delta.partial_json))
+                elif delta.type == "thinking_delta":
+                    results.append(ThinkingDelta(text=delta.thinking))
+                elif delta.type == "signature_delta":
+                    results.append(ThinkingDelta(text="", signature=delta.signature))
 
             case "content_block_stop":
-                block_id = block_id_by_index.pop(event.index, None)
-                if block_id is not None:
-                    results.append(ToolCallEnd(id=block_id))
+                if event.index in thinking_indices:
+                    thinking_indices.discard(event.index)
+                else:
+                    block_id = block_id_by_index.pop(event.index, None)
+                    if block_id is not None:
+                        results.append(ToolCallEnd(id=block_id))
 
             case "message_delta":
                 usage = getattr(event, "usage", None)
                 if usage:
-                    results.append(
-                        UsageEvent(
-                            input_tokens=0,
-                            output_tokens=usage.output_tokens,
-                        )
-                    )
+                    # Cumulative running total — overwrite, don't add.
+                    usage_acc["output_tokens"] = usage.output_tokens or usage_acc["output_tokens"]
                 stop_reason = getattr(event.delta, "stop_reason", None)
                 if stop_reason:
+                    # Emit the single accumulated usage event before the stop
+                    # so downstream sees them in stream-natural order.
+                    results.append(
+                        UsageEvent(
+                            input_tokens=usage_acc["input_tokens"],
+                            output_tokens=usage_acc["output_tokens"],
+                            cache_read_tokens=usage_acc["cache_read_tokens"],
+                            cache_write_tokens=usage_acc["cache_write_tokens"],
+                        )
+                    )
                     results.append(MessageStop(stop_reason=map_anthropic_stop_reason(stop_reason)))
 
             case _:

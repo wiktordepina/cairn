@@ -140,12 +140,21 @@ class ThinkingDelta:
     """Incremental reasoning / chain-of-thought token from the model.
 
     Emitted by providers that surface reasoning traces alongside the
-    final answer (e.g. DeepSeek's ``reasoning_content`` field). Captured
-    so the trace can be round-tripped back to the API on subsequent
-    turns — DeepSeek's thinking-mode SKUs require it.
+    final answer. Two flavours of payload share this event:
+
+    - ``text``: incremental reasoning content (DeepSeek's
+      ``reasoning_content``, Anthropic's ``thinking_delta.thinking``).
+    - ``signature``: Anthropic's encrypted handle for the trace,
+      arriving once at end-of-thinking-block via ``signature_delta``.
+      Empty on providers that don't sign their reasoning. Required on
+      Anthropic multi-turn tool-use loops — the server decrypts it to
+      reconstruct the original reasoning.
+
+    A single delta carries one or the other, not both.
     """
 
     text: str
+    signature: str = ""
 
 
 @dataclass(frozen=True, slots=True)

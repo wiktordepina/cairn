@@ -417,13 +417,19 @@ class Orchestrator:
                                 turn_id=turn_id,
                                 text=t,
                             )
-                        case ThinkingDelta(text=t):
-                            assistant_msg.append_thinking_delta(t)
-                            yield AssistantThinkingDelta(
-                                message_id=assistant_msg.id,
-                                turn_id=turn_id,
-                                text=t,
-                            )
+                        case ThinkingDelta(text=t, signature=sig):
+                            assistant_msg.append_thinking_delta(t, sig)
+                            if t:
+                                # Signature-only deltas (Anthropic
+                                # ``signature_delta`` at end-of-block)
+                                # carry no display text — skip the UI
+                                # event so the transcript only reflects
+                                # actual reasoning content.
+                                yield AssistantThinkingDelta(
+                                    message_id=assistant_msg.id,
+                                    turn_id=turn_id,
+                                    text=t,
+                                )
                         case ToolCallStart(id=tc_id, name=name):
                             assistant_msg.start_tool_use(tc_id, name)
                         case ToolCallDelta(id=tc_id, input_delta=chunk):
