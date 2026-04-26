@@ -441,6 +441,33 @@ class SessionScreen(Screen[None]):
         """Defer a `/reload` until the current turn finishes."""
         self._pending_reload = True
 
+    def replace_session(self, session: Session) -> None:
+        """Refresh the screen's session reference in place.
+
+        Used by ``/model`` after a "keep history" swap and by
+        ``/reload`` when the session row's model column was reverted
+        to config. The chat log, cost meter, and activity indicator
+        stay mounted; only the header re-renders.
+        """
+        self._session = session
+        try:
+            header = self.query_one(SessionHeader)
+        except Exception:  # noqa: BLE001
+            return
+        header.update_session(session)
+
+    def clear_transcript(self) -> None:
+        """Wipe every chat-log child (messages, tool rows, banners).
+
+        Used by ``/clear`` and the ``/model start fresh`` branch when
+        opening a brand-new session in the same screen.
+        """
+        try:
+            chat_log = self.query_one("#chat", ChatLog)
+        except Exception:  # noqa: BLE001
+            return
+        chat_log.clear()
+
     def _flush_pending_reload(self) -> None:
         """If `/reload` was deferred during a turn, run it now."""
         if not getattr(self, "_pending_reload", False):
@@ -458,13 +485,13 @@ class SessionScreen(Screen[None]):
             self._chat_log.append_banner(Banner(text=text, kind=kind))
             if result.ok and result.primary_model_drift is not None:
                 active, new = result.primary_model_drift
+                refreshed = await app.orchestrator.swap_session_model(
+                    self._session.id, new, mode="revert"
+                )
+                self.replace_session(refreshed)
                 self._chat_log.append_banner(
                     Banner(
-                        text=(
-                            f"primary role now resolves to {new}; the active "
-                            f"session stays on {active}. Restart cairn to "
-                            f"switch."
-                        ),
+                        text=(f"session model reverted to config — was {active}, now {new}"),
                         kind="muted",
                     ),
                 )

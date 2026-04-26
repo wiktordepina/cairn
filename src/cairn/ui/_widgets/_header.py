@@ -92,7 +92,24 @@ class SessionHeader(Horizontal):
             session_type=self._session.type,
             overrides=self._overrides,
         )
-        title = self._session.title or "(untitled)"
-        title_label = Label(f"{self._session.persona} · {self._session.model} · {title}")
+        title_label = Label(self._format_title(self._session))
         title_label.add_class("-title")
         yield title_label
+
+    def update_session(self, session: Session) -> None:
+        """Refresh the header to reflect a swapped session reference.
+
+        Called after ``/model`` (model column changed) or any other
+        in-place session-row update.
+        """
+        self._session = session
+        try:
+            label = self.query_one(".-title", Label)
+        except Exception:  # noqa: BLE001
+            return
+        label.update(self._format_title(session))
+
+    @staticmethod
+    def _format_title(session: Session) -> str:
+        title = session.title or "(untitled)"
+        return f"{session.persona} · {session.model} · {title}"

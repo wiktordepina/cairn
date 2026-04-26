@@ -32,6 +32,7 @@ from cairn.domain._events import (
     BudgetWarning,
     DelegationCompleted,
     DelegationSpawned,
+    ModelSwapped,
     ObservationExtractionRequested,
     SessionArchived,
     SessionCreated,
@@ -174,6 +175,51 @@ class Orchestrator:
     async def archive_session(self, session_id: str) -> None:
         await self._session_manager.archive(session_id)
         self._fanout(SessionArchived(session_id=session_id))
+
+    async def count_session_messages(self, session_id: str) -> int:
+        """Return the number of persisted messages for *session_id*.
+
+        Used by the UI to decide whether a session counts as
+        "in progress" before offering destructive operations like
+        a model swap or `/clear`.
+        """
+        return await self._message_repo.count_for_session(session_id)
+
+    async def swap_session_model(
+        self,
+        session_id: str,
+        new_model_id: str,
+        *,
+        mode: str,
+    ) -> Session:
+        """Persist a runtime model swap on the session row.
+
+        Used by ``/model`` (``mode="keep"``) and the post-``/reload``
+        revert path (``mode="revert"``). The ``"fresh"`` branch
+        archives the old session and starts a new one — that flow
+        does not call this method.
+        """
+        old = await self._session_manager.get(session_id)
+        if old.model == new_model_id:
+            self._fanout(
+                ModelSwapped(
+                    session_id=session_id,
+                    from_model=old.model,
+                    to_model=new_model_id,
+                    mode=mode,  # type: ignore[arg-type]
+                )
+            )
+            return old
+        refreshed = await self._session_manager.update_model(session_id, new_model_id)
+        self._fanout(
+            ModelSwapped(
+                session_id=session_id,
+                from_model=old.model,
+                to_model=new_model_id,
+                mode=mode,  # type: ignore[arg-type]
+            )
+        )
+        return refreshed
 
     # -- Hot reload -----------------------------------------------------
 

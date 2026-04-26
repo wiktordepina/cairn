@@ -108,8 +108,37 @@ class TestReloadCommand:
             )
 
     @pytest.mark.asyncio
-    async def test_reload_role_pin_drift_renders_hint(self, companion_session: Session) -> None:
-        app = _app_with_reloader(companion_session, _RolePinDriftReloader())
+    async def test_reload_role_pin_drift_reverts_session_model(
+        self, companion_session: Session
+    ) -> None:
+        # The drift path now actively reverts the session row's model
+        # to whatever config resolves to (ADR 0045) — rather than
+        # surfacing a "restart to switch" hint. Stub orchestrator
+        # records the swap and returns a refreshed session.
+        from cairn.domain._events import ModelSwapped
+
+        swapped: list[ModelSwapped] = []
+        refreshed_session = companion_session.model_copy(update={"model": "haiku-4-5"})
+
+        class _Orch:
+            async def swap_session_model(
+                self, session_id: str, new_model_id: str, *, mode: str
+            ) -> Session:
+                swapped.append(
+                    ModelSwapped(
+                        session_id=session_id,
+                        from_model=companion_session.model,
+                        to_model=new_model_id,
+                        mode=mode,  # type: ignore[arg-type]
+                    )
+                )
+                return refreshed_session
+
+        app = CairnApp(
+            orchestrator=cast("Orchestrator", _Orch()),
+            session=companion_session,
+            reloader=_RolePinDriftReloader(),  # type: ignore[arg-type]
+        )
         async with app.run_test() as pilot:
             await pilot.pause()
             screen = app.current_session_screen
@@ -122,9 +151,11 @@ class TestReloadCommand:
             banners = list(screen.query_one(ChatLog).query(Banner))
             rendered = "\n".join(str(b.renderable) for b in banners)
             assert "Reloaded: 1 config layer." in rendered
-            assert "primary role now resolves to haiku-4-5" in rendered
-            assert "active session stays on opus-4-7" in rendered
-            assert "Restart cairn to switch" in rendered
+            assert "session model reverted to config" in rendered
+            assert "was opus-4-7, now haiku-4-5" in rendered
+            assert len(swapped) == 1
+            assert swapped[0].mode == "revert"
+            assert swapped[0].to_model == "haiku-4-5"
 
     @pytest.mark.asyncio
     async def test_reload_mid_turn_queues(self, companion_session: Session) -> None:

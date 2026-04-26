@@ -83,6 +83,27 @@ class SessionRepo:
         await cursor.close()
         return _row_to_session(row) if row is not None else None
 
+    async def update_model(
+        self,
+        session_id: str,
+        model: str,
+        *,
+        updated_at: datetime | None = None,
+    ) -> None:
+        """Persist a runtime model swap on the session row.
+
+        ``/model`` calls this when the user picks a different model. The
+        config layer remains the single source of truth; ``/reload``
+        reverts this column to whatever config currently resolves to.
+        """
+        ts = updated_at if updated_at is not None else datetime.now(UTC)
+        conn = await self._db.connect()
+        await conn.execute(
+            "UPDATE sessions SET model = ?, updated_at = ? WHERE id = ?",
+            (model, ts.isoformat(), session_id),
+        )
+        await conn.commit()
+
     async def update_metadata(
         self,
         session_id: str,

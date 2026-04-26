@@ -88,6 +88,17 @@ class SessionManager:
         await self.get(session_id)
         await self._repo.archive(session_id)
 
+    async def update_model(self, session_id: str, model: str) -> Session:
+        """Swap the session's active model.
+
+        Used by ``/model`` (user-driven swap) and ``/reload`` (revert
+        to config). Returns the refreshed session. Raises
+        `UnknownSession` if the row is missing.
+        """
+        await self.get(session_id)
+        await self._repo.update_model(session_id, model)
+        return await self.get(session_id)
+
     @staticmethod
     def _scope_memory_space(type_: SessionType, requested: str | None) -> str | None:
         if type_ is SessionType.EPHEMERAL:

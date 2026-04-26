@@ -60,6 +60,29 @@ class TestUpdateMetadata:
         assert loaded.updated_at > original_time
 
 
+class TestUpdateModel:
+    @pytest.mark.asyncio
+    async def test_writes_new_model(self, session_repo: SessionRepo) -> None:
+        await session_repo.insert(make_db_session(id="s1", model="opus-4-7"))
+        await session_repo.update_model("s1", "haiku-4-5")
+        loaded = await session_repo.get("s1")
+        assert loaded is not None
+        assert loaded.model == "haiku-4-5"
+
+    @pytest.mark.asyncio
+    async def test_bumps_updated_at(self, session_repo: SessionRepo) -> None:
+        original_time = datetime(2026, 1, 1, tzinfo=UTC)
+        await session_repo.insert(
+            make_db_session(
+                id="s1", model="opus-4-7", created_at=original_time, updated_at=original_time
+            )
+        )
+        await session_repo.update_model("s1", "haiku-4-5")
+        loaded = await session_repo.get("s1")
+        assert loaded is not None
+        assert loaded.updated_at > original_time
+
+
 class TestListForSpace:
     @pytest.mark.asyncio
     async def test_filters_by_space(self, session_repo: SessionRepo) -> None:

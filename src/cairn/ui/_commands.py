@@ -256,30 +256,112 @@ async def _handle_profile(app: CairnApp, _tail: str) -> None:
 
 
 async def _handle_model(app: CairnApp, _tail: str) -> None:
-    """Show the resolved primary / utility model ids for this session.
+    """Open a picker over every configured model.
 
-    Reads from `app.profile` + `app.model_registry`; falls back to the
-    raw session model when the registry isn't wired.
+    The currently-active session model is highlighted; selecting it is
+    a no-op. Picking a different model on a fresh session swaps it
+    immediately. On an in-progress session (any persisted messages),
+    a follow-up modal asks whether to keep history (same row, swap
+    model), start fresh (archive + new session), or abort.
     """
+    from cairn.ui._screens import Choice, ChoiceModal, ModelPickerModal
     from cairn.ui._widgets import Banner
 
     screen = app.current_session_screen
     if screen is None:
         return
-    profile = app.profile
     registry = app.model_registry
-    if profile is None or registry is None:
-        text = f"model: {screen.session.model} (registry unwired)"
-        screen.append_banner(Banner(text=text, kind="muted"))
+    if registry is None:
+        screen.append_banner(
+            Banner(
+                text=f"/model — registry unwired (session model: {screen.session.model})",
+                kind="muted",
+            )
+        )
         return
-    primary = registry.resolve(profile.primary_model)
-    utility = registry.resolve(profile.utility_model)
-    lines = [
-        f"primary: {primary.id}  ({primary.display_name})",
-        f"utility: {utility.id}  ({utility.display_name})",
-        f"session: {screen.session.model}",
-    ]
-    screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
+
+    models = registry.models()
+    if not models:
+        screen.append_banner(Banner(text="/model — no models configured", kind="muted"))
+        return
+
+    if screen.is_turn_active():
+        screen.append_banner(
+            Banner(
+                text="/model — busy; finish the current turn first",
+                kind="muted",
+            )
+        )
+        return
+
+    picked: str | None = await app.push_screen_wait(
+        ModelPickerModal(
+            models=models,
+            current_model_id=screen.session.model,
+            profile=app.profile,
+        )
+    )
+    if picked is None:
+        return
+    if picked == screen.session.model:
+        screen.append_banner(Banner(text="model unchanged", kind="muted"))
+        return
+
+    # Fresh session (no messages yet) → swap immediately.
+    msg_count = await app.orchestrator.count_session_messages(screen.session.id)
+    if msg_count == 0:
+        refreshed = await app.orchestrator.swap_session_model(
+            screen.session.id, picked, mode="keep"
+        )
+        screen.replace_session(refreshed)
+        screen.append_banner(Banner(text=f"model → {picked}", kind="muted"))
+        return
+
+    # In-progress: ask the user how to handle history.
+    choice = await app.push_screen_wait(
+        ChoiceModal(
+            title=f"Switch model: {screen.session.model} → {picked}",
+            body=(
+                f"This session has {msg_count} message(s). The new model will "
+                "re-read the existing transcript on its next turn (prompt cache "
+                "will invalidate; the auto-compactor will trim aggressively if "
+                "the new model has a smaller context window)."
+            ),
+            choices=(
+                Choice(key="k", label="Keep history", variant="primary"),
+                Choice(key="s", label="Start fresh", variant="warning"),
+                Choice(key="a", label="Abort", variant="default"),
+            ),
+            default_key="k",
+        )
+    )
+    if choice in (None, "a"):
+        screen.append_banner(Banner(text="model swap aborted", kind="muted"))
+        return
+    if choice == "k":
+        refreshed = await app.orchestrator.swap_session_model(
+            screen.session.id, picked, mode="keep"
+        )
+        screen.replace_session(refreshed)
+        screen.append_banner(Banner(text=f"model → {picked}  (history kept)", kind="muted"))
+        return
+    if choice == "s":
+        old_id = screen.session.id
+        await app.orchestrator.archive_session(old_id)
+        new_session = await app.orchestrator.start_session(
+            type=screen.session.type,
+            persona=screen.session.persona,
+            model=picked,
+        )
+        screen.replace_session(new_session)
+        screen.clear_transcript()
+        screen.append_banner(
+            Banner(
+                text=f"model → {picked}  (fresh session)",
+                kind="muted",
+            )
+        )
+        return
 
 
 async def _handle_reload(app: CairnApp, _tail: str) -> None:
@@ -326,12 +408,13 @@ async def _handle_reload(app: CairnApp, _tail: str) -> None:
     screen.append_banner(Banner(text=text, kind=kind))
     if result.ok and result.primary_model_drift is not None:
         active, new = result.primary_model_drift
+        refreshed = await app.orchestrator.swap_session_model(
+            screen.session.id, new, mode="revert"
+        )
+        screen.replace_session(refreshed)
         screen.append_banner(
             Banner(
-                text=(
-                    f"primary role now resolves to {new}; the active session "
-                    f"stays on {active}. Restart cairn to switch."
-                ),
+                text=(f"session model reverted to config — was {active}, now {new}"),
                 kind="muted",
             ),
         )

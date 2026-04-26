@@ -1088,6 +1088,84 @@ class TestSessionLifecycleEvents:
         )
 
 
+class TestSwapSessionModel:
+    @pytest.mark.asyncio
+    async def test_swaps_and_emits_event(
+        self,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        from cairn.domain._events import ModelSwapped
+
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        original_model = session.model
+        new_model_id = "alternate-model"
+
+        refreshed = await orch.swap_session_model(session.id, new_model_id, mode="keep")
+        assert refreshed.model == new_model_id
+
+        swapped = [e for e in collector.events if isinstance(e, ModelSwapped)]
+        assert len(swapped) == 1
+        assert swapped[0].from_model == original_model
+        assert swapped[0].to_model == new_model_id
+        assert swapped[0].mode == "keep"
+
+    @pytest.mark.asyncio
+    async def test_no_op_when_already_active(
+        self,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        cost_tracker: BasicCostTracker,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        # Even when the requested model already matches, the
+        # orchestrator emits a ModelSwapped event so observers can
+        # record the user's intent — useful for "I just confirmed"
+        # telemetry. The session row is not rewritten.
+        from cairn.domain._events import ModelSwapped
+
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+        same = await orch.swap_session_model(session.id, session.model, mode="keep")
+        assert same.model == session.model
+        swapped = [e for e in collector.events if isinstance(e, ModelSwapped)]
+        assert len(swapped) == 1
+        assert swapped[0].from_model == swapped[0].to_model
+
+
 # ---------------------------------------------------------------------------
 # replace_collaborators (hot reload surgery)
 # ---------------------------------------------------------------------------
