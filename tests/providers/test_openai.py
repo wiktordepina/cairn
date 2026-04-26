@@ -28,7 +28,14 @@ from cairn.domain._provider import (
     ToolDefinition,
     UsageEvent,
 )
-from cairn.providers._openai import OpenAIProvider, format_messages, format_tools
+from cairn.providers._openai import (
+    OpenAIProvider,
+    _format_tool_choice,
+    _is_reasoning_model,
+    _usage_from_chunk,
+    format_messages,
+    format_tools,
+)
 
 from .conftest import make_simple_request
 
@@ -223,6 +230,215 @@ class TestChunkMapping:
         chunk = SimpleNamespace(choices=[], usage=None)
         results = provider._map_chunk(chunk, {})
         assert results == []
+
+
+class TestReasoningModelDetection:
+    def test_o1_detected(self) -> None:
+        assert _is_reasoning_model("o1")
+        assert _is_reasoning_model("o1-preview")
+        assert _is_reasoning_model("o1-mini")
+
+    def test_o3_detected(self) -> None:
+        assert _is_reasoning_model("o3")
+        assert _is_reasoning_model("o3-mini")
+
+    def test_o4_detected(self) -> None:
+        assert _is_reasoning_model("o4-mini")
+
+    def test_gpt5_detected(self) -> None:
+        assert _is_reasoning_model("gpt-5")
+        assert _is_reasoning_model("gpt-5-pro")
+
+    def test_non_reasoning_models(self) -> None:
+        assert not _is_reasoning_model("gpt-4o")
+        assert not _is_reasoning_model("gpt-4-turbo")
+        assert not _is_reasoning_model("local-llama")
+        # Don't false-positive on substrings:
+        assert not _is_reasoning_model("o1custom")  # no hyphen
+        assert not _is_reasoning_model("not-o1")
+
+
+class TestUsageReasoningTokens:
+    def test_reasoning_tokens_surfaced_when_present(self) -> None:
+        usage = SimpleNamespace(
+            prompt_tokens=100,
+            completion_tokens=200,
+            completion_tokens_details=SimpleNamespace(reasoning_tokens=150),
+        )
+        ev = _usage_from_chunk(usage)
+        assert ev.output_tokens == 200
+        assert ev.reasoning_tokens == 150
+
+    def test_reasoning_tokens_default_zero_when_absent(self) -> None:
+        usage = SimpleNamespace(prompt_tokens=100, completion_tokens=50)
+        ev = _usage_from_chunk(usage)
+        assert ev.reasoning_tokens == 0
+
+    def test_reasoning_tokens_none_coerced_zero(self) -> None:
+        usage = SimpleNamespace(
+            prompt_tokens=100,
+            completion_tokens=50,
+            completion_tokens_details=SimpleNamespace(reasoning_tokens=None),
+        )
+        ev = _usage_from_chunk(usage)
+        assert ev.reasoning_tokens == 0
+
+
+class TestToolChoiceTranslation:
+    def test_returns_none_when_unset(self) -> None:
+        assert _format_tool_choice(None, provider_name="openai") is None
+
+    def test_auto(self) -> None:
+        assert _format_tool_choice("auto", provider_name="openai") == "auto"
+
+    def test_none(self) -> None:
+        assert _format_tool_choice("none", provider_name="openai") == "none"
+
+    def test_any_translates_to_required(self) -> None:
+        assert _format_tool_choice("any", provider_name="openai") == "required"
+
+    def test_named_tool_object_form(self) -> None:
+        assert _format_tool_choice(("tool", "web_fetch"), provider_name="openai") == {
+            "type": "function",
+            "function": {"name": "web_fetch"},
+        }
+
+    def test_unrecognised_string_warns_and_returns_none(self, caplog: Any) -> None:
+        with caplog.at_level("WARNING", logger="cairn.providers._openai"):
+            result = _format_tool_choice("ultra", provider_name="openai")
+        assert result is None
+        assert any("unrecognised tool_choice" in r.message for r in caplog.records)
+
+
+class TestImageDetail:
+    def test_default_auto_omits_field_in_payload(self) -> None:
+        msg = Message(role="user")
+        msg.content = [ImageBlock(source=ImageSource(media_type="image/png", data="abc"))]
+        block = format_messages([msg])[0]["content"][0]
+        assert block["type"] == "image_url"
+        assert "detail" not in block["image_url"]
+
+    def test_explicit_high_forwarded(self) -> None:
+        msg = Message(role="user")
+        msg.content = [
+            ImageBlock(source=ImageSource(media_type="image/png", data="abc", detail="high"))
+        ]
+        block = format_messages([msg])[0]["content"][0]
+        assert block["image_url"]["detail"] == "high"
+
+    def test_explicit_low_forwarded(self) -> None:
+        msg = Message(role="user")
+        msg.content = [
+            ImageBlock(source=ImageSource(media_type="image/png", data="abc", detail="low"))
+        ]
+        block = format_messages([msg])[0]["content"][0]
+        assert block["image_url"]["detail"] == "low"
+
+
+class TestKwargsBuilding:
+    def _make_provider(self) -> OpenAIProvider:
+        config = ProviderConfig(name="openai", api_key=SecretRef.parse("literal:test"))
+        return OpenAIProvider(config, SecretResolver())
+
+    def test_non_reasoning_uses_max_tokens(self) -> None:
+        provider = self._make_provider()
+        req = make_simple_request(text="hi", model="gpt-4o")
+        kwargs = provider._build_kwargs(req)
+        assert "max_tokens" in kwargs
+        assert "max_completion_tokens" not in kwargs
+
+    def test_reasoning_uses_max_completion_tokens(self) -> None:
+        provider = self._make_provider()
+        req = make_simple_request(text="hi", model="o3-mini")
+        kwargs = provider._build_kwargs(req)
+        assert "max_completion_tokens" in kwargs
+        assert "max_tokens" not in kwargs
+
+    def test_reasoning_drops_temperature(self) -> None:
+        provider = self._make_provider()
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ProviderRequest
+
+        msg = Message(role="user")
+        msg.content = [TextBlock(text="hi")]
+        req = ProviderRequest(model="o3-mini", messages=[msg], temperature=0.7)
+        kwargs = provider._build_kwargs(req)
+        assert "temperature" not in kwargs
+
+    def test_non_reasoning_keeps_temperature(self) -> None:
+        provider = self._make_provider()
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ProviderRequest
+
+        msg = Message(role="user")
+        msg.content = [TextBlock(text="hi")]
+        req = ProviderRequest(model="gpt-4o", messages=[msg], temperature=0.7)
+        kwargs = provider._build_kwargs(req)
+        assert kwargs["temperature"] == 0.7
+
+    def test_reasoning_effort_only_on_reasoning_model(self) -> None:
+        provider = self._make_provider()
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ProviderRequest
+
+        msg = Message(role="user")
+        msg.content = [TextBlock(text="hi")]
+        # Non-reasoning: dropped silently
+        req_chat = ProviderRequest(model="gpt-4o", messages=[msg], reasoning_effort="high")
+        assert "reasoning_effort" not in provider._build_kwargs(req_chat)
+        # Reasoning: forwarded verbatim
+        req_o3 = ProviderRequest(model="o3-mini", messages=[msg], reasoning_effort="high")
+        assert provider._build_kwargs(req_o3)["reasoning_effort"] == "high"
+
+    def test_prompt_cache_key_forwarded(self) -> None:
+        provider = self._make_provider()
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ProviderRequest
+
+        msg = Message(role="user")
+        msg.content = [TextBlock(text="hi")]
+        req = ProviderRequest(model="gpt-4o", messages=[msg], prompt_cache_key="cairn:session-abc")
+        kwargs = provider._build_kwargs(req)
+        assert kwargs["prompt_cache_key"] == "cairn:session-abc"
+
+    def test_tool_choice_forwarded(self) -> None:
+        provider = self._make_provider()
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ProviderRequest
+
+        msg = Message(role="user")
+        msg.content = [TextBlock(text="hi")]
+        tool = ToolDefinition(name="fetch", description="x", input_schema={})
+        req = ProviderRequest(model="gpt-4o", messages=[msg], tools=[tool], tool_choice="any")
+        # "any" is normalised to OpenAI's "required"
+        assert provider._build_kwargs(req)["tool_choice"] == "required"
+
+    def test_parallel_tool_calls_disabled_when_requested(self) -> None:
+        provider = self._make_provider()
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ProviderRequest
+
+        msg = Message(role="user")
+        msg.content = [TextBlock(text="hi")]
+        tool = ToolDefinition(name="fetch", description="x", input_schema={})
+        req = ProviderRequest(
+            model="gpt-4o",
+            messages=[msg],
+            tools=[tool],
+            disable_parallel_tool_use=True,
+        )
+        assert provider._build_kwargs(req)["parallel_tool_calls"] is False
+
+    def test_parallel_tool_calls_omitted_when_no_tools(self) -> None:
+        """The flag has no meaning without tools — don't send it."""
+        provider = self._make_provider()
+        from cairn.domain._messages import Message
+        from cairn.domain._provider import ProviderRequest
+
+        msg = Message(role="user")
+        msg.content = [TextBlock(text="hi")]
+        req = ProviderRequest(model="gpt-4o", messages=[msg], disable_parallel_tool_use=True)
+        assert "parallel_tool_calls" not in provider._build_kwargs(req)
 
 
 class TestTokenCounting:

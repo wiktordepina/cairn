@@ -66,6 +66,63 @@ def flatten_system(
     return "\n\n".join(seg.text for seg in system if seg.text)
 
 
+# OpenAI reasoning-model detection. The o-series and gpt-5-class
+# models reject ``max_tokens`` (need ``max_completion_tokens``) and
+# reject non-default ``temperature``. Heuristic by model-id prefix —
+# kept narrow on purpose so local OpenAI-compatible servers keep
+# working with the legacy fields.
+_REASONING_MODEL_PREFIXES: tuple[str, ...] = ("o1", "o3", "o4", "gpt-5")
+
+
+def _is_reasoning_model(model: str) -> bool:
+    """True if ``model`` is in the OpenAI reasoning-model family.
+
+    Used to gate the ``max_tokens`` → ``max_completion_tokens`` switch,
+    drop ``temperature`` (rejected on o-series), and forward
+    ``reasoning_effort``. Matches model-id prefix only — adapters
+    talking to local OpenAI-compatible servers (llama.cpp, vLLM,
+    LM Studio) that don't recognise the newer fields keep using the
+    legacy shape.
+    """
+    return any(model == p or model.startswith(p + "-") for p in _REASONING_MODEL_PREFIXES)
+
+
+def _format_tool_choice(
+    tool_choice: str | tuple[str, str] | None,
+    *,
+    provider_name: str,
+) -> str | dict[str, Any] | None:
+    """Translate the unified ``tool_choice`` shape to OpenAI's payload.
+
+    OpenAI accepts string values ``"auto"`` / ``"none"`` / ``"required"``
+    and an object form ``{"type": "function", "function": {"name": ...}}``.
+    The unified ``"any"`` value (Anthropic's name for "must call a tool")
+    maps to OpenAI's ``"required"``.
+    """
+    if tool_choice is None:
+        return None
+    if isinstance(tool_choice, tuple):
+        kind, name = tool_choice
+        if kind == "tool":
+            return {"type": "function", "function": {"name": name}}
+        logger.warning(
+            "unrecognised tool_choice tuple kind %r; ignoring",
+            kind,
+            extra={"provider": provider_name},
+        )
+        return None
+    if tool_choice in ("auto", "none"):
+        return tool_choice
+    if tool_choice == "any":
+        return "required"
+    logger.warning(
+        "unrecognised tool_choice %r; ignoring",
+        tool_choice,
+        extra={"provider": provider_name},
+    )
+    return None
+
+
 def format_messages(
     messages: list[Message],
     system: str | list[SystemPromptSegment] | None = None,
@@ -112,10 +169,17 @@ def format_messages(
                     content_parts.append({"type": "text", "text": block.text})
                 case ImageBlock():
                     data_url = f"data:{block.source.media_type};base64,{block.source.data}"
+                    image_payload: dict[str, Any] = {"url": data_url}
+                    # ``detail`` defaults to ``"auto"`` server-side; only
+                    # forward when the user has opted into a non-default
+                    # to avoid rejection by older OpenAI-compatible local
+                    # servers that don't recognise the field.
+                    if block.source.detail != "auto":
+                        image_payload["detail"] = block.source.detail
                     content_parts.append(
                         {
                             "type": "image_url",
-                            "image_url": {"url": data_url},
+                            "image_url": image_payload,
                         }
                     )
                 case ToolUseBlock() | ToolResultBlock():
@@ -184,19 +248,30 @@ def _usage_from_chunk(usage: Any) -> UsageEvent:
     creation from baseline input. We populate ``cache_read_tokens``
     only and leave ``cache_write_tokens`` at zero.
 
+    On reasoning-class models (o-series, gpt-5-class), the SDK also
+    populates ``usage.completion_tokens_details.reasoning_tokens`` —
+    a *breakdown* of ``completion_tokens`` (already counted in the
+    total). Surfaced as ``UsageEvent.reasoning_tokens`` so the cost
+    meter can explain why an o-series turn was expensive.
+
     Robust against missing or ``None`` attributes (older SDK versions,
-    fixtures, OpenAI-compat local servers that don't echo cache
-    fields).
+    fixtures, OpenAI-compat local servers that don't echo cache or
+    reasoning fields).
     """
     cached_tokens = 0
-    details = getattr(usage, "prompt_tokens_details", None)
-    if details is not None:
-        cached_tokens = getattr(details, "cached_tokens", 0) or 0
+    prompt_details = getattr(usage, "prompt_tokens_details", None)
+    if prompt_details is not None:
+        cached_tokens = getattr(prompt_details, "cached_tokens", 0) or 0
+    reasoning_tokens = 0
+    completion_details = getattr(usage, "completion_tokens_details", None)
+    if completion_details is not None:
+        reasoning_tokens = getattr(completion_details, "reasoning_tokens", 0) or 0
     return UsageEvent(
         input_tokens=(getattr(usage, "prompt_tokens", 0) or 0),
         output_tokens=(getattr(usage, "completion_tokens", 0) or 0),
         cache_read_tokens=cached_tokens,
         cache_write_tokens=0,
+        reasoning_tokens=reasoning_tokens,
     )
 
 
@@ -235,25 +310,53 @@ class OpenAIProvider:
             )
         return self._client
 
-    async def stream(self, request: ProviderRequest) -> AsyncIterator[ProviderEvent]:
-        """Stream a completion from the OpenAI API."""
-        client = await self._get_client()
+    def _build_kwargs(self, request: ProviderRequest) -> dict[str, Any]:
+        """Translate a ``ProviderRequest`` into OpenAI ``create()`` kwargs.
+
+        Extracted from ``stream`` so the per-field gating (reasoning
+        model detection, ``prompt_cache_key``, ``parallel_tool_calls``,
+        ``tool_choice``) is testable without a live SDK client.
+        """
         messages = format_messages(request.messages, system=request.system)
         tools = format_tools(request.tools)
+        is_reasoning = _is_reasoning_model(request.model)
 
         kwargs: dict[str, Any] = {
             "model": request.model,
             "messages": messages,
-            "max_tokens": request.max_tokens,
             "stream": True,
             "stream_options": {"include_usage": True},
         }
+        # Reasoning-class models reject ``max_tokens`` (need
+        # ``max_completion_tokens``) and reject non-default ``temperature``.
+        # Non-reasoning models accept ``max_tokens`` (legacy) — we keep
+        # the legacy field there to preserve compat with older
+        # OpenAI-compatible local servers (llama.cpp, vLLM, LM Studio).
+        if is_reasoning:
+            kwargs["max_completion_tokens"] = request.max_tokens
+        else:
+            kwargs["max_tokens"] = request.max_tokens
         if tools:
             kwargs["tools"] = tools
-        if request.temperature is not None:
+        if request.temperature is not None and not is_reasoning:
             kwargs["temperature"] = request.temperature
         if request.stop_sequences:
             kwargs["stop"] = request.stop_sequences
+        if request.reasoning_effort and is_reasoning:
+            kwargs["reasoning_effort"] = request.reasoning_effort
+        if request.prompt_cache_key:
+            kwargs["prompt_cache_key"] = request.prompt_cache_key
+        tool_choice = _format_tool_choice(request.tool_choice, provider_name=self.name)
+        if tool_choice is not None:
+            kwargs["tool_choice"] = tool_choice
+        if request.disable_parallel_tool_use and tools:
+            kwargs["parallel_tool_calls"] = False
+        return kwargs
+
+    async def stream(self, request: ProviderRequest) -> AsyncIterator[ProviderEvent]:
+        """Stream a completion from the OpenAI API."""
+        client = await self._get_client()
+        kwargs = self._build_kwargs(request)
 
         # Track tool call IDs by their streaming index
         tool_ids_by_index: dict[int, str] = {}
