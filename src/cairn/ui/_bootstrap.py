@@ -83,7 +83,7 @@ from cairn.tools.builtin import (
 )
 from cairn.tools.security import WorkspaceSandbox
 from cairn.ui._app import CairnApp
-from cairn.ui._context_report import ContextReportInput
+from cairn.ui._context_report import ContextReportInput, build_context_report
 from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
 from cairn.ui._prompt_history import PromptHistoryStore
@@ -265,13 +265,16 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
     async def _session_cost() -> float:
         return await usage_repo.total_cost_for_session(session.id)
 
-    primary_model = model_registry.resolve(active.primary_model)
-
     async def _context_report() -> ContextReportInput:
-        return ContextReportInput(
-            context_window=primary_model.context_window,
-            model=primary_model.id,
-            last_usage=await usage_repo.most_recent_primary_turn(session.id),
+        # Look up the live session each call so a runtime ``/model``
+        # swap is reflected; fall back to the bootstrap session when
+        # the screen hasn't mounted yet (/context fired pre-on_mount).
+        screen = app.current_session_screen
+        current = screen.session if screen is not None else session
+        return await build_context_report(
+            session=current,
+            model_registry=model_registry,
+            usage_repo=usage_repo,
         )
 
     prompt_history_store = PromptHistoryStore(

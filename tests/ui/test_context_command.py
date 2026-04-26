@@ -8,15 +8,22 @@ from unittest.mock import Mock
 
 import pytest
 
+from cairn.config._models import ModelConfig
+from cairn.config._registry import ModelRegistry
 from cairn.domain._enums import StopReason, UsageOperation
 from cairn.persistence import UsageRecord
 from cairn.ui._app import CairnApp
-from cairn.ui._context_report import ContextReportInput, format_context_report
+from cairn.ui._context_report import (
+    ContextReportInput,
+    build_context_report,
+    format_context_report,
+)
 from cairn.ui._widgets import Banner, ChatLog, CommandBar
 
 if TYPE_CHECKING:
     from cairn.domain._sessions import Session
     from cairn.orchestrator import Orchestrator
+    from cairn.persistence import UsageRepo
 
 
 def _usage(
@@ -105,6 +112,75 @@ class TestFormatContextReport:
             ContextReportInput(context_window=200_000, model="m", last_usage=usage)
         )
         assert "(0% used)" in out
+
+
+# ---------------------------------------------------------------------------
+# Unit: build_context_report (live model resolution)
+# ---------------------------------------------------------------------------
+
+
+def _model(model_id: str, *, context_window: int = 200_000) -> ModelConfig:
+    return ModelConfig(
+        id=model_id,
+        provider="anthropic",
+        display_name=model_id,
+        context_window=context_window,
+        max_output_tokens=8_000,
+        supports_tools=True,
+        input_cost_per_1m=1.0,
+        output_cost_per_1m=5.0,
+    )
+
+
+class _StubUsageRepo:
+    """Just enough of `UsageRepo` for `build_context_report`."""
+
+    def __init__(self, last: UsageRecord | None = None) -> None:
+        self._last = last
+        self.calls: list[str] = []
+
+    async def most_recent_primary_turn(self, session_id: str) -> UsageRecord | None:
+        self.calls.append(session_id)
+        return self._last
+
+
+class TestBuildContextReport:
+    """`/context` must reflect the live `session.model`, not a value
+    captured at bootstrap — otherwise a runtime ``/model`` swap leaves
+    the report stuck on the original model id and context window."""
+
+    @pytest.mark.asyncio
+    async def test_resolves_model_from_live_session(self, companion_session: Session) -> None:
+        registry = ModelRegistry(
+            [_model("pro", context_window=200_000), _model("flash", context_window=64_000)]
+        )
+        repo = cast("UsageRepo", _StubUsageRepo())
+
+        pro_session = companion_session.model_copy(update={"model": "pro"})
+        report = await build_context_report(
+            session=pro_session, model_registry=registry, usage_repo=repo
+        )
+        assert report.model == "pro"
+        assert report.context_window == 200_000
+
+        # Simulate a `/model` swap: same session id, new model id.
+        flash_session = pro_session.model_copy(update={"model": "flash"})
+        report = await build_context_report(
+            session=flash_session, model_registry=registry, usage_repo=repo
+        )
+        assert report.model == "flash"
+        assert report.context_window == 64_000
+
+    @pytest.mark.asyncio
+    async def test_passes_session_id_to_usage_lookup(self, companion_session: Session) -> None:
+        registry = ModelRegistry([_model("claude-opus-4-7")])
+        stub = _StubUsageRepo()
+        await build_context_report(
+            session=companion_session,
+            model_registry=registry,
+            usage_repo=cast("UsageRepo", stub),
+        )
+        assert stub.calls == [companion_session.id]
 
 
 # ---------------------------------------------------------------------------

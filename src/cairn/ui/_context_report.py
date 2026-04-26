@@ -11,7 +11,9 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from cairn.persistence import UsageRecord
+    from cairn.config import ModelRegistry
+    from cairn.domain import Session
+    from cairn.persistence import UsageRecord, UsageRepo
 
 
 @dataclass(frozen=True, slots=True)
@@ -26,6 +28,28 @@ class ContextReportInput:
     context_window: int | None
     model: str
     last_usage: UsageRecord | None
+
+
+async def build_context_report(
+    *,
+    session: Session,
+    model_registry: ModelRegistry,
+    usage_repo: UsageRepo,
+) -> ContextReportInput:
+    """Resolve the live model + last-usage row for *session*.
+
+    Resolves model config from `session.model` at call time so a
+    runtime ``/model`` swap is reflected — capturing the bootstrap
+    profile's primary model would freeze the report at the original
+    model id.
+    """
+    model_cfg = model_registry.resolve(session.model)
+    last_usage = await usage_repo.most_recent_primary_turn(session.id)
+    return ContextReportInput(
+        context_window=model_cfg.context_window,
+        model=model_cfg.id,
+        last_usage=last_usage,
+    )
 
 
 def format_context_report(report: ContextReportInput) -> str:
