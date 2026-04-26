@@ -153,17 +153,78 @@ The command bar accepts the following commands:
 | Command | Summary |
 |---|---|
 | `/help` | Print the command catalogue |
-| `/cost` | Show current session cost |
+| `/cost` | Show session cost + today / last 3 days / month-to-date totals (see below) |
 | `/context` | Show context-budget usage (see below) |
 | `/tools` | List tools available in this session |
 | `/persona` | Show the active session's persona |
 | `/profile` | Show active profile name + key fields |
-| `/model` | Show resolved primary / utility models for this session |
+| `/model` | Pick a configured model for this session (see below) |
 | `/conventions` | List discovered convention files and the project's trust state |
 | `/reload` | Reload config + conventions + profile docs (see below) |
-| `/new` | Placeholder — session-type picker lands post-0.10.0 |
+| `/clear` | Archive the current session and start fresh |
+| `/archive` | Archive the current session and quit (see below) |
 | `/ephemeral <model>` | Placeholder — ephemeral spawn lands post-0.10.0 |
 | `/quit` | Exit the app |
+
+### `/cost`
+
+Renders the session's running cost alongside a four-row report:
+
+```
+session cost: $0.04
+
+                 current profile  all profiles
+today                      $0.41         $0.41
+last 3 days                $1.28         $1.28
+month-to-date              $5.67         $5.79
+```
+
+- **today** — since 00:00 local time on the current calendar day.
+- **last 3 days** — rolling 72h ending now.
+- **month-to-date** — since 00:00 local on the 1st of the current
+  calendar month.
+
+Local-time boundaries come from `[locale.timezone]` (see
+configuration); the orchestrator stamps `profile` on every
+`model_usage` row at record time so per-profile filtering is
+cheap. Two-decimal precision throughout — see ADR 0047 for the
+schema rationale.
+
+### `/model`
+
+Opens a picker over every model declared in `[models.*]`, with
+the session's current model marked. Selecting the current model
+is a no-op. Selecting a *different* model on a fresh session
+applies the swap immediately; on an in-progress session, a
+follow-up modal asks how to handle history:
+
+- **keep history** — same session row, model column updated,
+  transcript preserved. Next turn re-streams under the new model.
+  Prompt cache invalidates (cache markers are model-scoped); the
+  auto-compactor will trim aggressively if the new model has a
+  smaller context window.
+- **start fresh** — archive the current session, open a new one
+  of the same type / persona on the picked model.
+- **abort** — no change.
+
+`/reload` reverts `session.model` to whatever the config now
+resolves to — config is the single source of truth, so a runtime
+swap disappears on the next reload. See ADR 0045.
+
+### `/clear`
+
+Archives the current session and opens a fresh one of the same
+type and persona. Refused mid-turn — finish the current turn
+first.
+
+### `/archive`
+
+Archives the current session. V1 has no session picker yet, so
+post-archive there is nowhere to go — the command opens a
+confirm modal warning that archive will close the app. On
+accept: archive + quit. On Esc / cancel: no-op. ADR 0045
+records the rationale and the V2 follow-up to drop the quit
+once a picker exists.
 
 ### `/context`
 

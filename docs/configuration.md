@@ -303,6 +303,24 @@ too short for delegation or too long for `file_read`. If you
 keep hitting timeouts on one specific tool, override that
 tool only.
 
+### `locale`
+
+```toml
+[profiles.default.locale]
+timezone = "Europe/London"
+```
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `timezone` | `str | None` | `null` (falls back to host system tz) | IANA timezone name. Used by the date-in-system-prompt segment, the `now` tool, and `/cost` window boundaries (today / month-to-date). When unset, cairn reads the host's local timezone via `datetime.now().astimezone().tzinfo`. |
+
+The same field drives "what counts as today" across the app —
+the system prompt's `<today>` segment, the `now` tool's tz
+label, and the local-midnight boundaries `/cost` uses for the
+today / MTD windows. Setting it explicitly is recommended on
+servers whose host timezone is UTC even though the user lives
+elsewhere (CI containers, headless runs).
+
 ### Wall-clock turn timeout
 
 `OrchestratorConfig.max_turn_duration_s` (default **600.0** s)

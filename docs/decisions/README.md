@@ -111,3 +111,6 @@ ongoing costs does this impose?
 | [0042](0042-surgical-reload-boundary.md) | Surgical reload boundary for `/reload` | accepted |
 | [0043](0043-unified-reasoning-effort.md) | Unified `reasoning_effort` knob across providers | accepted |
 | [0044](0044-balance-cli-fanout.md) | `cairn balance` fans out across configured providers | accepted |
+| [0045](0045-model-swap-semantics.md) | `/model` mid-session swap semantics + `/archive` confirm-and-quit | accepted |
+| [0046](0046-date-in-prompt-time-via-tool.md) | Date in system prompt; time via the `now` tool | accepted |
+| [0047](0047-profile-on-usage-rows.md) | `profile` column on `model_usage` | accepted |

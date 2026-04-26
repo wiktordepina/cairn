@@ -10,6 +10,73 @@ don't change the public surface. Everything is still in flux.
 
 ## [Unreleased]
 
+## [0.18.0] — 2026-04-26
+
+The extended slash catalogue brick. Closes the named V1 slash
+items reserved for 0.18.0 and folds in two emergent items
+triggered by real 2026-04-25 observations.
+
+### Added
+
+- **`/model` picker.** Opens a modal listing every model
+  declared in `[models.*]`, with the session's current model
+  marked. Selecting the current model is a no-op. Selecting a
+  different model on a fresh session swaps immediately; on an
+  in-progress session, a follow-up modal asks how to handle
+  history (keep / start fresh / abort). See
+  [ADR 0045](docs/decisions/0045-model-swap-semantics.md).
+- **`/clear`** archives the current session and opens a fresh
+  one of the same type and persona. Replaces the `/new`
+  Tranche-1 stub, which is dropped.
+- **`/archive`** archives the current session. Opens an
+  inform-and-confirm modal first (V1 has no session picker
+  yet, so archive implies quit).
+- **`/cost` multi-window report.** Now shows today / last 3
+  days / month-to-date totals × current-profile / all-profiles
+  alongside the running session cost. Local-time boundaries
+  come from `[locale.timezone]`. Two-decimal precision
+  throughout.
+- **Date in the system prompt.** A new `<today>` segment
+  renders `Today is YYYY-MM-DD (<tz>).` between identity and
+  user_context, inside the cacheable profile-stable section.
+  Stable for the user's calendar day. See
+  [ADR 0046](docs/decisions/0046-date-in-prompt-time-via-tool.md).
+- **`now` tool.** Tier-0 read-only, auto-approved. Returns the
+  current ISO-8601 timestamp + IANA timezone label.
+- **`[locale.timezone]` profile field** drives the date stamp,
+  the `now` tool, and `/cost` window boundaries. Falls back to
+  host system timezone when unset.
+
+### Fixed
+
+- **Auto-compactor wiring in the UI bootstrap.** The
+  orchestrator was constructed with `preparers=()` since
+  compaction landed at 0.8.0 — auto-compaction has been
+  silently inert. Now wired through, with `HistoryCompacted`
+  routed to the structured observer.
+
+### Schema
+
+- **Migration `0004_usage_profile.sql`** — adds a nullable
+  `profile` column to `model_usage` plus a `(profile,
+  timestamp)` index. The orchestrator's `BasicCostTracker`
+  stamps the active profile on every `record()` call. See
+  [ADR 0047](docs/decisions/0047-profile-on-usage-rows.md).
+
+### `/reload`
+
+- `/reload` now actively reverts `session.model` to whatever
+  config resolves to. The drift banner becomes informational
+  ("session model reverted to config") rather than a "restart
+  to switch" hint.
+
+## [0.17.0] — 2026-04-26
+
+Provider improvements brick — `cairn balance`, Anthropic
+signature round-trip, OpenAI reasoning-model hygiene,
+OpenRouter billing accuracy. (Backfilled changelog entry —
+the release shipped via PR #30.)
+
 ## [0.16.0] — 2026-04-25
 
 The V1 loose-ends brick. Four small TODOs from earlier bricks
