@@ -9,6 +9,8 @@ from unittest.mock import Mock
 import pytest
 from textual.color import Color
 
+from cairn.config._models import ModelConfig
+from cairn.config._registry import ModelRegistry
 from cairn.domain import BudgetWarning, SessionType
 from cairn.domain._sessions import Session
 from cairn.ui._app import CairnApp
@@ -71,6 +73,49 @@ class TestSessionHeader:
             # plain-text substring suffices).
             labels = [str(label.renderable) for label in header.query("Label")]
             assert any("Essay on fen walks" in line for line in labels)
+
+    @pytest.mark.asyncio
+    async def test_header_shows_display_name_when_registry_wired(self) -> None:
+        session = _persona_session()
+        registry = ModelRegistry(
+            [
+                ModelConfig(
+                    id="claude-sonnet-4-6",
+                    provider="anthropic",
+                    display_name="Claude Sonnet 4.6",
+                    context_window=200_000,
+                    max_output_tokens=8_000,
+                    supports_tools=True,
+                    input_cost_per_1m=3.0,
+                    output_cost_per_1m=15.0,
+                )
+            ]
+        )
+        app = CairnApp(
+            orchestrator=cast("Orchestrator", Mock()),
+            session=session,
+            model_registry=registry,
+        )
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            header = screen.query_one(SessionHeader)
+            labels = [str(label.renderable) for label in header.query("Label")]
+            assert any("Claude Sonnet 4.6" in line for line in labels)
+            assert not any("claude-sonnet-4-6 ·" in line for line in labels)
+
+    @pytest.mark.asyncio
+    async def test_header_falls_back_to_id_without_registry(self) -> None:
+        session = _persona_session()
+        app = _app_for(session)  # no registry wired
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            header = screen.query_one(SessionHeader)
+            labels = [str(label.renderable) for label in header.query("Label")]
+            assert any("claude-sonnet-4-6" in line for line in labels)
 
     @pytest.mark.asyncio
     async def test_header_untitled_placeholder(self, companion_session: Session) -> None:

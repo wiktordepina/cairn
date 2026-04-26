@@ -94,7 +94,7 @@ class ModelPickerModal(ModalScreen[str | None]):
         with Vertical():
             yield Label("Switch model", classes="title")
             yield Label(
-                f"current: {self._current_model_id}",
+                f"current: {self._current_display_name()}",
                 classes="header-current",
             )
             list_view = ListView(id="model-list")
@@ -136,7 +136,16 @@ class ModelPickerModal(ModalScreen[str | None]):
         if utility_id is not None and self._matches_role(model.id, utility_id):
             tags.append("utility")
         tag_suffix = f"  [{', '.join(tags)}]" if tags else ""
-        return f"{model.id}{tag_suffix}{marker}"
+        # Pipe rather than parens — display_name may itself contain
+        # parentheses (e.g. "DeepSeek V3.1 (OpenRouter)"), and a pipe
+        # keeps the id visually distinct.
+        return f"{model.display_name} | {model.id}{tag_suffix}{marker}"
+
+    def _current_display_name(self) -> str:
+        for model in self._models:
+            if model.id == self._current_model_id:
+                return model.display_name
+        return self._current_model_id
 
     def _matches_role(self, model_id: str, ref: str) -> bool:
         # Role refs may be either a direct id or "role:<name>"; we only

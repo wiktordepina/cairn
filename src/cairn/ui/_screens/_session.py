@@ -71,12 +71,14 @@ class SessionScreen(Screen[None]):
         cost_precision: int = 6,
         cost_source: Callable[[], Awaitable[float]] | None = None,
         context_source: Callable[[], Awaitable[ContextReportInput]] | None = None,
+        model_label: Callable[[str], str] | None = None,
     ) -> None:
         super().__init__()
         self._session = session
         self._cost_precision = cost_precision
         self._cost_source = cost_source
         self._context_source = context_source
+        self._model_label = model_label
 
     @property
     def context_source(
@@ -92,7 +94,7 @@ class SessionScreen(Screen[None]):
         return self._session
 
     def compose(self) -> ComposeResult:
-        yield SessionHeader(session=self._session)
+        yield SessionHeader(session=self._session, model_label=self._model_label)
         yield ChatLog(id="chat")
         completion = CompletionMenu(id="completion")
         yield completion
@@ -479,6 +481,8 @@ class SessionScreen(Screen[None]):
             return
 
         async def _do_reload() -> None:
+            from cairn.ui._model_label import resolve_label
+
             result = await reloader.reload()
             kind = "muted" if result.ok else "warning"
             text = result.summary if result.ok else f"reload failed — {result.error}"
@@ -489,9 +493,14 @@ class SessionScreen(Screen[None]):
                     self._session.id, new, mode="revert"
                 )
                 self.replace_session(refreshed)
+                registry = app.model_registry
+                was_label = resolve_label(registry, active)
+                now_label = resolve_label(registry, new)
                 self._chat_log.append_banner(
                     Banner(
-                        text=(f"session model reverted to config — was {active}, now {new}"),
+                        text=(
+                            f"session model reverted to config — was {was_label}, now {now_label}"
+                        ),
                         kind="muted",
                     ),
                 )

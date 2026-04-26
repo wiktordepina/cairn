@@ -152,10 +152,61 @@ class TestReloadCommand:
             rendered = "\n".join(str(b.renderable) for b in banners)
             assert "Reloaded: 1 config layer." in rendered
             assert "session model reverted to config" in rendered
+            # No registry wired here, so the banner falls back to ids.
             assert "was opus-4-7, now haiku-4-5" in rendered
             assert len(swapped) == 1
             assert swapped[0].mode == "revert"
             assert swapped[0].to_model == "haiku-4-5"
+
+    @pytest.mark.asyncio
+    async def test_reload_revert_banner_uses_display_names(
+        self, companion_session: Session
+    ) -> None:
+        """When the registry is wired, the revert banner shows display names."""
+        from cairn.config._models import ModelConfig
+        from cairn.config._registry import ModelRegistry
+
+        def _m(model_id: str, display_name: str) -> ModelConfig:
+            return ModelConfig(
+                id=model_id,
+                provider="anthropic",
+                display_name=display_name,
+                context_window=200_000,
+                max_output_tokens=8_000,
+                supports_tools=True,
+                input_cost_per_1m=1.0,
+                output_cost_per_1m=5.0,
+            )
+
+        registry = ModelRegistry(
+            [_m("opus-4-7", "Claude Opus 4.7"), _m("haiku-4-5", "Claude Haiku 4.5")]
+        )
+        refreshed_session = companion_session.model_copy(update={"model": "haiku-4-5"})
+
+        class _Orch:
+            async def swap_session_model(
+                self, session_id: str, new_model_id: str, *, mode: str
+            ) -> Session:
+                return refreshed_session
+
+        app = CairnApp(
+            orchestrator=cast("Orchestrator", _Orch()),
+            session=companion_session,
+            reloader=_RolePinDriftReloader(),  # type: ignore[arg-type]
+            model_registry=registry,
+        )
+        async with app.run_test() as pilot:
+            await pilot.pause()
+            screen = app.current_session_screen
+            assert screen is not None
+            bar = screen.query_one(CommandBar)
+            bar.value = "/reload"
+            await bar.action_submit()
+            await pilot.pause()
+
+            banners = list(screen.query_one(ChatLog).query(Banner))
+            rendered = "\n".join(str(b.renderable) for b in banners)
+            assert "was Claude Opus 4.7, now Claude Haiku 4.5" in rendered
 
     @pytest.mark.asyncio
     async def test_reload_mid_turn_queues(self, companion_session: Session) -> None:

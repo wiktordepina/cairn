@@ -23,11 +23,17 @@ class ContextReportInput:
     The bootstrap-supplied `context_source` callback returns this;
     test harnesses hand in a constant instance so the handler's
     formatter path is exercised without a live orchestrator.
+
+    `model` carries the user-facing label (the model's `display_name`
+    when the registry resolves it). `model_id` is the canonical id
+    used in persistence and the orchestrator API — exposed separately
+    so tests can pin behaviour even when the rendered label changes.
     """
 
     context_window: int | None
     model: str
     last_usage: UsageRecord | None
+    model_id: str = ""
 
 
 async def build_context_report(
@@ -47,7 +53,8 @@ async def build_context_report(
     last_usage = await usage_repo.most_recent_primary_turn(session.id)
     return ContextReportInput(
         context_window=model_cfg.context_window,
-        model=model_cfg.id,
+        model=model_cfg.display_name,
+        model_id=model_cfg.id,
         last_usage=last_usage,
     )
 

@@ -176,11 +176,19 @@ class CairnApp(App[None]):
         return count
 
     async def on_mount(self) -> None:
+        from cairn.ui._model_label import resolve_label
+
+        registry = self._model_registry
+
+        def _label(model_id: str) -> str:
+            return resolve_label(registry, model_id)
+
         screen = SessionScreen(
             session=self._session,
             cost_precision=self._ui_config.cost_display_precision,
             cost_source=self._cost_source,
             context_source=self._context_source,
+            model_label=_label,
         )
         self._session_screen = screen
         await self.push_screen(screen)

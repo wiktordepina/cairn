@@ -119,11 +119,16 @@ class TestFormatContextReport:
 # ---------------------------------------------------------------------------
 
 
-def _model(model_id: str, *, context_window: int = 200_000) -> ModelConfig:
+def _model(
+    model_id: str,
+    *,
+    context_window: int = 200_000,
+    display_name: str | None = None,
+) -> ModelConfig:
     return ModelConfig(
         id=model_id,
         provider="anthropic",
-        display_name=model_id,
+        display_name=display_name or model_id,
         context_window=context_window,
         max_output_tokens=8_000,
         supports_tools=True,
@@ -152,7 +157,10 @@ class TestBuildContextReport:
     @pytest.mark.asyncio
     async def test_resolves_model_from_live_session(self, companion_session: Session) -> None:
         registry = ModelRegistry(
-            [_model("pro", context_window=200_000), _model("flash", context_window=64_000)]
+            [
+                _model("pro", display_name="DeepSeek V4 Pro", context_window=200_000),
+                _model("flash", display_name="DeepSeek V4 Flash", context_window=64_000),
+            ]
         )
         repo = cast("UsageRepo", _StubUsageRepo())
 
@@ -160,7 +168,8 @@ class TestBuildContextReport:
         report = await build_context_report(
             session=pro_session, model_registry=registry, usage_repo=repo
         )
-        assert report.model == "pro"
+        assert report.model == "DeepSeek V4 Pro"
+        assert report.model_id == "pro"
         assert report.context_window == 200_000
 
         # Simulate a `/model` swap: same session id, new model id.
@@ -168,7 +177,8 @@ class TestBuildContextReport:
         report = await build_context_report(
             session=flash_session, model_registry=registry, usage_repo=repo
         )
-        assert report.model == "flash"
+        assert report.model == "DeepSeek V4 Flash"
+        assert report.model_id == "flash"
         assert report.context_window == 64_000
 
     @pytest.mark.asyncio

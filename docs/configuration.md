@@ -147,7 +147,7 @@ roles = ["primary"]
 |---|---|---|---|
 | `id` | string | — (required) | Vendor model ID. |
 | `provider` | string | — (required) | Key into `[providers.*]`. |
-| `display_name` | string | — (required) | Shown in the UI. |
+| `display_name` | string | — (required) | Shown in every UI surface that names a model — session header, `/model` picker, swap/revert banners, `/context`, `/profile`. The id stays the canonical reference (config, persistence, logs); only rendered text uses `display_name`. The `/model` picker renders rows as `<display_name> | <id>` so the id is always discoverable. |
 | `context_window` | int | — (required) | Max input tokens. |
 | `max_output_tokens` | int | — (required) | Max tokens per response. |
 | `supports_tools` | bool | — (required) | Whether the model can call tools. |

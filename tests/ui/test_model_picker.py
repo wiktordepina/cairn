@@ -126,3 +126,40 @@ class TestModelPickerModal:
     def test_rejects_empty_model_list(self) -> None:
         with pytest.raises(ValueError, match="at least one model"):
             ModelPickerModal(models=(), current_model_id="x")
+
+    @pytest.mark.asyncio
+    async def test_rows_render_display_name_then_id(self, companion_session: Session) -> None:
+        """Picker rows show ``<display_name> | <id>``.
+
+        The id stays visible (separated by a pipe rather than parens,
+        because ``display_name`` may itself contain parens — e.g.
+        ``"DeepSeek V3.1 (OpenRouter)"``).
+        """
+        app = _app_for(companion_session)
+        models = (
+            _model("deepseek-v4-pro", display_name="DeepSeek V4 Pro"),
+            _model("deepseek-v4-flash", display_name="DeepSeek V4 Flash"),
+        )
+        async with app.run_test() as pilot:
+            await pilot.pause()
+
+            async def inner() -> None:
+                await app.push_screen_wait(
+                    ModelPickerModal(
+                        models=models,
+                        current_model_id="deepseek-v4-pro",
+                    )
+                )
+
+            worker = app.run_worker(inner(), exclusive=False, exit_on_error=False)
+            await pilot.pause()
+
+            modal = app.screen
+            assert isinstance(modal, ModelPickerModal)
+            text = "\n".join(str(label.renderable) for label in modal.query(Label))
+            assert "current: DeepSeek V4 Pro" in text
+            assert "DeepSeek V4 Pro | deepseek-v4-pro" in text
+            assert "DeepSeek V4 Flash | deepseek-v4-flash" in text
+
+            await pilot.press("escape")
+            await worker.wait()

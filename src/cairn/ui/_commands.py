@@ -348,10 +348,29 @@ async def _handle_profile(app: CairnApp, _tail: str) -> None:
     lines = [
         f"profile: {name}",
         f"  memory space: {profile.memory_space}",
-        f"  primary model: {profile.primary_model}",
-        f"  utility model: {profile.utility_model}",
+        f"  primary model: {_format_role_ref(app, profile.primary_model)}",
+        f"  utility model: {_format_role_ref(app, profile.utility_model)}",
     ]
     screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
+
+
+def _format_role_ref(app: CairnApp, ref: str) -> str:
+    """Render a profile model ref (id or ``role:<name>``) with its display name.
+
+    Falls back to the raw ref when the registry is unwired or the ref
+    can't be resolved (test harnesses, or a config that drifted away
+    from what the running session was started with).
+    """
+    registry = app.model_registry
+    if registry is None:
+        return ref
+    from cairn.config._registry import ModelNotFoundError
+
+    try:
+        model = registry.resolve(ref)
+    except ModelNotFoundError:
+        return ref
+    return f"{model.display_name}  ({ref})"
 
 
 async def _handle_model(app: CairnApp, _tail: str) -> None:
@@ -398,6 +417,7 @@ async def _handle_model(app: CairnApp, _tail: str) -> None:
 
 
 async def _run_model_swap(app: CairnApp) -> None:
+    from cairn.ui._model_label import resolve_label
     from cairn.ui._screens import Choice, ChoiceModal, ModelPickerModal
     from cairn.ui._widgets import Banner
 
@@ -421,18 +441,21 @@ async def _run_model_swap(app: CairnApp) -> None:
         screen.append_banner(Banner(text="model unchanged", kind="muted"))
         return
 
+    picked_label = resolve_label(registry, picked)
+    current_label = resolve_label(registry, screen.session.model)
+
     msg_count = await app.orchestrator.count_session_messages(screen.session.id)
     if msg_count == 0:
         refreshed = await app.orchestrator.swap_session_model(
             screen.session.id, picked, mode="keep"
         )
         screen.replace_session(refreshed)
-        screen.append_banner(Banner(text=f"model → {picked}", kind="muted"))
+        screen.append_banner(Banner(text=f"model → {picked_label}", kind="muted"))
         return
 
     choice = await app.push_screen_wait(
         ChoiceModal(
-            title=f"Switch model: {screen.session.model} → {picked}",
+            title=f"Switch model: {current_label} → {picked_label}",
             body=(
                 f"This session has {msg_count} message(s). The new model will "
                 "re-read the existing transcript on its next turn (prompt cache "
@@ -455,7 +478,7 @@ async def _run_model_swap(app: CairnApp) -> None:
             screen.session.id, picked, mode="keep"
         )
         screen.replace_session(refreshed)
-        screen.append_banner(Banner(text=f"model → {picked}  (history kept)", kind="muted"))
+        screen.append_banner(Banner(text=f"model → {picked_label}  (history kept)", kind="muted"))
         return
     if choice == "s":
         old_id = screen.session.id
@@ -469,7 +492,7 @@ async def _run_model_swap(app: CairnApp) -> None:
         screen.clear_transcript()
         screen.append_banner(
             Banner(
-                text=f"model → {picked}  (fresh session)",
+                text=f"model → {picked_label}  (fresh session)",
                 kind="muted",
             )
         )
@@ -518,14 +541,19 @@ async def _handle_reload(app: CairnApp, _tail: str) -> None:
     text = result.summary if result.ok else f"reload failed — {result.error}"
     screen.append_banner(Banner(text=text, kind=kind))
     if result.ok and result.primary_model_drift is not None:
+        from cairn.ui._model_label import resolve_label
+
         active, new = result.primary_model_drift
         refreshed = await app.orchestrator.swap_session_model(
             screen.session.id, new, mode="revert"
         )
         screen.replace_session(refreshed)
+        registry = app.model_registry
+        was_label = resolve_label(registry, active)
+        now_label = resolve_label(registry, new)
         screen.append_banner(
             Banner(
-                text=(f"session model reverted to config — was {active}, now {new}"),
+                text=(f"session model reverted to config — was {was_label}, now {now_label}"),
                 kind="muted",
             ),
         )
