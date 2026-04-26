@@ -82,8 +82,17 @@ def format_messages(
     the message's leading :class:`ThinkingBlock`. Per DeepSeek's
     thinking-mode docs, replaying ``reasoning_content`` is *required*
     when the prior assistant turn included tool calls and *optional
-    (silently ignored)* otherwise — we send it unconditionally to keep
-    the formatter rule-free and safe across both shapes.
+    (silently ignored)* otherwise.
+
+    Cross-model gotcha: when the user swaps from a non-reasoning model
+    (e.g. Kimi via OpenRouter) back to a DeepSeek thinking SKU, the
+    intermediate assistant turns may carry ``tool_calls`` but no
+    :class:`ThinkingBlock` — there was nothing to capture. DeepSeek
+    rejects those rows with ``"reasoning_content in the thinking mode
+    must be passed back to the API"``. We send an empty
+    ``reasoning_content`` for those rows so the key is always present
+    when tool calls are; for messages without tool calls, the field is
+    "optional but ignored" so we can omit it.
     """
     formatted = _openai_format_messages(messages, system=system)
     cairn_assistants = [m for m in messages if m.role == "assistant"]
@@ -94,6 +103,11 @@ def format_messages(
         head = cairn_msg.content[0]
         if isinstance(head, ThinkingBlock) and head.thinking:
             row["reasoning_content"] = head.thinking
+        elif row.get("tool_calls"):
+            # Tool-call row from a non-reasoning model — present an
+            # empty reasoning trace so DeepSeek's thinking-mode check
+            # passes after a cross-model swap.
+            row["reasoning_content"] = ""
     return formatted
 
 

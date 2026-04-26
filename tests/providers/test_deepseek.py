@@ -195,6 +195,30 @@ class TestReasoningContentRoundTrip:
         assistant_row = next(r for r in formatted if r["role"] == "assistant")
         assert "reasoning_content" not in assistant_row
 
+    def test_format_messages_empty_reasoning_for_cross_model_tool_calls(self) -> None:
+        """Cross-model swap: a tool-call message produced by a
+        non-reasoning model has no `ThinkingBlock`, but DeepSeek's
+        thinking SKUs reject the request unless `reasoning_content` is
+        present on every assistant row that carries tool calls. Send an
+        empty string for those rows so the key is always there."""
+        from cairn.domain._content import ToolUseBlock
+
+        user_msg = Message(role="user")
+        user_msg.content.append(TextBlock(text="search for X"))
+
+        # Assistant message from a non-reasoning model: TextBlock + a
+        # tool call, no ThinkingBlock anywhere.
+        assistant_msg = Message(role="assistant")
+        assistant_msg.content.append(TextBlock(text="checking..."))
+        assistant_msg.content.append(
+            ToolUseBlock(id="call-1", name="web_fetch", input={"url": "https://example.com"})
+        )
+
+        formatted = format_messages([user_msg, assistant_msg])
+        assistant_row = next(r for r in formatted if r["role"] == "assistant")
+        assert assistant_row.get("tool_calls"), "fixture should produce a tool_calls row"
+        assert assistant_row["reasoning_content"] == ""
+
 
 class TestUsageFlowsThroughMapChunk:
     def test_usage_chunk_emits_usage_event(self) -> None:
