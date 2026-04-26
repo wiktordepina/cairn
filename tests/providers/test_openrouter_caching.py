@@ -5,6 +5,8 @@ from __future__ import annotations
 import logging
 from types import SimpleNamespace
 
+import pytest
+
 from cairn.config._models import ProviderConfig, SecretRef
 from cairn.config._secrets import SecretResolver
 from cairn.domain._content import TextBlock
@@ -157,6 +159,23 @@ class TestUsageDualShape:
         ev = _usage_from_chunk(usage)
         assert ev.cache_read_tokens == 0
         assert ev.cache_write_tokens == 0
+        assert ev.cache_discount_usd == 0.0
+
+    def test_cache_discount_surfaced(self) -> None:
+        """OpenRouter exposes cache_discount uniformly across upstreams."""
+        usage = SimpleNamespace(
+            prompt_tokens=100,
+            completion_tokens=10,
+            cache_read_input_tokens=80,
+            cache_discount=0.0042,
+        )
+        ev = _usage_from_chunk(usage)
+        assert ev.cache_discount_usd == pytest.approx(0.0042)
+
+    def test_cache_discount_default_zero_when_absent(self) -> None:
+        usage = SimpleNamespace(prompt_tokens=10, completion_tokens=5)
+        ev = _usage_from_chunk(usage)
+        assert ev.cache_discount_usd == 0.0
 
 
 class TestMarkerCap:

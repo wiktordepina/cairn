@@ -74,18 +74,25 @@ class Message:
 
     # -- Thinking streaming -----------------------------------------------
 
-    def append_thinking_delta(self, text: str) -> None:
-        """Append reasoning text to the leading ThinkingBlock, or create one.
+    def append_thinking_delta(self, text: str, signature: str = "") -> None:
+        """Append reasoning text and/or signature to the leading ThinkingBlock.
 
         Reasoning content arrives before the final answer, so the
         ThinkingBlock sits at index 0 of the content list. ThinkingBlock
-        is frozen, so we replace it on each delta.
+        is frozen, so we replace it on each delta. ``signature`` is
+        appended (concatenated) when non-empty — Anthropic's
+        ``signature_delta`` arrives at end-of-thinking-block as a
+        single chunk in practice, but this stays safe under any
+        chunking pattern.
         """
         if self.content and isinstance(self.content[0], ThinkingBlock):
             existing = self.content[0]
-            self.content[0] = ThinkingBlock(thinking=existing.thinking + text)
+            self.content[0] = ThinkingBlock(
+                thinking=existing.thinking + text,
+                signature=existing.signature + signature,
+            )
         else:
-            self.content.insert(0, ThinkingBlock(thinking=text))
+            self.content.insert(0, ThinkingBlock(thinking=text, signature=signature))
 
     # -- Tool use streaming ------------------------------------------------
 

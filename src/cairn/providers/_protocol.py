@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Protocol, runtime_checkable
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
-    from cairn.domain._provider import ProviderEvent, ProviderRequest
+    from cairn.domain._provider import BalanceInfo, ProviderEvent, ProviderRequest
 
 
 @runtime_checkable
@@ -15,10 +15,12 @@ class Provider(Protocol):
     """Vendor-agnostic interface for LLM providers.
 
     Implementations translate between cairn's domain types and
-    provider-specific SDK formats. The protocol has two methods:
+    provider-specific SDK formats. The protocol has three methods:
 
     - `stream()` — the primary path; async generator yielding events
     - `count_tokens()` — token estimation for budget tracking
+    - `balance()` — optional account-balance lookup; ``None`` for
+      providers without a public billing endpoint
     """
 
     @property
@@ -40,6 +42,16 @@ class Provider(Protocol):
 
     async def count_tokens(self, request: ProviderRequest) -> int:
         """Estimate token count for a request."""
+        ...
+
+    async def balance(self) -> BalanceInfo | None:
+        """Fetch the account balance / credits for this provider.
+
+        Returns ``None`` for providers that do not expose a public
+        balance endpoint reachable with the chat-completions API key
+        (Anthropic, OpenAI without an admin key). The ``cairn balance``
+        CLI surfaces ``None`` results as a "no public API" stub row.
+        """
         ...
 
 

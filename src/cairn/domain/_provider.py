@@ -78,6 +78,49 @@ class ProviderRequest:
     stop_sequences: list[str] | None = None
     cache_tools: bool = False
     cache_last_message: bool = False
+    reasoning_effort: str | None = None
+    """Reasoning depth knob, unified across thinking-capable providers.
+
+    Accepted values: ``"none"``, ``"minimal"``, ``"low"``, ``"medium"``,
+    ``"high"``, ``"xhigh"``. Adapter-specific mapping (see ADR 0043):
+
+    - **OpenAI**: passed through verbatim to the ``reasoning_effort``
+      param on o-series models; ignored on non-reasoning models.
+    - **Anthropic**: scaled proportionally to ``max_tokens`` and emitted
+      as ``thinking.budget_tokens`` (low/medium/high/xhigh = 25/50/75/90 %,
+      floored at 1024, ceilinged at ``max_tokens - 1``). ``none`` /
+      ``minimal`` skip the thinking block entirely. Only applied when
+      the model declares ``supports_thinking``.
+    - **DeepSeek**: forwarded as ``reasoning_effort`` on V4-pro-class
+      models; no-op on ``deepseek-reasoner`` (always thinks).
+    - **OpenRouter**: best-effort passthrough — translation depends on
+      whichever upstream the route resolves to.
+    """
+    tool_choice: str | tuple[str, str] | None = None
+    """Tool-selection strategy.
+
+    ``None`` = adapter default (typically ``"auto"`` when tools present).
+    String values: ``"auto"``, ``"any"``, ``"none"``. To force a
+    specific tool, pass a tuple ``("tool", tool_name)``. Adapters that
+    don't natively support all values translate or warn-and-fall-back.
+    """
+    disable_parallel_tool_use: bool = False
+    """When True, instruct the provider to call tools sequentially.
+
+    Honoured by Anthropic (validated against the extended-thinking
+    constraint that only ``"auto"`` and ``"none"`` are supported when
+    thinking is on) and OpenAI (via ``parallel_tool_calls=False``).
+    Ignored on adapters without an equivalent knob.
+    """
+    prompt_cache_key: str | None = None
+    """Stable key for cache-prefix partitioning.
+
+    Currently consumed by the OpenAI adapter — the SDK doc describes
+    it as "used by OpenAI to cache responses for similar requests to
+    optimize your cache hit rates" and as the replacement for the
+    legacy ``user`` field. Typically set to ``f"cairn:{session_id}"``
+    by the orchestrator. Ignored on adapters without an equivalent.
+    """
 
 
 # ---------------------------------------------------------------------------
@@ -97,12 +140,21 @@ class ThinkingDelta:
     """Incremental reasoning / chain-of-thought token from the model.
 
     Emitted by providers that surface reasoning traces alongside the
-    final answer (e.g. DeepSeek's ``reasoning_content`` field). Captured
-    so the trace can be round-tripped back to the API on subsequent
-    turns — DeepSeek's thinking-mode SKUs require it.
+    final answer. Two flavours of payload share this event:
+
+    - ``text``: incremental reasoning content (DeepSeek's
+      ``reasoning_content``, Anthropic's ``thinking_delta.thinking``).
+    - ``signature``: Anthropic's encrypted handle for the trace,
+      arriving once at end-of-thinking-block via ``signature_delta``.
+      Empty on providers that don't sign their reasoning. Required on
+      Anthropic multi-turn tool-use loops — the server decrypts it to
+      reconstruct the original reasoning.
+
+    A single delta carries one or the other, not both.
     """
 
     text: str
+    signature: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -130,12 +182,36 @@ class ToolCallEnd:
 
 @dataclass(frozen=True, slots=True)
 class UsageEvent:
-    """Token consumption from a provider call."""
+    """Token consumption from a provider call.
+
+    ``reasoning_tokens`` is a *breakdown* of ``output_tokens`` (already
+    counted in the total) — it lets cost meters explain why a turn
+    was expensive on reasoning-class models. ``cache_discount`` is the
+    USD discount already applied by the provider for cache hits;
+    surfaced uniformly by OpenRouter, zero on others.
+    """
 
     input_tokens: int
     output_tokens: int
     cache_read_tokens: int = 0
     cache_write_tokens: int = 0
+    reasoning_tokens: int = 0
+    cache_discount_usd: float = 0.0
+
+
+@dataclass(frozen=True, slots=True)
+class GenerationId:
+    """Provider-native identifier for a single completion.
+
+    Emitted at most once per stream by adapters that return one.
+    OpenRouter uses it to look up authoritative cost via
+    ``GET /api/v1/generation?id=<id>``; Anthropic and OpenAI also
+    return native IDs (``message.id``, completion ``id``) which can
+    populate this event in future. Persisted on the assistant message
+    so post-hoc accounting can reconcile.
+    """
+
+    id: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -152,5 +228,29 @@ ProviderEvent = (
     | ToolCallDelta
     | ToolCallEnd
     | UsageEvent
+    | GenerationId
     | MessageStop
 )
+
+
+@dataclass(frozen=True, slots=True)
+class BalanceInfo:
+    """Account balance / credit state from a provider's billing API.
+
+    Attributes:
+        currency: ISO-ish currency code (``"USD"``, ``"CNY"``, …).
+        total: Combined granted + topped-up credit.
+        used: Spend to date in the same currency.
+        remaining: ``total - used``. Stored explicitly because some
+            APIs return it directly without exposing the components.
+        granted: Promotional / unexpired grant component, or ``None``.
+        source: Endpoint or API path the figure came from, for the
+            CLI to attribute the row.
+    """
+
+    currency: str
+    total: float
+    used: float
+    remaining: float
+    granted: float | None = None
+    source: str = ""

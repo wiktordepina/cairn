@@ -8,10 +8,12 @@ with reasoning- and chat-class models:
   reasoning traces alongside the final answer. ``reasoning_content``
   on streamed deltas is captured into a :class:`ThinkingBlock` on the
   assistant message and re-emitted on the next turn under the
-  ``reasoning_content`` field — DeepSeek's thinking-mode SKUs reject
-  multi-turn requests that drop it (HTTP 400 ``invalid_request_error``).
-  The trace is round-tripped invisibly; surfacing it in the transcript
-  is a follow-up.
+  ``reasoning_content`` field. Per DeepSeek's docs, this round-trip is
+  *required* when the prior assistant turn contained tool calls and
+  *optional but ignored* otherwise — so we always send it for
+  simplicity and correctness across both shapes. The trace is
+  round-tripped invisibly; surfacing it in the transcript is a
+  follow-up.
 
 Caching is automatic and disk-based — no markers, no opt-in. Cache
 hits are billed at roughly 10 % of the input rate. Usage echoes back
@@ -31,6 +33,7 @@ import openai
 
 from cairn.domain._content import TextBlock, ThinkingBlock
 from cairn.domain._provider import (
+    BalanceInfo,
     MessageStop,
     ProviderEvent,
     TextDelta,
@@ -76,11 +79,11 @@ def format_messages(
 
     Identical to :func:`cairn.providers._openai.format_messages` plus a
     per-assistant-message ``reasoning_content`` field re-emitted from
-    the message's leading :class:`ThinkingBlock`. Thinking-mode SKUs
-    (e.g. deepseek-reasoner, V4 reasoning models) reject multi-turn
-    requests that omit prior reasoning with
-    ``invalid_request_error``; round-tripping it keeps the conversation
-    valid across iterations.
+    the message's leading :class:`ThinkingBlock`. Per DeepSeek's
+    thinking-mode docs, replaying ``reasoning_content`` is *required*
+    when the prior assistant turn included tool calls and *optional
+    (silently ignored)* otherwise — we send it unconditionally to keep
+    the formatter rule-free and safe across both shapes.
     """
     formatted = _openai_format_messages(messages, system=system)
     cairn_assistants = [m for m in messages if m.role == "assistant"]
@@ -266,3 +269,68 @@ class DeepSeekProvider:
                 if isinstance(block, TextBlock):
                     total += len(enc.encode(block.text))
         return total
+
+    async def balance(self) -> BalanceInfo | None:
+        """Fetch DeepSeek account balance via ``GET /user/balance``.
+
+        DeepSeek's response shape:
+
+        .. code-block:: json
+
+            {
+              "is_available": true,
+              "balance_infos": [
+                {"currency": "CNY", "total_balance": "110.00",
+                 "granted_balance": "10.00", "topped_up_balance": "100.00"}
+              ]
+            }
+
+        Returns the FIRST entry in ``balance_infos`` — accounts with
+        multi-currency balances are rare; the CLI can re-call when we
+        need full per-currency listings. Returns ``None`` on any
+        transport failure or malformed response so the CLI fan-out
+        keeps going for other providers.
+        """
+        import httpx
+
+        if self._config.api_key is None:
+            return None
+        api_key = self._secret_resolver.resolve(self._config.api_key)
+        base_url = self._config.base_url or _DEFAULT_BASE_URL
+        url = f"{base_url.rstrip('/')}/user/balance"
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.get(url, headers={"Authorization": f"Bearer {api_key}"})
+                response.raise_for_status()
+                data = response.json()
+        except (httpx.HTTPError, ValueError) as exc:
+            logger.warning("deepseek balance fetch failed: %s", exc)
+            return None
+        if not isinstance(data, dict):
+            return None
+        data_dict: dict[str, Any] = data  # pyright: ignore[reportUnknownVariableType]
+        infos = data_dict.get("balance_infos")
+        if not isinstance(infos, list) or not infos:
+            return None
+        first_raw = infos[0]  # pyright: ignore[reportUnknownVariableType]
+        if not isinstance(first_raw, dict):
+            return None
+        first: dict[str, Any] = first_raw  # pyright: ignore[reportUnknownVariableType]
+        try:
+            total_balance = float(first.get("total_balance", 0) or 0)
+            granted = float(first.get("granted_balance", 0) or 0)
+        except (TypeError, ValueError):
+            return None
+        # DeepSeek's endpoint reports the CURRENT REMAINING balance only —
+        # ``total_balance`` is granted + topped_up still available, with
+        # no historical-spend field. We surface ``remaining`` faithfully
+        # and leave ``used`` at 0.0 (unknown). The CLI's "used" column
+        # is informational across providers; OpenRouter does report it.
+        return BalanceInfo(
+            currency=str(first.get("currency", "")),
+            total=total_balance,
+            used=0.0,
+            remaining=total_balance,
+            granted=granted,
+            source="/user/balance",
+        )

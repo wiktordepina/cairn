@@ -90,9 +90,35 @@ base_url = "http://localhost:8080/v1"
 | `api_key` | [`SecretRef`](#secret-references) | — | Must not use the `literal:` scheme (rejected at load time). |
 | `base_url` | string | — | Override for OpenAI-compatible local servers. See [providers.md](providers.md#openai-compatible-local-servers). |
 | `extra_headers` | `{ string: string }` | `{}` | Merged into every request. Used for OpenRouter identity headers. |
+| `extra_body` | `{ string: any }` | `{}` | Opaque pass-through merged into the request body. Currently consumed by the OpenRouter adapter for `provider.*` routing preferences (see below). Adapter-set kwargs always win — you cannot clobber `stream`, `model`, `messages`. |
 
 Provider names are injected into the `ProviderConfig` from the TOML dict
 key, so you don't repeat them inside the block.
+
+### `extra_body` for OpenRouter
+
+OpenRouter's request body accepts a `provider` object that controls
+upstream routing. With `extra_body` you can pin to specific upstreams,
+allow / disable fallbacks, opt into zero-data-retention routing, sort
+by price / latency / throughput, and more — without an adapter
+release. Example:
+
+```toml
+[providers.openrouter]
+api_key = "keyring:cairn:openrouter-api-key"
+extra_body = {
+    provider = {
+        order = ["anthropic", "google"],   # try Anthropic first, then Google
+        allow_fallbacks = false,           # don't fall back to anyone else
+        zdr = true,                        # zero-data-retention upstreams only
+        sort = "throughput",               # tie-break by speed
+    }
+}
+```
+
+See [OpenRouter's provider-routing docs](https://openrouter.ai/docs/features/provider-routing)
+for the full schema. cairn does not validate `extra_body` contents
+beyond passing them through.
 
 ## `[[models]]`
 

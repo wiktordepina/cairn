@@ -109,3 +109,5 @@ ongoing costs does this impose?
 | [0040](0040-deepseek-fourth-v1-provider.md) | DeepSeek as the fourth V1 provider | accepted |
 | [0041](0041-typer-for-cli-surface.md) | Typer for the CLI surface | accepted |
 | [0042](0042-surgical-reload-boundary.md) | Surgical reload boundary for `/reload` | accepted |
+| [0043](0043-unified-reasoning-effort.md) | Unified `reasoning_effort` knob across providers | accepted |
+| [0044](0044-balance-cli-fanout.md) | `cairn balance` fans out across configured providers | accepted |

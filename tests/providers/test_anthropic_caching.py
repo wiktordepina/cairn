@@ -96,28 +96,62 @@ class TestFormatMessagesCacheLast:
         assert format_messages([], cache_last=True) == []
 
 
+def _drive_to_stop(
+    provider: AnthropicProvider,
+    start_usage: SimpleNamespace,
+    *,
+    final_output_tokens: int = 50,
+) -> UsageEvent:
+    """Run a minimal message_start → message_delta(end_turn) sequence and
+    return the single aggregated ``UsageEvent`` that lands at end-of-stream.
+    """
+    block_ids: dict[int, str] = {}
+    thinking_idx: set[int] = set()
+    usage_acc = {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_read_tokens": 0,
+        "cache_write_tokens": 0,
+    }
+    provider._map_event(
+        SimpleNamespace(type="message_start", message=SimpleNamespace(usage=start_usage)),
+        block_ids,
+        thinking_idx,
+        usage_acc,
+    )
+    results = provider._map_event(
+        SimpleNamespace(
+            type="message_delta",
+            delta=SimpleNamespace(stop_reason="end_turn"),
+            usage=SimpleNamespace(output_tokens=final_output_tokens),
+        ),
+        block_ids,
+        thinking_idx,
+        usage_acc,
+    )
+    usage_events = [r for r in results if isinstance(r, UsageEvent)]
+    assert len(usage_events) == 1, "expected exactly one UsageEvent at message_stop"
+    return usage_events[0]
+
+
 class TestUsageWithCache:
     def _make_provider(self) -> AnthropicProvider:
         config = ProviderConfig(name="anthropic", api_key=SecretRef.parse("literal:t"))
         return AnthropicProvider(config, SecretResolver())
 
     def test_message_start_populates_cache_fields(self) -> None:
+        """Cache fields buffered at message_start surface in the aggregated
+        end-of-stream UsageEvent."""
         provider = self._make_provider()
-        event = SimpleNamespace(
-            type="message_start",
-            message=SimpleNamespace(
-                usage=SimpleNamespace(
-                    input_tokens=100,
-                    output_tokens=0,
-                    cache_creation_input_tokens=200,
-                    cache_read_input_tokens=300,
-                )
+        ev = _drive_to_stop(
+            provider,
+            SimpleNamespace(
+                input_tokens=100,
+                output_tokens=0,
+                cache_creation_input_tokens=200,
+                cache_read_input_tokens=300,
             ),
         )
-        results = provider._map_event(event, {})
-        assert len(results) == 1
-        ev = results[0]
-        assert isinstance(ev, UsageEvent)
         assert ev.input_tokens == 100
         assert ev.cache_write_tokens == 200
         assert ev.cache_read_tokens == 300
@@ -125,33 +159,25 @@ class TestUsageWithCache:
     def test_message_start_missing_cache_fields_defaults_zero(self) -> None:
         """Older SDK versions / fixtures may not include cache fields."""
         provider = self._make_provider()
-        event = SimpleNamespace(
-            type="message_start",
-            message=SimpleNamespace(usage=SimpleNamespace(input_tokens=42, output_tokens=0)),
+        ev = _drive_to_stop(
+            provider,
+            SimpleNamespace(input_tokens=42, output_tokens=0),
         )
-        results = provider._map_event(event, {})
-        ev = results[0]
-        assert isinstance(ev, UsageEvent)
         assert ev.cache_read_tokens == 0
         assert ev.cache_write_tokens == 0
 
     def test_message_start_none_cache_fields_coerced_zero(self) -> None:
         """SDK sometimes sets the attribute to None rather than omitting."""
         provider = self._make_provider()
-        event = SimpleNamespace(
-            type="message_start",
-            message=SimpleNamespace(
-                usage=SimpleNamespace(
-                    input_tokens=42,
-                    output_tokens=0,
-                    cache_creation_input_tokens=None,
-                    cache_read_input_tokens=None,
-                )
+        ev = _drive_to_stop(
+            provider,
+            SimpleNamespace(
+                input_tokens=42,
+                output_tokens=0,
+                cache_creation_input_tokens=None,
+                cache_read_input_tokens=None,
             ),
         )
-        results = provider._map_event(event, {})
-        ev = results[0]
-        assert isinstance(ev, UsageEvent)
         assert ev.cache_read_tokens == 0
         assert ev.cache_write_tokens == 0
 

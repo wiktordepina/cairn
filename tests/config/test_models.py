@@ -85,6 +85,21 @@ class TestProviderConfig:
         provider = ProviderConfig()
         assert provider.name == ""
 
+    def test_extra_body_defaults_empty(self) -> None:
+        provider = ProviderConfig(name="test")
+        assert provider.extra_body == {}
+
+    def test_extra_body_accepts_arbitrary_dict(self) -> None:
+        provider = ProviderConfig(
+            name="openrouter",
+            extra_body={
+                "provider": {"order": ["anthropic"], "allow_fallbacks": False},
+                "transforms": [],
+            },
+        )
+        assert provider.extra_body["provider"]["order"] == ["anthropic"]
+        assert provider.extra_body["transforms"] == []
+
 
 class TestModelConfig:
     def test_valid_model(self) -> None:

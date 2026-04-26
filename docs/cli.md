@@ -179,6 +179,32 @@ the allowlist.
 The allowlist lives at `$XDG_CONFIG_HOME/cairn/trusted_projects.toml`
 and is shared across profiles.
 
+## Account balance
+
+`cairn balance` prints one row per configured provider with the
+account's remaining credit, lifetime usage, and the source endpoint
+the figure came from. Providers are queried in parallel — a slow
+or failing provider doesn't block others.
+
+```
+$ cairn balance
+provider     remaining       used         source
+anthropic    —               —            no public API
+deepseek     CNY 110.00      CNY 0.00     /user/balance
+openai       —               —            no public API
+openrouter   USD 4.21        USD 0.79     /api/v1/credits
+```
+
+Anthropic and OpenAI print the `no public API` stub because their
+billing endpoints require a separate admin API key — different from
+the chat-completions key cairn carries. DeepSeek and OpenRouter
+expose their balance reachable with the same key. See
+[ADR 0044](decisions/0044-balance-cli-fanout.md) for the design.
+
+A single provider failing prints `error: <type>` in the `remaining`
+column and exits `0` — safe to run from cron / status bars. Exit
+`2` only when *every* provider with an endpoint failed.
+
 ## Schema migrations
 
 `cairn config migrate` walks every loaded layer and reports the

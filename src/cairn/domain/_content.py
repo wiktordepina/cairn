@@ -33,12 +33,20 @@ class ToolUseBlock(BaseModel):
 
 
 class ImageSource(BaseModel):
-    """Image data source (base64-encoded)."""
+    """Image data source (base64-encoded).
+
+    ``detail`` controls how providers tile and tokenise the image for
+    vision-capable models. Currently consumed by the OpenAI adapter
+    (``"low"`` ≈ 85 tokens flat; ``"high"`` enables tiling at higher
+    cost; ``"auto"`` lets the provider pick). Adapters that don't
+    support a detail knob ignore the field.
+    """
 
     model_config = ConfigDict(frozen=True)
 
     media_type: str
     data: str
+    detail: Literal["auto", "low", "high"] = "auto"
 
 
 class ImageBlock(BaseModel):
@@ -51,12 +59,35 @@ class ImageBlock(BaseModel):
 
 
 class ThinkingBlock(BaseModel):
-    """Extended reasoning / chain-of-thought content."""
+    """Extended reasoning / chain-of-thought content.
+
+    The ``signature`` field carries Anthropic's encrypted server-side
+    handle for the thinking trace — required when echoing the block
+    back on multi-turn tool-use loops (the server decrypts it to
+    reconstruct the original reasoning). Empty for providers that
+    don't sign their reasoning (e.g. DeepSeek's ``reasoning_content``).
+    """
 
     model_config = ConfigDict(frozen=True)
 
     type: Literal["thinking"] = "thinking"
     thinking: str
+    signature: str = ""
+
+
+class RedactedThinkingBlock(BaseModel):
+    """Anthropic-redacted reasoning placeholder.
+
+    Returned in place of a ``ThinkingBlock`` when Anthropic's safety
+    layer redacts the trace. The opaque ``data`` field must be passed
+    back unchanged on subsequent turns to keep the conversation
+    valid; we don't render it.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    type: Literal["redacted_thinking"] = "redacted_thinking"
+    data: str
 
 
 class ToolResultBlock(BaseModel):
@@ -74,7 +105,7 @@ class ToolResultBlock(BaseModel):
         str
         | list[
             Annotated[
-                TextBlock | ToolUseBlock | ImageBlock | ThinkingBlock,
+                TextBlock | ToolUseBlock | ImageBlock | ThinkingBlock | RedactedThinkingBlock,
                 Field(discriminator="type"),
             ]
         ]
@@ -87,7 +118,12 @@ class ToolResultBlock(BaseModel):
 # ---------------------------------------------------------------------------
 
 ContentBlock = Annotated[
-    TextBlock | ToolUseBlock | ToolResultBlock | ImageBlock | ThinkingBlock,
+    TextBlock
+    | ToolUseBlock
+    | ToolResultBlock
+    | ImageBlock
+    | ThinkingBlock
+    | RedactedThinkingBlock,
     Field(discriminator="type"),
 ]
 

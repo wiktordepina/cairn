@@ -267,6 +267,15 @@ class ProviderConfig(BaseModel):
     api_key: SecretRef | None = None
     base_url: str | None = None
     extra_headers: dict[str, str] = {}
+    extra_body: dict[str, Any] = {}
+    """Opaque pass-through body fields for adapters that consult it.
+
+    Merged into the request kwargs by adapters that opt in (V1: only
+    OpenRouter, for ``provider.order`` / ``provider.allow_fallbacks``
+    / ``provider.zdr`` / ``provider.sort`` / etc.). **Adapter-set
+    kwargs win** — the dict is merged first, then the adapter overlays
+    its own computed fields. Unknown keys are silently forwarded.
+    """
 
     @model_validator(mode="before")
     @classmethod

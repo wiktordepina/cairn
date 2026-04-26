@@ -11,6 +11,8 @@
 
 ::: cairn.domain.ImageSource
 
+::: cairn.domain.RedactedThinkingBlock
+
 ::: cairn.domain.TextBlock
 
 ::: cairn.domain.ThinkingBlock
@@ -100,6 +102,10 @@
 ::: cairn.domain.Message
 
 ## Provider
+
+::: cairn.domain.BalanceInfo
+
+::: cairn.domain.GenerationId
 
 ::: cairn.domain.MessageStop
 
