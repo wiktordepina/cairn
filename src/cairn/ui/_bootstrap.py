@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
+from cairn.compaction import TruncatingCompactor
 from cairn.config import ConfigError, ModelRegistry, SecretResolver, ToolsConfig, load_config
 from cairn.conventions import (
     AllowlistStore,
@@ -95,6 +96,7 @@ from cairn.watcher import (
 
 if TYPE_CHECKING:
     from cairn.config._models import CairnConfig
+    from cairn.domain import UIEvent
     from cairn.orchestrator._middleware import ResultTransformer, ToolApprover
     from cairn.orchestrator._protocols import ApprovalGateway
 
@@ -205,6 +207,22 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         tools_config=active.tools,
     )
 
+    # Auto-compactor: trims the outgoing provider request when history
+    # plus tools plus system prompt approach the model's context
+    # window. Routed through the structured observer so
+    # ``HistoryCompacted`` and ``BudgetOverflowAdvisory`` land in
+    # ``cairn.events``. Pre-0.18.0 the orchestrator was constructed
+    # without this preparer, leaving auto-compaction inert.
+    async def _compactor_event_sink(event: UIEvent) -> None:
+        structured_observer.observe(event)
+
+    compactor = TruncatingCompactor(
+        config=active.compaction,
+        model_registry=model_registry,
+        provider_registry=provider_registry,
+        event_sink=_compactor_event_sink,
+    )
+
     orchestrator = Orchestrator(
         provider_registry=provider_registry,
         model_registry=model_registry,
@@ -220,6 +238,7 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         message_repo=message_repo,
         clock=clock,
         config=OrchestratorConfig(),
+        preparers=(compactor,),
         approvers=approvers,
         transformers=transformers,
         observers=(),
