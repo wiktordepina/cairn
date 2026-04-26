@@ -187,7 +187,62 @@ The SDKs (`anthropic`, `openai`) handle transport retries internally;
 they surface the error only after their own retry budget is exhausted.
 Cairn does not layer additional retries on top of the transport.
 
+## Cross-provider request fields
+
+`ProviderRequest` carries a small set of fields that translate
+differently per adapter. The orchestrator sets them; each adapter
+maps them to its native shape (or silently ignores when there's no
+equivalent).
+
+- **`reasoning_effort`** — unified knob for thinking-capable models.
+  Accepts `"none" | "minimal" | "low" | "medium" | "high" | "xhigh"`.
+  See [ADR 0043](decisions/0043-unified-reasoning-effort.md). Maps:
+  - **OpenAI** o-series / gpt-5-class: passed through verbatim.
+  - **Anthropic** with `supports_thinking`: scaled proportionally
+    to `max_tokens` (low/medium/high/xhigh = 25/50/75/90 %),
+    floored at 1024, ceilinged at `max_tokens - 1`.
+  - **DeepSeek**: forwarded on V4-pro-class; no-op on
+    `deepseek-reasoner` (always thinks).
+  - **OpenRouter**: best-effort passthrough.
+
+- **`tool_choice`** — `"auto" | "any" | "none"` or
+  `("tool", "<tool_name>")`. Anthropic's `"any"` semantically equals
+  OpenAI's `"required"` — adapters translate. With Anthropic
+  extended thinking on, only `"auto"` and `"none"` are supported;
+  `"any"` and `"tool"` are downgraded to `"auto"` with a WARNING.
+
+- **`disable_parallel_tool_use`** — when True, instruct the provider
+  to call tools sequentially. Honoured by Anthropic (via
+  `tool_choice.disable_parallel_tool_use`) and OpenAI (via
+  `parallel_tool_calls=false`).
+
+- **`prompt_cache_key`** — stable cache-prefix partition key.
+  Forwarded to OpenAI's `prompt_cache_key` field; ignored elsewhere
+  (other adapters' caches don't expose a partition knob).
+
+`UsageEvent` carries two breakdown fields populated by adapters
+when the upstream surfaces them:
+
+- **`reasoning_tokens`** — share of `output_tokens` spent on
+  reasoning. Populated by OpenAI's
+  `completion_tokens_details.reasoning_tokens` on o-series models.
+- **`cache_discount_usd`** — USD discount already applied for cache
+  hits. Populated by OpenRouter's `cache_discount` field uniformly
+  across upstreams.
+
+## Account balance
+
+Adapters expose an optional `balance() -> BalanceInfo | None`
+method. DeepSeek and OpenRouter return live numbers from
+`/user/balance` and `/api/v1/credits` respectively; Anthropic and
+OpenAI return `None` because their billing endpoints require a
+separate admin key. The `cairn balance` CLI surfaces the result —
+see [`cli.md`](cli.md#account-balance) and
+[ADR 0044](decisions/0044-balance-cli-fanout.md).
+
 ## Related ADRs
 
 - [0005 — Per-provider adapters over unified client](decisions/0005-per-provider-adapters.md)
 - [0006 — Role-based model selection](decisions/0006-role-based-model-selection.md)
+- [0043 — Unified `reasoning_effort` knob across providers](decisions/0043-unified-reasoning-effort.md)
+- [0044 — `cairn balance` fans out across configured providers](decisions/0044-balance-cli-fanout.md)

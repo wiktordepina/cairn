@@ -67,12 +67,13 @@ app.add_typer(trust_app, name="trust")
 # Late imports keep the dependency direction explicit: subcommand
 # modules pull from `cairn.config` / `cairn.conventions`; this
 # module just registers them.
-from cairn.cli import _config, _init, _secrets, _trust  # noqa: E402
+from cairn.cli import _balance, _config, _init, _secrets, _trust  # noqa: E402
 
 _config.register(config_app)
 _init.register(config_app)
 _secrets.register(secret_app)
 _trust.register(trust_app)
+_balance.register(app)
 
 
 def _read_version() -> str:
