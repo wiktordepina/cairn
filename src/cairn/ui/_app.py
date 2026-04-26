@@ -22,7 +22,9 @@ if TYPE_CHECKING:
     from cairn.conventions import AllowlistStore, ConventionLoader
     from cairn.domain import Session
     from cairn.orchestrator import Orchestrator
+    from cairn.orchestrator._clock import Clock
     from cairn.orchestrator._protocols import ToolRegistry
+    from cairn.persistence import UsageRepo
     from cairn.ui._context_report import ContextReportInput
     from cairn.ui._prompt_history import PromptHistoryStore
     from cairn.watcher import Reloader
@@ -59,6 +61,9 @@ class CairnApp(App[None]):
         allowlist_store: AllowlistStore | None = None,
         prompt_history_store: PromptHistoryStore | None = None,
         reloader: Reloader | None = None,
+        usage_repo: UsageRepo | None = None,
+        clock: Clock | None = None,
+        active_profile_key: str | None = None,
     ) -> None:
         super().__init__()
         self._orchestrator = orchestrator
@@ -75,6 +80,9 @@ class CairnApp(App[None]):
         self._allowlist_store = allowlist_store
         self._prompt_history_store = prompt_history_store
         self._reloader = reloader
+        self._usage_repo = usage_repo
+        self._clock = clock
+        self._active_profile_key = active_profile_key
         from cairn.config import UIConfig as _UIConfig
 
         self._ui_config = ui_config or _UIConfig()
@@ -140,6 +148,21 @@ class CairnApp(App[None]):
         """Reloader for `/reload`. `None` when the bootstrap omitted
         the file watcher (test harnesses)."""
         return self._reloader
+
+    @property
+    def usage_repo(self) -> UsageRepo | None:
+        """`UsageRepo` for `/cost` aggregations. `None` in tests."""
+        return self._usage_repo
+
+    @property
+    def clock(self) -> Clock | None:
+        """Clock the bootstrap injected. `None` in tests."""
+        return self._clock
+
+    @property
+    def active_profile_key(self) -> str | None:
+        """Active profile name (e.g. ``"personal"``). `None` in tests."""
+        return self._active_profile_key
 
     def take_resumed_turn_count(self) -> int:
         """Return the recorded count and clear it.

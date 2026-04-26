@@ -18,7 +18,7 @@ from cairn.persistence._paths import (
     memory_dir_for_profile,
     prompt_history_path,
 )
-from cairn.persistence._records import MemoryHit, ToolCallRecord, UsageRecord
+from cairn.persistence._records import CostSummary, MemoryHit, ToolCallRecord, UsageRecord
 from cairn.persistence._sessions_repo import SessionRepo
 from cairn.persistence._tool_calls_repo import ToolCallRepo
 from cairn.persistence._turns_repo import InvalidTurnTransition, TurnRepo
@@ -44,6 +44,7 @@ __all__ = [
     "memory_dir_for_profile",
     "prompt_history_path",
     # Records
+    "CostSummary",
     "MemoryHit",
     "ToolCallRecord",
     "UsageRecord",

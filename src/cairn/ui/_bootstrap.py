@@ -145,6 +145,7 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         usage_repo=usage_repo,
         clock=clock,
         budgets=active.budgets,
+        profile=profile_key,
     )
     session_manager = SessionManager(
         session_repo=session_repo,
@@ -323,6 +324,9 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         allowlist_store=allowlist_store,
         prompt_history_store=prompt_history_store,
         reloader=reloader,
+        usage_repo=usage_repo,
+        clock=clock,
+        active_profile_key=profile_key,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,

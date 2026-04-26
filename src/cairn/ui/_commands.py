@@ -116,19 +116,50 @@ async def _handle_help(app: CairnApp, _tail: str) -> None:
 
 
 async def _handle_cost(app: CairnApp, _tail: str) -> None:
-    """Show the current session + daily cost.
+    """Render the multi-window cost report.
 
-    Tranche 1 reads the values from the cost meter (authoritative
-    feed from the cost-tracker lands with the bootstrap PR).
+    Falls back to the cost-meter feed when the bootstrap hasn't
+    plumbed the usage repo through (test harnesses with mock
+    orchestrators).
     """
+    from cairn.ui._cost_report import render_cost_summary
     from cairn.ui._widgets import Banner, CostMeter
 
     screen = app.current_session_screen
     if screen is None:
         return
-    cost = screen.current_cost_usd
-    precision = screen.query_one(CostMeter).precision
-    screen.append_banner(Banner(text=f"session cost: ${cost:.{precision}f}", kind="muted"))
+
+    usage_repo = app.usage_repo
+    clock = app.clock
+    profile_key = app.active_profile_key
+    if usage_repo is None or clock is None or profile_key is None:
+        cost = screen.current_cost_usd
+        precision = screen.query_one(CostMeter).precision
+        screen.append_banner(Banner(text=f"session cost: ${cost:.{precision}f}", kind="muted"))
+        return
+
+    tz = _resolve_locale_timezone(app.profile.locale.timezone if app.profile else None)
+    summary = await usage_repo.cost_summary(
+        session_id=screen.session.id,
+        profile=profile_key,
+        now=clock.now(),
+        timezone=tz,
+    )
+    screen.append_banner(Banner(text=render_cost_summary(summary), kind="muted"))
+
+
+def _resolve_locale_timezone(name: str | None):
+    from datetime import datetime  # noqa: PLC0415
+    from zoneinfo import ZoneInfo, ZoneInfoNotFoundError  # noqa: PLC0415
+
+    if name is not None:
+        try:
+            return ZoneInfo(name)
+        except ZoneInfoNotFoundError:
+            log.warning("locale.timezone %r not found; falling back to system tz", name)
+    local = datetime.now().astimezone().tzinfo
+    assert local is not None
+    return local
 
 
 async def _handle_tools(app: CairnApp, _tail: str) -> None:
