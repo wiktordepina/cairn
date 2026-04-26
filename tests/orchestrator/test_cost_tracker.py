@@ -261,6 +261,116 @@ class TestShouldBlockTurn:
         assert await tracker.should_block_turn(session_id="sess-other") == BudgetVerdict.PROCEED
 
 
+class TestShouldBlockIteration:
+    @pytest.mark.asyncio
+    async def test_proceeds_on_empty_turn(self, tracker: BasicCostTracker) -> None:
+        assert await tracker.should_block_iteration(turn_id="t-fresh") == BudgetVerdict.PROCEED
+
+    @pytest.mark.asyncio
+    async def test_blocks_when_turn_cost_meets_cap(
+        self, tracker: BasicCostTracker, session_repo: SessionRepo
+    ) -> None:
+        await _insert_session(session_repo, "sess-1")
+        await tracker.record(
+            session_id="sess-1",
+            parent_session_id=None,
+            turn_id="t-1",
+            message_id=None,
+            usage=_usage(),
+            provider="x",
+            model="y",
+            role="primary",
+            operation=UsageOperation.PRIMARY_TURN,
+            duration_ms=1,
+            cost_usd=0.50,  # equals per_turn_usd cap
+        )
+        assert await tracker.should_block_iteration(turn_id="t-1") == BudgetVerdict.BLOCK
+
+    @pytest.mark.asyncio
+    async def test_blocks_when_turn_cost_exceeds_cap(
+        self, tracker: BasicCostTracker, session_repo: SessionRepo
+    ) -> None:
+        await _insert_session(session_repo, "sess-1")
+        await tracker.record(
+            session_id="sess-1",
+            parent_session_id=None,
+            turn_id="t-1",
+            message_id=None,
+            usage=_usage(),
+            provider="x",
+            model="y",
+            role="primary",
+            operation=UsageOperation.PRIMARY_TURN,
+            duration_ms=1,
+            cost_usd=0.60,  # over per_turn_usd
+        )
+        assert await tracker.should_block_iteration(turn_id="t-1") == BudgetVerdict.BLOCK
+
+    @pytest.mark.asyncio
+    async def test_proceeds_below_cap(
+        self, tracker: BasicCostTracker, session_repo: SessionRepo
+    ) -> None:
+        await _insert_session(session_repo, "sess-1")
+        await tracker.record(
+            session_id="sess-1",
+            parent_session_id=None,
+            turn_id="t-1",
+            message_id=None,
+            usage=_usage(),
+            provider="x",
+            model="y",
+            role="primary",
+            operation=UsageOperation.PRIMARY_TURN,
+            duration_ms=1,
+            cost_usd=0.49,  # just below per_turn_usd
+        )
+        assert await tracker.should_block_iteration(turn_id="t-1") == BudgetVerdict.PROCEED
+
+    @pytest.mark.asyncio
+    async def test_aggregates_multiple_iterations_within_turn(
+        self, tracker: BasicCostTracker, session_repo: SessionRepo
+    ) -> None:
+        # Three iterations at $0.20 each → $0.60, over the $0.50 cap.
+        await _insert_session(session_repo, "sess-1")
+        for _ in range(3):
+            await tracker.record(
+                session_id="sess-1",
+                parent_session_id=None,
+                turn_id="t-1",
+                message_id=None,
+                usage=_usage(),
+                provider="x",
+                model="y",
+                role="primary",
+                operation=UsageOperation.PRIMARY_TURN,
+                duration_ms=1,
+                cost_usd=0.20,
+            )
+        assert await tracker.should_block_iteration(turn_id="t-1") == BudgetVerdict.BLOCK
+
+    @pytest.mark.asyncio
+    async def test_isolated_per_turn(
+        self, tracker: BasicCostTracker, session_repo: SessionRepo
+    ) -> None:
+        # Turn 1 hits the cap; turn 2 is untouched.
+        await _insert_session(session_repo, "sess-1")
+        await tracker.record(
+            session_id="sess-1",
+            parent_session_id=None,
+            turn_id="t-1",
+            message_id=None,
+            usage=_usage(),
+            provider="x",
+            model="y",
+            role="primary",
+            operation=UsageOperation.PRIMARY_TURN,
+            duration_ms=1,
+            cost_usd=0.60,
+        )
+        assert await tracker.should_block_iteration(turn_id="t-1") == BudgetVerdict.BLOCK
+        assert await tracker.should_block_iteration(turn_id="t-2") == BudgetVerdict.PROCEED
+
+
 class TestConstruction:
     def test_rejects_invalid_warn_fraction(
         self, usage_repo: UsageRepo, frozen_clock: FrozenClock, budgets: BudgetConfig

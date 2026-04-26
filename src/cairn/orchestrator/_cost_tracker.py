@@ -28,10 +28,14 @@ class BasicCostTracker:
       spend already meets or exceeds the session or daily cap, `WARN`
       when session spend has crossed the configured warn fraction of
       the per-session cap, and `PROCEED` otherwise.
+    - `should_block_iteration` returns `BLOCK` when the cost recorded
+      so far against `turn_id` meets or exceeds the per-turn cap.
+      Called between iterations to bound a single turn's spend.
 
     Budget checks reflect costs *already persisted* — the turn currently
-    starting is not counted. The orchestrator's own `max_iterations`
-    guards against unbounded loops within a single turn.
+    starting is not counted by `should_block_turn`. The orchestrator's
+    own `max_iterations` guards against unbounded loops within a single
+    turn.
     """
 
     def __init__(
@@ -103,4 +107,10 @@ class BasicCostTracker:
         if session_cost >= session_threshold:
             return BudgetVerdict.WARN
 
+        return BudgetVerdict.PROCEED
+
+    async def should_block_iteration(self, *, turn_id: str) -> BudgetVerdict:
+        turn_cost = await self._usage_repo.cost_for_turn(turn_id)
+        if turn_cost >= self._budgets.per_turn_usd:
+            return BudgetVerdict.BLOCK
         return BudgetVerdict.PROCEED

@@ -5,8 +5,6 @@ Distinct shapes for distinct runner responses:
 - `ToolError` — expected, user-meaningful failure. Runner returns
   `ToolResultBlock(is_error=True, ...)` with `error_class="user"`
   and surfaces the message to the model.
-- `ToolRetry` — the tool thinks the call can succeed if retried
-  (stale lock, transient I/O). Runner re-invokes once.
 - `ToolTimeout` — raised internally when `asyncio.timeout` fires.
   Runner marks the call `timed_out`.
 - `PathEscape` — filesystem tool attempted to escape the workspace
@@ -21,11 +19,6 @@ from __future__ import annotations
 class ToolError(Exception):
     """Expected, user-meaningful failure inside a tool. Surfaces to the
     model as an error ToolResultBlock."""
-
-
-class ToolRetry(Exception):
-    """Raised by a tool to request one re-invocation. Runner retries once,
-    then surfaces as an error if it fails again."""
 
 
 class ToolTimeout(Exception):

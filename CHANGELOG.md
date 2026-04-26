@@ -8,62 +8,55 @@ While the project is pre-1.0, minor version bumps track meaningful additions
 of functionality; patch bumps cover docs, internal tidy-ups, and fixes that
 don't change the public surface. Everything is still in flux.
 
-## [Unreleased]
+## [0.18.1] — 2026-04-27
 
-Cross-model swap polish — every UI surface now shows model
-`display_name`s, and the DeepSeek + orchestrator paths handle
-swap sequences that involve a non-reasoning provider (Kimi via
-OpenRouter) without aborting the next turn.
-
-### Added
-
-- **Display name across the UI.** Session header, `/model`
-  picker, swap and reload-revert banners, `/context`, and
-  `/profile` now render `display_name` rather than the bare
-  model id. The id stays the canonical reference in
-  persistence, logs, and the orchestrator API; only rendered
-  text changes. The picker keeps the id visible alongside the
-  display name as `<display_name> | <id>` (pipe rather than
-  parens, since display names may contain parens — e.g.
-  `"DeepSeek V3.1 (OpenRouter)"`). Falls back to the bare id
-  when the registry is unwired or doesn't know the id.
-  `ContextReportInput` gains a `model_id` field so tests can
-  pin the canonical id even when the rendered label changes.
+V1 close-out brick. Three small loose ends surfaced by the
+2026-04-26 V1-end audit, plus a documentation reorganisation
+(slash commands now live on a dedicated reference page).
 
 ### Fixed
 
-- **`/context` reflects the live session model.** The
-  bootstrap closure captured `primary_model` once via
-  `model_registry.resolve(active.primary_model)`, so a
-  runtime `/model` swap left the report stuck on the original
-  model id and its context window. The closure now resolves
-  through the live screen's session each call.
-- **DeepSeek thinking-mode rejection after a cross-model
-  swap.** Sequences like *DeepSeek thinking → Kimi via
-  OpenRouter → DeepSeek thinking* used to abort the third
-  turn with `"reasoning_content in the thinking mode must be
-  passed back to the API"` because Kimi-produced assistant
-  messages had no `ThinkingBlock`. The DeepSeek formatter now
-  emits `reasoning_content` on every assistant row, falling
-  back to an empty string when no thinking content is
-  available — invisible to the model, satisfies the API.
-- **Tool-call id collisions across turns and sessions.** Some
-  providers (Kimi via OpenRouter, in particular) emit
-  positional tool-call ids like `functions.web_fetch:0` that
-  repeat across turns. `tool_calls.id` is a primary key, so
-  the second insertion failed
-  `UNIQUE constraint failed: tool_calls.id` and aborted the
-  turn. The orchestrator now namespaces ids with the
-  assistant message UUID at the boundary
-  (`<message-id>:<provider-id>`); the model still correlates
-  `tool_calls[i].id` with `tool_result.tool_call_id` because
-  the id is opaque end-to-end.
+- **Per-turn budget cap is now enforced.** `BudgetConfig.per_turn_usd`
+  was loaded but never read — `BasicCostTracker` only checked daily
+  + per-session totals. Adds `should_block_iteration(turn_id)` to
+  the `CostTracker` protocol; the orchestrator calls it between
+  iterations and emits `TurnAborted(reason="per_turn_budget")` when
+  the running cost for the turn meets or exceeds the cap. Pending
+  tool calls from the just-finished iteration are dropped on the
+  floor; the next user turn sees the truncated history.
+
+### Removed
+
+- **`DelegationToolConfig.preserve_history` is gone.** The field
+  was a never-implemented design hook that raised
+  `NotImplementedError` at tool construction. Configs containing
+  the key are now rejected at config-load with a clear error
+  pointing at the migration: just remove the line. A future brick
+  may re-introduce the field once the parent-history seeding work
+  has a real implementation.
+- **`ToolRetry` exception class deleted.** Re-exported from
+  `cairn.tools`, documented in the API reference, mentioned in the
+  orchestrator retry-layer docs — but never raised or caught
+  anywhere. Removed the class, the re-export, and the doc
+  references. Re-add when the runner actually grows a retry path.
+
+### Docs
+
+- New top-level reference page **`docs/slash-commands.md`** —
+  consolidates the slash-command catalogue + per-command behaviour
+  + completion-popover bindings that previously lived as a section
+  inside `docs/ui.md`. `docs/ui.md` keeps the rest of its UI
+  content and links out to the new page.
 
 ## [0.18.0] — 2026-04-26
 
-The extended slash catalogue brick. Closes the named V1 slash
-items reserved for 0.18.0 and folds in two emergent items
-triggered by real 2026-04-25 observations.
+The extended slash catalogue brick, plus a cross-model swap
+polish pass folded in late on the same PR. Closes the named
+V1 slash items reserved for 0.18.0, two emergent items
+triggered by real 2026-04-25 observations, and the
+display-name / DeepSeek / tool-id-collision fixes that
+surfaced once `/model` mid-session swaps were exercised end
+to end.
 
 ### Added
 
@@ -95,6 +88,18 @@ triggered by real 2026-04-25 observations.
 - **`[locale.timezone]` profile field** drives the date stamp,
   the `now` tool, and `/cost` window boundaries. Falls back to
   host system timezone when unset.
+- **Display name across the UI.** Session header, `/model`
+  picker, swap and reload-revert banners, `/context`, and
+  `/profile` now render `display_name` rather than the bare
+  model id. The id stays the canonical reference in
+  persistence, logs, and the orchestrator API; only rendered
+  text changes. The picker keeps the id visible alongside the
+  display name as `<display_name> | <id>` (pipe rather than
+  parens, since display names may contain parens — e.g.
+  `"DeepSeek V3.1 (OpenRouter)"`). Falls back to the bare id
+  when the registry is unwired or doesn't know the id.
+  `ContextReportInput` gains a `model_id` field so tests can
+  pin the canonical id even when the rendered label changes.
 
 ### Fixed
 
@@ -103,6 +108,32 @@ triggered by real 2026-04-25 observations.
   compaction landed at 0.8.0 — auto-compaction has been
   silently inert. Now wired through, with `HistoryCompacted`
   routed to the structured observer.
+- **`/context` reflects the live session model.** The
+  bootstrap closure captured `primary_model` once via
+  `model_registry.resolve(active.primary_model)`, so a
+  runtime `/model` swap left the report stuck on the original
+  model id and its context window. The closure now resolves
+  through the live screen's session each call.
+- **DeepSeek thinking-mode rejection after a cross-model
+  swap.** Sequences like *DeepSeek thinking → Kimi via
+  OpenRouter → DeepSeek thinking* used to abort the third
+  turn with `"reasoning_content in the thinking mode must be
+  passed back to the API"` because Kimi-produced assistant
+  messages had no `ThinkingBlock`. The DeepSeek formatter now
+  emits `reasoning_content` on every assistant row, falling
+  back to an empty string when no thinking content is
+  available — invisible to the model, satisfies the API.
+- **Tool-call id collisions across turns and sessions.** Some
+  providers (Kimi via OpenRouter, in particular) emit
+  positional tool-call ids like `functions.web_fetch:0` that
+  repeat across turns. `tool_calls.id` is a primary key, so
+  the second insertion failed
+  `UNIQUE constraint failed: tool_calls.id` and aborted the
+  turn. The orchestrator now namespaces ids with the
+  assistant message UUID at the boundary
+  (`<message-id>:<provider-id>`); the model still correlates
+  `tool_calls[i].id` with `tool_result.tool_call_id` because
+  the id is opaque end-to-end.
 
 ### Schema
 

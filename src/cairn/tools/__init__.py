@@ -14,7 +14,6 @@ from cairn.tools._errors import (
     PathEscape,
     SSRFBlocked,
     ToolError,
-    ToolRetry,
     ToolTimeout,
 )
 from cairn.tools._registry import DefaultToolRegistry
@@ -36,7 +35,6 @@ __all__ = [
     "PathEscape",
     "SSRFBlocked",
     "ToolError",
-    "ToolRetry",
     "ToolTimeout",
     # Registry + decorator + runner
     "DefaultToolRegistry",

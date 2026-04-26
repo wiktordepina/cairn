@@ -121,6 +121,7 @@ nav:
       - Compaction: compaction.md
       - Prompt caching: prompt-caching.md
       - UI: ui.md
+      - Slash commands: slash-commands.md
       - Observability: observability.md
   - Architecture:
       - Overview: architecture.md
