@@ -29,8 +29,9 @@ A session screen composes six widgets top-to-bottom:
 
 1. **`SessionHeader`** — session-type badge (companion / persona /
    ephemeral, colour-keyed per
-   [`UIConfig.session_type_colours`](#ui-configuration)) and session
-   title.
+   [`UIConfig.session_type_colours`](#ui-configuration)), persona
+   name, the active model's `display_name`, and the session
+   title — separated by `·`.
 2. **`ChatLog`** — scrolling container of `MessageView`,
    `ToolRow`, and `Banner` widgets. Auto-scrolls to the tail when
    the user is already near the bottom; respects manual scroll-up
@@ -193,8 +194,11 @@ schema rationale.
 ### `/model`
 
 Opens a picker over every model declared in `[models.*]`, with
-the session's current model marked. Selecting the current model
-is a no-op. Selecting a *different* model on a fresh session
+the session's current model marked. Each row renders as
+`<display_name> | <id>` (the pipe separator avoids clashing with
+display names that already contain parentheses, like
+`"DeepSeek V3.1 (OpenRouter)"`). Selecting the current model is
+a no-op. Selecting a *different* model on a fresh session
 applies the swap immediately; on an in-progress session, a
 follow-up modal asks how to handle history:
 
@@ -232,7 +236,7 @@ Shows the current session's context-budget footprint as an inline
 muted banner:
 
 ```
-context: 17,000 / 200,000 tokens (8% used) — model=claude-opus-4-7
+context: 17,000 / 200,000 tokens (8% used) — model=Claude Opus 4.7
   cached: 10,000 (read) + 2,000 (write)
   fresh:  5,000
   output: 800 (this turn)

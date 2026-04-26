@@ -114,3 +114,4 @@ ongoing costs does this impose?
 | [0045](0045-model-swap-semantics.md) | `/model` mid-session swap semantics + `/archive` confirm-and-quit | accepted |
 | [0046](0046-date-in-prompt-time-via-tool.md) | Date in system prompt; time via the `now` tool | accepted |
 | [0047](0047-profile-on-usage-rows.md) | `profile` column on `model_usage` | accepted |
+| [0048](0048-cross-model-swap-resilience.md) | Cross-model swap resilience: `reasoning_content` on every DeepSeek assistant row, namespaced tool-call ids | accepted |

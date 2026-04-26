@@ -186,3 +186,9 @@ nav:
       - "0040 DeepSeek as fourth V1 provider": decisions/0040-deepseek-fourth-v1-provider.md
       - "0041 Typer for the CLI surface": decisions/0041-typer-for-cli-surface.md
       - "0042 Surgical reload boundary": decisions/0042-surgical-reload-boundary.md
+      - "0043 Unified reasoning_effort knob": decisions/0043-unified-reasoning-effort.md
+      - "0044 cairn balance fan-out": decisions/0044-balance-cli-fanout.md
+      - "0045 /model swap semantics + /archive": decisions/0045-model-swap-semantics.md
+      - "0046 Date in prompt; time via tool": decisions/0046-date-in-prompt-time-via-tool.md
+      - "0047 profile column on model_usage": decisions/0047-profile-on-usage-rows.md
+      - "0048 Cross-model swap resilience": decisions/0048-cross-model-swap-resilience.md
