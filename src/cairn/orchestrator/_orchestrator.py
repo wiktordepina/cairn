@@ -98,6 +98,21 @@ if TYPE_CHECKING:
 _logger = logging.getLogger("cairn.orchestrator")
 
 
+def _safe_tool_call_id(message_id: str, provider_tool_call_id: str) -> str:
+    """Namespaced tool-call id that's globally unique across sessions.
+
+    Some providers (Kimi via OpenRouter, in particular) emit positional
+    tool-call ids like ``functions.web_fetch:0`` that repeat across
+    turns and sessions. ``tool_calls.id`` is a primary key, so the
+    second insertion fails ``UNIQUE constraint failed: tool_calls.id``
+    and aborts the turn. Prefixing with the assistant message's UUID
+    guarantees uniqueness; the model only uses the id to correlate
+    ``tool_calls[i].id`` with ``tool_result.tool_call_id`` *within* a
+    conversation, so the rewrite is invisible end-to-end.
+    """
+    return f"{message_id}:{provider_tool_call_id}"
+
+
 class Orchestrator:
     """The turn loop.
 
@@ -477,12 +492,29 @@ class Orchestrator:
                                     text=t,
                                 )
                         case ToolCallStart(id=tc_id, name=name):
-                            assistant_msg.start_tool_use(tc_id, name)
+                            # Provider-issued ids are not guaranteed
+                            # globally unique — Kimi via OpenRouter, for
+                            # one, emits positional names like
+                            # ``functions.web_fetch:0`` that collide
+                            # with the same call from a prior turn.
+                            # ``tool_calls.id`` is a primary key, so
+                            # repeated insertion fails the UNIQUE
+                            # constraint and aborts the turn. Prefix
+                            # with the assistant message's UUID to make
+                            # the persisted id globally unique; the
+                            # round-trip with the provider treats the
+                            # id as opaque (the model only uses it to
+                            # correlate tool_call → tool_result within
+                            # the same conversation).
+                            safe_id = _safe_tool_call_id(assistant_msg.id, tc_id)
+                            assistant_msg.start_tool_use(safe_id, name)
                         case ToolCallDelta(id=tc_id, input_delta=chunk):
-                            assistant_msg.append_tool_input_delta(tc_id, chunk)
+                            safe_id = _safe_tool_call_id(assistant_msg.id, tc_id)
+                            assistant_msg.append_tool_input_delta(safe_id, chunk)
                         case ToolCallEnd(id=tc_id):
-                            assistant_msg.finalize_tool_use(tc_id)
-                            pending_tool_calls.append(assistant_msg.get_tool_use(tc_id))
+                            safe_id = _safe_tool_call_id(assistant_msg.id, tc_id)
+                            assistant_msg.finalize_tool_use(safe_id)
+                            pending_tool_calls.append(assistant_msg.get_tool_use(safe_id))
                         case UsageEvent() as u:
                             # Buffer usage events — the model_usage FK on
                             # message_id requires the assistant row to exist
