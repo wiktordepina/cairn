@@ -185,7 +185,18 @@ class TestReasoningContentRoundTrip:
         assert assistant_row["reasoning_content"] == "step-by-step"
         assert assistant_row["content"] == "hello!"
 
-    def test_format_messages_omits_reasoning_when_no_thinking_block(self) -> None:
+    def test_format_messages_empty_reasoning_when_no_thinking_block(self) -> None:
+        """Every assistant row must carry ``reasoning_content``.
+
+        DeepSeek's thinking-mode endpoints reject the request as soon
+        as one prior assistant message is missing the key — regardless
+        of whether that message has tool calls. In a homogeneous
+        DeepSeek conversation that's a non-issue (every turn has a
+        ``ThinkingBlock``); after a cross-model swap from a
+        non-reasoning model (Kimi via OpenRouter), some assistant
+        messages have no thinking content. Emit an empty string in
+        that case so the field is always present.
+        """
         user_msg = Message(role="user")
         user_msg.content.append(TextBlock(text="hi"))
         assistant_msg = Message(role="assistant")
@@ -193,21 +204,17 @@ class TestReasoningContentRoundTrip:
 
         formatted = format_messages([user_msg, assistant_msg])
         assistant_row = next(r for r in formatted if r["role"] == "assistant")
-        assert "reasoning_content" not in assistant_row
+        assert assistant_row["reasoning_content"] == ""
 
     def test_format_messages_empty_reasoning_for_cross_model_tool_calls(self) -> None:
-        """Cross-model swap: a tool-call message produced by a
-        non-reasoning model has no `ThinkingBlock`, but DeepSeek's
-        thinking SKUs reject the request unless `reasoning_content` is
-        present on every assistant row that carries tool calls. Send an
-        empty string for those rows so the key is always there."""
+        """A tool-call message from a non-reasoning model still carries
+        ``reasoning_content`` (empty) so the API's ``"must be passed
+        back"`` check passes after a cross-model swap."""
         from cairn.domain._content import ToolUseBlock
 
         user_msg = Message(role="user")
         user_msg.content.append(TextBlock(text="search for X"))
 
-        # Assistant message from a non-reasoning model: TextBlock + a
-        # tool call, no ThinkingBlock anywhere.
         assistant_msg = Message(role="assistant")
         assistant_msg.content.append(TextBlock(text="checking..."))
         assistant_msg.content.append(

@@ -79,34 +79,29 @@ def format_messages(
 
     Identical to :func:`cairn.providers._openai.format_messages` plus a
     per-assistant-message ``reasoning_content`` field re-emitted from
-    the message's leading :class:`ThinkingBlock`. Per DeepSeek's
-    thinking-mode docs, replaying ``reasoning_content`` is *required*
-    when the prior assistant turn included tool calls and *optional
-    (silently ignored)* otherwise.
+    the message's leading :class:`ThinkingBlock`.
 
-    Cross-model gotcha: when the user swaps from a non-reasoning model
-    (e.g. Kimi via OpenRouter) back to a DeepSeek thinking SKU, the
-    intermediate assistant turns may carry ``tool_calls`` but no
-    :class:`ThinkingBlock` — there was nothing to capture. DeepSeek
-    rejects those rows with ``"reasoning_content in the thinking mode
-    must be passed back to the API"``. We send an empty
-    ``reasoning_content`` for those rows so the key is always present
-    when tool calls are; for messages without tool calls, the field is
-    "optional but ignored" so we can omit it.
+    DeepSeek's thinking-mode endpoints reject the request with
+    ``"reasoning_content in the thinking mode must be passed back to
+    the API"`` whenever any prior assistant message in the conversation
+    is missing the field. In a pure DeepSeek conversation that's never
+    a problem — every assistant turn has a ``ThinkingBlock``. After a
+    cross-model swap, though, intermediate assistant messages produced
+    by a non-reasoning model (e.g. Kimi via OpenRouter) have no
+    ``ThinkingBlock``, and DeepSeek then refuses the next thinking
+    request. We always emit ``reasoning_content`` for every assistant
+    row, falling back to an empty string when no thinking content is
+    available — this satisfies the API's "must be present" check and
+    is invisible to the model.
     """
     formatted = _openai_format_messages(messages, system=system)
     cairn_assistants = [m for m in messages if m.role == "assistant"]
     formatted_assistants = [r for r in formatted if r.get("role") == "assistant"]
     for cairn_msg, row in zip(cairn_assistants, formatted_assistants, strict=False):
-        if not cairn_msg.content:
-            continue
-        head = cairn_msg.content[0]
+        head = cairn_msg.content[0] if cairn_msg.content else None
         if isinstance(head, ThinkingBlock) and head.thinking:
             row["reasoning_content"] = head.thinking
-        elif row.get("tool_calls"):
-            # Tool-call row from a non-reasoning model — present an
-            # empty reasoning trace so DeepSeek's thinking-mode check
-            # passes after a cross-model swap.
+        else:
             row["reasoning_content"] = ""
     return formatted
 
