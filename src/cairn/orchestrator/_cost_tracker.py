@@ -41,6 +41,7 @@ class BasicCostTracker:
         clock: Clock,
         budgets: BudgetConfig,
         warn_threshold_fraction: float = 0.8,
+        profile: str | None = None,
     ) -> None:
         if not 0 < warn_threshold_fraction <= 1:
             raise ValueError(
@@ -50,6 +51,7 @@ class BasicCostTracker:
         self._clock = clock
         self._budgets = budgets
         self._warn_fraction = warn_threshold_fraction
+        self._profile = profile
 
     async def record(
         self,
@@ -82,6 +84,7 @@ class BasicCostTracker:
             cache_write_tokens=usage.cache_write_tokens,
             cost_usd=cost_usd,
             duration_ms=duration_ms,
+            profile=self._profile,
         )
 
     async def should_block_turn(self, *, session_id: str) -> BudgetVerdict:

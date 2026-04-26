@@ -41,6 +41,8 @@
 
 ## Records
 
+::: cairn.persistence.CostSummary
+
 ::: cairn.persistence.MemoryHit
 
 ::: cairn.persistence.ToolCallRecord

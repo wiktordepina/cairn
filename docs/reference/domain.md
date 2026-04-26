@@ -61,6 +61,8 @@
 
 ::: cairn.domain.HistoryCompacted
 
+::: cairn.domain.ModelSwapped
+
 ::: cairn.domain.ObservationExtractionCompleted
 
 ::: cairn.domain.ObservationExtractionRequested

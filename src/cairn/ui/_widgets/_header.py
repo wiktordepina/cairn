@@ -16,6 +16,8 @@ from textual.widgets import Label
 from cairn.ui._theme import colour_for
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from textual.app import ComposeResult
 
     from cairn.domain import Session
@@ -82,17 +84,39 @@ class SessionHeader(Horizontal):
         *,
         session: Session,
         session_type_colour_overrides: dict[SessionType, str] | None = None,
+        model_label: Callable[[str], str] | None = None,
     ) -> None:
         super().__init__()
         self._session = session
         self._overrides = session_type_colour_overrides
+
+        def _identity(model_id: str) -> str:
+            return model_id
+
+        self._model_label: Callable[[str], str] = model_label or _identity
 
     def compose(self) -> ComposeResult:
         yield SessionTypeBadge(
             session_type=self._session.type,
             overrides=self._overrides,
         )
-        title = self._session.title or "(untitled)"
-        title_label = Label(f"{self._session.persona} · {self._session.model} · {title}")
+        title_label = Label(self._format_title(self._session))
         title_label.add_class("-title")
         yield title_label
+
+    def update_session(self, session: Session) -> None:
+        """Refresh the header to reflect a swapped session reference.
+
+        Called after ``/model`` (model column changed) or any other
+        in-place session-row update.
+        """
+        self._session = session
+        try:
+            label = self.query_one(".-title", Label)
+        except Exception:  # noqa: BLE001
+            return
+        label.update(self._format_title(session))
+
+    def _format_title(self, session: Session) -> str:
+        title = session.title or "(untitled)"
+        return f"{session.persona} · {self._model_label(session.model)} · {title}"

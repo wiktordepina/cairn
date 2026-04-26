@@ -1,8 +1,8 @@
 """Slash-command registry + dispatcher.
 
-Current catalogue: `/new`, `/ephemeral`, `/quit`, `/cost`,
-`/tools`, `/context`, `/help`, `/persona`, `/profile`, `/model`,
-`/conventions`. Later tranches extend the catalogue; new commands
+Current catalogue: `/help`, `/cost`, `/tools`, `/context`,
+`/clear`, `/archive`, `/ephemeral`, `/quit`, `/persona`,
+`/profile`, `/model`, `/conventions`, `/reload`. New commands
 land in follow-up PRs rather than gating on a tranche flag
 (resolved Q10).
 """
@@ -116,19 +116,50 @@ async def _handle_help(app: CairnApp, _tail: str) -> None:
 
 
 async def _handle_cost(app: CairnApp, _tail: str) -> None:
-    """Show the current session + daily cost.
+    """Render the multi-window cost report.
 
-    Tranche 1 reads the values from the cost meter (authoritative
-    feed from the cost-tracker lands with the bootstrap PR).
+    Falls back to the cost-meter feed when the bootstrap hasn't
+    plumbed the usage repo through (test harnesses with mock
+    orchestrators).
     """
+    from cairn.ui._cost_report import render_cost_summary
     from cairn.ui._widgets import Banner, CostMeter
 
     screen = app.current_session_screen
     if screen is None:
         return
-    cost = screen.current_cost_usd
-    precision = screen.query_one(CostMeter).precision
-    screen.append_banner(Banner(text=f"session cost: ${cost:.{precision}f}", kind="muted"))
+
+    usage_repo = app.usage_repo
+    clock = app.clock
+    profile_key = app.active_profile_key
+    if usage_repo is None or clock is None or profile_key is None:
+        cost = screen.current_cost_usd
+        precision = screen.query_one(CostMeter).precision
+        screen.append_banner(Banner(text=f"session cost: ${cost:.{precision}f}", kind="muted"))
+        return
+
+    tz = _resolve_locale_timezone(app.profile.locale.timezone if app.profile else None)
+    summary = await usage_repo.cost_summary(
+        session_id=screen.session.id,
+        profile=profile_key,
+        now=clock.now(),
+        timezone=tz,
+    )
+    screen.append_banner(Banner(text=render_cost_summary(summary), kind="muted"))
+
+
+def _resolve_locale_timezone(name: str | None):
+    from datetime import datetime  # noqa: PLC0415
+    from zoneinfo import ZoneInfo, ZoneInfoNotFoundError  # noqa: PLC0415
+
+    if name is not None:
+        try:
+            return ZoneInfo(name)
+        except ZoneInfoNotFoundError:
+            log.warning("locale.timezone %r not found; falling back to system tz", name)
+    local = datetime.now().astimezone().tzinfo
+    assert local is not None
+    return local
 
 
 async def _handle_tools(app: CairnApp, _tail: str) -> None:
@@ -188,15 +219,83 @@ async def _handle_context(app: CairnApp, _tail: str) -> None:
     screen.append_banner(Banner(text=format_context_report(report), kind="muted"))
 
 
-async def _handle_new(app: CairnApp, _tail: str) -> None:
-    """Placeholder for `/new`. Full session-type picker is Tranche 2."""
+async def _handle_clear(app: CairnApp, _tail: str) -> None:
+    """Archive the current session and open a fresh one in its place.
+
+    The new session inherits the current type and persona; its model
+    re-resolves from config (any runtime ``/model`` swap is dropped,
+    consistent with the ``/reload`` revert rule). Mid-turn invocations
+    are refused — finish the turn first.
+    """
     from cairn.ui._widgets import Banner
 
     screen = app.current_session_screen
-    if screen is not None:
+    if screen is None:
+        return
+    if screen.is_turn_active():
         screen.append_banner(
-            Banner(text="/new — session-type picker lands in Tranche 2", kind="muted")
+            Banner(text="/clear — busy; finish the current turn first", kind="muted")
         )
+        return
+    current = screen.session
+    await app.orchestrator.archive_session(current.id)
+    new_session = await app.orchestrator.start_session(
+        type=current.type,
+        persona=current.persona,
+    )
+    screen.replace_session(new_session)
+    screen.clear_transcript()
+    screen.append_banner(Banner(text="session cleared", kind="muted"))
+
+
+async def _handle_archive(app: CairnApp, _tail: str) -> None:
+    """Archive the current session and exit.
+
+    V1 has no session picker, so post-archive there is nowhere to go.
+    The user is informed up front via a confirm modal — accidentally
+    triggered ``/archive`` doesn't kill the app silently.
+    """
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    if screen.is_turn_active():
+        screen.append_banner(
+            Banner(text="/archive — busy; finish the current turn first", kind="muted")
+        )
+        return
+
+    # `push_screen_wait` requires a worker context — see `_handle_model`.
+    app.run_worker(_run_archive(app), name="archive", exit_on_error=False)
+
+
+async def _run_archive(app: CairnApp) -> None:
+    from cairn.ui._screens import Choice, ChoiceModal
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    choice = await app.push_screen_wait(
+        ChoiceModal(
+            title="Archive this session?",
+            body=(
+                "Archiving will close the app — V1 has no session picker yet, "
+                "so there is nowhere to go after the archive."
+            ),
+            choices=(
+                Choice(key="a", label="Archive and quit", variant="warning"),
+                Choice(key="c", label="Cancel"),
+            ),
+            default_key="c",
+        )
+    )
+    if choice in (None, "c"):
+        screen.append_banner(Banner(text="archive cancelled", kind="muted"))
+        return
+    await app.orchestrator.archive_session(screen.session.id)
+    app.exit()
 
 
 async def _handle_ephemeral(app: CairnApp, tail: str) -> None:
@@ -249,37 +348,154 @@ async def _handle_profile(app: CairnApp, _tail: str) -> None:
     lines = [
         f"profile: {name}",
         f"  memory space: {profile.memory_space}",
-        f"  primary model: {profile.primary_model}",
-        f"  utility model: {profile.utility_model}",
+        f"  primary model: {_format_role_ref(app, profile.primary_model)}",
+        f"  utility model: {_format_role_ref(app, profile.utility_model)}",
     ]
     screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
 
 
-async def _handle_model(app: CairnApp, _tail: str) -> None:
-    """Show the resolved primary / utility model ids for this session.
+def _format_role_ref(app: CairnApp, ref: str) -> str:
+    """Render a profile model ref (id or ``role:<name>``) with its display name.
 
-    Reads from `app.profile` + `app.model_registry`; falls back to the
-    raw session model when the registry isn't wired.
+    Falls back to the raw ref when the registry is unwired or the ref
+    can't be resolved (test harnesses, or a config that drifted away
+    from what the running session was started with).
+    """
+    registry = app.model_registry
+    if registry is None:
+        return ref
+    from cairn.config._registry import ModelNotFoundError
+
+    try:
+        model = registry.resolve(ref)
+    except ModelNotFoundError:
+        return ref
+    return f"{model.display_name}  ({ref})"
+
+
+async def _handle_model(app: CairnApp, _tail: str) -> None:
+    """Open a picker over every configured model.
+
+    The currently-active session model is highlighted; selecting it is
+    a no-op. Picking a different model on a fresh session swaps it
+    immediately. On an in-progress session (any persisted messages),
+    a follow-up modal asks whether to keep history (same row, swap
+    model), start fresh (archive + new session), or abort.
     """
     from cairn.ui._widgets import Banner
 
     screen = app.current_session_screen
     if screen is None:
         return
-    profile = app.profile
     registry = app.model_registry
-    if profile is None or registry is None:
-        text = f"model: {screen.session.model} (registry unwired)"
-        screen.append_banner(Banner(text=text, kind="muted"))
+    if registry is None:
+        screen.append_banner(
+            Banner(
+                text=f"/model — registry unwired (session model: {screen.session.model})",
+                kind="muted",
+            )
+        )
         return
-    primary = registry.resolve(profile.primary_model)
-    utility = registry.resolve(profile.utility_model)
-    lines = [
-        f"primary: {primary.id}  ({primary.display_name})",
-        f"utility: {utility.id}  ({utility.display_name})",
-        f"session: {screen.session.model}",
-    ]
-    screen.append_banner(Banner(text="\n".join(lines), kind="muted"))
+
+    if not registry.models():
+        screen.append_banner(Banner(text="/model — no models configured", kind="muted"))
+        return
+
+    if screen.is_turn_active():
+        screen.append_banner(
+            Banner(
+                text="/model — busy; finish the current turn first",
+                kind="muted",
+            )
+        )
+        return
+
+    # `push_screen_wait` requires a worker context (Textual rule); the
+    # slash-handler dispatch path runs on the main loop, so spin a
+    # dedicated worker for the modal flow.
+    app.run_worker(_run_model_swap(app), name="model-swap", exit_on_error=False)
+
+
+async def _run_model_swap(app: CairnApp) -> None:
+    from cairn.ui._model_label import resolve_label
+    from cairn.ui._screens import Choice, ChoiceModal, ModelPickerModal
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    registry = app.model_registry
+    if registry is None:
+        return
+
+    picked: str | None = await app.push_screen_wait(
+        ModelPickerModal(
+            models=registry.models(),
+            current_model_id=screen.session.model,
+            profile=app.profile,
+        )
+    )
+    if picked is None:
+        return
+    if picked == screen.session.model:
+        screen.append_banner(Banner(text="model unchanged", kind="muted"))
+        return
+
+    picked_label = resolve_label(registry, picked)
+    current_label = resolve_label(registry, screen.session.model)
+
+    msg_count = await app.orchestrator.count_session_messages(screen.session.id)
+    if msg_count == 0:
+        refreshed = await app.orchestrator.swap_session_model(
+            screen.session.id, picked, mode="keep"
+        )
+        screen.replace_session(refreshed)
+        screen.append_banner(Banner(text=f"model → {picked_label}", kind="muted"))
+        return
+
+    choice = await app.push_screen_wait(
+        ChoiceModal(
+            title=f"Switch model: {current_label} → {picked_label}",
+            body=(
+                f"This session has {msg_count} message(s). The new model will "
+                "re-read the existing transcript on its next turn (prompt cache "
+                "will invalidate; the auto-compactor will trim aggressively if "
+                "the new model has a smaller context window)."
+            ),
+            choices=(
+                Choice(key="k", label="Keep history", variant="primary"),
+                Choice(key="s", label="Start fresh", variant="warning"),
+                Choice(key="a", label="Abort", variant="default"),
+            ),
+            default_key="k",
+        )
+    )
+    if choice in (None, "a"):
+        screen.append_banner(Banner(text="model swap aborted", kind="muted"))
+        return
+    if choice == "k":
+        refreshed = await app.orchestrator.swap_session_model(
+            screen.session.id, picked, mode="keep"
+        )
+        screen.replace_session(refreshed)
+        screen.append_banner(Banner(text=f"model → {picked_label}  (history kept)", kind="muted"))
+        return
+    if choice == "s":
+        old_id = screen.session.id
+        await app.orchestrator.archive_session(old_id)
+        new_session = await app.orchestrator.start_session(
+            type=screen.session.type,
+            persona=screen.session.persona,
+            model=picked,
+        )
+        screen.replace_session(new_session)
+        screen.clear_transcript()
+        screen.append_banner(
+            Banner(
+                text=f"model → {picked_label}  (fresh session)",
+                kind="muted",
+            )
+        )
 
 
 async def _handle_reload(app: CairnApp, _tail: str) -> None:
@@ -325,13 +541,19 @@ async def _handle_reload(app: CairnApp, _tail: str) -> None:
     text = result.summary if result.ok else f"reload failed — {result.error}"
     screen.append_banner(Banner(text=text, kind=kind))
     if result.ok and result.primary_model_drift is not None:
+        from cairn.ui._model_label import resolve_label
+
         active, new = result.primary_model_drift
+        refreshed = await app.orchestrator.swap_session_model(
+            screen.session.id, new, mode="revert"
+        )
+        screen.replace_session(refreshed)
+        registry = app.model_registry
+        was_label = resolve_label(registry, active)
+        now_label = resolve_label(registry, new)
         screen.append_banner(
             Banner(
-                text=(
-                    f"primary role now resolves to {new}; the active session "
-                    f"stays on {active}. Restart cairn to switch."
-                ),
+                text=(f"session model reverted to config — was {was_label}, now {now_label}"),
                 kind="muted",
             ),
         )
@@ -409,7 +631,18 @@ def build_default_registry() -> CommandRegistry:
         )
     )
     registry.register(
-        SlashCommand(name="/new", summary="new session (Tranche 2)", handler=_handle_new)
+        SlashCommand(
+            name="/clear",
+            summary="archive current session and start fresh",
+            handler=_handle_clear,
+        )
+    )
+    registry.register(
+        SlashCommand(
+            name="/archive",
+            summary="archive current session and quit",
+            handler=_handle_archive,
+        )
     )
     registry.register(
         SlashCommand(
@@ -432,7 +665,7 @@ def build_default_registry() -> CommandRegistry:
     registry.register(
         SlashCommand(
             name="/model",
-            summary="show resolved models for this session",
+            summary="pick a configured model for this session",
             handler=_handle_model,
         )
     )

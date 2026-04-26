@@ -23,7 +23,9 @@ to fit the system prompt comfortably.
 from __future__ import annotations
 
 import logging
+from datetime import tzinfo  # noqa: TCH003 — used in runtime helper
 from typing import TYPE_CHECKING
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from cairn.conventions import ConventionFile, render_conventions
 from cairn.domain._provider import ProviderRequest, SystemPromptSegment
@@ -36,6 +38,7 @@ if TYPE_CHECKING:
     from cairn.domain._messages import Message
     from cairn.domain._provider import ToolDefinition
     from cairn.domain._sessions import Session
+    from cairn.orchestrator._clock import Clock
 
 
 log = logging.getLogger(__name__)
@@ -189,6 +192,21 @@ def _wrap_section(tag: str, body: str) -> str:
     return f"<{tag}>\n{body}\n</{tag}>"
 
 
+def _resolve_timezone(name: str | None) -> tzinfo | None:
+    """Resolve an IANA timezone name to a `tzinfo`, or return None.
+
+    None signals "use the local system timezone" — the caller does
+    that via `datetime.astimezone()` with no argument.
+    """
+    if name is None:
+        return None
+    try:
+        return ZoneInfo(name)
+    except ZoneInfoNotFoundError:
+        log.warning("locale.timezone %r not found; falling back to system tz", name)
+        return None
+
+
 # ---------------------------------------------------------------------------
 # Manager
 # ---------------------------------------------------------------------------
@@ -209,10 +227,14 @@ class StandardContextManager:
         loader: ProfileDocLoader,
         conventions: ConventionLoader | None = None,
         base_system_prompt: str = "",
+        clock: Clock | None = None,
+        timezone_name: str | None = None,
     ) -> None:
         self._loader = loader
         self._conventions = conventions
         self._base_prompt = base_system_prompt
+        self._clock = clock
+        self._timezone_name = timezone_name
 
     async def build_request(
         self,
@@ -267,6 +289,7 @@ class StandardContextManager:
     ) -> str:
         sections = [
             _wrap_section("identity", self._loader.load_soul_document()),
+            _wrap_section("today", self._render_today()),
             _wrap_section("user_context", self._loader.load_user_context()),
             render_conventions(convention_files),
             _wrap_section("memory_index", self._loader.load_memory_index()),
@@ -277,6 +300,23 @@ class StandardContextManager:
             _wrap_section("persona_system_prompt", self._base_prompt),
         ]
         return "\n\n".join(s for s in sections if s)
+
+    def _render_today(self) -> str:
+        """Build the cacheable ``<today>`` block.
+
+        Date-only on purpose — minute-precision time staleens within
+        minutes and would invalidate the prompt cache. The model can
+        ask the ``now`` tool when it needs wall-clock precision.
+        Returns an empty string when no clock is wired (test
+        harnesses); the section is then dropped from the prompt.
+        """
+        if self._clock is None:
+            return ""
+        tz = _resolve_timezone(self._timezone_name)
+        raw = self._clock.now()
+        now = raw.astimezone(tz) if tz is not None else raw.astimezone()
+        tz_label = self._timezone_name or (str(now.tzinfo) if now.tzinfo else "local")
+        return f"Today is {now:%Y-%m-%d} ({tz_label})."
 
     def _assemble_system_prompt_segments(
         self,
@@ -301,6 +341,7 @@ class StandardContextManager:
         """
         profile_sections = [
             _wrap_section("identity", self._loader.load_soul_document()),
+            _wrap_section("today", self._render_today()),
             _wrap_section("user_context", self._loader.load_user_context()),
             render_conventions(convention_files),
             _wrap_section("memory_index", self._loader.load_memory_index()),

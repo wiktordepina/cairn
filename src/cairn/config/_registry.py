@@ -40,6 +40,15 @@ class ModelRegistry:
                     )
                 self._by_role[role] = model
 
+    def models(self) -> list[ModelConfig]:
+        """Return every registered model in config-declaration order.
+
+        `/model` reads this for its picker; preserving declaration order
+        lets users keep their preferred entries near the top by ordering
+        ``[models.*]`` blocks accordingly.
+        """
+        return list(self._by_id.values())
+
     def by_id(self, model_id: str) -> ModelConfig:
         """Look up a model by its ID. Raises `ModelNotFoundError` on miss."""
         try:

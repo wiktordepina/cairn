@@ -71,12 +71,14 @@ class SessionScreen(Screen[None]):
         cost_precision: int = 6,
         cost_source: Callable[[], Awaitable[float]] | None = None,
         context_source: Callable[[], Awaitable[ContextReportInput]] | None = None,
+        model_label: Callable[[str], str] | None = None,
     ) -> None:
         super().__init__()
         self._session = session
         self._cost_precision = cost_precision
         self._cost_source = cost_source
         self._context_source = context_source
+        self._model_label = model_label
 
     @property
     def context_source(
@@ -92,7 +94,7 @@ class SessionScreen(Screen[None]):
         return self._session
 
     def compose(self) -> ComposeResult:
-        yield SessionHeader(session=self._session)
+        yield SessionHeader(session=self._session, model_label=self._model_label)
         yield ChatLog(id="chat")
         completion = CompletionMenu(id="completion")
         yield completion
@@ -441,6 +443,33 @@ class SessionScreen(Screen[None]):
         """Defer a `/reload` until the current turn finishes."""
         self._pending_reload = True
 
+    def replace_session(self, session: Session) -> None:
+        """Refresh the screen's session reference in place.
+
+        Used by ``/model`` after a "keep history" swap and by
+        ``/reload`` when the session row's model column was reverted
+        to config. The chat log, cost meter, and activity indicator
+        stay mounted; only the header re-renders.
+        """
+        self._session = session
+        try:
+            header = self.query_one(SessionHeader)
+        except Exception:  # noqa: BLE001
+            return
+        header.update_session(session)
+
+    def clear_transcript(self) -> None:
+        """Wipe every chat-log child (messages, tool rows, banners).
+
+        Used by ``/clear`` and the ``/model start fresh`` branch when
+        opening a brand-new session in the same screen.
+        """
+        try:
+            chat_log = self.query_one("#chat", ChatLog)
+        except Exception:  # noqa: BLE001
+            return
+        chat_log.clear()
+
     def _flush_pending_reload(self) -> None:
         """If `/reload` was deferred during a turn, run it now."""
         if not getattr(self, "_pending_reload", False):
@@ -452,18 +481,25 @@ class SessionScreen(Screen[None]):
             return
 
         async def _do_reload() -> None:
+            from cairn.ui._model_label import resolve_label
+
             result = await reloader.reload()
             kind = "muted" if result.ok else "warning"
             text = result.summary if result.ok else f"reload failed — {result.error}"
             self._chat_log.append_banner(Banner(text=text, kind=kind))
             if result.ok and result.primary_model_drift is not None:
                 active, new = result.primary_model_drift
+                refreshed = await app.orchestrator.swap_session_model(
+                    self._session.id, new, mode="revert"
+                )
+                self.replace_session(refreshed)
+                registry = app.model_registry
+                was_label = resolve_label(registry, active)
+                now_label = resolve_label(registry, new)
                 self._chat_log.append_banner(
                     Banner(
                         text=(
-                            f"primary role now resolves to {new}; the active "
-                            f"session stays on {active}. Restart cairn to "
-                            f"switch."
+                            f"session model reverted to config — was {was_label}, now {now_label}"
                         ),
                         kind="muted",
                     ),

@@ -270,6 +270,32 @@ class SessionArchived:
     session_id: str
 
 
+@dataclass(frozen=True, slots=True)
+class ModelSwapped:
+    """The session's active model has changed.
+
+    Emitted by ``/model`` (user-driven swap) and ``/reload`` (revert to
+    config). ``mode`` records which user-facing branch produced the
+    swap so observers can render distinct telemetry / banners:
+
+    - ``"keep"``: same session row, model column updated, transcript
+      preserved. Next turn streams under ``to_model``.
+    - ``"fresh"``: previous session archived, new session opened with
+      ``to_model``. ``session_id`` is the new session.
+    - ``"revert"``: ``/reload`` resynced ``session.model`` to the
+      config-resolved value after a runtime swap.
+
+    ``turn_id`` is ``None`` because the swap happens at idle, between
+    turns.
+    """
+
+    session_id: str
+    from_model: str
+    to_model: str
+    mode: Literal["keep", "fresh", "revert"]
+    turn_id: str | None = None
+
+
 UIEvent = (
     UserMessagePersisted
     | AssistantTextDelta
@@ -294,5 +320,6 @@ UIEvent = (
     | SessionCreated
     | SessionResumed
     | SessionArchived
+    | ModelSwapped
     | ConfigDriftDetected
 )

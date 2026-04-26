@@ -25,6 +25,7 @@ import sys
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
 
+from cairn.compaction import TruncatingCompactor
 from cairn.config import ConfigError, ModelRegistry, SecretResolver, ToolsConfig, load_config
 from cairn.conventions import (
     AllowlistStore,
@@ -77,11 +78,12 @@ from cairn.tools.builtin import (
     make_file_read,
     make_file_write,
     make_grep,
+    make_now,
     make_web_fetch,
 )
 from cairn.tools.security import WorkspaceSandbox
 from cairn.ui._app import CairnApp
-from cairn.ui._context_report import ContextReportInput
+from cairn.ui._context_report import ContextReportInput, build_context_report
 from cairn.ui._gateway import TextualApprovalGateway
 from cairn.ui._observer import TextualUIEventObserver
 from cairn.ui._prompt_history import PromptHistoryStore
@@ -95,6 +97,7 @@ from cairn.watcher import (
 
 if TYPE_CHECKING:
     from cairn.config._models import CairnConfig
+    from cairn.domain import UIEvent
     from cairn.orchestrator._middleware import ResultTransformer, ToolApprover
     from cairn.orchestrator._protocols import ApprovalGateway
 
@@ -142,6 +145,7 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         usage_repo=usage_repo,
         clock=clock,
         budgets=active.budgets,
+        profile=profile_key,
     )
     session_manager = SessionManager(
         session_repo=session_repo,
@@ -171,7 +175,12 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         trust_gate=initial_trust_gate,
         cwd=Path.cwd(),
     )
-    context_manager = StandardContextManager(loader=doc_loader, conventions=convention_loader)
+    context_manager = StandardContextManager(
+        loader=doc_loader,
+        conventions=convention_loader,
+        clock=clock,
+        timezone_name=active.locale.timezone,
+    )
 
     memory_service = MemoryService(
         memory_repo=memory_repo,
@@ -203,6 +212,23 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         approval_repo=approval_repo,
         workspace_root=Path.cwd(),
         tools_config=active.tools,
+        timezone_name=active.locale.timezone,
+    )
+
+    # Auto-compactor: trims the outgoing provider request when history
+    # plus tools plus system prompt approach the model's context
+    # window. Routed through the structured observer so
+    # ``HistoryCompacted`` and ``BudgetOverflowAdvisory`` land in
+    # ``cairn.events``. Pre-0.18.0 the orchestrator was constructed
+    # without this preparer, leaving auto-compaction inert.
+    async def _compactor_event_sink(event: UIEvent) -> None:
+        structured_observer.observe(event)
+
+    compactor = TruncatingCompactor(
+        config=active.compaction,
+        model_registry=model_registry,
+        provider_registry=provider_registry,
+        event_sink=_compactor_event_sink,
     )
 
     orchestrator = Orchestrator(
@@ -220,6 +246,7 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         message_repo=message_repo,
         clock=clock,
         config=OrchestratorConfig(),
+        preparers=(compactor,),
         approvers=approvers,
         transformers=transformers,
         observers=(),
@@ -238,13 +265,16 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
     async def _session_cost() -> float:
         return await usage_repo.total_cost_for_session(session.id)
 
-    primary_model = model_registry.resolve(active.primary_model)
-
     async def _context_report() -> ContextReportInput:
-        return ContextReportInput(
-            context_window=primary_model.context_window,
-            model=primary_model.id,
-            last_usage=await usage_repo.most_recent_primary_turn(session.id),
+        # Look up the live session each call so a runtime ``/model``
+        # swap is reflected; fall back to the bootstrap session when
+        # the screen hasn't mounted yet (/context fired pre-on_mount).
+        screen = app.current_session_screen
+        current = screen.session if screen is not None else session
+        return await build_context_report(
+            session=current,
+            model_registry=model_registry,
+            usage_repo=usage_repo,
         )
 
     prompt_history_store = PromptHistoryStore(
@@ -297,6 +327,9 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         allowlist_store=allowlist_store,
         prompt_history_store=prompt_history_store,
         reloader=reloader,
+        usage_repo=usage_repo,
+        clock=clock,
+        active_profile_key=profile_key,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,
@@ -358,6 +391,7 @@ def _build_tool_stack(
     approval_repo: ApprovalDecisionRepo,
     workspace_root: Path,
     tools_config: ToolsConfig,
+    timezone_name: str | None = None,
 ) -> tuple[
     DefaultToolRegistry,
     DefaultToolRunner,
@@ -370,6 +404,7 @@ def _build_tool_stack(
         make_file_read(sandbox),
         make_file_write(sandbox),
         make_grep(sandbox),
+        make_now(clock, timezone_name=timezone_name),
         make_web_fetch(),
     ]
     tool_registry = DefaultToolRegistry(companion_tools=companion_tools)

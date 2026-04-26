@@ -17,6 +17,8 @@
 
 ::: cairn.config.DelegationToolConfig
 
+::: cairn.config.LocaleConfig
+
 ::: cairn.config.MemoryConfig
 
 ::: cairn.config.ModelConfig

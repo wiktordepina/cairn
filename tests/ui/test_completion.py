@@ -37,8 +37,13 @@ class TestCompletionMenuSync:
 
             assert menu.is_open is True
             names = [cmd.name for cmd in menu.matches]
-            assert names == ["/context", "/conventions", "/cost"]
-            assert menu.selected_name == "/context"
+            assert names == [
+                "/clear",
+                "/context",
+                "/conventions",
+                "/cost",
+            ]
+            assert menu.selected_name == "/clear"
             assert menu.has_class("-visible")
 
     @pytest.mark.asyncio
@@ -102,13 +107,14 @@ class TestCompletionMenuSync:
             assert menu.is_open is True
             names = [cmd.name for cmd in menu.matches]
             assert names == [
+                "/archive",
+                "/clear",
                 "/context",
                 "/conventions",
                 "/cost",
                 "/ephemeral",
                 "/help",
                 "/model",
-                "/new",
                 "/persona",
                 "/profile",
                 "/quit",

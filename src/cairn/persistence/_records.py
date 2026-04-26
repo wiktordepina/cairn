@@ -73,6 +73,24 @@ class UsageRecord(BaseModel):
     metadata: dict[str, object] = {}
 
 
+class CostSummary(BaseModel):
+    """Cost across the four `/cost` windows × two scopes.
+
+    Built by ``UsageRepo.cost_summary``. Pure data — formatting lives
+    in ``cairn.ui._cost_report``.
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    session_usd: float
+    today_profile_usd: float
+    today_total_usd: float
+    last_3d_profile_usd: float
+    last_3d_total_usd: float
+    mtd_profile_usd: float
+    mtd_total_usd: float
+
+
 class MemoryHit(BaseModel):
     """A memory entry surfaced by `MemoryRepo.search`, paired with its
     FTS5 BM25 score.

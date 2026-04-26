@@ -15,6 +15,11 @@ def _model(id: str, roles: list[str] | None = None, **kw: object) -> ModelConfig
 
 
 class TestModelRegistry:
+    def test_models_preserves_declaration_order(self) -> None:
+        registry = ModelRegistry([_model("opus"), _model("haiku"), _model("gpt-5")])
+        ids = [m.id for m in registry.models()]
+        assert ids == ["opus", "haiku", "gpt-5"]
+
     def test_by_id(self) -> None:
         registry = ModelRegistry([_model("opus"), _model("haiku")])
         assert registry.by_id("opus").id == "opus"

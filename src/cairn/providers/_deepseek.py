@@ -79,21 +79,30 @@ def format_messages(
 
     Identical to :func:`cairn.providers._openai.format_messages` plus a
     per-assistant-message ``reasoning_content`` field re-emitted from
-    the message's leading :class:`ThinkingBlock`. Per DeepSeek's
-    thinking-mode docs, replaying ``reasoning_content`` is *required*
-    when the prior assistant turn included tool calls and *optional
-    (silently ignored)* otherwise — we send it unconditionally to keep
-    the formatter rule-free and safe across both shapes.
+    the message's leading :class:`ThinkingBlock`.
+
+    DeepSeek's thinking-mode endpoints reject the request with
+    ``"reasoning_content in the thinking mode must be passed back to
+    the API"`` whenever any prior assistant message in the conversation
+    is missing the field. In a pure DeepSeek conversation that's never
+    a problem — every assistant turn has a ``ThinkingBlock``. After a
+    cross-model swap, though, intermediate assistant messages produced
+    by a non-reasoning model (e.g. Kimi via OpenRouter) have no
+    ``ThinkingBlock``, and DeepSeek then refuses the next thinking
+    request. We always emit ``reasoning_content`` for every assistant
+    row, falling back to an empty string when no thinking content is
+    available — this satisfies the API's "must be present" check and
+    is invisible to the model.
     """
     formatted = _openai_format_messages(messages, system=system)
     cairn_assistants = [m for m in messages if m.role == "assistant"]
     formatted_assistants = [r for r in formatted if r.get("role") == "assistant"]
     for cairn_msg, row in zip(cairn_assistants, formatted_assistants, strict=False):
-        if not cairn_msg.content:
-            continue
-        head = cairn_msg.content[0]
+        head = cairn_msg.content[0] if cairn_msg.content else None
         if isinstance(head, ThinkingBlock) and head.thinking:
             row["reasoning_content"] = head.thinking
+        else:
+            row["reasoning_content"] = ""
     return formatted
 
 

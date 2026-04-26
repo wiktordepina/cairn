@@ -323,6 +323,7 @@ class StructuredEventObserver:
             DelegationCompleted,
             DelegationSpawned,
             HistoryCompacted,
+            ModelSwapped,
             ObservationExtractionCompleted,
             ObservationExtractionRequested,
             SessionArchived,
@@ -510,6 +511,15 @@ class StructuredEventObserver:
                 self._info(
                     "session_archived: session=%s",
                     event.session_id,
+                    event=event,
+                )
+            case ModelSwapped():
+                self._info(
+                    "model_swapped: session=%s mode=%s from=%s to=%s",
+                    event.session_id,
+                    event.mode,
+                    event.from_model,
+                    event.to_model,
                     event=event,
                 )
             case _:

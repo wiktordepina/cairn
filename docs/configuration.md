@@ -147,7 +147,7 @@ roles = ["primary"]
 |---|---|---|---|
 | `id` | string | — (required) | Vendor model ID. |
 | `provider` | string | — (required) | Key into `[providers.*]`. |
-| `display_name` | string | — (required) | Shown in the UI. |
+| `display_name` | string | — (required) | Shown in every UI surface that names a model — session header, `/model` picker, swap/revert banners, `/context`, `/profile`. The id stays the canonical reference (config, persistence, logs); only rendered text uses `display_name`. The `/model` picker renders rows as `<display_name> | <id>` so the id is always discoverable. |
 | `context_window` | int | — (required) | Max input tokens. |
 | `max_output_tokens` | int | — (required) | Max tokens per response. |
 | `supports_tools` | bool | — (required) | Whether the model can call tools. |
@@ -302,6 +302,24 @@ deliberately tuned and a single global value would either be
 too short for delegation or too long for `file_read`. If you
 keep hitting timeouts on one specific tool, override that
 tool only.
+
+### `locale`
+
+```toml
+[profiles.default.locale]
+timezone = "Europe/London"
+```
+
+| Key | Type | Default | Notes |
+|---|---|---|---|
+| `timezone` | `str | None` | `null` (falls back to host system tz) | IANA timezone name. Used by the date-in-system-prompt segment, the `now` tool, and `/cost` window boundaries (today / month-to-date). When unset, cairn reads the host's local timezone via `datetime.now().astimezone().tzinfo`. |
+
+The same field drives "what counts as today" across the app —
+the system prompt's `<today>` segment, the `now` tool's tz
+label, and the local-midnight boundaries `/cost` uses for the
+today / MTD windows. Setting it explicitly is recommended on
+servers whose host timezone is UTC even though the user lives
+elsewhere (CI containers, headless runs).
 
 ### Wall-clock turn timeout
 

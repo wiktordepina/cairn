@@ -45,6 +45,16 @@ class ChatLog(VerticalScroll):
         self.mount(banner)
         self.scroll_end(animate=False)
 
+    def clear(self) -> None:
+        """Remove every mounted child.
+
+        Used by ``/clear`` and the ``/model start fresh`` branch so the
+        new session opens with an empty transcript, not the previous
+        session's history.
+        """
+        for child in list(self.children):
+            child.remove()
+
     _TAIL_SLACK = 3
     """Rows of slack before the bottom that still count as "at the tail".
 
