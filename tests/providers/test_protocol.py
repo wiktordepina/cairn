@@ -58,13 +58,14 @@ class TestBalanceDefault:
         assert await provider.balance() is None
 
     @pytest.mark.asyncio
-    async def test_deepseek_stub_returns_none_until_phase_5(self) -> None:
-        provider = DeepSeekProvider(_make_config("deepseek"), SecretResolver())
+    async def test_deepseek_returns_none_when_no_api_key(self) -> None:
+        # No api_key configured → no http call, return None.
+        provider = DeepSeekProvider(ProviderConfig(name="deepseek"), SecretResolver())
         assert await provider.balance() is None
 
     @pytest.mark.asyncio
-    async def test_openrouter_stub_returns_none_until_phase_5(self) -> None:
-        provider = OpenRouterProvider(_make_config("openrouter"), SecretResolver())
+    async def test_openrouter_returns_none_when_no_api_key(self) -> None:
+        provider = OpenRouterProvider(ProviderConfig(name="openrouter"), SecretResolver())
         assert await provider.balance() is None
 
 

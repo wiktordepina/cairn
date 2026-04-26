@@ -271,5 +271,66 @@ class DeepSeekProvider:
         return total
 
     async def balance(self) -> BalanceInfo | None:
-        """Stub — real implementation lands in phase 5 (DeepSeek `/user/balance`)."""
-        return None
+        """Fetch DeepSeek account balance via ``GET /user/balance``.
+
+        DeepSeek's response shape:
+
+        .. code-block:: json
+
+            {
+              "is_available": true,
+              "balance_infos": [
+                {"currency": "CNY", "total_balance": "110.00",
+                 "granted_balance": "10.00", "topped_up_balance": "100.00"}
+              ]
+            }
+
+        Returns the FIRST entry in ``balance_infos`` — accounts with
+        multi-currency balances are rare; the CLI can re-call when we
+        need full per-currency listings. Returns ``None`` on any
+        transport failure or malformed response so the CLI fan-out
+        keeps going for other providers.
+        """
+        import httpx
+
+        if self._config.api_key is None:
+            return None
+        api_key = self._secret_resolver.resolve(self._config.api_key)
+        base_url = self._config.base_url or _DEFAULT_BASE_URL
+        url = f"{base_url.rstrip('/')}/user/balance"
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.get(url, headers={"Authorization": f"Bearer {api_key}"})
+                response.raise_for_status()
+                data = response.json()
+        except (httpx.HTTPError, ValueError) as exc:
+            logger.warning("deepseek balance fetch failed: %s", exc)
+            return None
+        if not isinstance(data, dict):
+            return None
+        data_dict: dict[str, Any] = data  # pyright: ignore[reportUnknownVariableType]
+        infos = data_dict.get("balance_infos")
+        if not isinstance(infos, list) or not infos:
+            return None
+        first_raw = infos[0]  # pyright: ignore[reportUnknownVariableType]
+        if not isinstance(first_raw, dict):
+            return None
+        first: dict[str, Any] = first_raw  # pyright: ignore[reportUnknownVariableType]
+        try:
+            total_balance = float(first.get("total_balance", 0) or 0)
+            granted = float(first.get("granted_balance", 0) or 0)
+        except (TypeError, ValueError):
+            return None
+        # DeepSeek's endpoint reports the CURRENT REMAINING balance only —
+        # ``total_balance`` is granted + topped_up still available, with
+        # no historical-spend field. We surface ``remaining`` faithfully
+        # and leave ``used`` at 0.0 (unknown). The CLI's "used" column
+        # is informational across providers; OpenRouter does report it.
+        return BalanceInfo(
+            currency=str(first.get("currency", "")),
+            total=total_balance,
+            used=0.0,
+            remaining=total_balance,
+            granted=granted,
+            source="/user/balance",
+        )

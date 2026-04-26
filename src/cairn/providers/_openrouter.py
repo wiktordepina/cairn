@@ -516,5 +516,54 @@ class OpenRouterProvider:
         return total
 
     async def balance(self) -> BalanceInfo | None:
-        """Stub — real implementation lands in phase 5 (`/api/v1/credits`)."""
-        return None
+        """Fetch OpenRouter credit state via ``GET /api/v1/credits``.
+
+        Response shape:
+
+        .. code-block:: json
+
+            {"data": {"total_credits": <num>, "total_usage": <num>}}
+
+        Older responses returned ``total_credits`` / ``total_usage`` at
+        the top level; we accept both. Returns ``None`` on transport
+        failure or malformed payload so the CLI fan-out keeps going for
+        other providers.
+        """
+        import httpx
+
+        if self._config.api_key is None:
+            return None
+        api_key = self._secret_resolver.resolve(self._config.api_key)
+        base_url = self._config.base_url or "https://openrouter.ai/api/v1"
+        url = f"{base_url.rstrip('/')}/credits"
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                response = await client.get(
+                    url,
+                    headers={"Authorization": f"Bearer {api_key}", **self._build_headers()},
+                )
+                response.raise_for_status()
+                payload = response.json()
+        except (httpx.HTTPError, ValueError) as exc:
+            logger.warning("openrouter balance fetch failed: %s", exc)
+            return None
+        if not isinstance(payload, dict):
+            return None
+        payload_dict: dict[str, Any] = payload  # pyright: ignore[reportUnknownVariableType]
+        nested = payload_dict.get("data")
+        body: dict[str, Any] = payload_dict
+        if isinstance(nested, dict):
+            body = nested  # pyright: ignore[reportUnknownVariableType]
+        try:
+            total = float(body.get("total_credits", 0) or 0)
+            used = float(body.get("total_usage", 0) or 0)
+        except (TypeError, ValueError):
+            return None
+        return BalanceInfo(
+            currency="USD",
+            total=total,
+            used=used,
+            remaining=max(0.0, total - used),
+            granted=None,
+            source="/api/v1/credits",
+        )
