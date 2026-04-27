@@ -741,6 +741,88 @@ class TestBudgetAndCancellation:
         assert msgs == []
 
     @pytest.mark.asyncio
+    async def test_per_turn_budget_aborts_between_iterations(
+        self,
+        provider: FakeProvider,
+        provider_registry: ProviderRegistry,
+        model_registry: ModelRegistry,
+        session_manager: SessionManager,
+        message_repo: MessageRepo,
+        turn_repo,
+        usage_repo: UsageRepo,
+        frozen_clock: FrozenClock,
+        orchestrator_config: OrchestratorConfig,
+        collector: EventCollector,
+    ) -> None:
+        """First iteration runs and records cost; the per-turn cap then
+        blocks before iteration 2's provider call. Pending tool calls
+        from iteration 1 are dropped on the floor."""
+        # Iteration 1 issues a tool call so the loop *would* continue.
+        # Iteration 2's script is never consumed because the per-turn
+        # budget aborts the turn first.
+        provider.scripted = [
+            [
+                ToolCallStart(id="tc-1", name="echo"),
+                ToolCallEnd(id="tc-1"),
+                # Big input_tokens so the computed cost trips the cap.
+                UsageEvent(input_tokens=1_000_000, output_tokens=1_000_000),
+                MessageStop(stop_reason=StopReason.TOOL_USE),
+            ],
+            [
+                TextDelta(text="should-never-stream"),
+                UsageEvent(input_tokens=1, output_tokens=1),
+                MessageStop(stop_reason=StopReason.END_TURN),
+            ],
+        ]
+
+        async def echo_handler(tool_call, session, turn_id):  # noqa: ARG001
+            return ("echoed", False)
+
+        runner = RecordingToolRunner(handlers={"echo": echo_handler})
+        registry = DictToolRegistry(tools={"echo": StubTool(name="echo", approval_required=False)})
+
+        # Tiny per-turn cap; daily / per-session caps stay loose so
+        # only the per-turn check fires.
+        cost_tracker = BasicCostTracker(
+            usage_repo=usage_repo,
+            clock=frozen_clock,
+            budgets=BudgetConfig(
+                per_turn_usd=0.0001,
+                per_session_usd=1000.0,
+                daily_usd=1000.0,
+            ),
+        )
+        orch = _make_orchestrator(
+            provider_registry=provider_registry,
+            model_registry=model_registry,
+            session_manager=session_manager,
+            message_repo=message_repo,
+            turn_repo=turn_repo,
+            cost_tracker=cost_tracker,
+            frozen_clock=frozen_clock,
+            orchestrator_config=orchestrator_config,
+            collector=collector,
+            tool_registry=registry,
+            tool_runner=runner,
+        )
+        session = await orch.start_session(type=SessionType.COMPANION, persona="companion")
+
+        events = []
+        async for ev in orch.run_turn(session.id, _user("go")):
+            events.append(ev)
+
+        # Per-turn cap aborts the turn; iteration 2 never streamed.
+        aborted = [e for e in events if isinstance(e, TurnAborted)]
+        assert len(aborted) == 1
+        assert aborted[0].reason == "per_turn_budget"
+        assert "Per-turn budget" in (aborted[0].message or "")
+
+        # Only one provider call went out.
+        assert len(provider.requests) == 1
+        # Tool was never dispatched — the abort happens before tool dispatch.
+        assert runner.calls == []
+
+    @pytest.mark.asyncio
     async def test_turn_already_running(
         self,
         provider: FakeProvider,

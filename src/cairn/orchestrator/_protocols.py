@@ -199,3 +199,9 @@ class CostTracker(Protocol):
         *,
         session_id: str,
     ) -> BudgetVerdict: ...
+
+    async def should_block_iteration(
+        self,
+        *,
+        turn_id: str,
+    ) -> BudgetVerdict: ...

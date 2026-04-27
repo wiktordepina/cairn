@@ -150,7 +150,6 @@ Three layers:
 - **Orchestrator** (model-behaviour retries: malformed tool-call JSON,
   unknown tool name) — feeds a tool-error result back to the model.
   Capped by `max_model_behaviour_retries` (default 2).
-- **Tool** (`ToolRetry` exception) — inside `ToolRunner`.
 
 Iteration loops are capped by `OrchestratorConfig.max_iterations`
 (default 10). Wall-clock cap per turn is

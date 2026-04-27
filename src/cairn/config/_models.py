@@ -250,10 +250,24 @@ class DelegationToolConfig(BaseModel):
     target_model: str
     description: str
     when_to_use: str
-    preserve_history: bool = False
     sub_system_prompt: str | None = None
     max_cost_usd: float | None = None
     approval_required: bool = False
+
+    @model_validator(mode="before")
+    @classmethod
+    def _reject_preserve_history(cls, data: Any) -> Any:  # noqa: ANN401
+        if not isinstance(data, dict):  # pyright: ignore[reportUnnecessaryIsInstance]
+            return data
+        typed_data: dict[str, Any] = data  # pyright: ignore[reportUnknownVariableType]
+        if "preserve_history" in typed_data:
+            raise ValueError(
+                "DelegationToolConfig.preserve_history has been removed. "
+                "It was a never-implemented design hook in V1; remove the "
+                "field from your config. A future brick may reintroduce "
+                "it with a real implementation."
+            )
+        return typed_data
 
 
 class ProviderConfig(BaseModel):

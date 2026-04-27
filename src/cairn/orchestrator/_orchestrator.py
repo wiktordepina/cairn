@@ -554,6 +554,26 @@ class Orchestrator:
                 if not pending_tool_calls:
                     break
 
+                # Per-turn budget cap. Checked after the iteration's cost
+                # has been recorded and before the next provider call (or
+                # tool dispatch, which is cheap). If the cap is hit, abort
+                # the turn — pending tool calls are dropped on the floor;
+                # the next user turn sees the truncated history.
+                iter_verdict = await self._cost_tracker.should_block_iteration(turn_id=turn_id)
+                if iter_verdict is BudgetVerdict.BLOCK:
+                    await self._turn_repo.mark_aborted(
+                        turn_id,
+                        reason="per_turn_budget",
+                        completed_at=self._clock.now(),
+                    )
+                    yield TurnAborted(
+                        session_id=session.id,
+                        turn_id=turn_id,
+                        reason="per_turn_budget",
+                        message="Per-turn budget cap reached.",
+                    )
+                    return
+
                 # Tool dispatch
                 await self._turn_repo.transition(
                     turn_id,

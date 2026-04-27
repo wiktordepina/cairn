@@ -389,9 +389,7 @@ As of 0.6.0 the tool-system brick is feature-complete for V1:
   ephemeral sub-sessions against alternative models, with mid-stream
   cost caps (`max_cost_usd`) and parent attribution via
   `parent_session_id`. The sub-session is archived in a `finally:`
-  block so clean-up survives mid-stream failures. Setting
-  `preserve_history=true` in config currently raises
-  `NotImplementedError` at construction — deferred.
+  block so clean-up survives mid-stream failures.
 - ✅ **Orchestrator wiring** (0.6.0) — `_dispatch_tools` now calls the
   runner once per tool call on both approve and reject paths. See
   [orchestrator.md](orchestrator.md) for the responsibility split.
@@ -405,8 +403,6 @@ Deferred to later releases:
   back-channel to report it. Users can still observe delegation via
   `model_usage` rows where `operation = delegation` and via
   `SessionRepo.children_of(parent)`.
-- **`preserve_history=true`** for delegation — the config field is
-  honoured at the schema level but unsupported at runtime in V1.
 - **MCP client** — V2. The `tool_kind` discriminator and registry
   slot are already in place.
 

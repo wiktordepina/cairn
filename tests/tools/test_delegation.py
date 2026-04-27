@@ -109,7 +109,6 @@ def _config(
     *,
     name: str = "ask_utility",
     max_cost_usd: float | None = None,
-    preserve_history: bool = False,
     sub_system_prompt: str | None = None,
 ) -> DelegationToolConfig:
     return DelegationToolConfig(
@@ -117,7 +116,6 @@ def _config(
         target_model="delegation-target",
         description="Consult the utility model.",
         when_to_use="For factual lookups.",
-        preserve_history=preserve_history,
         sub_system_prompt=sub_system_prompt,
         max_cost_usd=max_cost_usd,
     )
@@ -440,22 +438,26 @@ class TestCostCap:
 
 
 class TestPreserveHistory:
-    def test_raises_on_preserve_history_true(
-        self,
-        session_manager: SessionManager,
-        provider_registry: ProviderRegistry,
-        model_registry: ModelRegistry,
-        cost_tracker: BasicCostTracker,
-        frozen_clock: FrozenClock,
-    ) -> None:
-        with pytest.raises(NotImplementedError, match="preserve_history"):
-            _make_tool(
-                config=_config(preserve_history=True),
-                session_manager=session_manager,
-                provider_registry=provider_registry,
-                model_registry=model_registry,
-                cost_tracker=cost_tracker,
-                clock=frozen_clock,
+    def test_config_load_rejects_preserve_history_true(self) -> None:
+        with pytest.raises(ValueError, match="preserve_history has been removed"):
+            DelegationToolConfig(
+                tool_name="ask_utility",
+                target_model="delegation-target",
+                description="Consult the utility model.",
+                when_to_use="For factual lookups.",
+                preserve_history=True,
+            )
+
+    def test_config_load_rejects_preserve_history_false(self) -> None:
+        # Even setting it to its old default is rejected — the field is gone,
+        # any presence in config is stale.
+        with pytest.raises(ValueError, match="preserve_history has been removed"):
+            DelegationToolConfig(
+                tool_name="ask_utility",
+                target_model="delegation-target",
+                description="Consult the utility model.",
+                when_to_use="For factual lookups.",
+                preserve_history=False,
             )
 
 

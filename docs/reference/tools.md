@@ -19,8 +19,6 @@
 
 ::: cairn.tools.ToolError
 
-::: cairn.tools.ToolRetry
-
 ::: cairn.tools.ToolTimeout
 
 ## Registry + decorator + runner

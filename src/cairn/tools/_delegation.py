@@ -82,11 +82,6 @@ class DelegationTool:
         clock: Clock,
         timeout_s: float = 120.0,
     ) -> None:
-        if config.preserve_history:
-            raise NotImplementedError(
-                "DelegationToolConfig.preserve_history is not yet supported; "
-                "the sub-session starts empty in V1."
-            )
         self._config = config
         self._session_manager = session_manager
         self._provider_registry = provider_registry
