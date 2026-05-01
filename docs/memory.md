@@ -127,6 +127,32 @@ Before each companion turn, the orchestrator's context manager calls
 `composite_score()` is a pure function; golden-value tests catch
 formula drift.
 
+## User surfaces
+
+Two user-facing surfaces for V1, plus a matching tool for the LLM:
+
+- [`/recall <query>`](slash-commands.md#recall) — top-k FTS5 search
+  of the active session's memory, rendered in a modal. Read-only;
+  nothing about the recall is appended to the conversation.
+- [`/remember <text>`](slash-commands.md#remember) — explicit save
+  of a fact memory, bypassing the post-turn observation queue.
+  Importance defaults to 7 (configurable via
+  `[memory] explicit_remember_importance`).
+- [`recall` tool](reference/tools.md) — the same FTS5 search the
+  slash command uses, exposed to the LLM as a tier-0 read-only
+  built-in tool. Use cases: a delegation child needs targeted
+  context the parent's auto-retrieve didn't surface; the model
+  realises mid-turn it needs to check a stated preference; the
+  user's first message didn't lexically trigger the relevant
+  memories. Returns full content (not truncated like the pre-turn
+  preparer).
+
+V1 has no curation UI: edit, archive, and delete are all V2 (tier-3
+curation). The supported V1 escape hatch is hand-editing
+`<data_dir>/cairn.db` directly with `sqlite3` — the `memory_entries`
+table schema is documented in `_sql/0003_memory.sql`. The tier-3
+curation brick will replace this with a proper interface.
+
 ## System prompt assembly
 
 `StandardContextManager` wraps each source in a tagged section:

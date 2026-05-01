@@ -15,10 +15,15 @@ rather than re-documenting individual commands.
 | `/model` | Pick a configured model for this session (see below) |
 | `/conventions` | List discovered convention files and the project's trust state |
 | `/reload` | Reload config + conventions + profile docs (see below) |
+| `/recall <query>` | Search session memory; show top-k hits in a modal (see below) |
+| `/remember <text>` | Save a fact to session memory (see below) |
 | `/clear` | Archive the current session and start fresh |
 | `/archive` | Archive the current session and quit (see below) |
 | `/ephemeral <model>` | Placeholder — ephemeral spawn lands post-0.10.0 |
 | `/quit` | Exit the app |
+
+> **Future:** `/compact` lands with LLM-driven compaction at
+> 0.20.0; `/forget` is V2 and ships with the tier-3 curation UI.
 
 ## `/cost`
 
@@ -130,6 +135,65 @@ What `/reload` does and doesn't swap is documented in
 short version: provider registry, model registry, and secret
 resolver are rebuilt; the orchestrator instance, active session,
 persistence, and extraction queue are preserved.
+
+## `/recall`
+
+Searches the active session's memory for entries matching the
+query. Results render in a modal overlay listing the top hits
+with composite score, type, importance, and full content body —
+nothing about the recall is appended to the conversation, so the
+LLM does not see the results.
+
+```
+recall: "coffee"  (3 hit(s))
+
+[0.84]  preference  imp=8  #42
+Wiktor takes coffee with no sugar, oat milk, single shot.
+
+[0.71]  fact  imp=5  #18
+Coffee shop near the office is closed on Mondays.
+
+[0.58]  fact  imp=4  #7
+Espresso machine at home is a Rancilio Silvia.
+```
+
+The composite score is the same value `MemoryService.retrieve()`
+uses internally (recency + importance + BM25 relevance). Score
+visibility is intentional — same posture as `/cost` exposing
+dollar figures rather than hiding them. Empty results render
+*"no memories matched that query."*.
+
+The modal scopes to the active session's `memory_space`; if the
+current session has no memory space (ephemeral, or a persona
+without one), the slash command shows a muted banner instead.
+Esc closes.
+
+> **Symmetric tool:** the `recall` built-in tool gives the LLM
+> the same capability through a tool call. Slash output is
+> human-only; the tool's JSON output becomes part of the next
+> provider request. See [Tools](reference/tools.md).
+
+## `/remember`
+
+Saves a `fact` memory to the active session's `memory_space`,
+bypassing the post-turn observation queue. Importance defaults to
+**7** (one notch above the extractor default of 5 — explicit user
+intent is a stronger signal than auto-extraction); override per
+profile with `[memory] explicit_remember_importance = N` (1..10).
+
+Confirmed via toast:
+
+- *"remembered"* — fresh insert.
+- *"already remembered (entry #N)"* — dedup hit, where `N` is the
+  existing entry's id. The `MemoryRepo` runs the same
+  similarity-threshold dedup as the post-turn extractor; saying
+  the same thing twice refreshes the existing row's `updated_at`
+  rather than creating a duplicate.
+
+V1 has no inline flags for entry type or importance — every
+`/remember` writes a `fact` with the configured importance. If
+you want a memory gone, hand-edit `<data_dir>/cairn.db`; the
+tier-3 curation UI lands in V2.
 
 ## Completion popover
 

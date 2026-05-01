@@ -12,7 +12,9 @@ import logging
 from typing import TYPE_CHECKING
 
 from cairn.config import ToolsConfig
-from cairn.persistence import ApprovalDecisionRepo, ToolCallRepo
+from cairn.config._models import MemoryConfig
+from cairn.memory._retrieval import MemoryService
+from cairn.persistence import ApprovalDecisionRepo, MemoryRepo, ToolCallRepo
 from cairn.ui._bootstrap import _build_tool_stack
 
 if TYPE_CHECKING:
@@ -22,6 +24,14 @@ if TYPE_CHECKING:
 
     from cairn.orchestrator import FrozenClock
     from cairn.persistence._connection import Database
+
+
+def _memory_service(db: Database, frozen_clock: FrozenClock) -> MemoryService:
+    return MemoryService(
+        memory_repo=MemoryRepo(db),
+        clock=frozen_clock,  # pyright: ignore[reportArgumentType]
+        memory_config=MemoryConfig(),
+    )
 
 
 class TestBootstrapTimeoutOverrides:
@@ -39,6 +49,7 @@ class TestBootstrapTimeoutOverrides:
                 approval_repo=ApprovalDecisionRepo(db),
                 workspace_root=tmp_path,
                 tools_config=ToolsConfig(),
+                memory_service=_memory_service(db, frozen_clock),
             )
         assert not [r for r in caplog.records if "timeout_s_overrides" in r.message]
 
@@ -56,6 +67,7 @@ class TestBootstrapTimeoutOverrides:
                 approval_repo=ApprovalDecisionRepo(db),
                 workspace_root=tmp_path,
                 tools_config=ToolsConfig(timeout_s_overrides={"file_read": 30.0}),
+                memory_service=_memory_service(db, frozen_clock),
             )
         assert not [r for r in caplog.records if "timeout_s_overrides" in r.message]
 
@@ -73,6 +85,7 @@ class TestBootstrapTimeoutOverrides:
                 approval_repo=ApprovalDecisionRepo(db),
                 workspace_root=tmp_path,
                 tools_config=ToolsConfig(timeout_s_overrides={"never_existed": 30.0}),
+                memory_service=_memory_service(db, frozen_clock),
             )
         warnings = [r for r in caplog.records if "timeout_s_overrides" in r.message]
         assert len(warnings) == 1
@@ -100,6 +113,7 @@ class TestBootstrapTimeoutOverrides:
                         "ghost_tool": 30.0,
                     }
                 ),
+                memory_service=_memory_service(db, frozen_clock),
             )
         warnings = [r for r in caplog.records if "timeout_s_overrides" in r.message]
         # One warning per unknown override name. file_read is known, so

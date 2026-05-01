@@ -2,9 +2,9 @@
 
 Current catalogue: `/help`, `/cost`, `/tools`, `/context`,
 `/clear`, `/archive`, `/ephemeral`, `/quit`, `/persona`,
-`/profile`, `/model`, `/conventions`, `/reload`. New commands
-land in follow-up PRs rather than gating on a tranche flag
-(resolved Q10).
+`/profile`, `/model`, `/conventions`, `/reload`, `/recall`,
+`/remember`. New commands land in follow-up PRs rather than
+gating on a tranche flag (resolved Q10).
 """
 
 from __future__ import annotations
@@ -559,6 +559,101 @@ async def _handle_reload(app: CairnApp, _tail: str) -> None:
         )
 
 
+async def _handle_recall(app: CairnApp, tail: str) -> None:
+    """Search the active session's memory and render hits in a modal.
+
+    Read-only — nothing about the recall is appended to the
+    conversation. The model only sees the result if it issues its
+    own ``recall`` tool call.
+    """
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    query = tail.strip()
+    if not query:
+        screen.append_banner(Banner(text="usage: /recall <query>", kind="muted"))
+        return
+    service = app.memory_service
+    if service is None:
+        screen.append_banner(Banner(text="/recall — bootstrap did not wire memory", kind="muted"))
+        return
+    space = screen.session.memory_space
+    if not space:
+        screen.append_banner(
+            Banner(text="/recall — this session has no memory_space", kind="muted")
+        )
+        return
+
+    app.run_worker(_run_recall(app, query=query, space=space), name="recall", exit_on_error=False)
+
+
+async def _run_recall(app: CairnApp, *, query: str, space: str) -> None:
+    from cairn.ui._screens import MemoryRecallModal
+
+    service = app.memory_service
+    screen = app.current_session_screen
+    if service is None or screen is None:
+        return
+    hits = await service.retrieve_scored(space=space, query=query, k=10)
+    await app.push_screen_wait(MemoryRecallModal(query=query, hits=hits))
+
+
+async def _handle_remember(app: CairnApp, tail: str) -> None:
+    """Save a fact memory for the active session, bypassing the
+    post-turn observation queue.
+
+    Confirmed via toast. Dedup-on-store is unchanged: if the new
+    text is near-identical to an existing entry, the existing row's
+    `updated_at` is refreshed and the toast names the dedup hit.
+    """
+    from cairn.domain import MemoryClass, MemoryEntryType
+    from cairn.ui._widgets import Banner
+
+    screen = app.current_session_screen
+    if screen is None:
+        return
+    text = tail.strip()
+    if not text:
+        screen.append_banner(Banner(text="usage: /remember <text>", kind="muted"))
+        return
+    repo = app.memory_repo
+    if repo is None:
+        screen.append_banner(
+            Banner(text="/remember — bootstrap did not wire memory", kind="muted")
+        )
+        return
+    space = screen.session.memory_space
+    if not space:
+        screen.append_banner(
+            Banner(text="/remember — this session has no memory_space", kind="muted")
+        )
+        return
+
+    importance = 7
+    if app.profile is not None:
+        importance = app.profile.memory.explicit_remember_importance
+
+    entry = await repo.store(
+        memory_space=space,
+        content=text,
+        entry_type=MemoryEntryType.FACT,
+        memory_class=MemoryClass.SEMANTIC,
+        importance=importance,
+        source_session_id=screen.session.id,
+    )
+    # Dedup heuristic: a fresh insert has created_at == updated_at
+    # (both set to the same ``now`` inside ``store``); a dedup hit
+    # leaves the original ``created_at`` and only refreshes
+    # ``updated_at``.
+    was_dedup = entry.created_at != entry.updated_at
+    if was_dedup:
+        app.notify(f"already remembered (entry #{entry.id})", severity="information")
+    else:
+        app.notify("remembered", severity="information")
+
+
 async def _handle_conventions(app: CairnApp, _tail: str) -> None:
     """List discovered convention files and the project's trust state.
 
@@ -681,6 +776,20 @@ def build_default_registry() -> CommandRegistry:
             name="/reload",
             summary="reload config + conventions + profile docs",
             handler=_handle_reload,
+        )
+    )
+    registry.register(
+        SlashCommand(
+            name="/recall",
+            summary="search session memory (top-k FTS5)",
+            handler=_handle_recall,
+        )
+    )
+    registry.register(
+        SlashCommand(
+            name="/remember",
+            summary="save a fact to session memory",
+            handler=_handle_remember,
         )
     )
     return registry

@@ -290,6 +290,103 @@ class TestContentTruncation:
         assert out[0].content == long_text
 
 
+class TestRetrieveTruncateOptOut:
+    @pytest.mark.asyncio
+    async def test_truncate_content_false_returns_full_body(self, memory_repo, clock):
+        """`/recall` and the `recall` tool need full content."""
+        long_text = "Python observation " * 50
+        await memory_repo.store(
+            memory_space="companion",
+            content=long_text,
+            entry_type=MemoryEntryType.FACT,
+            memory_class=MemoryClass.SEMANTIC,
+        )
+        svc = MemoryService(
+            memory_repo=memory_repo,
+            clock=clock,
+            memory_config=MemoryConfig(retrieval_content_truncate=60),
+        )
+        out = await svc.retrieve(space="companion", query="python", k=1, truncate_content=False)
+        assert out[0].content == long_text
+
+    @pytest.mark.asyncio
+    async def test_truncate_content_default_still_truncates(self, memory_repo, clock):
+        long_text = "Python observation " * 50
+        await memory_repo.store(
+            memory_space="companion",
+            content=long_text,
+            entry_type=MemoryEntryType.FACT,
+            memory_class=MemoryClass.SEMANTIC,
+        )
+        svc = MemoryService(
+            memory_repo=memory_repo,
+            clock=clock,
+            memory_config=MemoryConfig(retrieval_content_truncate=60),
+        )
+        out = await svc.retrieve(space="companion", query="python", k=1)
+        assert out[0].content.endswith("…")
+
+
+class TestRetrieveScored:
+    @pytest.mark.asyncio
+    async def test_returns_score_paired_with_full_entry(self, memory_repo, clock):
+        long_text = "Python observation " * 50
+        await memory_repo.store(
+            memory_space="companion",
+            content=long_text,
+            entry_type=MemoryEntryType.FACT,
+            memory_class=MemoryClass.SEMANTIC,
+        )
+        svc = MemoryService(
+            memory_repo=memory_repo,
+            clock=clock,
+            memory_config=MemoryConfig(retrieval_content_truncate=60),
+        )
+        scored = await svc.retrieve_scored(space="companion", query="python", k=1)
+        assert len(scored) == 1
+        score, entry = scored[0]
+        assert 0.0 <= score <= 1.0
+        # retrieve_scored never truncates — modal needs the full body.
+        assert entry.content == long_text
+
+    @pytest.mark.asyncio
+    async def test_empty_query_returns_empty(self, memory_repo, clock):
+        svc = MemoryService(
+            memory_repo=memory_repo,
+            clock=clock,
+            memory_config=MemoryConfig(),
+        )
+        assert await svc.retrieve_scored(space="companion", query="   ", k=5) == []
+        assert await svc.retrieve_scored(space="", query="python", k=5) == []
+        assert await svc.retrieve_scored(space="companion", query="python", k=0) == []
+
+    @pytest.mark.asyncio
+    async def test_scores_in_descending_order(self, memory_repo, clock):
+        # Two entries; the more recent + higher importance should score higher.
+        await memory_repo.store(
+            memory_space="companion",
+            content="Python preferences",
+            entry_type=MemoryEntryType.FACT,
+            memory_class=MemoryClass.SEMANTIC,
+            importance=2,
+        )
+        await memory_repo.store(
+            memory_space="companion",
+            content="Python preferences",
+            entry_type=MemoryEntryType.PREFERENCE,
+            memory_class=MemoryClass.SEMANTIC,
+            importance=10,
+        )
+        svc = MemoryService(
+            memory_repo=memory_repo,
+            clock=clock,
+            memory_config=MemoryConfig(),
+        )
+        scored = await svc.retrieve_scored(space="companion", query="python", k=2)
+        assert len(scored) == 2
+        assert scored[0][0] >= scored[1][0]
+
+
 class TestClockInjection:
     @pytest.mark.asyncio
     async def test_frozen_clock_gives_deterministic_recency(self, memory_repo):

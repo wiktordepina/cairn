@@ -205,6 +205,12 @@ class MemoryConfig(BaseModel):
     """Per-entry content truncation when rendering retrieved memories
     into the system prompt."""
 
+    # Explicit /remember -------------------------------------------------
+    explicit_remember_importance: int = Field(default=7, ge=1, le=10)
+    """Importance assigned to memories saved via the `/remember` slash
+    command. One notch above the extractor default (5) because user
+    intent is a stronger signal than auto-extraction."""
+
     # Observation log ----------------------------------------------------
     observation_log_fsync: bool = False
     """Fsync each JSONL append. Default off — SQLite is the durability

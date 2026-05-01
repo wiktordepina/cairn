@@ -79,6 +79,7 @@ from cairn.tools.builtin import (
     make_file_write,
     make_grep,
     make_now,
+    make_recall,
     make_web_fetch,
 )
 from cairn.tools.security import WorkspaceSandbox
@@ -98,6 +99,7 @@ from cairn.watcher import (
 if TYPE_CHECKING:
     from cairn.config._models import CairnConfig
     from cairn.domain import UIEvent
+    from cairn.orchestrator import TurnContext
     from cairn.orchestrator._middleware import ResultTransformer, ToolApprover
     from cairn.orchestrator._protocols import ApprovalGateway
 
@@ -213,6 +215,7 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         workspace_root=Path.cwd(),
         tools_config=active.tools,
         timezone_name=active.locale.timezone,
+        memory_service=memory_service,
     )
 
     # Auto-compactor: trims the outgoing provider request when history
@@ -330,6 +333,8 @@ async def _run(config: CairnConfig, *, profile_name: str | None = None) -> int:
         usage_repo=usage_repo,
         clock=clock,
         active_profile_key=profile_key,
+        memory_service=memory_service,
+        memory_repo=memory_repo,
     )
     orchestrator._approval_gateway = TextualApprovalGateway(  # noqa: SLF001  # pyright: ignore[reportPrivateUsage]
         app=app,
@@ -392,6 +397,7 @@ def _build_tool_stack(
     workspace_root: Path,
     tools_config: ToolsConfig,
     timezone_name: str | None = None,
+    memory_service: MemoryService,
 ) -> tuple[
     DefaultToolRegistry,
     DefaultToolRunner,
@@ -400,11 +406,16 @@ def _build_tool_stack(
     tuple[ResultTransformer, ...],
 ]:
     sandbox = WorkspaceSandbox(root=workspace_root)
+
+    def _memory_space_for_turn(ctx: TurnContext) -> str:
+        return ctx.session.memory_space or ""
+
     companion_tools = [
         make_file_read(sandbox),
         make_file_write(sandbox),
         make_grep(sandbox),
         make_now(clock, timezone_name=timezone_name),
+        make_recall(memory_service, memory_space_provider=_memory_space_for_turn),
         make_web_fetch(),
     ]
     tool_registry = DefaultToolRegistry(companion_tools=companion_tools)

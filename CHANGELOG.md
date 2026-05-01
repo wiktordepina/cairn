@@ -8,6 +8,72 @@ While the project is pre-1.0, minor version bumps track meaningful additions
 of functionality; patch bumps cover docs, internal tidy-ups, and fixes that
 don't change the public surface. Everything is still in flux.
 
+## [0.19.0] — 2026-04-28
+
+Memory slash + `recall` tool brick. Lands the first user-facing
+surfaces over the tier-1 memory pipeline that's been running
+auto-extract / auto-retrieve since 0.7.0, plus the matching
+built-in tool that gives the LLM the same on-demand search
+capability through a tool call.
+
+See [ADR 0049](docs/decisions/0049-memory-slash-tool-symmetry.md)
+for the slash/tool symmetry rationale and the deliberate
+non-features (no `/memory` browser, no archive, no edit — tier-3
+curation lands as one V2 brick).
+
+### Added
+
+- **`/recall <query>`** — top-k FTS5 search of the active session's
+  `memory_space`, rendered in a modal overlay listing composite
+  score, type, importance, and full content body. Read-only;
+  results are user-only and never appended to the conversation.
+  Empty query shows a usage hint banner; sessions without a
+  `memory_space` (ephemeral, persona without one) show a muted
+  banner instead. Score visibility is intentional — same posture
+  as `/cost` exposing dollar figures.
+- **`/remember <text>`** — explicit save of a `fact` memory,
+  bypassing the post-turn observation queue. Confirmed via toast.
+  Dedup-on-store applies (same threshold as the extractor); a
+  near-identical input refreshes the existing row's `updated_at`
+  and the toast names the dedup hit by entry id.
+- **`recall` built-in tool** — tier-0, read-only, no approval
+  gate. Reuses `MemoryService.retrieve()` underneath, so the LLM
+  sees the same scoring the pre-turn preparer would. JSON output
+  with `hits[]`, plus a `note: "no matches"` line on empty
+  results so the model can distinguish a clean miss from a server
+  error. `k` is bounded 1..20.
+- **`MemoryConfig.explicit_remember_importance: int = 7`** — new
+  per-profile knob controlling the importance assigned by
+  `/remember`. Default 7 (one notch above the extractor default
+  of 5 — explicit user intent is a stronger signal than
+  auto-extraction). Bounded 1..10.
+- **`MemoryService.retrieve_scored()`** — companion to
+  `retrieve()`; returns `(score, MemoryEntry)` pairs for the
+  modal's score column. Same scoring underneath; just exposes the
+  composite score that `retrieve()` discards.
+
+### Changed
+
+- `MemoryService.retrieve()` gains a `truncate_content: bool = True`
+  kwarg. The pre-turn preparer keeps the default; `/recall` and the
+  `recall` tool pass `False` to receive full bodies. Backwards
+  compatible — existing callers see no change.
+- `CairnApp` accepts `memory_service` and `memory_repo` keyword
+  arguments and exposes them via read-only properties for the
+  slash handlers. Test harnesses that mint a `CairnApp` without
+  memory wiring see a "did not wire memory" muted banner — the
+  slash commands degrade gracefully.
+
+### Docs
+
+- New ADR 0049 — slash/tool symmetry, deferral of curation UI.
+- `docs/slash-commands.md` gains `/recall` and `/remember`
+  sections plus a note on the `recall` tool.
+- `docs/memory.md` gains a "User surfaces" section cross-linking
+  to the new commands and tool, plus an explicit note on the V1
+  escape hatch (hand-edit `<data_dir>/cairn.db`) until tier-3
+  curation lands.
+
 ## [0.18.1] — 2026-04-27
 
 V1 close-out brick. Three small loose ends surfaced by the

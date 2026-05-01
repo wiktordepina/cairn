@@ -107,12 +107,19 @@ class MemoryService:
         space: str,
         query: str,
         k: int,
+        truncate_content: bool = True,
     ) -> list[MemoryEntry]:
         """Return the top-*k* memories for *query* within *space*.
 
         An empty *space* (or one that yields no candidates) returns `[]`
         silently. No exceptions on miss — callers want to keep rendering
         their system prompt either way.
+
+        The pre-turn preparer leaves *truncate_content* at its default
+        (clipping per `MemoryConfig.retrieval_content_truncate` to keep
+        the system prompt compact). User-facing surfaces (`/recall`
+        modal, the `recall` tool) pass ``False`` to receive full
+        entry bodies.
         """
         if not space or not query.strip() or k <= 0:
             return []
@@ -142,8 +149,44 @@ class MemoryService:
                 space,
             )
 
+        if not truncate_content:
+            return [hit.entry for _, hit in kept]
         truncate = self._config.retrieval_content_truncate
         return [_truncate_content(hit.entry, truncate) for _, hit in kept]
+
+    async def retrieve_scored(
+        self,
+        *,
+        space: str,
+        query: str,
+        k: int,
+    ) -> list[tuple[float, MemoryEntry]]:
+        """Return the top-*k* memories paired with their composite score.
+
+        Used by the `/recall` modal where we want to display the score
+        column alongside the entries. Content is **not** truncated —
+        the modal is the natural place to show full bodies on row
+        expand.
+        """
+        if not space or not query.strip() or k <= 0:
+            return []
+
+        candidates = await self._memory_repo.search(
+            memory_space=space,
+            query=query,
+            k=max(k * 3, k),
+        )
+        if not candidates:
+            return []
+
+        now = self._clock.now().astimezone(UTC)
+        scored: list[tuple[float, MemoryHit]] = [
+            (composite_score(entry=hit.entry, bm25_score=hit.bm25_score, now=now), hit)
+            for hit in candidates
+        ]
+        scored.sort(key=lambda pair: pair[0], reverse=True)
+        kept = scored[:k]
+        return [(score, hit.entry) for score, hit in kept]
 
 
 def _truncate_content(entry: MemoryEntry, limit: int) -> MemoryEntry:
