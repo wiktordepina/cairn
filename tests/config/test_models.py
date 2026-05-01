@@ -8,6 +8,7 @@ from pydantic import ValidationError
 from cairn.config._models import (
     BudgetConfig,
     CairnConfig,
+    MemoryConfig,
     ModelConfig,
     ModelRole,
     ProfileConfig,
@@ -134,6 +135,22 @@ class TestProfileConfig:
         assert profile.memory_space == "companion"
         assert profile.budgets.per_turn_usd == 0.50
         assert profile.convention_files.enabled is True
+
+
+class TestMemoryConfig:
+    def test_explicit_remember_importance_default(self) -> None:
+        m = MemoryConfig()
+        assert m.explicit_remember_importance == 7
+
+    def test_explicit_remember_importance_accepts_bounds(self) -> None:
+        assert MemoryConfig(explicit_remember_importance=1).explicit_remember_importance == 1
+        assert MemoryConfig(explicit_remember_importance=10).explicit_remember_importance == 10
+
+    def test_explicit_remember_importance_rejects_out_of_bounds(self) -> None:
+        with pytest.raises(ValidationError):
+            MemoryConfig(explicit_remember_importance=0)
+        with pytest.raises(ValidationError):
+            MemoryConfig(explicit_remember_importance=11)
 
 
 class TestBudgetConfig:

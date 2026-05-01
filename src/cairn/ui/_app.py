@@ -21,10 +21,11 @@ if TYPE_CHECKING:
     from cairn.config import ModelRegistry, ProfileConfig, UIConfig
     from cairn.conventions import AllowlistStore, ConventionLoader
     from cairn.domain import Session
+    from cairn.memory._retrieval import MemoryService
     from cairn.orchestrator import Orchestrator
     from cairn.orchestrator._clock import Clock
     from cairn.orchestrator._protocols import ToolRegistry
-    from cairn.persistence import UsageRepo
+    from cairn.persistence import MemoryRepo, UsageRepo
     from cairn.ui._context_report import ContextReportInput
     from cairn.ui._prompt_history import PromptHistoryStore
     from cairn.watcher import Reloader
@@ -64,6 +65,8 @@ class CairnApp(App[None]):
         usage_repo: UsageRepo | None = None,
         clock: Clock | None = None,
         active_profile_key: str | None = None,
+        memory_service: MemoryService | None = None,
+        memory_repo: MemoryRepo | None = None,
     ) -> None:
         super().__init__()
         self._orchestrator = orchestrator
@@ -83,6 +86,8 @@ class CairnApp(App[None]):
         self._usage_repo = usage_repo
         self._clock = clock
         self._active_profile_key = active_profile_key
+        self._memory_service = memory_service
+        self._memory_repo = memory_repo
         from cairn.config import UIConfig as _UIConfig
 
         self._ui_config = ui_config or _UIConfig()
@@ -163,6 +168,17 @@ class CairnApp(App[None]):
     def active_profile_key(self) -> str | None:
         """Active profile name (e.g. ``"personal"``). `None` in tests."""
         return self._active_profile_key
+
+    @property
+    def memory_service(self) -> MemoryService | None:
+        """`MemoryService` for `/recall`. `None` when the bootstrap
+        omits the memory pipeline (test harnesses)."""
+        return self._memory_service
+
+    @property
+    def memory_repo(self) -> MemoryRepo | None:
+        """`MemoryRepo` for `/remember`. `None` in test harnesses."""
+        return self._memory_repo
 
     def take_resumed_turn_count(self) -> int:
         """Return the recorded count and clear it.

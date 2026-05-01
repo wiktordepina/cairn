@@ -19,6 +19,7 @@ from cairn.tools.builtin._file_write import (
 )
 from cairn.tools.builtin._grep import GrepArgs, make_grep
 from cairn.tools.builtin._now import NowArgs, make_now
+from cairn.tools.builtin._recall import RecallArgs, make_recall
 from cairn.tools.builtin._web_fetch import WebFetchArgs, make_web_fetch
 
 __all__ = [
@@ -26,10 +27,12 @@ __all__ = [
     "FileWriteArgs",
     "GrepArgs",
     "NowArgs",
+    "RecallArgs",
     "WebFetchArgs",
     "make_file_read",
     "make_file_write",
     "make_grep",
     "make_now",
+    "make_recall",
     "make_web_fetch",
 ]

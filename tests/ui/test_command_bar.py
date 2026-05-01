@@ -102,6 +102,8 @@ class TestCommandRegistry:
             "/model",
             "/conventions",
             "/reload",
+            "/recall",
+            "/remember",
         }
 
 

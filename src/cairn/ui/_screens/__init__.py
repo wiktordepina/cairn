@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from cairn.ui._screens._approval import ApprovalModal, ApprovalModalResult
 from cairn.ui._screens._choice_modal import Choice, ChoiceModal
+from cairn.ui._screens._memory_recall import MemoryRecallModal
 from cairn.ui._screens._model_picker import ModelPickerModal
 from cairn.ui._screens._session import SessionScreen
 
@@ -12,6 +13,7 @@ __all__ = [
     "ApprovalModalResult",
     "Choice",
     "ChoiceModal",
+    "MemoryRecallModal",
     "ModelPickerModal",
     "SessionScreen",
 ]
